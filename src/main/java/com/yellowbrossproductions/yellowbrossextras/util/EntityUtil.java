@@ -1,0 +1,389 @@
+package com.yellowbrossproductions.yellowbrossextras.util;
+
+import com.google.common.collect.ImmutableMap;
+import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
+import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
+import com.yellowbrossproductions.yellowbrossextras.entities.creepers.AbstractCreeperEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperEnemy;
+import com.yellowbrossproductions.yellowbrossextras.entities.creepers.SneakerEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
+import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.CarrotMinionEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ConverslinBulletEntity;
+import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
+import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
+import com.yellowbrossproductions.yellowbrossextras.world.bunnyblitz.BlitzManager;
+import com.yellowbrossproductions.yellowbrossextras.world.bunnyblitz.BunnyBlitz;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.PacketDistributor;
+import org.apache.commons.compress.utils.Lists;
+
+import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.function.Predicate;
+
+public class EntityUtil {
+    public static boolean canHurtThisMob(Entity target, Mob attacker) {
+        if (target.isInvulnerable()) {
+            return false;
+        }
+        if ((attacker.getTeam() != null || target.getTeam() != null)) {
+            return attacker.getTeam() != target.getTeam();
+        } else {
+            return true;
+        }
+    }
+
+    public static boolean isMobNotInCreativeMode(Entity entity) {
+        if (entity instanceof Player) {
+            return !((Player) entity).isCreative() && !((Player)entity).isSpectator();
+        }
+        return true;
+    }
+
+    public static boolean isMobOnOtherTeam2(Entity target, Mob attacker) {
+        if (attacker.getTeam() != null || target.getTeam() != null) {
+            return attacker.getTeam() != target.getTeam();
+        } else {
+            return true;
+        }
+    }
+
+    public static void convertMobToCreeper(Mob entity, LivingEntity killer, Level level) {
+        Map<EntityType<?>, EntityType<?>> creeperConversions;
+        
+
+        Random random = new Random();
+        if (!entity.isRemoved()) {
+            if (!(entity instanceof CreeperEnemy)) {
+                AbstractCreeperEntity creeper = null;
+
+                float paraCreeperWidth = 0.5F;
+
+                float normalCreeperWidth = 1.0F;
+
+                float ravagerCreeperWidth = 2.0F;
+
+                if (entity.getBbWidth() < paraCreeperWidth) {
+                    creeper = ModEntityTypes.Paracreeper.get().create(level);
+                } else if (entity.getBbWidth() >= paraCreeperWidth && entity.getBbWidth() <= normalCreeperWidth) {
+                    creeper = ModEntityTypes.Sneaker.get().create(level);
+                    if (entity instanceof RangedAttackMob) {
+                        if (random.nextBoolean()) {
+                            creeper = ModEntityTypes.Sprayer.get().create(level);
+                        }
+                    }
+                } else if (entity.getBbWidth() >= normalCreeperWidth && entity.getBbWidth() <= ravagerCreeperWidth) {
+                    creeper = ModEntityTypes.Crawler.get().create(level);
+                } else {
+                    creeper = ModEntityTypes.Freaker.get().create(level);
+                }
+
+                if (creeper != null) {
+                    creeper.copyPosition(entity);
+                    creeper.setNoAi(entity.isNoAi());
+                    if (entity.hasCustomName()) {
+                        creeper.setCustomName(entity.getCustomName());
+                        creeper.setCustomNameVisible(entity.isCustomNameVisible());
+                    }
+
+                    if (killer.getTeam() != null) {
+                        level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                                level.getScoreboard().getPlayerTeam(killer.getTeam().getName()));
+                    }
+
+                    if (entity.isPassenger() && entity.getVehicle() != null) {
+                        Entity vehicle = entity.getVehicle();
+                        entity.stopRiding();
+                        creeper.startRiding(vehicle, true);
+                    }
+
+                    if (!entity.getPassengers().isEmpty()) {
+                        for (Entity entity1 : entity.getPassengers()) {
+                            if (!entity1.isRemoved()) {
+                                entity1.stopRiding();
+                                entity1.startRiding(creeper, true);
+                            }
+                        }
+                    }
+
+                    if (creeper instanceof SneakerEntity sneaker) {
+                        if (random.nextInt(4) == 0) {
+                            sneaker.setCreeperType(1);
+                            List<SneakerEntity> list = level.getEntitiesOfClass(SneakerEntity.class, sneaker.getBoundingBox().inflate(30.0F), predicate -> {
+                                return predicate.getCreeperType() == 2 && predicate != sneaker;
+                            });
+                            if (list.isEmpty()) {
+                                if (random.nextInt(3) == 0) {
+                                    sneaker.setCreeperType(2);
+                                }
+                            }
+                        }
+                    }
+
+                    if (!level.isClientSide) {
+                        level.addFreshEntity(creeper);
+                    }
+                    entity.discard();
+
+                    creeper.playSound(SoundEvents.ZOMBIE_CONVERTED_TO_DROWNED, 3.0F, creeper.getVoicePitch());
+                }
+            }
+        }
+    }
+
+    public static void convertMobToCarrot(Mob entity, LivingEntity killer, Level level) {
+        Random random = new Random();
+        if (!entity.isRemoved()) {
+            if (!(entity instanceof IsOryctolinAligned)) {
+                CarrotMinionEntity creeper = null;
+
+                creeper = ModEntityTypes.CarrotMinion.get().create(level);
+
+                if (creeper != null) {
+                    creeper.copyPosition(entity);
+                    creeper.setNoAi(entity.isNoAi());
+                    if (entity.hasCustomName()) {
+                        creeper.setCustomName(entity.getCustomName());
+                        creeper.setCustomNameVisible(entity.isCustomNameVisible());
+                    }
+
+                    if (killer.getTeam() != null) {
+                        level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                                level.getScoreboard().getPlayerTeam(killer.getTeam().getName()));
+                    }
+
+                    if (entity.isPassenger() && entity.getVehicle() != null) {
+                        Entity vehicle = entity.getVehicle();
+                        entity.stopRiding();
+                        creeper.startRiding(vehicle, true);
+                    }
+
+                    if (!entity.getPassengers().isEmpty()) {
+                        for (Entity entity1 : entity.getPassengers()) {
+                            if (!entity1.isRemoved()) {
+                                entity1.stopRiding();
+                                entity1.startRiding(creeper, true);
+                            }
+                        }
+                    }
+
+                    if (!level.isClientSide) {
+                        level.addFreshEntity(creeper);
+                    }
+                    entity.discard();
+
+                    creeper.playSound(SoundEvents.ZOMBIE_INFECT, 3.0F, creeper.getVoicePitch());
+                }
+            }
+        }
+    }
+
+    public static void makeStunnedParticles(Level level, Entity caught) {
+        final Random random = new Random();
+        if (!level.isClientSide) {
+            for (ServerPlayer serverPlayer : ((ServerLevel)level).players()) {
+                if (serverPlayer.distanceToSqr(caught) < 4096.0D) {
+                    ParticlePacket packet = new ParticlePacket();
+
+                    for(int i = 0; i < 2; ++i) {
+                        double d0 = (-0.5 + random.nextGaussian()) / 10;
+                        double d1 = (-0.5 + random.nextGaussian()) / 10;
+                        double d2 = (-0.5 + random.nextGaussian()) / 10;
+                        packet.queueParticle(ParticleTypes.SPLASH, false, new Vec3(caught.getRandomX(0.5D), caught.getRandomY(), caught.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
+                    }
+                    for(int i = 0; i < 2; ++i) {
+                        double d0 = (-0.5 + random.nextGaussian()) / 10;
+                        double d1 = (-0.5 + random.nextGaussian()) / 10;
+                        double d2 = (-0.5 + random.nextGaussian()) / 10;
+                        packet.queueParticle(ParticleTypes.CRIT, false, new Vec3(caught.getRandomX(0.5D), caught.getY() + caught.getBbHeight() + 0.2D, caught.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
+                    }
+
+                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
+                }
+            }
+        }
+    }
+
+    public static void makeCircleParticles(Level level, Entity spawner, ParticleOptions particleType, int amount, double y, float velocity) {
+        final Random random = new Random();
+        if (!level.isClientSide) {
+            for (ServerPlayer serverPlayer : ((ServerLevel)level).players()) {
+                if (serverPlayer.distanceToSqr(spawner) < 4096.0D) {
+                    ParticlePacket packet = new ParticlePacket();
+
+                    // code adapted from Mowzie's Mobs
+                    for (int i = 0; i < amount; i++) {
+                        float TAU = (float) (2 * StrictMath.PI);
+
+                        float yaw = i * (TAU / amount);
+                        float vy = random.nextFloat() * 0.1F - 0.05f;
+                        float vx = velocity * Mth.cos(yaw);
+                        float vz = velocity * Mth.sin(yaw);
+                        packet.queueParticle(particleType, false, new Vec3(spawner.getX(), spawner.getY() + y, spawner.getZ()), new Vec3(vx, vy, vz));
+                    }
+
+                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
+                }
+            }
+        }
+    }
+
+    public static void broadcastMessage(Level world, Component m) {
+        MinecraftServer server = world.getServer();
+        if (server == null) {
+            return;
+        }
+
+        for (Player player : server.getPlayerList().getPlayers()) {
+            player.sendSystemMessage(m);
+        }
+    }
+
+    public static BunnyBlitz findNearestBlitz(PathfinderMob mob, ServerLevel level) {
+        List<BunnyBlitz> list = BlitzManager.getRaids(level);
+        if (list.isEmpty()) {
+            return null;
+        }
+        BunnyBlitz closestBlitz = list.get(0);
+        double minDistance = mob.distanceToSqr(new Vec3(closestBlitz.getCenter().getX(), closestBlitz.getCenter().getY(), closestBlitz.getCenter().getZ()));
+
+        for (int i = 1; i < list.size(); i++) {
+            double distance = mob.distanceToSqr(new Vec3(list.get(i).getCenter().getX(), list.get(i).getCenter().getY(), list.get(i).getCenter().getZ()));
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestBlitz = list.get(i);
+            }
+        }
+
+        return closestBlitz;
+    }
+
+    public static IntelligenceEntity getNearestIntel(List<IntelligenceEntity> intels, LivingEntity playing) {
+        double d0 = -1.0D;
+        IntelligenceEntity t = null;
+
+        for(IntelligenceEntity t1 : intels) {
+            double d1 = t1.distanceToSqr(playing.getX(), playing.getY(), playing.getZ());
+            if (d0 == -1.0D || d1 < d0) {
+                d0 = d1;
+                t = t1;
+            }
+        }
+
+        return t;
+    }
+
+    public static boolean isEnemyCapping(LivingEntity mob, LivingEntity defender) {
+        for (Entity entity : mob.getPassengers()) {
+            if (entity instanceof IntelligenceEntity intel) {
+                if (intel.getTeam() == defender.getTeam()) return true;
+            }
+        }
+        return false;
+    }
+
+    @Nullable
+    public static PathGuideEntity getNearestGuide(List<PathGuideEntity> intels, LivingEntity playing) {
+        double d0 = -1.0D;
+        PathGuideEntity t = null;
+
+        for(PathGuideEntity t1 : intels) {
+            double d1 = t1.distanceToSqr(playing.getX(), playing.getY(), playing.getZ());
+            if (d0 == -1.0D || d1 < d0) {
+                d0 = d1;
+                t = t1;
+            }
+        }
+
+        return t;
+    }
+
+    @Nullable
+    public static BlockPos getNextGuide(PathGuideEntity guide, LivingEntity playing, Vec3 goal) {
+        BlockPos t = null;
+
+        Random random = new Random();
+        List<BlockPos> randomList = Lists.newArrayList();
+
+        for (BlockPos pos : guide.getNeighbors()) {
+            Vec3 pos_distance = new Vec3(pos.getX(), pos.getY(), pos.getZ());
+            Vec3 guide_distance = new Vec3(guide.getX(), guide.getY(), guide.getZ());
+            if (goal.distanceToSqr(pos_distance) < goal.distanceToSqr(guide_distance)) {
+                randomList.add(pos);
+            }
+            if (guide.getNeighbors().size() == 2) {
+                double distance1 = goal.distanceToSqr(new Vec3(guide.getNeighbors().get(0).getX(), guide.getNeighbors().get(0).getY(), guide.getNeighbors().get(0).getZ()));
+                double distance2 = goal.distanceToSqr(new Vec3(guide.getNeighbors().get(1).getX(), guide.getNeighbors().get(1).getY(), guide.getNeighbors().get(1).getZ()));
+                randomList.add(guide.getNeighbors().get(distance1 <= distance2 ? 0 : 1));
+            }
+        }
+
+        if (!randomList.isEmpty()) {
+            t = randomList.get(random.nextInt(randomList.size()));
+        }
+
+        return t;
+    }
+
+    public static boolean checkGuide(BlockPos pos, LivingEntity playing, Vec3 goal) {
+        PathGuideEntity guide = getGuideAt(pos, playing.level);
+        if (guide != null) {
+            for (BlockPos pos2 : guide.getNeighbors()) {
+                Vec3 pos2_distance = new Vec3(pos2.getX(), pos2.getY(), pos2.getZ());
+                Vec3 guide_distance = new Vec3(guide.getX(), guide.getY(), guide.getZ());
+                if (goal.distanceToSqr(pos2_distance) < goal.distanceToSqr(guide_distance) && !(playing.distanceToSqr(pos2_distance) < 9.0D)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Nullable
+    public static PathGuideEntity getGuideAt(BlockPos pos, Level level) {
+        PathGuideEntity t = null;
+        List<PathGuideEntity> list = level.getEntitiesOfClass(PathGuideEntity.class, new AABB(pos));
+
+        if (!list.isEmpty()) {
+            t = list.get(0);
+        }
+        return t;
+    }
+
+    public static boolean hasLineOfSightToLocation(LivingEntity mob, Vec3 location) {
+        Vec3 vec3 = new Vec3(mob.getX(), mob.getY() + mob.getEyeHeight(), mob.getZ());
+        if (location.distanceTo(vec3) > 128.0D) {
+            return false;
+        } else {
+            return mob.level.clip(new ClipContext(vec3, location, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mob)).getType() == HitResult.Type.MISS;
+        }
+    }
+}

@@ -1,0 +1,323 @@
+{
+  "entity.defender.hurt": {
+    "subtitle": "subtitles.entity.defender.hurt",
+    "sounds": [
+      "yellowbrossextras:defender/hurt"
+    ]
+  },
+
+  "entity.defender.step": {
+    "subtitle": "subtitles.entity.defender.step",
+    "sounds": [
+      "yellowbrossextras:defender/step1",
+      "yellowbrossextras:defender/step2",
+      "yellowbrossextras:defender/step3"
+    ]
+  },
+
+  "entity.defender.jump": {
+    "subtitle": "subtitles.entity.defender.jump",
+    "sounds": [
+      "yellowbrossextras:defender/jump"
+    ]
+  },
+
+  "entity.defender.saw": {
+    "subtitle": "subtitles.entity.defender.saw",
+    "sounds": [
+      "yellowbrossextras:defender/saw1",
+      "yellowbrossextras:defender/saw2",
+      "yellowbrossextras:defender/saw3"
+    ]
+  },
+
+  "entity.defender.saw_start": {
+    "subtitle": "subtitles.entity.defender.saw_start",
+    "sounds": [
+      "yellowbrossextras:defender/saw_start"
+    ]
+  },
+
+  "entity.defender.sword_whoosh": {
+    "subtitle": "subtitles.entity.defender.sword_whoosh",
+    "sounds": [
+      "yellowbrossextras:defender/sword_whoosh"
+    ]
+  },
+
+  "entity.defender.sword_hit": {
+    "subtitle": "subtitles.entity.defender.sword_hit",
+    "sounds": [
+      "yellowbrossextras:defender/sword_hit"
+    ]
+  },
+
+  "entity.defender.boomerang_hit": {
+    "subtitle": "subtitles.entity.defender.boomerang_hit",
+    "sounds": [
+      "yellowbrossextras:defender/boomerang_hit"
+    ]
+  },
+
+  "entity.defender.spin_short": {
+    "subtitle": "subtitles.entity.defender.spin_short",
+    "sounds": [
+      "yellowbrossextras:defender/spin_short"
+    ]
+  },
+
+  "entity.defender.crash": {
+    "subtitle": "subtitles.entity.defender.crash",
+    "sounds": [
+      "yellowbrossextras:defender/crash"
+    ]
+  },
+
+  "entity.defender.spike": {
+    "subtitle": "subtitles.entity.defender.spike",
+    "sounds": [
+      "yellowbrossextras:defender/spike"
+    ]
+  },
+
+  "entity.defender.shoot": {
+    "subtitle": "subtitles.entity.defender.shoot",
+    "sounds": [
+      "yellowbrossextras:defender/shoot"
+    ]
+  },
+
+  "entity.defender.chainsaw_warn": {
+    "subtitle": "subtitles.entity.defender.chainsaw_warn",
+    "sounds": [
+      "yellowbrossextras:defender/chainsaw_pull"
+    ]
+  },
+
+  "entity.defender.chainsaw_catch": {
+    "subtitle": "subtitles.entity.defender.chainsaw_catch",
+    "sounds": [
+      "yellowbrossextras:defender/chainsaw_catch"
+    ]
+  },
+
+  "entity.defender.chainsaw": {
+    "subtitle": "subtitles.entity.defender.chainsaw",
+    "sounds": [
+      "yellowbrossextras:defender/chainsaw"
+    ]
+  },
+
+  "entity.defender.smack": {
+    "subtitle": "subtitles.entity.defender.smack",
+    "sounds": [
+      "yellowbrossextras:defender/smack"
+    ]
+  },
+
+  "entity.defender.phase_ended": {
+    "subtitle": "subtitles.entity.defender.phase_ended",
+    "sounds": [
+      "yellowbrossextras:defender/phase_ended"
+    ]
+  },
+
+  "entity.defender.quick_whoosh": {
+    "subtitle": "subtitles.entity.defender.quick_whoosh",
+    "sounds": [
+      "yellowbrossextras:defender/quick_whoosh"
+    ]
+  },
+
+  "entity.defender.earth_rumble": {
+    "subtitle": "subtitles.entity.defender.earth_rumble",
+    "sounds": [
+      "yellowbrossextras:defender/earth_rumble"
+    ]
+  },
+
+  "entity.defender.defeated": {
+    "subtitle": "subtitles.entity.defender.defeated",
+    "sounds": [
+      "yellowbrossextras:defender/defeated"
+    ]
+  },
+
+  "entity.defender.gag1": {
+    "subtitle": "subtitles.entity.defender.gag1",
+    "sounds": [
+      "yellowbrossextras:defender/gag1"
+    ]
+  },
+
+  "entity.defender.gag2": {
+    "subtitle": "subtitles.entity.defender.gag2",
+    "sounds": [
+      "yellowbrossextras:defender/gag2"
+    ]
+  },
+
+  "entity.defender.gag3": {
+    "subtitle": "subtitles.entity.defender.gag3",
+    "sounds": [
+      "yellowbrossextras:defender/gag3"
+    ]
+  },
+
+  "entity.defender.carnage": {
+    "subtitle": "subtitles.entity.defender.carnage",
+    "sounds": [
+      "yellowbrossextras:defender/carnage1",
+      "yellowbrossextras:defender/carnage2",
+      "yellowbrossextras:defender/carnage3",
+      "yellowbrossextras:defender/carnage4",
+      "yellowbrossextras:defender/carnage5",
+      "yellowbrossextras:defender/carnage6"
+    ]
+  },
+
+  "entity.vilvgaver.attack": {
+    "subtitle": "subtitles.entity.vilvgaver.attack",
+    "sounds": [
+      "yellowbrossextras:vilvgaver/attack1",
+      "yellowbrossextras:vilvgaver/attack2",
+      "yellowbrossextras:vilvgaver/attack3",
+      "yellowbrossextras:vilvgaver/attack4",
+      "yellowbrossextras:vilvgaver/attack5"
+    ]
+  },
+
+  "entity.vilvgaver.loop": {
+    "subtitle": "subtitles.entity.vilvgaver.loop",
+    "sounds": [
+      "yellowbrossextras:vilvgaver/loop"
+    ]
+  },
+
+  "entity.vilvgaver.say": {
+    "subtitle": "subtitles.entity.vilvgaver.say",
+    "sounds": [
+      "yellowbrossextras:vilvgaver/say1",
+      "yellowbrossextras:vilvgaver/say2",
+      "yellowbrossextras:vilvgaver/say3",
+      "yellowbrossextras:vilvgaver/say4",
+      "yellowbrossextras:vilvgaver/say5",
+      "yellowbrossextras:vilvgaver/say6"
+    ]
+  },
+
+  "entity.vilvgaver.jump": {
+    "subtitle": "subtitles.entity.vilvgaver.jump",
+    "sounds": [
+      "yellowbrossextras:vilvgaver/jump1",
+      "yellowbrossextras:vilvgaver/jump2",
+      "yellowbrossextras:vilvgaver/jump3"
+    ]
+  },
+
+  "entity.vilvgaver.respawn": {
+    "subtitle": "subtitles.entity.vilvgaver.respawn",
+    "sounds": [
+      "yellowbrossextras:vilvgaver/respawn"
+    ]
+  },
+
+  "entity.vilvgaver.warn": {
+    "subtitle": "subtitles.entity.vilvgaver.warn",
+    "sounds": [
+      "yellowbrossextras:vilvgaver/warn"
+    ]
+  },
+
+  "entity.vilvgaver.crash_close": {
+    "subtitle": "subtitles.entity.vilvgaver.crash",
+    "sounds": [
+      "yellowbrossextras:vilvgaver/crash_close1",
+      "yellowbrossextras:vilvgaver/crash_close2"
+    ]
+  },
+
+  "entity.vilvgaver.crash_medium": {
+    "subtitle": "subtitles.entity.vilvgaver.crash",
+    "sounds": [
+      "yellowbrossextras:vilvgaver/crash_medium1",
+      "yellowbrossextras:vilvgaver/crash_medium2"
+    ]
+  },
+
+  "entity.vilvgaver.crash_distant": {
+    "subtitle": "subtitles.entity.vilvgaver.crash",
+    "sounds": [
+      "yellowbrossextras:vilvgaver/crash_distant1",
+      "yellowbrossextras:vilvgaver/crash_distant2"
+    ]
+  },
+
+  "entity.converslin.step": {
+    "subtitle": "subtitles.entity.converslin.step",
+    "sounds": [
+      "yellowbrossextras:oryctolins/scurry1",
+      "yellowbrossextras:oryctolins/scurry2",
+      "yellowbrossextras:oryctolins/scurry3",
+      "yellowbrossextras:oryctolins/scurry4"
+    ]
+  },
+
+  "entity.converslin.shriek": {
+    "subtitle": "subtitles.entity.converslin.shriek",
+    "sounds": [
+      "yellowbrossextras:oryctolins/converslin/shriek"
+    ]
+  },
+
+  "entity.converslin.jump": {
+    "subtitle": "subtitles.entity.converslin.jump",
+    "sounds": [
+      "yellowbrossextras:oryctolins/jump"
+    ]
+  },
+
+  "entity.amoebic_devourer.gulp": {
+    "subtitle": "subtitles.entity.amoebic_devourer.gulp",
+    "sounds": [
+      "yellowbrossextras:amoebic_devourer/gulp1",
+      "yellowbrossextras:amoebic_devourer/gulp2",
+      "yellowbrossextras:amoebic_devourer/gulp3",
+      "yellowbrossextras:amoebic_devourer/gulp4"
+    ]
+  },
+
+  "entity.amoebic_devourer.big_gulp": {
+    "subtitle": "subtitles.entity.amoebic_devourer.gulp",
+    "sounds": [
+      "yellowbrossextras:amoebic_devourer/big_gulp1",
+      "yellowbrossextras:amoebic_devourer/big_gulp2",
+      "yellowbrossextras:amoebic_devourer/big_gulp3"
+    ]
+  },
+
+  "huge_explosion": {
+    "subtitle": "subtitles.huge_explosion",
+    "sounds": [
+      "yellowbrossextras:huge_explosion"
+    ]
+  },
+
+  "gamemode_fun.ctf.friendly_take": {
+    "sounds": [
+      "yellowbrossextras:gamemode_fun/ctf/friendly_take"
+    ]
+  },
+
+  "gamemode_fun.ctf.friendly_cap": {
+    "sounds": [
+      "yellowbrossextras:gamemode_fun/ctf/friendly_cap"
+    ]
+  },
+
+  "gamemode_fun.ctf.enemy_return": {
+    "sounds": [
+      "yellowbrossextras:gamemode_fun/ctf/enemy_return"
+    ]
+  }
+}

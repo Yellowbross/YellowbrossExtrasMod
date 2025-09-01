@@ -1,0 +1,63 @@
+package com.yellowbrossproductions.yellowbrossextras.util;
+
+import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+
+public class YellowbrossExtrasSoundEvents {
+    public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, YellowbrossExtras.MOD_ID);
+
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_HURT = addSoundsToRegistry("entity.defender.hurt");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_STEP = addSoundsToRegistry("entity.defender.step");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_JUMP = addSoundsToRegistry("entity.defender.jump");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SAW = addSoundsToRegistry("entity.defender.saw");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SAW_START = addSoundsToRegistry("entity.defender.saw_start");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SWORD_WHOOSH = addSoundsToRegistry("entity.defender.sword_whoosh");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SWORD_HIT = addSoundsToRegistry("entity.defender.sword_hit");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_BOOMERANG_HIT = addSoundsToRegistry("entity.defender.boomerang_hit");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SPIN_SHORT = addSoundsToRegistry("entity.defender.spin_short");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_CRASH = addSoundsToRegistry("entity.defender.crash");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SPIKE = addSoundsToRegistry("entity.defender.spike");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SHOOT = addSoundsToRegistry("entity.defender.shoot");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_CHAINSAW_WARN = addSoundsToRegistry("entity.defender.chainsaw_warn");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_CHAINSAW_CATCH = addSoundsToRegistry("entity.defender.chainsaw_catch");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_CHAINSAW = addSoundsToRegistry("entity.defender.chainsaw");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SMACK = addSoundsToRegistry("entity.defender.smack");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_PHASE_ENDED = addSoundsToRegistry("entity.defender.phase_ended");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_EARTH_RUMBLE = addSoundsToRegistry("entity.defender.earth_rumble");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_QUICK_WHOOSH = addSoundsToRegistry("entity.defender.quick_whoosh");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_DEFEATED = addSoundsToRegistry("entity.defender.defeated");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_GAG1 = addSoundsToRegistry("entity.defender.gag1");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_GAG2 = addSoundsToRegistry("entity.defender.gag2");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_GAG3 = addSoundsToRegistry("entity.defender.gag3");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_CARNAGE = addSoundsToRegistry("entity.defender.carnage");
+
+    public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_ATTACK = addSoundsToRegistry("entity.vilvgaver.attack");
+    public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_LOOP = addSoundsToRegistry("entity.vilvgaver.loop");
+    public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_SAY = addSoundsToRegistry("entity.vilvgaver.say");
+    public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_JUMP = addSoundsToRegistry("entity.vilvgaver.jump");
+    public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_RESPAWN = addSoundsToRegistry("entity.vilvgaver.respawn");
+    public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_WARN = addSoundsToRegistry("entity.vilvgaver.warn");
+    public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_CRASH_CLOSE = addSoundsToRegistry("entity.vilvgaver.crash_close");
+    public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_CRASH_MEDIUM = addSoundsToRegistry("entity.vilvgaver.crash_medium");
+    public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_CRASH_DISTANT = addSoundsToRegistry("entity.vilvgaver.crash_distant");
+
+    public static final RegistryObject<SoundEvent> ENTITY_CONVERSLIN_STEP = addSoundsToRegistry("entity.converslin.step");
+    public static final RegistryObject<SoundEvent> ENTITY_CONVERSLIN_SHRIEK = addSoundsToRegistry("entity.converslin.shriek");
+    public static final RegistryObject<SoundEvent> ENTITY_CONVERSLIN_JUMP = addSoundsToRegistry("entity.converslin.jump");
+
+    public static final RegistryObject<SoundEvent> HUGE_EXPLOSION = addSoundsToRegistry("huge_explosion");
+
+    public static final RegistryObject<SoundEvent> CTF_FRIENDLY_TAKE = addSoundsToRegistry("gamemode_fun.ctf.friendly_take");
+    public static final RegistryObject<SoundEvent> CTF_FRIENDLY_CAP = addSoundsToRegistry("gamemode_fun.ctf.friendly_cap");
+
+    public static final RegistryObject<SoundEvent> CTF_ENEMY_RETURN = addSoundsToRegistry("gamemode_fun.ctf.enemy_return");
+
+    private static RegistryObject<SoundEvent> addSoundsToRegistry(String soundId) {
+        ResourceLocation name = new ResourceLocation(YellowbrossExtras.MOD_ID, soundId);
+        return SOUND_EVENTS.register(soundId, () -> new SoundEvent(name));
+    }
+}

@@ -1,0 +1,103 @@
+{
+  "item.yellowbrossextras.defender_spawn_egg": "\u00A7dDefender Spawn Egg (WIP)",
+
+  "item.yellowbrossextras.sneaker_spawn_egg": "Sneaker Spawn Egg",
+  "item.yellowbrossextras.paracreeper_spawn_egg": "Paracreeper Spawn Egg",
+  "item.yellowbrossextras.crawler_spawn_egg": "Crawler Spawn Egg",
+  "item.yellowbrossextras.freaker_spawn_egg": "Freaker Spawn Egg",
+  "item.yellowbrossextras.sprayer_spawn_egg": "Sprayer Spawn Egg",
+
+  "item.yellowbrossextras.vilvgaver_spawn_egg": "Vilvgaver Spawn Egg",
+
+  "item.yellowbrossextras.converslin_spawn_egg": "Converslin Spawn Egg (WIP)",
+
+  "item.yellowbrossextras.mob_remover": "Mob Remover",
+
+  "tooltip.yellowbrossextras.mob_remover": "§6Click on a YExtras mob to remove it",
+
+  "entity.yellowbrossextras.defender": "Defender",
+
+  "entity.yellowbrossextras.sneaker": "Sneaker",
+  "entity.yellowbrossextras.paracreeper": "Paracreeper",
+  "entity.yellowbrossextras.crawler": "Crawler",
+  "entity.yellowbrossextras.freaker": "Freaker",
+  "entity.yellowbrossextras.sprayer": "Sprayer",
+
+  "entity.yellowbrossextras.vilvgaver": "Vilvgaver",
+
+  "entity.yellowbrossextras.converslin": "Converslin",
+  "entity.yellowbrossextras.carrot_minion": "Carrot Minion",
+
+  "subtitles.entity.defender.hurt": "Defender hurts",
+  "subtitles.entity.defender.step": "Defender steps",
+  "subtitles.entity.defender.jump": "Defender jumps",
+  "subtitles.entity.defender.saw": "Saw slices",
+  "subtitles.entity.defender.saw_start": "Defender starts saws",
+  "subtitles.entity.defender.sword_whoosh": "Sword swings",
+  "subtitles.entity.defender.sword_hit": "Sword hits something",
+  "subtitles.entity.defender.boomerang_hit": "Boomerang hits something",
+  "subtitles.entity.defender.spin_short": "Defender twirls",
+  "subtitles.entity.defender.crash": "Defender crashes",
+  "subtitles.entity.defender.spike": "Spikes slice",
+  "subtitles.entity.defender.shoot": "Defender shoots",
+  "subtitles.entity.defender.chainsaw_warn": "Chainsaw revs up",
+  "subtitles.entity.defender.chainsaw_catch": "Defender catches",
+  "subtitles.entity.defender.chainsaw": "Chainsaw roars",
+  "subtitles.entity.defender.smack": "Defender smacks",
+  "subtitles.entity.defender.phase_ended": "Defender heavily damaged",
+  "subtitles.entity.defender.earth_rumble": "Earth rumbles",
+  "subtitles.entity.defender.quick_whoosh": "Defender spins",
+  "subtitles.entity.defender.defeated": "Defender stops",
+  "subtitles.entity.defender.taunt": "Defender taunts",
+  "subtitles.entity.defender.gag1": "AAUUUOOGGHHHHHH",
+  "subtitles.entity.defender.gag2": "MRROOOOWWWW",
+  "subtitles.entity.defender.gag3": "OOOUUUUUHHHHHH",
+  "subtitles.entity.defender.carnage": "Mindless carnage",
+
+  "subtitles.entity.vilvgaver.attack": "Vilvgaver attacks",
+  "subtitles.entity.vilvgaver.loop": "Vilvgaver screams",
+  "subtitles.entity.vilvgaver.say": "Vilvgaver mumbles",
+  "subtitles.entity.vilvgaver.jump": "Vilvgaver jumps",
+  "subtitles.entity.vilvgaver.respawn": "Vilvgaver respawns",
+  "subtitles.entity.vilvgaver.warn": "Ground shakes",
+  "subtitles.entity.vilvgaver.crash": "Blocks smashed through",
+
+  "subtitles.entity.converslin.hurt": "Converslin hurts",
+  "subtitles.entity.converslin.death": "Converslin dies",
+  "subtitles.entity.converslin.step": "Converslin scurries",
+  "subtitles.entity.converslin.shriek": "Converslin shrieks",
+  "subtitles.entity.converslin.jump": "Converslin jumps",
+
+  "subtitles.entity.amoebic_devourer.gulp": "Amoebic Devourer absorbs",
+
+  "subtitles.huge_explosion": "Huge explosion",
+
+  "gamerule.vilvgaverChallenge": "The Vilvgaver Challenge",
+  "gamerule.vilvgaverChallenge.description": "If this gamerule is enabled, Vilvgavers will automatically spawn in to relentlessly chase the player. The idea is to beat the game whilst being on an endless, frantic run for survival.",
+  "gamerule.herobrineChallenge": "The Herobrine Challenge",
+  "gamerule.herobrineChallenge.description": "If this gamerule is enabled, Herobrine will spawn in to relentlessly chase the player. This challenge is more or less intended to be paired with the Vilvgaver Challenge as a harder version of it.",
+
+  "gamerule.enableCreeperInfection": "Enable Creeper Infection",
+  "gamerule.enableCreeperInfection.description": "Determines if the Creeper Infection is allowed to spread by infecting other mobs.",
+
+  "gamerule.converslinConversion": "Converslin conversion",
+  "gamerule.converslinConversion.description": "Determines if Converslins are allowed to convert other mobs into Carrot Minions.",
+
+  "itemGroup.yellowbrossextrastab": "Yellowbross's Extras",
+
+  "yellowbrossextras.defenderLeaveGame": "%s left the game",
+
+  "effect.yellowbrossextras.knocked_out": "Knocked Out",
+  "effect.yellowbrossextras.hunted": "Hunted",
+
+  "event.yellowbrossextras.bunny_blitz": "Bunny Blitz",
+  "event.yellowbrossextras.bunny_blitz.victory": "Victory",
+  "event.yellowbrossextras.bunny_blitz.defeat": "soosy amoogoos",
+  "event.yellowbrossextras.bunny_blitz.raiders_remaining": "Raiders remaining: %s",
+  "event.yellowbrossextras.bunny_blitz.bosses_remaining": "Bosses remaining: %s",
+
+  "command.yellowbrossextras.bunny_blitz.start_success": "Successfully spawned a Bunny Blitz at ",
+  "command.yellowbrossextras.bunny_blitz.start_failure.too_close": "Can't spawn; a Bunny Blitz was already spawned too close by",
+  "command.yellowbrossextras.bunny_blitz.absurdity_enabled": "Absurdity Mode activated!",
+  "command.yellowbrossextras.bunny_blitz.absurdity_disabled": "Absurdity Mode deactivated!"
+}
