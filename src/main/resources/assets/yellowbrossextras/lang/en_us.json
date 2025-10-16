@@ -96,8 +96,10 @@
   "event.yellowbrossextras.bunny_blitz.raiders_remaining": "Raiders remaining: %s",
   "event.yellowbrossextras.bunny_blitz.bosses_remaining": "Bosses remaining: %s",
 
-  "command.yellowbrossextras.bunny_blitz.start_success": "Successfully spawned a Bunny Blitz at ",
+  "command.yellowbrossextras.bunny_blitz.start_success": "Successfully spawned a Bunny Blitz at %s",
   "command.yellowbrossextras.bunny_blitz.start_failure.too_close": "Can't spawn; a Bunny Blitz was already spawned too close by",
-  "command.yellowbrossextras.bunny_blitz.absurdity_enabled": "Absurdity Mode activated!",
-  "command.yellowbrossextras.bunny_blitz.absurdity_disabled": "Absurdity Mode deactivated!"
+  "command.yellowbrossextras.bunny_blitz.highlight_success": "Highlighted %s raiders",
+  "command.yellowbrossextras.bunny_blitz.overall_fail": "There are no Bunny Blitzes active right now",
+  "command.yellowbrossextras.bunny_blitz.skip_success": "Skipped to wave %s",
+  "command.yellowbrossextras.bunny_blitz.skip_fail": "There are no Bunny Blitzes active in that location"
 }

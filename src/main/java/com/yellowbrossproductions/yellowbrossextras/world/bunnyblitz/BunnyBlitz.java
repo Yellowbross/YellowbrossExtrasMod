@@ -543,6 +543,16 @@ public class BunnyBlitz {
         return 10;
     }
 
+    public Set<LivingEntity> getRaiders() {
+        return this.raiders;
+    }
+
+    public void skipToWave(int wave) {
+        int i = Math.min(wave, this.getNumGroups());
+        this.currentWave = i;
+        this.currentSpawn = i - 1;
+    }
+
     static enum Status {
         ONGOING,
         VICTORY,
