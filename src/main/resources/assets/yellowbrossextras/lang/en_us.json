@@ -11,6 +11,8 @@
 
   "item.yellowbrossextras.converslin_spawn_egg": "Converslin Spawn Egg (WIP)",
 
+  "item.yellowbrossextras.hyper_snow_golem_spawn_egg": "Hyper Snow Golem Spawn Egg",
+
   "item.yellowbrossextras.mob_remover": "Mob Remover",
 
   "tooltip.yellowbrossextras.mob_remover": "§6Click on a YExtras mob to remove it",
@@ -27,6 +29,8 @@
 
   "entity.yellowbrossextras.converslin": "Converslin",
   "entity.yellowbrossextras.carrot_minion": "Carrot Minion",
+
+  "entity.yellowbrossextras.hyper_snow_golem": "Hyper Snow Golem",
 
   "subtitles.entity.defender.hurt": "Defender hurts",
   "subtitles.entity.defender.step": "Defender steps",

@@ -11,6 +11,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.projectile.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -55,6 +56,13 @@ public class ModEntityTypes {
             () -> EntityType.Builder.of(VilvgaverEntity::new, MobCategory.MONSTER)
                     .sized(0.8f, 2.3f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "vilvgaver").toString()));
+
+    public static final RegistryObject<EntityType<HyperSnowGolemEntity>> HyperSnowGolem = ENTITY_TYPES.register("hyper_snow_golem",
+            () -> EntityType.Builder.of(HyperSnowGolemEntity::new, MobCategory.MISC)
+                    .immuneTo(Blocks.POWDER_SNOW)
+                    .fireImmune()
+                    .sized(0.7f, 1.9f)
+                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "hyper_snow_golem").toString()));
 
     // Oryctolins
     public static final RegistryObject<EntityType<ConverslinEntity>> Converslin = ENTITY_TYPES.register("converslin",
@@ -106,6 +114,8 @@ public class ModEntityTypes {
         event.put(Sprayer.get(), SprayerEntity.createAttributes().build());
 
         event.put(Vilvgaver.get(), VilvgaverEntity.createAttributes().build());
+
+        event.put(HyperSnowGolem.get(), HyperSnowGolemEntity.createAttributes().build());
 
         event.put(Converslin.get(), ConverslinEntity.createAttributes().build());
         event.put(CarrotMinion.get(), CarrotMinionEntity.createAttributes().build());

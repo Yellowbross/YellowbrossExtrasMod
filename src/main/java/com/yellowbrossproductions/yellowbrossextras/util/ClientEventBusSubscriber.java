@@ -29,6 +29,8 @@ public class ClientEventBusSubscriber {
 
         event.registerLayerDefinition(CarrotMinionModel.LAYER_LOCATION, CarrotMinionModel::createBodyLayer);
 
+        event.registerLayerDefinition(HyperSnowGolemModel.LAYER_LOCATION, HyperSnowGolemModel::createBodyLayer);
+
         event.registerLayerDefinition(DefenderAxeModel.LAYER_LOCATION, DefenderAxeModel::createBodyLayer);
         event.registerLayerDefinition(BoomerangModel.LAYER_LOCATION, BoomerangModel::createBodyLayer);
         event.registerLayerDefinition(SpikeModel.LAYER_LOCATION, SpikeModel::createBodyLayer);
@@ -52,6 +54,8 @@ public class ClientEventBusSubscriber {
         event.registerEntityRenderer(ModEntityTypes.Converslin.get(), ConverslinRenderer::new);
 
         event.registerEntityRenderer(ModEntityTypes.CarrotMinion.get(), CarrotMinionRenderer::new);
+
+        event.registerEntityRenderer(ModEntityTypes.HyperSnowGolem.get(), HyperSnowGolemRenderer::new);
 
         event.registerEntityRenderer(ModEntityTypes.DefenderAxe.get(), DefenderAxeRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.Boomerang.get(), BoomerangRenderer::new);
