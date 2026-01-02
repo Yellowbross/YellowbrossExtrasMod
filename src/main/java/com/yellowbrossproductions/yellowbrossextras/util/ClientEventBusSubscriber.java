@@ -66,6 +66,7 @@ public class ClientEventBusSubscriber {
         event.registerEntityRenderer(ModEntityTypes.ConverslinBullet.get(), (p_174064_) -> {
             return new ThrownItemRenderer<>(p_174064_, 1.5F, true);
         });
+        event.registerEntityRenderer(ModEntityTypes.HyperSnowball.get(), ThrownItemRenderer::new);
 
         event.registerEntityRenderer(ModEntityTypes.CameraShake.get(), NothingRenderer::new);
 

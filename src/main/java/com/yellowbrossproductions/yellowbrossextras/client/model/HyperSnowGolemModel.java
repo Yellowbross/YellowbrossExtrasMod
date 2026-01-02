@@ -111,13 +111,28 @@ public class HyperSnowGolemModel<T extends Entity> extends EntityModel<T> {
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         if (entity instanceof HyperSnowGolemEntity snowGolem) {
+            this.body_bottom.getAllParts().forEach(ModelPart::resetPose);
+
             this.left_hand_standby.visible = snowGolem.getTarget() == null;
             this.right_hand_standby.visible = snowGolem.getTarget() == null;
+            this.left_hand.visible = false;
+            this.right_hand.visible = false;
             this.spinningarms.visible = snowGolem.getTarget() != null;
 
             this.head.yRot = netHeadYaw * ((float)Math.PI / 180F);
             this.head.xRot = headPitch * ((float)Math.PI / 180F);
             this.spinningarms.xRot = (ageInTicks * 150) * ((float)Math.PI / 180F);
+
+            float f1 = (ageInTicks - 15) / 60.0F;
+            float f2 = (ageInTicks - 10) / 60.0F;
+            float f3 = ageInTicks / 60.0F;
+            float mult = 0.1f;
+
+            this.body.x += Mth.sin(f2 * 20.0F) * mult;
+            this.body.y += Mth.sin(f3 * 40.0F) * mult;
+
+            this.head.x += Mth.sin(f1 * 20.0F) * mult;
+            this.head.y += Mth.sin(f2 * 40.0F) * mult;
         }
     }
 

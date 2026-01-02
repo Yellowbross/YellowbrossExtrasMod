@@ -96,6 +96,8 @@ public class ModEntityTypes {
 
     public static final RegistryObject<EntityType<ConverslinBulletEntity>> ConverslinBullet = ENTITY_TYPES.register("converslin_bullet", () -> EntityType.Builder.<ConverslinBulletEntity>of(ConverslinBulletEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "converslin_bullet").toString()));
 
+    public static final RegistryObject<EntityType<HyperSnowballEntity>> HyperSnowball = ENTITY_TYPES.register("hyper_snowball", () -> EntityType.Builder.<HyperSnowballEntity>of(HyperSnowballEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "hyper_snowball").toString()));
+
     // Misc
     public static final RegistryObject<EntityType<CameraShakeEntity>> CameraShake = ENTITY_TYPES.register("camera_shake", () -> EntityType.Builder.<CameraShakeEntity>of(CameraShakeEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "camera_shake").toString()));
 

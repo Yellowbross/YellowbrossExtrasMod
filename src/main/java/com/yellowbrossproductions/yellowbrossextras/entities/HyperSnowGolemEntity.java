@@ -1,9 +1,11 @@
 package com.yellowbrossproductions.yellowbrossextras.entities;
 
+import com.yellowbrossproductions.yellowbrossextras.entities.projectile.HyperSnowballEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -57,8 +59,8 @@ public class HyperSnowGolemEntity extends SnowGolem {
                 this.performRangedAttack(this.getTarget(), 0.0f);
             }
 
-            double x = (int)(getTarget().getX() + random.nextInt(100) - 50);
-            double z = (int)(getTarget().getZ() + random.nextInt(100) - 50);
+            double x = (int)(getTarget().getX() + random.nextInt(80) - 40);
+            double z = (int)(getTarget().getZ() + random.nextInt(80) - 40);
             int worldHeight = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int)x, (int)z);
             if (worldHeight > level.getMinBuildHeight() + 1) {
                 this.playSound(SoundEvents.ENDERMAN_TELEPORT, 3.0F, 1.0F);
@@ -69,7 +71,7 @@ public class HyperSnowGolemEntity extends SnowGolem {
 
     @Override
     public void performRangedAttack(LivingEntity p_29912_, float p_29913_) {
-        Snowball snowball = new Snowball(this.level, this);
+        HyperSnowballEntity snowball = new HyperSnowballEntity(this.level, this);
         double d0 = p_29912_.getEyeY() - (double)1.1F;
         double d1 = p_29912_.getX() - this.getX();
         double d2 = d0 - snowball.getY();
@@ -78,5 +80,13 @@ public class HyperSnowGolemEntity extends SnowGolem {
         snowball.shoot(d1, d2 + d4, d3, 3.0F, 30.0F);
         this.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 3.0F, (0.5F + this.getRandom().nextFloat()));
         this.level.addFreshEntity(snowball);
+    }
+
+    @Override
+    public boolean hurt(DamageSource p_21016_, float p_21017_) {
+        if (p_21016_.getEntity() == this) {
+            return false;
+        }
+        return super.hurt(p_21016_, p_21017_);
     }
 }
