@@ -92,6 +92,8 @@ public class YellowbrossExtras
         SpawnPlacements.register(ModEntityTypes.Converslin.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
         SpawnPlacements.register(ModEntityTypes.CarrotMinion.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
 
+        SpawnPlacements.register(ModEntityTypes.HyperSnowGolem.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, PathfinderMob::checkMobSpawnRules);
+
         PacketHandler.init();
     }
 
