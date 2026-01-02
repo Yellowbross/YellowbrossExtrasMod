@@ -113,11 +113,11 @@ public class HyperSnowGolemModel<T extends Entity> extends EntityModel<T> {
         if (entity instanceof HyperSnowGolemEntity snowGolem) {
             this.body_bottom.getAllParts().forEach(ModelPart::resetPose);
 
-            this.left_hand_standby.visible = snowGolem.getTarget() == null;
-            this.right_hand_standby.visible = snowGolem.getTarget() == null;
+            this.left_hand_standby.visible = !snowGolem.isAggressive();
+            this.right_hand_standby.visible = !snowGolem.isAggressive();
             this.left_hand.visible = false;
             this.right_hand.visible = false;
-            this.spinningarms.visible = snowGolem.getTarget() != null;
+            this.spinningarms.visible = snowGolem.isAggressive();
 
             this.head.yRot = netHeadYaw * ((float)Math.PI / 180F);
             this.head.xRot = headPitch * ((float)Math.PI / 180F);

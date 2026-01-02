@@ -1,8 +1,15 @@
 package com.yellowbrossproductions.yellowbrossextras.entities;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.HyperSnowballEntity;
+import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
+import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
+import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -12,10 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.SnowGolem;
@@ -28,14 +32,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.PacketDistributor;
 
-public class HyperSnowGolemEntity extends SnowGolem {
+public class HyperSnowGolemEntity extends SnowGolem implements YextrasEntity {
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new RangedAttackGoal(this, 1.25D, 1, 20.0F));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.25D, true));
         this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D, 1.0000001E-5F));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 16.0F));
         this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Mob.class, 10, true, false, (p_29932_) -> {
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Mob.class, 1, true, false, (p_29932_) -> {
             return p_29932_ instanceof Enemy;
         }));
     }
@@ -47,6 +52,7 @@ public class HyperSnowGolemEntity extends SnowGolem {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 40.0D)
                 .add(Attributes.MOVEMENT_SPEED, (double)0.3F)
+                .add(Attributes.ATTACK_DAMAGE, 0.0000001F)
                 .add(Attributes.FOLLOW_RANGE, 96.0d);
     }
 
@@ -54,7 +60,7 @@ public class HyperSnowGolemEntity extends SnowGolem {
     public void tick() {
         super.tick();
 
-        if (this.getTarget() != null) {
+        if (this.getTarget() != null && this.isAggressive()) {
             for (int i = 0; i < 10; ++i) {
                 this.performRangedAttack(this.getTarget(), 0.0f);
             }
@@ -63,6 +69,9 @@ public class HyperSnowGolemEntity extends SnowGolem {
             double z = (int)(getTarget().getZ() + random.nextInt(80) - 40);
             int worldHeight = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int)x, (int)z);
             if (worldHeight > level.getMinBuildHeight() + 1) {
+                EntityUtil.makeSimpleTrail(this, ParticleTypes.ELECTRIC_SPARK, 40,
+                        this.getX(), this.getY(), this.getZ(),
+                        x, worldHeight, z);
                 this.playSound(SoundEvents.ENDERMAN_TELEPORT, 3.0F, 1.0F);
                 this.setPos(x, worldHeight, z);
             }

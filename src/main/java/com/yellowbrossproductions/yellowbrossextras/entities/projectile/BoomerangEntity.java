@@ -6,6 +6,7 @@ import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EffectRegisterer;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -176,13 +177,14 @@ public class BoomerangEntity extends PathfinderMob implements MobAttack {
 
         if (this.goFor instanceof Player) {
             if (!this.shouldReturn) {
-                this.makeWarningTrail(this.olderX, this.olderY, this.olderZ,
+                EntityUtil.makeSimpleTrail(this, ParticleTypes.ELECTRIC_SPARK, 30,
+                        this.olderX, this.olderY, this.olderZ,
                         this.olderX + (this.getDeltaMovement().x * 40.0D),
                         this.olderY + (this.getDeltaMovement().y * 40.0D),
                         this.olderZ + (this.getDeltaMovement().z * 40.0D));
             } else {
                 if (this.shooter != null) {
-                    this.makeWarningTrail(this.olderX, this.olderY, this.olderZ, this.shooter.getX(), this.shooter.getY() + 2.2, this.shooter.getZ());
+                    EntityUtil.makeSimpleTrail(this, ParticleTypes.ELECTRIC_SPARK, 30, this.olderX, this.olderY, this.olderZ, this.shooter.getX(), this.shooter.getY() + 2.2, this.shooter.getZ());
                 }
             }
         }
@@ -202,31 +204,6 @@ public class BoomerangEntity extends PathfinderMob implements MobAttack {
         super.tick();
         this.setYRot(this.getYHeadRot());
         this.yBodyRot = this.getYRot();
-    }
-
-    // code borrowed from Twilight Forest
-    public void makeWarningTrail(double srcX, double srcY, double srcZ, double destX, double destY, double destZ) {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    int particles = 30;
-                    for (int i = 0; i < particles; i++) {
-                        double trailFactor = i / (particles - 1.0D);
-                        float f = (this.getRandom().nextFloat() - 0.5F) * 0.2F;
-                        float f1 = (this.getRandom().nextFloat() - 0.5F) * 0.2F;
-                        float f2 = (this.getRandom().nextFloat() - 0.5F) * 0.2F;
-                        double tx = srcX + (destX - srcX) * trailFactor;
-                        double ty = srcY + (destY - srcY) * trailFactor;
-                        double tz = srcZ + (destZ - srcZ) * trailFactor;
-                        packet.queueParticle(ParticleTypes.ELECTRIC_SPARK, false, new Vec3(tx, ty, tz), new Vec3(f, f1, f2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
-        }
     }
 
     public void setOlder() {

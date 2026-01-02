@@ -18,10 +18,7 @@ import com.yellowbrossproductions.yellowbrossextras.world.bunnyblitz.BlitzManage
 import com.yellowbrossproductions.yellowbrossextras.world.bunnyblitz.BunnyBlitz;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -384,6 +381,32 @@ public class EntityUtil {
             return false;
         } else {
             return mob.level.clip(new ClipContext(vec3, location, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mob)).getType() == HitResult.Type.MISS;
+        }
+    }
+
+    // code borrowed from Twilight Forest
+    public static void makeSimpleTrail(Entity entity, SimpleParticleType type, int amount, double srcX, double srcY, double srcZ, double destX, double destY, double destZ) {
+        Random random = new Random();
+
+        if (!entity.level.isClientSide) {
+            for (ServerPlayer serverPlayer : ((ServerLevel)entity.level).players()) {
+                if (serverPlayer.distanceToSqr(entity) < 4096.0D) {
+                    ParticlePacket packet = new ParticlePacket();
+
+                    for (int i = 0; i < amount; i++) {
+                        double trailFactor = i / (amount - 1.0D);
+                        float f = (random.nextFloat() - 0.5F) * 0.2F;
+                        float f1 = (random.nextFloat() - 0.5F) * 0.2F;
+                        float f2 = (random.nextFloat() - 0.5F) * 0.2F;
+                        double tx = srcX + (destX - srcX) * trailFactor;
+                        double ty = srcY + (destY - srcY) * trailFactor;
+                        double tz = srcZ + (destZ - srcZ) * trailFactor;
+                        packet.queueParticle(type, false, new Vec3(tx, ty, tz), new Vec3(f, f1, f2));
+                    }
+
+                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
+                }
+            }
         }
     }
 }
