@@ -1,5 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.projectile;
 
+import com.yellowbrossproductions.yellowbrossextras.entities.AmoebicDevourerEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -13,10 +14,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public class HyperSnowballEntity extends ThrowableItemProjectile {
-
     public HyperSnowballEntity(EntityType<? extends ThrowableItemProjectile> p_37391_, Level p_37392_) {
         super(p_37391_, p_37392_);
     }

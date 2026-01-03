@@ -51,6 +51,9 @@ public class YellowbrossExtrasSoundEvents {
 
     public static final RegistryObject<SoundEvent> HUGE_EXPLOSION = addSoundsToRegistry("huge_explosion");
 
+    public static final RegistryObject<SoundEvent> ENTITY_AMOEBIC_DEVOURER_GULP = addSoundsToRegistry("entity.amoebic_devourer.gulp");
+    public static final RegistryObject<SoundEvent> ENTITY_AMOEBIC_DEVOURER_BIG_GULP = addSoundsToRegistry("entity.amoebic_devourer.big_gulp");
+
     public static final RegistryObject<SoundEvent> CTF_FRIENDLY_TAKE = addSoundsToRegistry("gamemode_fun.ctf.friendly_take");
     public static final RegistryObject<SoundEvent> CTF_FRIENDLY_CAP = addSoundsToRegistry("gamemode_fun.ctf.friendly_cap");
 
