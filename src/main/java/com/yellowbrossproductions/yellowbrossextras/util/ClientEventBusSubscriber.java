@@ -29,6 +29,7 @@ public class ClientEventBusSubscriber {
 
         event.registerLayerDefinition(CarrotMinionModel.LAYER_LOCATION, CarrotMinionModel::createBodyLayer);
 
+        event.registerLayerDefinition(AmoebicDevourerModel.LAYER_LOCATION, AmoebicDevourerModel::createBodyLayer);
         event.registerLayerDefinition(HyperSnowGolemModel.LAYER_LOCATION, HyperSnowGolemModel::createBodyLayer);
 
         event.registerLayerDefinition(DefenderAxeModel.LAYER_LOCATION, DefenderAxeModel::createBodyLayer);
@@ -55,6 +56,7 @@ public class ClientEventBusSubscriber {
 
         event.registerEntityRenderer(ModEntityTypes.CarrotMinion.get(), CarrotMinionRenderer::new);
 
+        event.registerEntityRenderer(ModEntityTypes.AmoebicDevourer.get(), AmoebicDevourerRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.HyperSnowGolem.get(), HyperSnowGolemRenderer::new);
 
         event.registerEntityRenderer(ModEntityTypes.DefenderAxe.get(), DefenderAxeRenderer::new);

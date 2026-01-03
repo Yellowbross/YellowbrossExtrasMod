@@ -36,6 +36,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 public class HyperSnowGolemEntity extends SnowGolem implements YextrasEntity {
     protected void registerGoals() {
+        this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.25D, true));
         this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D, 1.0000001E-5F));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 16.0F));
@@ -50,7 +51,7 @@ public class HyperSnowGolemEntity extends SnowGolem implements YextrasEntity {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 40.0D)
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 400.0D)
                 .add(Attributes.MOVEMENT_SPEED, (double)0.3F)
                 .add(Attributes.ATTACK_DAMAGE, 0.0000001F)
                 .add(Attributes.FOLLOW_RANGE, 96.0d);
@@ -69,7 +70,7 @@ public class HyperSnowGolemEntity extends SnowGolem implements YextrasEntity {
             double z = (int)(getTarget().getZ() + random.nextInt(80) - 40);
             int worldHeight = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int)x, (int)z);
             if (worldHeight > level.getMinBuildHeight() + 1) {
-                EntityUtil.makeSimpleTrail(this, ParticleTypes.ELECTRIC_SPARK, 40,
+                EntityUtil.makeSimpleTrail(this, ParticleTypes.SONIC_BOOM, 50,
                         this.getX(), this.getY(), this.getZ(),
                         x, worldHeight, z);
                 this.playSound(SoundEvents.ENDERMAN_TELEPORT, 3.0F, 1.0F);
@@ -87,7 +88,7 @@ public class HyperSnowGolemEntity extends SnowGolem implements YextrasEntity {
         double d3 = p_29912_.getZ() - this.getZ();
         double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
         snowball.shoot(d1, d2 + d4, d3, 3.0F, 30.0F);
-        this.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 3.0F, (0.5F + this.getRandom().nextFloat()));
+        this.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 3.0F, (0.5F + this.getRandom().nextFloat() + (this.getRandom().nextFloat() / 2.0F)));
         this.level.addFreshEntity(snowball);
     }
 
@@ -97,5 +98,10 @@ public class HyperSnowGolemEntity extends SnowGolem implements YextrasEntity {
             return false;
         }
         return super.hurt(p_21016_, p_21017_);
+    }
+
+    @Override
+    public boolean isSensitiveToWater() {
+        return false;
     }
 }

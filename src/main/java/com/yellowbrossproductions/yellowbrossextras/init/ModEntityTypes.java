@@ -64,6 +64,11 @@ public class ModEntityTypes {
                     .sized(0.7f, 1.9f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "hyper_snow_golem").toString()));
 
+    public static final RegistryObject<EntityType<AmoebicDevourerEntity>> AmoebicDevourer = ENTITY_TYPES.register("amoebic_devourer",
+            () -> EntityType.Builder.of(AmoebicDevourerEntity::new, MobCategory.MONSTER)
+                    .sized(0.9f, 3.0f)
+                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "amoebic_devourer").toString()));
+
     // Oryctolins
     public static final RegistryObject<EntityType<ConverslinEntity>> Converslin = ENTITY_TYPES.register("converslin",
             () -> EntityType.Builder.of(ConverslinEntity::new, MobCategory.MONSTER)
@@ -117,6 +122,7 @@ public class ModEntityTypes {
 
         event.put(Vilvgaver.get(), VilvgaverEntity.createAttributes().build());
 
+        event.put(AmoebicDevourer.get(), AmoebicDevourerEntity.createAttributes().build());
         event.put(HyperSnowGolem.get(), HyperSnowGolemEntity.createAttributes().build());
 
         event.put(Converslin.get(), ConverslinEntity.createAttributes().build());
