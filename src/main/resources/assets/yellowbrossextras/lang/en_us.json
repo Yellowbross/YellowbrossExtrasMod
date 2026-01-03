@@ -11,6 +11,7 @@
 
   "item.yellowbrossextras.converslin_spawn_egg": "Converslin Spawn Egg (WIP)",
 
+  "item.yellowbrossextras.amoebic_devourer_spawn_egg": "Amoebic Devourer Spawn Egg",
   "item.yellowbrossextras.hyper_snow_golem_spawn_egg": "Hyper Snow Golem Spawn Egg",
 
   "item.yellowbrossextras.mob_remover": "Mob Remover",
@@ -30,6 +31,7 @@
   "entity.yellowbrossextras.converslin": "Converslin",
   "entity.yellowbrossextras.carrot_minion": "Carrot Minion",
 
+  "entity.yellowbrossextras.amoebic_devourer": "Amoebic Devourer",
   "entity.yellowbrossextras.hyper_snow_golem": "Hyper Snow Golem",
 
   "subtitles.entity.defender.hurt": "Defender hurts",

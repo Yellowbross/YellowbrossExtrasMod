@@ -44,12 +44,12 @@ public class AmoebicDevourerModel<T extends Entity> extends HierarchicalModel<T>
         this.belly = this.body.getChild("belly");
         this.neck = this.body.getChild("neck");
         this.head = this.neck.getChild("head");
-        this.right_hairbun = this.neck.getChild("right_hairbun");
+        this.right_hairbun = this.head.getChild("right_hairbun");
         this.right_hang = this.right_hairbun.getChild("right_hang");
         this.right_hair1 = this.right_hang.getChild("right_hair1");
         this.right_hair2 = this.right_hair1.getChild("right_hair2");
         this.right_hair3 = this.right_hair1.getChild("right_hair3");
-        this.left_hairbun = this.neck.getChild("left_hairbun");
+        this.left_hairbun = this.head.getChild("left_hairbun");
         this.left_hang = this.left_hairbun.getChild("left_hang");
         this.left_hair1 = this.left_hang.getChild("left_hair1");
         this.left_hair2 = this.left_hair1.getChild("left_hair2");
@@ -74,7 +74,7 @@ public class AmoebicDevourerModel<T extends Entity> extends HierarchicalModel<T>
 
         PartDefinition head = neck.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-7.0F, -14.0F, -7.0F, 14.0F, 14.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -4.0F, 0.0F));
 
-        PartDefinition right_hairbun = neck.addOrReplaceChild("right_hairbun", CubeListBuilder.create().texOffs(96, 0).mirror().addBox(-4.0F, -16.0F, -4.0F, 8.0F, 16.0F, 8.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(4.0F, -14.0F, 0.0F, 0.0F, 0.0F, 0.9599F));
+        PartDefinition right_hairbun = head.addOrReplaceChild("right_hairbun", CubeListBuilder.create().texOffs(96, 0).mirror().addBox(-4.0F, -16.0F, -4.0F, 8.0F, 16.0F, 8.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(4.0F, -10.0F, 0.0F, 0.0F, 0.0F, 0.9599F));
 
         PartDefinition right_hang = right_hairbun.addOrReplaceChild("right_hang", CubeListBuilder.create().texOffs(96, 24).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(-0.5F)), PartPose.offsetAndRotation(7.0F, -8.5F, 0.0F, 0.0F, 0.0F, -0.9599F));
 
@@ -84,7 +84,7 @@ public class AmoebicDevourerModel<T extends Entity> extends HierarchicalModel<T>
 
         PartDefinition right_hair3 = right_hair1.addOrReplaceChild("right_hair3", CubeListBuilder.create().texOffs(96, 24).addBox(-4.0F, 0.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-        PartDefinition left_hairbun = neck.addOrReplaceChild("left_hairbun", CubeListBuilder.create().texOffs(96, 0).addBox(-4.0F, -16.0F, -4.0F, 8.0F, 16.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-4.0F, -14.0F, 0.0F, 0.0F, 0.0F, -0.9599F));
+        PartDefinition left_hairbun = head.addOrReplaceChild("left_hairbun", CubeListBuilder.create().texOffs(96, 0).addBox(-4.0F, -16.0F, -4.0F, 8.0F, 16.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-4.0F, -10.0F, 0.0F, 0.0F, 0.0F, -0.9599F));
 
         PartDefinition left_hang = left_hairbun.addOrReplaceChild("left_hang", CubeListBuilder.create().texOffs(96, 24).mirror().addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(-0.5F)).mirror(false), PartPose.offsetAndRotation(-8.0F, -7.5F, 0.0F, 0.0F, 0.0F, 0.9599F));
 
@@ -108,7 +108,7 @@ public class AmoebicDevourerModel<T extends Entity> extends HierarchicalModel<T>
             this.head.yRot += netHeadYaw * ((float)Math.PI / 180F);
             this.head.xRot += (headPitch * ((float)Math.PI / 180F));
 
-            
+
         }
     }
 
