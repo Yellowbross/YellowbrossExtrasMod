@@ -32,6 +32,7 @@ public class ClientEventBusSubscriber {
         event.registerLayerDefinition(AmoebicDevourerModel.LAYER_LOCATION, AmoebicDevourerModel::createBodyLayer);
         event.registerLayerDefinition(HyperSnowGolemModel.LAYER_LOCATION, HyperSnowGolemModel::createBodyLayer);
         event.registerLayerDefinition(SkeletonSnapModel.LAYER_LOCATION, SkeletonSnapModel::createBodyLayer);
+        event.registerLayerDefinition(StickFigureModel.LAYER_LOCATION, StickFigureModel::createBodyLayer);
 
         event.registerLayerDefinition(DefenderAxeModel.LAYER_LOCATION, DefenderAxeModel::createBodyLayer);
         event.registerLayerDefinition(BoomerangModel.LAYER_LOCATION, BoomerangModel::createBodyLayer);
@@ -60,6 +61,7 @@ public class ClientEventBusSubscriber {
         event.registerEntityRenderer(ModEntityTypes.AmoebicDevourer.get(), AmoebicDevourerRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.HyperSnowGolem.get(), HyperSnowGolemRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.SkeletonSnap.get(), SkeletonSnapRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.StickFigure.get(), StickFigureRenderer::new);
 
         event.registerEntityRenderer(ModEntityTypes.DefenderAxe.get(), DefenderAxeRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.Boomerang.get(), BoomerangRenderer::new);

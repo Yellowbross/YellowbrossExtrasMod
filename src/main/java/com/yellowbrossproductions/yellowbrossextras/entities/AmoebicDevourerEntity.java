@@ -1,6 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -23,7 +24,7 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-public class AmoebicDevourerEntity extends Monster implements YextrasEntity {
+public class AmoebicDevourerEntity extends Monster implements YextrasEntity, ICanBeAnimated {
     private static final EntityDataAccessor<Float> SIZE = SynchedEntityData.defineId(AmoebicDevourerEntity.class, EntityDataSerializers.FLOAT);
     public float targetSquish;
     public float squish;
@@ -176,5 +177,10 @@ public class AmoebicDevourerEntity extends Monster implements YextrasEntity {
                 .add(Attributes.ATTACK_DAMAGE, 5.0D)
                 .add(Attributes.FOLLOW_RANGE, 96.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
+    }
+
+    @Override
+    public AnimationState getAnimationState(String input) {
+        return null;
     }
 }

@@ -11,6 +11,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.Mob;
@@ -73,11 +74,19 @@ public class SkeletonSnapModel<T extends Mob & RangedAttackMob> extends Hierarch
         head.yRot += netHeadYaw * ((float)Math.PI / 180F);
         head.xRot += (headPitch * ((float)Math.PI / 180F));
 
-        if (itemstack.is(Items.BOW) && entity.isAggressive()) {
-            this.right_arm.yRot = -0.1F + this.head.yRot;
-            this.left_arm.yRot = 0.1F + this.head.yRot + 0.4F;
-            this.right_arm.xRot = (-(float)Math.PI / 2F) + this.head.xRot;
-            this.left_arm.xRot = (-(float)Math.PI / 2F) + this.head.xRot;
+        left_leg.xRot += Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount * 0.8F;
+        right_leg.xRot += Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.8F;
+
+        if (itemstack.is(Items.BOW)) {
+            if (entity.isAggressive()) {
+                this.right_arm.yRot = -0.1F + this.head.yRot;
+                this.left_arm.yRot = 0.1F + this.head.yRot + 0.4F;
+                this.right_arm.xRot = (-(float)Math.PI / 2F) + this.head.xRot;
+                this.left_arm.xRot = (-(float)Math.PI / 2F) + this.head.xRot;
+            } else {
+                this.right_arm.xRot = Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F / 0.8f;
+                this.left_arm.xRot = Mth.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F / 0.8f;
+            }
         }
     }
 

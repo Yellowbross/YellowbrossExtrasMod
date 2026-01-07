@@ -76,8 +76,11 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     private static final EntityDataAccessor<Float> STRETCH = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> USING_CUSTOM_RENDER = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.INT);
 
-    public AnimationState sawsAnimationState = new AnimationState();
     public AnimationState jumpAnimationState = new AnimationState();
+    public AnimationState defeatedAnimationState = new AnimationState();
+
+    // Phase 1
+    public AnimationState sawsAnimationState = new AnimationState();
     public AnimationState swordAnimationState = new AnimationState();
     public AnimationState axesAnimationState = new AnimationState();
     public AnimationState boomerangAnimationState = new AnimationState();
@@ -90,8 +93,9 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     public AnimationState claws_continueAnimationState = new AnimationState();
     public AnimationState claws_endAnimationState = new AnimationState();
     public AnimationState excaliburAnimationState = new AnimationState();
-    public AnimationState defeatedAnimationState = new AnimationState();
     public AnimationState claws_punchAnimationState = new AnimationState();
+
+    // Phase 2
     public AnimationState ratatatabowAnimationState = new AnimationState();
     public AnimationState ratatatabow2AnimationState = new AnimationState();
 
@@ -102,6 +106,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     public int shurikensCooldown;
     public int chainsawCooldown;
     public int clawsCooldown;
+
     public int ratatatabowCooldown;
 
     public int attackType;
