@@ -11,7 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class StickFigureRenderer extends MobRenderer<StickFigureEntity, StickFigureModel<StickFigureEntity>> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/skeleton/skeleton.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/stick_figure/stick.png");
 
     public StickFigureRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new StickFigureModel<>(renderManagerIn.bakeLayer(StickFigureModel.LAYER_LOCATION)), 0.5F);
