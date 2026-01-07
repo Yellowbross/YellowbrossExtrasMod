@@ -153,6 +153,8 @@ public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> {
 
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        this.root().getAllParts().forEach(ModelPart::resetPose);
+
         if (entity instanceof StickFigureEntity sticky) {
             this.animate(sticky.getAnimationState("base"), StickFigureAnimation.base, ageInTicks, sticky.getAnimationSpeed());
         }

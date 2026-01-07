@@ -73,7 +73,7 @@ public class StickFigureEntity extends PathfinderMob implements YextrasEntity, I
         if (ANIMATION_STATE.equals(p_21104_)) {
             if (this.level.isClientSide) {
                 switch (this.entityData.get(ANIMATION_STATE)) {
-                    case 0 :
+                    case 0:
                         this.stopAllAnimationStates();
                         this.animationState_base.start(this.tickCount);
                         break;
