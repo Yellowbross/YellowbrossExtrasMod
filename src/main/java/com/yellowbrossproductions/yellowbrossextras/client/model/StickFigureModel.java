@@ -2,10 +2,10 @@ package com.yellowbrossproductions.yellowbrossextras.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.client.model.animation.DefenderAnimation;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.StickFigureAnimation;
-import com.yellowbrossproductions.yellowbrossextras.entities.AmoebicDevourerEntity;
+import com.yellowbrossproductions.yellowbrossextras.client.render.layer.CustomHeadedModel;
 import com.yellowbrossproductions.yellowbrossextras.entities.StickFigureEntity;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -15,9 +15,13 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
-public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> {
+public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> implements CustomHeadedModel {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(YellowbrossExtras.MOD_ID, "stick_figure"), "main");
+    private static final float TEXTURE_WIDTH = 16;
+    private static final float TEXTURE_HEIGHT = 16;
+    private static final float START_RADIUS = -0.25f;
+
     private final ModelPart root;
     private final ModelPart all;
     private final ModelPart spine_center;
@@ -154,9 +158,10 @@ public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> {
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
+        this.head.visible = false;
 
         if (entity instanceof StickFigureEntity sticky) {
-            this.animate(sticky.getAnimationState("base"), StickFigureAnimation.base, ageInTicks, sticky.getAnimationSpeed());
+            this.animate(sticky.getAnimationState("base"), StickFigureAnimation.debugging, ageInTicks, sticky.getAnimationSpeed());
         }
     }
 
@@ -168,5 +173,14 @@ public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> {
     @Override
     public ModelPart root() {
         return this.root;
+    }
+
+    @Override
+    public void translateToHead(PoseStack stack) {
+        this.root().translateAndRotate(stack);
+        this.all.translateAndRotate(stack);
+        this.spine_center.translateAndRotate(stack);
+        this.spine1.translateAndRotate(stack);
+        this.head.translateAndRotate(stack);
     }
 }

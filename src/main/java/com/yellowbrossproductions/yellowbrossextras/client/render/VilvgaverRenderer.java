@@ -40,7 +40,7 @@ public class VilvgaverRenderer extends EntityRenderer<Entity> {
     }
 
     @Override
-    public void render(Entity p_114485_, float p_114486_, float p_114487_, PoseStack poseStack, MultiBufferSource p_114489_, int light) {
+    public void render(Entity p_114485_, float p_114486_, float p_114487_, PoseStack poseStack, MultiBufferSource bufferSource, int light) {
         int delay = YellowbrossExtrasConfig.vilvgaverChallenge_delayTime.get() * 20;
 
         float f = p_114485_.tickCount / (float)delay;
@@ -61,7 +61,7 @@ public class VilvgaverRenderer extends EntityRenderer<Entity> {
 
         int frameAmount = YellowbrossExtrasConfig.vilvgaverTotalFrames.get();
         int frame = (p_114485_.tickCount % frameAmount) + 1;
-        VertexConsumer sprite = p_114489_.getBuffer(RenderType.entityTranslucent(new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/vilvgaver/vilvgaver" + (frame) + ".png")));
+        VertexConsumer sprite = bufferSource.getBuffer(RenderType.entityTranslucent(new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/vilvgaver/vilvgaver" + (frame) + ".png")));
         renderMonster(poseStack, sprite, light, f1);
         poseStack.popPose();
     }

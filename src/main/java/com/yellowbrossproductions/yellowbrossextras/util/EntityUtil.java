@@ -1,6 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.util;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.AbstractCreeperEntity;
@@ -17,6 +18,8 @@ import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.world.bunnyblitz.BlitzManager;
 import com.yellowbrossproductions.yellowbrossextras.world.bunnyblitz.BunnyBlitz;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.model.HierarchicalModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.*;
 import net.minecraft.network.chat.Component;
@@ -40,10 +43,7 @@ import net.minecraftforge.network.PacketDistributor;
 import org.apache.commons.compress.utils.Lists;
 
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class EntityUtil {
