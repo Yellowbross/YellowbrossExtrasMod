@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.*;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.StickFigureModel;
+import com.yellowbrossproductions.yellowbrossextras.client.render.YERenderTypes;
 import com.yellowbrossproductions.yellowbrossextras.entities.StickFigureEntity;
 import com.yellowbrossproductions.yellowbrossextras.client.render.util.RenderUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -47,6 +48,7 @@ public class StickFigureHeadLayer<T extends StickFigureEntity, M extends StickFi
         pPoseStack.mulPose(Vector3f.YP.rotationDegrees(RenderUtil.getDefaultBodyRot(pLivingEntity, pPartialTick)));
         pPoseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
         this.renderFlatQuad(pPoseStack, pBuffer.getBuffer(RenderType.entityTranslucent(HEAD)));
+        this.renderFlatQuad(pPoseStack, pBuffer.getBuffer(YERenderTypes.stickFigure(HEAD, false)));
         pPoseStack.popPose();
     }
 
