@@ -34,10 +34,10 @@ public class StickFigureHeadLayer<T extends StickFigureEntity, M extends StickFi
 
         PoseStack headStack = new PoseStack();
         headStack.pushPose();
-        this.getParentModel().translateToHead(pPoseStack);
+        this.getParentModel().translateToHead(headStack);
 
         Matrix4f patrick = headStack.last().pose();
-        Vector4f headPos = new Vector4f();
+        Vector4f headPos = new Vector4f(0, 0, 0, 1);
         headPos.transform(patrick);
         pPoseStack.translate(headPos.x(), headPos.y(), headPos.z());
         headStack.popPose();
