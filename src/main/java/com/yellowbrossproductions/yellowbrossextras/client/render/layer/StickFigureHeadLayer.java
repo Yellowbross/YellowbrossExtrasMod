@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
+// THANK YOU DARKPEASANT THANK YOU THANK YOU THANK YOUUUUUUUUUUU
 public class StickFigureHeadLayer<T extends StickFigureEntity, M extends StickFigureModel<T>> extends RenderLayer<T, M> {
     private static final ResourceLocation HEAD = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/stick_figure/head.png");
 
@@ -34,8 +35,7 @@ public class StickFigureHeadLayer<T extends StickFigureEntity, M extends StickFi
 
         PoseStack headStack = new PoseStack();
         headStack.pushPose();
-        this.getParentModel().translateToHead(headStack);
-
+        RenderUtil.translatePoseStackToPart(this.getParentModel(), headStack, "head");
         Matrix4f patrick = headStack.last().pose();
         Vector4f headPos = new Vector4f(0, 0, 0, 1);
         headPos.transform(patrick);
@@ -43,7 +43,7 @@ public class StickFigureHeadLayer<T extends StickFigureEntity, M extends StickFi
         headStack.popPose();
 
         pPoseStack.scale(-1, 1, 1);
-        pPoseStack.translate(0, START_RADIUS / 2, 0);
+        // pPoseStack.translate(0, START_RADIUS / 2, 0);
         pPoseStack.mulPose(Vector3f.YP.rotationDegrees(RenderUtil.getDefaultBodyRot(pLivingEntity, pPartialTick)));
         pPoseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
         this.renderFlatQuad(pPoseStack, pBuffer.getBuffer(RenderType.entityTranslucent(HEAD)));

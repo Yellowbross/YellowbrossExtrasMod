@@ -33,6 +33,7 @@ public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> imp
     private final ModelPart right_arm3;
     private final ModelPart right_arm_end2;
     private final ModelPart staff;
+    private final ModelPart staff_rotated;
     private final ModelPart block;
     private final ModelPart right_arm_end1;
     private final ModelPart left_arm1;
@@ -59,13 +60,14 @@ public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> imp
         this.spine_center = this.all.getChild("spine_center");
         this.spine1 = this.spine_center.getChild("spine1");
         this.spine_end1 = this.spine1.getChild("spine_end1");
-        this.head = this.spine1.getChild("head");
+        this.head = this.spine_end1.getChild("head");
         this.right_arm1 = this.spine1.getChild("right_arm1");
         this.right_arm2 = this.right_arm1.getChild("right_arm2");
         this.right_arm3 = this.right_arm2.getChild("right_arm3");
         this.right_arm_end2 = this.right_arm3.getChild("right_arm_end2");
         this.staff = this.right_arm_end2.getChild("staff");
-        this.block = this.staff.getChild("block");
+        this.staff_rotated = this.staff.getChild("staff_rotated");
+        this.block = this.staff_rotated.getChild("block");
         this.right_arm_end1 = this.right_arm1.getChild("right_arm_end1");
         this.left_arm1 = this.spine1.getChild("left_arm1");
         this.left_arm2 = this.left_arm1.getChild("left_arm2");
@@ -98,7 +100,7 @@ public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> imp
 
         PartDefinition spine_end1 = spine1.addOrReplaceChild("spine_end1", CubeListBuilder.create().texOffs(2, 1).addBox(-0.5F, -1.0F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -5.0F, 0.0F));
 
-        PartDefinition head = spine1.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 16).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -9.0F, 0.0F));
+        PartDefinition head = spine_end1.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 16).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -4.0F, 0.0F));
 
         PartDefinition right_arm1 = spine1.addOrReplaceChild("right_arm1", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.0F, -5.0F, 0.0F, 0.0F, 0.0F, 1.5708F));
 
@@ -108,13 +110,15 @@ public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> imp
 
         PartDefinition right_arm_end2 = right_arm3.addOrReplaceChild("right_arm_end2", CubeListBuilder.create().texOffs(2, 1).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 6.0F, 0.0F));
 
-        PartDefinition staff = right_arm_end2.addOrReplaceChild("staff", CubeListBuilder.create().texOffs(112, 66).addBox(-2.0F, -30.0F, -2.0F, 4.0F, 58.0F, 4.0F, new CubeDeformation(0.0F))
+        PartDefinition staff = right_arm_end2.addOrReplaceChild("staff", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 1.5708F, 0.0F, 0.0F));
+
+        PartDefinition staff_rotated = staff.addOrReplaceChild("staff_rotated", CubeListBuilder.create().texOffs(112, 66).addBox(-2.0F, -30.0F, -2.0F, 4.0F, 58.0F, 4.0F, new CubeDeformation(0.0F))
                 .texOffs(82, 122).addBox(-2.0F, -32.0F, -2.0F, 11.0F, 2.0F, 4.0F, new CubeDeformation(0.0F))
                 .texOffs(96, 98).addBox(5.0F, -46.0F, -2.0F, 4.0F, 14.0F, 4.0F, new CubeDeformation(0.0F))
                 .texOffs(96, 90).addBox(-2.0F, -52.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.0F))
-                .texOffs(82, 116).addBox(-2.0F, -48.0F, -2.0F, 11.0F, 2.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 1.5708F, 0.0F, 0.0F));
+                .texOffs(82, 116).addBox(-2.0F, -48.0F, -2.0F, 11.0F, 2.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
 
-        PartDefinition block = staff.addOrReplaceChild("block", CubeListBuilder.create().texOffs(0, 96).addBox(-9.0F, -16.0F, -7.0F, 16.0F, 16.0F, 16.0F, new CubeDeformation(-1.0F)), PartPose.offset(1.0F, -31.0F, -1.0F));
+        PartDefinition block = staff_rotated.addOrReplaceChild("block", CubeListBuilder.create().texOffs(0, 96).addBox(-9.0F, -16.0F, -7.0F, 16.0F, 16.0F, 16.0F, new CubeDeformation(-1.0F)), PartPose.offset(1.0F, -31.0F, -1.0F));
 
         PartDefinition right_arm_end1 = right_arm1.addOrReplaceChild("right_arm_end1", CubeListBuilder.create().texOffs(2, 1).addBox(-0.5F, -1.0F, -0.5F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
@@ -181,6 +185,6 @@ public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> imp
         this.all.translateAndRotate(stack);
         this.spine_center.translateAndRotate(stack);
         this.spine1.translateAndRotate(stack);
-        this.head.translateAndRotate(stack);
+        this.spine_end1.translateAndRotate(stack);
     }
 }
