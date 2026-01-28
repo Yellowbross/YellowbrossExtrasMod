@@ -25,9 +25,12 @@ import java.util.Random;
 public class DefenderRenderer extends MobRenderer<DefenderEntity, DefenderModel<DefenderEntity>> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/defender.png");
     private final Random random = new Random();
-    private static final float TEXTURE_WIDTH = 16;
+
+    private static final ResourceLocation SPINNY_P2 = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/phase2_spinny.png");
+
+    private static final float TEXTURE_WIDTH = 64;
     private static final float TEXTURE_HEIGHT = 16;
-    private static final float START_RADIUS = -1.5f;
+    private static final float START_RADIUS = -1f;
 
     public DefenderRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new DefenderModel<>(renderManagerIn.bakeLayer(DefenderModel.LAYER_LOCATION)), 0.6F);
@@ -68,21 +71,21 @@ public class DefenderRenderer extends MobRenderer<DefenderEntity, DefenderModel<
     public void renderSprite1(Entity p_114485_, float p_114486_, float p_114487_, PoseStack poseStack, MultiBufferSource p_114489_, int light, float alpha) {
         poseStack.pushPose();
         poseStack.translate(0.0D, 1.35D, 0.0D);
-        VertexConsumer sprite = p_114489_.getBuffer(RenderType.entityTranslucent(new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/vilvgaver/vilvgaver1.png")));
-        renderMonster(poseStack, sprite, light, alpha);
+        VertexConsumer sprite = p_114489_.getBuffer(RenderType.entityTranslucent(SPINNY_P2));
+        renderSpin((int) (p_114485_.tickCount) % 4, poseStack, sprite, light, alpha);
         poseStack.popPose();
     }
 
-    private void renderMonster(PoseStack matrixStackIn, VertexConsumer builder, int packedLightIn, float alpha) {
+    private void renderSpin(int frame, PoseStack matrixStackIn, VertexConsumer builder, int packedLightIn, float alpha) {
         matrixStackIn.pushPose();
         Quaternion quat = this.entityRenderDispatcher.cameraOrientation();
         matrixStackIn.mulPose(quat);
-        renderFlatQuad(matrixStackIn, builder, packedLightIn, alpha);
+        renderFlatQuad(frame, matrixStackIn, builder, packedLightIn, alpha);
         matrixStackIn.popPose();
     }
 
-    private void renderFlatQuad(PoseStack matrixStackIn, VertexConsumer builder, int packedLightIn, float warning) {
-        float minU = 0 + 16F / TEXTURE_WIDTH * 10;
+    private void renderFlatQuad(int frame, PoseStack matrixStackIn, VertexConsumer builder, int packedLightIn, float warning) {
+        float minU = 0 + 16F / TEXTURE_WIDTH * frame;
         float minV = 0;
         float maxU = minU + 16F / TEXTURE_WIDTH;
         float maxV = minV + 16F / TEXTURE_HEIGHT;

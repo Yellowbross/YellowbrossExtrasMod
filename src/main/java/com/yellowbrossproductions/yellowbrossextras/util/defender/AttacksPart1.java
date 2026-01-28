@@ -444,7 +444,7 @@ public class AttacksPart1 {
                         defender.setAnimationState(18);
                     }
                     if (!defender.isOnGround() && defender.attackTicks % 3 == 0) {
-                        defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH.get(), 3.0F, defender.getVoicePitch());
+                        defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH.get(), 3.0F, defender.getVoicePitch() + 0.5F);
                     }
                 }
                 if (defender.attackTicks2 > 0 && defender.attackTicks2 <= 60) {
