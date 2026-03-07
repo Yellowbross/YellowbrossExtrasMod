@@ -52,15 +52,8 @@ public class AttacksPart1 {
                         }
                     }
                     if (t != null && (!(t instanceof Player) || (((defender.attackTicks - 22) % 30 == 0 && (defender.distanceTo(t) > 10.0D)) || defender.attackTicks == 22))) {
-                        double chargex = defender.getX() - t.getX();
-                        double chargey = defender.getY() - t.getY();
-                        double chargez = defender.getZ() - t.getZ();
-                        double charged = Math.sqrt(chargex * chargex + chargey * chargey + chargez * chargez);
                         float power = (float) 5.5F;
-                        double motionX = -(chargex / charged * (double) power * 0.2D);
-                        double motionY = -(chargey / charged * (double) power * 0.2D);
-                        double motionZ = -(chargez / charged * (double) power * 0.2D);
-                        defender.setCharge(motionX, motionY, motionZ);
+                        defender.setCharge(t.position().subtract(defender.position()).normalize().scale(power).scale(0.2d));
                     }
                     defender.setDeltaMovement(defender.chargeX, defender.getDeltaMovement().y, defender.chargeZ);
                     if (defender.horizontalCollision) {
@@ -130,15 +123,8 @@ public class AttacksPart1 {
                         projectile.setYHeadRot(defender.getYHeadRot());
                         projectile.setYRot(defender.getYHeadRot());
 
-                        double x = projectile.getX() - target.getX();
-                        double y = projectile.getY() - (target.getY() + (target.getBbHeight() / 2.0D));
-                        double z = projectile.getZ() - target.getZ();
-                        double d = Math.sqrt(x * x + y * y + z * z);
                         float power = (float) 6.0F;
-                        double motionX = -(x / d * (double) power * 0.2D);
-                        double motionY = -(y / d * (double) power * 0.2D);
-                        double motionZ = -(z / d * (double) power * 0.2D);
-                        projectile.setAcceleration(motionX, motionY, motionZ);
+                        projectile.setAcceleration(target.position().add(0, (target.getBbHeight() / 2.0D), 0).subtract(defender.position()).normalize().scale(power).scale(0.2d));
 
                         projectile.setShooter(defender);
                         defender.level.addFreshEntity(projectile);
@@ -161,15 +147,8 @@ public class AttacksPart1 {
                                     defender.level.getScoreboard().getPlayerTeam(defender.getTeam().getName()));
                         }
 
-                        double x = projectile.getX() - target.getX();
-                        double y = projectile.getY() - (target.getY() + (target.getBbHeight() / 2.0D));
-                        double z = projectile.getZ() - target.getZ();
-                        double d = Math.sqrt(x * x + y * y + z * z);
                         float power = (float) 5.0F;
-                        double motionX = -(x / d * (double) power * 0.2D);
-                        double motionY = -(y / d * (double) power * 0.2D);
-                        double motionZ = -(z / d * (double) power * 0.2D);
-                        projectile.setAcceleration(motionX, motionY, motionZ);
+                        projectile.setAcceleration(target.position().add(0, (target.getBbHeight() / 2.0D), 0).subtract(defender.position()).normalize().scale(power).scale(0.2d));
                         projectile.setGoFor(target);
                         projectile.setOlder();
 

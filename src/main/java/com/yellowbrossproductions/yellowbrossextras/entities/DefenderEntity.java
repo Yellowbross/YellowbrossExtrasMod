@@ -1010,6 +1010,10 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         this.chargeZ = z;
     }
 
+    public void setCharge(Vec3 vec) {
+        this.setCharge(vec.x, vec.y, vec.z);
+    }
+
     protected SoundEvent getHurtSound(DamageSource p_21239_) {
         return YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_HURT.get();
     }

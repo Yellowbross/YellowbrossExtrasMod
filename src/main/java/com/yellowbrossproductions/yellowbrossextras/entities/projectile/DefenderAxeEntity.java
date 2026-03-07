@@ -101,6 +101,10 @@ public class DefenderAxeEntity extends PathfinderMob implements MobAttack {
         this.accelerationZ = z;
     }
 
+    public void setAcceleration(Vec3 vec) {
+        this.setAcceleration(vec.x, vec.y, vec.z);
+    }
+
     public void makeParticles() {
         if (!this.level.isClientSide) {
             for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
