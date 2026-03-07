@@ -36,6 +36,8 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -407,6 +409,28 @@ public class EntityUtil {
                     PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
                 }
             }
+        }
+    }
+
+    // code adapted from Illage & Spillage: Respillaged
+    public static void basicMobFlight(Mob mob, @Nullable LivingEntity target, double distanceRequired, int blocksToFlyNormal, int blocksToFlyAggressive) {
+        BlockState blockState = mob.level.getBlockState(mob.blockPosition().below(blocksToFlyNormal));
+        if (target != null) {
+            if (mob.distanceToSqr(target) > distanceRequired)
+                mob.setDeltaMovement(mob.getDeltaMovement().add(target.position().subtract(mob.position()).normalize().scale(0.016)));
+
+            blockState = mob.level.getBlockState(mob.blockPosition().below(blocksToFlyAggressive));
+
+            if (blockState.isAir()) {
+                if (mob.getDeltaMovement().y > 0)
+                    mob.setDeltaMovement(mob.getDeltaMovement().add(0, -0.01, 0));
+            } else {
+                mob.setDeltaMovement(mob.getDeltaMovement().add(0, 0.04, 0));
+            }
+        } else if (!blockState.isAir()) {
+            mob.setDeltaMovement(mob.getDeltaMovement().add(0, 0.04, 0));
+        } else {
+            mob.setDeltaMovement(mob.getDeltaMovement().add(0, -0.01, 0));
         }
     }
 }

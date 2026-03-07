@@ -1,6 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
+import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -57,26 +58,7 @@ public class ParacreeperEntity extends AbstractCreeperEntity implements CreeperE
         this.setYRot(this.getYHeadRot());
         this.yBodyRot = this.getYRot();
 
-        if (this.getTarget() != null) {
-            LivingEntity entity = this.getTarget();
-            double x = getX() - entity.getX();
-            double y = getY() - entity.getY();
-            double z = getZ() - entity.getZ();
-            double d = Math.sqrt(x * x + y * y + z * z);
-            float power = (float) 0.1F;
-            double motionX = this.getDeltaMovement().x - (x / d * (double) power * 0.2D);
-            double motionY = this.getDeltaMovement().y - (y / d * (double) power * 0.2D);
-            double motionZ = this.getDeltaMovement().z - (z / d * (double) power * 0.2D);
-            if (this.distanceToSqr(entity) > 9.0D) {
-                this.setDeltaMovement(motionX, motionY, motionZ);
-            }
-        }
-
-        if (this.level.getBlockState(this.blockPosition().below()) != Blocks.AIR.defaultBlockState()) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.04D, 0.0D));
-        } else {
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.01D, 0.0D));
-        }
+        EntityUtil.basicMobFlight(this, this.getTarget(), 9.0D, 1, 1);
     }
 
     @Override
