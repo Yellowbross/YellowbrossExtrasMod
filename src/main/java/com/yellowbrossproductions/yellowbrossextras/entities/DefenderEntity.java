@@ -1,6 +1,8 @@
 package com.yellowbrossproductions.yellowbrossextras.entities;
 
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
+import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
+import com.yellowbrossproductions.yellowbrossextras.entities.goal.StareAtDefenderGoal;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase1.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase2.*;
@@ -58,6 +60,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, YextrasEntity {
     int frame;
@@ -1155,6 +1158,14 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     }
 
     private void processDeath() {
+        List<Mob> list = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(50.0D), p -> {
+            return p instanceof Enemy && EntityUtil.canHurtThisMob(p, this);
+        });
+        for (Mob entity : list) {
+            Set<WrappedGoal> goals = entity.goalSelector.getAvailableGoals();
+            boolean hasGoal = goals.stream().anyMatch(goal -> goal.getGoal() instanceof StareAtDefenderGoal);
+            if (!hasGoal) entity.goalSelector.addGoal(0, new StareAtDefenderGoal(entity, this));
+        }
         if (this.getPhase() == 1) {
             if (!this.level.isClientSide) {
                 this.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);

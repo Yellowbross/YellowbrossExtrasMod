@@ -60,9 +60,6 @@ public class ServerEventHandler {
         if (!(YellowbrossExtrasConfig.aiChangesNotAllowed.get().contains(entity.getEncodeId()) || YellowbrossExtrasConfig.aiChangesNotAllowed.get().contains(entity.getType().getKey(entity.getType()).getNamespace()))) {
             if (entity instanceof Mob mob) {
                 ((Mob) entity).goalSelector.addGoal(0, new LoseAIGoal((Mob) entity));
-                if (YellowbrossExtrasConfig.defender_distractEnemies.get()) {
-                    ((Mob) entity).goalSelector.addGoal(0, new StareAtDefenderGoal((Mob) entity));
-                }
 
                 if (entity instanceof Raider || mob.getMobType() == MobType.ILLAGER) {
                     ((Mob) entity).targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(((Mob) entity), AbstractCreeperEntity.class, true));
