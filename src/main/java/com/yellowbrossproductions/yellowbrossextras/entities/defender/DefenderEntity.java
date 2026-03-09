@@ -63,7 +63,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, YextrasEntity {
+public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, YextrasEntity, IsDefenderAligned {
     int frame;
     private final ServerBossEvent bossEvent = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.NOTCHED_10));
     private static final EntityDataAccessor<Boolean> SHOULD_SHOW_BOSSBAR = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.BOOLEAN);
@@ -186,7 +186,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.7D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, IsDefenderAligned.class));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Mob.class, 10, true, false, (p_29932_) -> {
             return p_29932_ instanceof Enemy;
         }));

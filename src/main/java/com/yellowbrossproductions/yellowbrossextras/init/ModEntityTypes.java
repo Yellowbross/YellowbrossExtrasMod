@@ -7,6 +7,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.defender.ChainsawEn
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.SpikeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.*;
@@ -131,6 +132,8 @@ public class ModEntityTypes {
     public static final RegistryObject<EntityType<ConverslinBulletEntity>> ConverslinBullet = ENTITY_TYPES.register("converslin_bullet", () -> EntityType.Builder.<ConverslinBulletEntity>of(ConverslinBulletEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "converslin_bullet").toString()));
 
     public static final RegistryObject<EntityType<HyperSnowballEntity>> HyperSnowball = ENTITY_TYPES.register("hyper_snowball", () -> EntityType.Builder.<HyperSnowballEntity>of(HyperSnowballEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "hyper_snowball").toString()));
+
+    public static final RegistryObject<EntityType<SentryBulletEntity>> SentryBullet = ENTITY_TYPES.register("sentry_bullet", () -> EntityType.Builder.<SentryBulletEntity>of(SentryBulletEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sentry_bullet").toString()));
 
 
 

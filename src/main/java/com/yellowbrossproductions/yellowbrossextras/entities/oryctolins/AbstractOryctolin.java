@@ -38,7 +38,7 @@ public abstract class AbstractOryctolin extends Monster implements ICanBeAnimate
     protected int attackType;
     protected int attackTicks;
 
-    public AnimationState celebrateAnimationState = new AnimationState();
+    public AnimationState anim_celebrate = new AnimationState();
 
     public AbstractOryctolin(EntityType<? extends Monster> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
@@ -129,7 +129,7 @@ public abstract class AbstractOryctolin extends Monster implements ICanBeAnimate
     @Override
     public AnimationState getAnimationState(String input) {
         if (input == "celebrate") {
-            return celebrateAnimationState;
+            return anim_celebrate;
         }
         return new AnimationState();
     }
@@ -148,7 +148,7 @@ public abstract class AbstractOryctolin extends Monster implements ICanBeAnimate
                         break;
                     case 1 :
                         this.stopAllAnimationStates();
-                        this.celebrateAnimationState.start(this.tickCount);
+                        this.anim_celebrate.start(this.tickCount);
                         break;
                 }
             }
@@ -158,7 +158,7 @@ public abstract class AbstractOryctolin extends Monster implements ICanBeAnimate
     }
 
     public void stopAllAnimationStates() {
-        this.celebrateAnimationState.stop();
+        this.anim_celebrate.stop();
     }
 
     public void setAnimationState(int input) {

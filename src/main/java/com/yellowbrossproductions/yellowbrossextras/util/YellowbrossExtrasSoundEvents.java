@@ -34,6 +34,7 @@ public class YellowbrossExtrasSoundEvents {
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_GAG2 = addSoundsToRegistry("entity.defender.gag2");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_GAG3 = addSoundsToRegistry("entity.defender.gag3");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_CARNAGE = addSoundsToRegistry("entity.defender.carnage");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SENTRY_SHOOT = addSoundsToRegistry("entity.defender.sentry_gun.shoot");
 
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_ATTACK = addSoundsToRegistry("entity.vilvgaver.attack");
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_LOOP = addSoundsToRegistry("entity.vilvgaver.loop");

@@ -1,9 +1,16 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 
+import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ConverslinBulletEntity;
+import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -14,16 +21,19 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeMod;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
-public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated {
+public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, IsDefenderAligned {
     private static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(SentryGunEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> ACTIVE = SynchedEntityData.defineId(SentryGunEntity.class, EntityDataSerializers.BOOLEAN);
 
-    public AnimationState animationState_shoot = new AnimationState();
-    public AnimationState animationState_intro = new AnimationState();
-    public AnimationState animationState_flying = new AnimationState();
+    public AnimationState anim_shoot = new AnimationState();
+    public AnimationState anim_intro = new AnimationState();
+    public AnimationState anim_flying = new AnimationState();
+
+    int setupTicks = 60;
 
     public SentryGunEntity(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
@@ -35,7 +45,7 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated {
         this.goalSelector.addGoal(2, new ShootGoal(this));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, IsDefenderAligned.class));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Mob.class, 10, true, false, (p_29932_) -> {
             return p_29932_ instanceof Enemy;
         }));
@@ -46,6 +56,7 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ANIMATION_STATE, 0);
+        this.entityData.define(ACTIVE, false);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -64,9 +75,9 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated {
     @Override
     public AnimationState getAnimationState(String input) {
         return switch (input) {
-            case "shoot" -> animationState_shoot;
-            case "intro" -> animationState_intro;
-            case "flying" -> animationState_flying;
+            case "shoot" -> anim_shoot;
+            case "intro" -> anim_intro;
+            case "flying" -> anim_flying;
 
             default -> new AnimationState();
         };
@@ -86,15 +97,15 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated {
                         break;
                     case 1 :
                         this.stopAllAnimationStates();
-                        this.animationState_shoot.start(this.tickCount);
+                        this.anim_shoot.start(this.tickCount);
                         break;
                     case 2 :
                         this.stopAllAnimationStates();
-                        this.animationState_intro.start(this.tickCount);
+                        this.anim_intro.start(this.tickCount);
                         break;
                     case 3 :
                         this.stopAllAnimationStates();
-                        this.animationState_flying.start(this.tickCount);
+                        this.anim_flying.start(this.tickCount);
                         break;
                 }
             }
@@ -104,14 +115,84 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated {
     }
 
     public void stopAllAnimationStates() {
-        this.animationState_shoot.stop();
-        this.animationState_intro.stop();
-        this.animationState_flying.stop();
+        this.anim_shoot.stop();
+        this.anim_intro.stop();
+        this.anim_flying.stop();
     }
 
     @Override
     public boolean removeWhenFarAway(double p_21542_) {
         return false;
+    }
+
+    @Override
+    protected boolean shouldDespawnInPeaceful() {
+        return true;
+    }
+
+    @Override
+    public float getVoicePitch() {
+        return (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.5F;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(DamageSource p_21239_) {
+        return YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_HURT.get();
+    }
+
+    @Override
+    public void tick() {
+        this.setDeltaMovement(0.0, this.getDeltaMovement().y, 0.0);
+        super.tick();
+
+        if (this.isOnGround() && !this.isActive()) {
+            if (this.setupTicks == 60) {
+                this.setupTicks = 59;
+                this.setAnimationState(2);
+            }
+            if (this.setupTicks < 1) this.setActive(true);
+        }
+        if (this.setupTicks < 60) this.setupTicks -= 1;
+
+        if (this.getTarget() != null && this.isActive()) {
+            if (this.tickCount % 5 == 0) {
+                this.setAnimationState(0);
+                this.setAnimationState(1);
+                this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get(), 2.0F, 1.0F);
+                this.performRangedAttack(this.getTarget());
+            }
+        }
+    }
+
+    public void performRangedAttack(LivingEntity target) {
+        float radius2 = 1.1f;
+        double x = this.getX() + 0.5F * Math.sin(-this.getYRot() * Math.PI / 180) + radius2 * Math.sin(-this.yHeadRot * Math.PI / 180) * Math.cos(-this.getXRot() * Math.PI / 180);
+        double y = this.getY() + 1.0 + radius2 * Math.sin(-this.getXRot() * Math.PI / 180);
+        double z = this.getZ() + 0.5F * Math.cos(-this.getYRot() * Math.PI / 180) + radius2 * Math.cos(-this.yHeadRot * Math.PI / 180) * Math.cos(-this.getXRot() * Math.PI / 180);
+        for (int i = 0; i < 5; ++i) {
+            double y1 = this.getY() + 0.75D;
+
+            double d0 = target.getEyeY();
+            double d1 = target.getX() - x;
+            double d2 = d0 - y1;
+            double d3 = target.getZ() - z;
+            double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
+
+            SentryBulletEntity bullet = new SentryBulletEntity(this.level, this, d1, d2, d3);
+
+            bullet.setPos(x, y1, z);
+            bullet.setOwner(this);
+            this.level.addFreshEntity(bullet);
+        }
+    }
+
+    public boolean isActive() {
+        return this.entityData.get(ACTIVE);
+    }
+
+    public void setActive(boolean a) {
+        this.entityData.set(ACTIVE, a);
     }
 
     class ShootGoal extends Goal {
@@ -138,10 +219,6 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated {
             if (target == null) return;
 
             gun.getLookControl().setLookAt(target.getX(), target.getEyeY(), target.getZ(), 100.0F, 100.0F);
-
-            if (gun.tickCount % 5 == 0) {
-                gun.setAnimationState(1);
-            }
         }
     }
 }
