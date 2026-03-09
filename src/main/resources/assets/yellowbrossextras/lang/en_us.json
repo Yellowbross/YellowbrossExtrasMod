@@ -1,5 +1,6 @@
 {
   "item.yellowbrossextras.defender_spawn_egg": "\u00A7dDefender Spawn Egg (WIP)",
+  "item.yellowbrossextras.sentry_gun_spawn_egg": "Sentry Gun Spawn Egg",
 
   "item.yellowbrossextras.sneaker_spawn_egg": "Sneaker Spawn Egg",
   "item.yellowbrossextras.paracreeper_spawn_egg": "Paracreeper Spawn Egg",
@@ -19,6 +20,7 @@
   "tooltip.yellowbrossextras.mob_remover": "§6Click on a YExtras mob to remove it",
 
   "entity.yellowbrossextras.defender": "Defender",
+  "entity.yellowbrossextras.sentry_gun": "Sentry Gun",
 
   "entity.yellowbrossextras.sneaker": "Sneaker",
   "entity.yellowbrossextras.paracreeper": "Paracreeper",
