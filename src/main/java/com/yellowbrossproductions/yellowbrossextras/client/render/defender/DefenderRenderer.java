@@ -1,4 +1,4 @@
-package com.yellowbrossproductions.yellowbrossextras.client.render;
+package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -6,8 +6,8 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.client.model.DefenderModel;
-import com.yellowbrossproductions.yellowbrossextras.entities.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DefenderModel;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

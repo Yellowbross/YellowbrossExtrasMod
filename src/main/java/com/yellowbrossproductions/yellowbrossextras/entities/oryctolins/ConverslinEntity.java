@@ -1,23 +1,14 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.oryctolins;
 
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
-import com.yellowbrossproductions.yellowbrossextras.entities.DefenderEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.CarrotMinionEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ConverslinBulletEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ShurikenEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.projectile.TNTProjectileEntity;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -25,27 +16,18 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.Ocelot;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Vex;
-import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.level.pathfinder.PathFinder;
-import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,7 +44,7 @@ public class ConverslinEntity extends AbstractOryctolin {
 
     private int ATTACK1 = 1;
 
-    public AnimationState attack1AnimationState = new AnimationState();
+    public AnimationState anim_attack1 = new AnimationState();
 
     public ConverslinEntity(EntityType<? extends AbstractOryctolin> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
@@ -317,7 +299,7 @@ public class ConverslinEntity extends AbstractOryctolin {
     @Override
     public AnimationState getAnimationState(String input) {
         if (input == "attack1") {
-            return attack1AnimationState;
+            return anim_attack1;
         }
         return super.getAnimationState(input);
     }
@@ -329,7 +311,7 @@ public class ConverslinEntity extends AbstractOryctolin {
                 switch (this.entityData.get(ANIMATION_STATE)) {
                     case 2 :
                         this.stopAllAnimationStates();
-                        this.attack1AnimationState.start(this.tickCount);
+                        this.anim_attack1.start(this.tickCount);
                         break;
                 }
             }
@@ -340,7 +322,7 @@ public class ConverslinEntity extends AbstractOryctolin {
 
     @Override
     public void stopAllAnimationStates() {
-        this.attack1AnimationState.stop();
+        this.anim_attack1.stop();
         super.stopAllAnimationStates();
     }
 

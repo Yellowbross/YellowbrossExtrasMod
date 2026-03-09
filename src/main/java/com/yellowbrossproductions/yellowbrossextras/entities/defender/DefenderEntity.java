@@ -1,7 +1,8 @@
-package com.yellowbrossproductions.yellowbrossextras.entities;
+package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
-import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
+import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.StareAtDefenderGoal;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase1.*;
@@ -79,28 +80,28 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     private static final EntityDataAccessor<Float> STRETCH = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> USING_CUSTOM_RENDER = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.INT);
 
-    public AnimationState jumpAnimationState = new AnimationState();
-    public AnimationState defeatedAnimationState = new AnimationState();
+    public AnimationState anim_jump = new AnimationState();
+    public AnimationState anim_defeated = new AnimationState();
 
     // Phase 1
-    public AnimationState sawsAnimationState = new AnimationState();
-    public AnimationState swordAnimationState = new AnimationState();
-    public AnimationState axesAnimationState = new AnimationState();
-    public AnimationState boomerangAnimationState = new AnimationState();
-    public AnimationState spikesAnimationState = new AnimationState();
-    public AnimationState spikes_landAnimationState = new AnimationState();
-    public AnimationState spikes_slamAnimationState = new AnimationState();
-    public AnimationState shurikensAnimationState = new AnimationState();
-    public AnimationState chainsawAnimationState = new AnimationState();
-    public AnimationState claws_startAnimationState = new AnimationState();
-    public AnimationState claws_continueAnimationState = new AnimationState();
-    public AnimationState claws_endAnimationState = new AnimationState();
-    public AnimationState excaliburAnimationState = new AnimationState();
-    public AnimationState claws_punchAnimationState = new AnimationState();
+    public AnimationState anim_saws = new AnimationState();
+    public AnimationState anim_sword = new AnimationState();
+    public AnimationState anim_axes = new AnimationState();
+    public AnimationState anim_boomerang = new AnimationState();
+    public AnimationState anim_spikes = new AnimationState();
+    public AnimationState anim_spikes_land = new AnimationState();
+    public AnimationState anim_spikes_slam = new AnimationState();
+    public AnimationState anim_shurikens = new AnimationState();
+    public AnimationState anim_chainsaw = new AnimationState();
+    public AnimationState anim_claws_start = new AnimationState();
+    public AnimationState anim_claws_continue = new AnimationState();
+    public AnimationState anim_claws_end = new AnimationState();
+    public AnimationState anim_excalibur = new AnimationState();
+    public AnimationState anim_claws_punch = new AnimationState();
 
     // Phase 2
-    public AnimationState ratatatabowAnimationState = new AnimationState();
-    public AnimationState ratatatabow2AnimationState = new AnimationState();
+    public AnimationState anim_ratatatabow = new AnimationState();
+    public AnimationState anim_ratatatabow2 = new AnimationState();
 
     public int sawsCooldown;
     public int axesCooldown;
@@ -1400,44 +1401,30 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
     @Override
     public AnimationState getAnimationState(String input) {
-        if (input == "saws") {
-            return sawsAnimationState;
-        } else if (input == "jump") {
-            return jumpAnimationState;
-        } else if (input == "sword") {
-            return swordAnimationState;
-        } else if (input == "axes") {
-            return axesAnimationState;
-        } else if (input == "boomerang") {
-            return boomerangAnimationState;
-        } else if (input == "spikes") {
-            return spikesAnimationState;
-        } else if (input == "spikes_land") {
-            return spikes_landAnimationState;
-        } else if (input == "spikes_slam") {
-            return spikes_slamAnimationState;
-        } else if (input == "shuriken_launcher") {
-            return shurikensAnimationState;
-        } else if (input == "chainsaw") {
-            return chainsawAnimationState;
-        } else if (input == "claws_start") {
-            return claws_startAnimationState;
-        } else if (input == "claws_continue") {
-            return claws_continueAnimationState;
-        } else if (input == "claws_end") {
-            return claws_endAnimationState;
-        } else if (input == "excalibur") {
-            return excaliburAnimationState;
-        } else if (input == "defeated") {
-            return defeatedAnimationState;
-        } else if (input == "claws_punch") {
-            return claws_punchAnimationState;
-        } else if (input == "ratatatabow") {
-            return ratatatabowAnimationState;
-        } else if (input == "ratatatabow2") {
-            return ratatatabow2AnimationState;
-        }
-        return new AnimationState();
+        return switch (input) {
+            case "jump" -> anim_jump;
+            case "defeated" -> anim_defeated;
+
+            case "saws" -> anim_saws;
+            case "sword" -> anim_sword;
+            case "axes" -> anim_axes;
+            case "boomerang" -> anim_boomerang;
+            case "spikes" -> anim_spikes;
+            case "spikes_land" -> anim_spikes_land;
+            case "spikes_slam" -> anim_spikes_slam;
+            case "shuriken_launcher" -> anim_shurikens;
+            case "chainsaw" -> anim_chainsaw;
+            case "claws_start" -> anim_claws_start;
+            case "claws_continue" -> anim_claws_continue;
+            case "claws_end" -> anim_claws_end;
+            case "claws_punch" -> anim_claws_punch;
+            case "excalibur" -> anim_excalibur;
+
+            case "ratatatabow" -> anim_ratatatabow;
+            case "ratatatabow2" -> anim_ratatatabow2;
+
+            default -> new AnimationState();
+        };
     }
 
     public int getAnimationState() {
@@ -1454,75 +1441,75 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
                         break;
                     case 1 :
                         this.stopAllAnimationStates();
-                        this.sawsAnimationState.start(this.tickCount);
+                        this.anim_saws.start(this.tickCount);
                         break;
                     case 2 :
                         this.stopAllAnimationStates();
-                        this.jumpAnimationState.start(this.tickCount);
+                        this.anim_jump.start(this.tickCount);
                         break;
                     case 3 :
                         this.stopAllAnimationStates();
-                        this.swordAnimationState.start(this.tickCount);
+                        this.anim_sword.start(this.tickCount);
                         break;
                     case 4 :
                         this.stopAllAnimationStates();
-                        this.axesAnimationState.start(this.tickCount);
+                        this.anim_axes.start(this.tickCount);
                         break;
                     case 5 :
                         this.stopAllAnimationStates();
-                        this.boomerangAnimationState.start(this.tickCount);
+                        this.anim_boomerang.start(this.tickCount);
                         break;
                     case 6 :
                         this.stopAllAnimationStates();
-                        this.spikesAnimationState.start(this.tickCount);
+                        this.anim_spikes.start(this.tickCount);
                         break;
                     case 7 :
                         this.stopAllAnimationStates();
-                        this.spikes_landAnimationState.start(this.tickCount);
+                        this.anim_spikes_land.start(this.tickCount);
                         break;
                     case 8 :
                         this.stopAllAnimationStates();
-                        this.shurikensAnimationState.start(this.tickCount);
+                        this.anim_shurikens.start(this.tickCount);
                         break;
                     case 9 :
                         this.stopAllAnimationStates();
-                        this.chainsawAnimationState.start(this.tickCount);
+                        this.anim_chainsaw.start(this.tickCount);
                         break;
                     case 10 :
                         this.stopAllAnimationStates();
-                        this.claws_startAnimationState.start(this.tickCount);
+                        this.anim_claws_start.start(this.tickCount);
                         break;
                     case 11 :
                         this.stopAllAnimationStates();
-                        this.claws_continueAnimationState.start(this.tickCount);
+                        this.anim_claws_continue.start(this.tickCount);
                         break;
                     case 12 :
                         this.stopAllAnimationStates();
-                        this.claws_endAnimationState.start(this.tickCount);
+                        this.anim_claws_end.start(this.tickCount);
                         break;
                     case 13 :
                         this.stopAllAnimationStates();
-                        this.excaliburAnimationState.start(this.tickCount);
+                        this.anim_excalibur.start(this.tickCount);
                         break;
                     case 14 :
                         this.stopAllAnimationStates();
-                        this.defeatedAnimationState.start(this.tickCount);
+                        this.anim_defeated.start(this.tickCount);
                         break;
                     case 15 :
                         this.stopAllAnimationStates();
-                        this.claws_punchAnimationState.start(this.tickCount);
+                        this.anim_claws_punch.start(this.tickCount);
                         break;
                     case 16 :
                         this.stopAllAnimationStates();
-                        this.ratatatabowAnimationState.start(this.tickCount);
+                        this.anim_ratatatabow.start(this.tickCount);
                         break;
                     case 17 :
                         this.stopAllAnimationStates();
-                        this.spikes_slamAnimationState.start(this.tickCount);
+                        this.anim_spikes_slam.start(this.tickCount);
                         break;
                     case 18 :
                         this.stopAllAnimationStates();
-                        this.ratatatabow2AnimationState.start(this.tickCount);
+                        this.anim_ratatatabow2.start(this.tickCount);
                         break;
                 }
             }
@@ -1532,24 +1519,24 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     }
 
     public void stopAllAnimationStates() {
-        this.sawsAnimationState.stop();
-        this.jumpAnimationState.stop();
-        this.swordAnimationState.stop();
-        this.axesAnimationState.stop();
-        this.boomerangAnimationState.stop();
-        this.spikesAnimationState.stop();
-        this.spikes_landAnimationState.stop();
-        this.spikes_slamAnimationState.stop();
-        this.shurikensAnimationState.stop();
-        this.chainsawAnimationState.stop();
-        this.claws_startAnimationState.stop();
-        this.claws_continueAnimationState.stop();
-        this.claws_endAnimationState.stop();
-        this.excaliburAnimationState.stop();
-        this.defeatedAnimationState.stop();
-        this.claws_punchAnimationState.stop();
-        this.ratatatabowAnimationState.stop();
-        this.ratatatabow2AnimationState.stop();
+        this.anim_saws.stop();
+        this.anim_jump.stop();
+        this.anim_sword.stop();
+        this.anim_axes.stop();
+        this.anim_boomerang.stop();
+        this.anim_spikes.stop();
+        this.anim_spikes_land.stop();
+        this.anim_spikes_slam.stop();
+        this.anim_shurikens.stop();
+        this.anim_chainsaw.stop();
+        this.anim_claws_start.stop();
+        this.anim_claws_continue.stop();
+        this.anim_claws_end.stop();
+        this.anim_excalibur.stop();
+        this.anim_defeated.stop();
+        this.anim_claws_punch.stop();
+        this.anim_ratatatabow.stop();
+        this.anim_ratatatabow2.stop();
     }
 
     public boolean doesJumpMeetNormalRequirements() {

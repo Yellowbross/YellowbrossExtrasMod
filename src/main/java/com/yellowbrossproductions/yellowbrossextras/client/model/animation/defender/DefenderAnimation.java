@@ -1,4 +1,4 @@
-package com.yellowbrossproductions.yellowbrossextras.client.model.animation;
+package com.yellowbrossproductions.yellowbrossextras.client.model.animation.defender;
 
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;

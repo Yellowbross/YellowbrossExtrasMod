@@ -80,6 +80,7 @@ public class YellowbrossExtras
         MinecraftForge.EVENT_BUS.register(new ServerEventHandler());
 
         SpawnPlacements.register(ModEntityTypes.Defender.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, PathfinderMob::checkMobSpawnRules);
+        SpawnPlacements.register(ModEntityTypes.SentryGun.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, PathfinderMob::checkMobSpawnRules);
 
         SpawnPlacements.register(ModEntityTypes.Sneaker.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
         SpawnPlacements.register(ModEntityTypes.Paracreeper.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);

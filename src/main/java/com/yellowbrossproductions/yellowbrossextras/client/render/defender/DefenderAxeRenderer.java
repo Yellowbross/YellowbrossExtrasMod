@@ -1,4 +1,4 @@
-package com.yellowbrossproductions.yellowbrossextras.client.render;
+package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.DefenderAxeModel;

@@ -2,8 +2,11 @@ package com.yellowbrossproductions.yellowbrossextras.util;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.*;
+import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DefenderModel;
+import com.yellowbrossproductions.yellowbrossextras.client.model.defender.SentryGunModel;
 import com.yellowbrossproductions.yellowbrossextras.client.model.oryctolins.*;
 import com.yellowbrossproductions.yellowbrossextras.client.render.*;
+import com.yellowbrossproductions.yellowbrossextras.client.render.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.client.render.oryctolins.*;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -18,6 +21,7 @@ public class ClientEventBusSubscriber {
     @SubscribeEvent
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(DefenderModel.LAYER_LOCATION, DefenderModel::createBodyLayer);
+        event.registerLayerDefinition(SentryGunModel.LAYER_LOCATION, SentryGunModel::createBodyLayer);
 
         event.registerLayerDefinition(SneakerModel.LAYER_LOCATION, SneakerModel::createBodyLayer);
         event.registerLayerDefinition(ParacreeperModel.LAYER_LOCATION, ParacreeperModel::createBodyLayer);
@@ -45,6 +49,7 @@ public class ClientEventBusSubscriber {
     @SubscribeEvent
     public static void onClientSetup(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntityTypes.Defender.get(), DefenderRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.SentryGun.get(), SentryGunRenderer::new);
 
         event.registerEntityRenderer(ModEntityTypes.Sneaker.get(), SneakerRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.Paracreeper.get(), ParacreeperRenderer::new);

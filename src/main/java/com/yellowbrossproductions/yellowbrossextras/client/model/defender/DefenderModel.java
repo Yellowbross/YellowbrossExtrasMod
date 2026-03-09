@@ -1,10 +1,10 @@
-package com.yellowbrossproductions.yellowbrossextras.client.model;
+package com.yellowbrossproductions.yellowbrossextras.client.model.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.client.model.animation.DefenderAnimation;
-import com.yellowbrossproductions.yellowbrossextras.entities.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.client.model.animation.defender.DefenderAnimation;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -13,8 +13,6 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-
-import java.util.NoSuchElementException;
 
 public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
@@ -259,8 +257,10 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
         head.xRot += (headPitch * ((float)Math.PI / 180F));
 
         if (entity instanceof DefenderEntity defender) {
-            this.animate(defender.getAnimationState("saws"), DefenderAnimation.SAWS, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.getAnimationState("jump"), DefenderAnimation.JUMP, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.getAnimationState("defeated"), DefenderAnimation.DEFEATED, ageInTicks, defender.getAnimationSpeed());
+
+            this.animate(defender.getAnimationState("saws"), DefenderAnimation.SAWS, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.getAnimationState("sword"), DefenderAnimation.SWORD, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.getAnimationState("axes"), DefenderAnimation.AXES, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.getAnimationState("boomerang"), DefenderAnimation.BOOMERANG, ageInTicks, defender.getAnimationSpeed());
@@ -272,9 +272,9 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
             this.animate(defender.getAnimationState("claws_start"), DefenderAnimation.CLAWS_START, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.getAnimationState("claws_continue"), DefenderAnimation.CLAWS_CONTINUE, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.getAnimationState("claws_end"), DefenderAnimation.CLAWS_END, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("excalibur"), DefenderAnimation.EXCALIBUR, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("defeated"), DefenderAnimation.DEFEATED, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.getAnimationState("claws_punch"), DefenderAnimation.CLAWS_PUNCH, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.getAnimationState("excalibur"), DefenderAnimation.EXCALIBUR, ageInTicks, defender.getAnimationSpeed());
+
             this.animate(defender.getAnimationState("ratatatabow"), DefenderAnimation.RATATATABOW, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.getAnimationState("ratatatabow2"), DefenderAnimation.RATATATABOW2, ageInTicks, defender.getAnimationSpeed());
 

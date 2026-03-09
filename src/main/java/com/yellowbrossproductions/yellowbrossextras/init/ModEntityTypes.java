@@ -3,6 +3,10 @@ package com.yellowbrossproductions.yellowbrossextras.init;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.entities.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.*;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.ChainsawEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.SpikeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.*;
@@ -22,36 +26,6 @@ public class ModEntityTypes {
     public static DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, YellowbrossExtras.MOD_ID);
 
     // Entity Types
-    public static final RegistryObject<EntityType<DefenderEntity>> Defender = ENTITY_TYPES.register("defender",
-            () -> EntityType.Builder.of(DefenderEntity::new, MobCategory.MONSTER)
-                    .sized(0.75f, 2.25f)
-                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "defender").toString()));
-
-    public static final RegistryObject<EntityType<SneakerEntity>> Sneaker = ENTITY_TYPES.register("sneaker",
-            () -> EntityType.Builder.of(SneakerEntity::new, MobCategory.MONSTER)
-                    .sized(0.6f, 1.7f)
-                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sneaker").toString()));
-
-    public static final RegistryObject<EntityType<ParacreeperEntity>> Paracreeper = ENTITY_TYPES.register("paracreeper",
-            () -> EntityType.Builder.of(ParacreeperEntity::new, MobCategory.MONSTER)
-                    .sized(0.4f, 0.6f)
-                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "paracreeper").toString()));
-
-    public static final RegistryObject<EntityType<CrawlerEntity>> Crawler = ENTITY_TYPES.register("crawler",
-            () -> EntityType.Builder.of(CrawlerEntity::new, MobCategory.MONSTER)
-                    .sized(2.2f, 2.7f)
-                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "crawler").toString()));
-
-    public static final RegistryObject<EntityType<FreakerEntity>> Freaker = ENTITY_TYPES.register("freaker",
-            () -> EntityType.Builder.of(FreakerEntity::new, MobCategory.MONSTER)
-                    .sized(2.625f, 3.75f)
-                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "freaker").toString()));
-
-    public static final RegistryObject<EntityType<SprayerEntity>> Sprayer = ENTITY_TYPES.register("sprayer",
-            () -> EntityType.Builder.of(SprayerEntity::new, MobCategory.MONSTER)
-                    .sized(0.6f, 1.7f)
-                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sprayer").toString()));
-
     public static final RegistryObject<EntityType<VilvgaverEntity>> Vilvgaver = ENTITY_TYPES.register("vilvgaver",
             () -> EntityType.Builder.of(VilvgaverEntity::new, MobCategory.MONSTER)
                     .sized(0.8f, 2.3f)
@@ -79,6 +53,21 @@ public class ModEntityTypes {
                     .sized(0.25F, 2.625F)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "stick_figure").toString()));
 
+
+
+    // Defender and his entities
+    public static final RegistryObject<EntityType<DefenderEntity>> Defender = ENTITY_TYPES.register("defender",
+            () -> EntityType.Builder.of(DefenderEntity::new, MobCategory.MONSTER)
+                    .sized(0.75f, 2.25f)
+                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "defender").toString()));
+
+    public static final RegistryObject<EntityType<SentryGunEntity>> SentryGun = ENTITY_TYPES.register("sentry_gun",
+            () -> EntityType.Builder.of(SentryGunEntity::new, MobCategory.MONSTER)
+                    .sized(0.5f, 1.25f)
+                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sentry_gun").toString()));
+
+
+
     // Oryctolins
     public static final RegistryObject<EntityType<ConverslinEntity>> Converslin = ENTITY_TYPES.register("converslin",
             () -> EntityType.Builder.of(ConverslinEntity::new, MobCategory.MONSTER)
@@ -89,6 +78,36 @@ public class ModEntityTypes {
             () -> EntityType.Builder.of(CarrotMinionEntity::new, MobCategory.MONSTER)
                     .sized(0.8f, 1.8f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "carrot_minion").toString()));
+
+
+
+    // Creeper Infection
+    public static final RegistryObject<EntityType<SneakerEntity>> Sneaker = ENTITY_TYPES.register("sneaker",
+            () -> EntityType.Builder.of(SneakerEntity::new, MobCategory.MONSTER)
+                    .sized(0.6f, 1.7f)
+                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sneaker").toString()));
+
+    public static final RegistryObject<EntityType<ParacreeperEntity>> Paracreeper = ENTITY_TYPES.register("paracreeper",
+            () -> EntityType.Builder.of(ParacreeperEntity::new, MobCategory.MONSTER)
+                    .sized(0.4f, 0.6f)
+                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "paracreeper").toString()));
+
+    public static final RegistryObject<EntityType<CrawlerEntity>> Crawler = ENTITY_TYPES.register("crawler",
+            () -> EntityType.Builder.of(CrawlerEntity::new, MobCategory.MONSTER)
+                    .sized(2.2f, 2.7f)
+                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "crawler").toString()));
+
+    public static final RegistryObject<EntityType<FreakerEntity>> Freaker = ENTITY_TYPES.register("freaker",
+            () -> EntityType.Builder.of(FreakerEntity::new, MobCategory.MONSTER)
+                    .sized(2.625f, 3.75f)
+                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "freaker").toString()));
+
+    public static final RegistryObject<EntityType<SprayerEntity>> Sprayer = ENTITY_TYPES.register("sprayer",
+            () -> EntityType.Builder.of(SprayerEntity::new, MobCategory.MONSTER)
+                    .sized(0.6f, 1.7f)
+                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sprayer").toString()));
+
+
 
     // Projectiles
     public static final RegistryObject<EntityType<DefenderAxeEntity>> DefenderAxe = ENTITY_TYPES.register("defender_axe",
@@ -113,8 +132,12 @@ public class ModEntityTypes {
 
     public static final RegistryObject<EntityType<HyperSnowballEntity>> HyperSnowball = ENTITY_TYPES.register("hyper_snowball", () -> EntityType.Builder.<HyperSnowballEntity>of(HyperSnowballEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "hyper_snowball").toString()));
 
+
+
     // Misc
     public static final RegistryObject<EntityType<CameraShakeEntity>> CameraShake = ENTITY_TYPES.register("camera_shake", () -> EntityType.Builder.<CameraShakeEntity>of(CameraShakeEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "camera_shake").toString()));
+
+
 
     // Gamemode Fun
     public static final RegistryObject<EntityType<PathGuideEntity>> PathGuide = ENTITY_TYPES.register("path_guide", () -> EntityType.Builder.<PathGuideEntity>of(PathGuideEntity::new, MobCategory.MISC).sized(1.0F,2.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "path_guide").toString()));
@@ -123,6 +146,7 @@ public class ModEntityTypes {
 
     public static void onAttribute(final EntityAttributeCreationEvent event) {
         event.put(Defender.get(), DefenderEntity.createAttributes().build());
+        event.put(SentryGun.get(), SentryGunEntity.createAttributes().build());
 
         event.put(Sneaker.get(), SneakerEntity.createAttributes().build());
         event.put(Paracreeper.get(), ParacreeperEntity.createAttributes().build());

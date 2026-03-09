@@ -1,14 +1,12 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.oryctolins;
 
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
-import com.yellowbrossproductions.yellowbrossextras.entities.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
@@ -21,8 +19,6 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Ravager;
-import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;

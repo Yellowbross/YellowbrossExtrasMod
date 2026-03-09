@@ -1,9 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase1;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.block.Blocks;
 
 public class SawsGoal extends CustomAttackGoal {

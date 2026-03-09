@@ -1,13 +1,11 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal;
 
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
-import com.yellowbrossproductions.yellowbrossextras.entities.DefenderEntity;
-import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
-import java.util.List;
 
 public class StareAtDefenderGoal extends Goal {
     private final Mob mob;

@@ -1,9 +1,9 @@
 package com.yellowbrossproductions.yellowbrossextras.util.defender;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.BoomerangEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ChainsawEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.ChainsawEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.DefenderAxeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ShurikenEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;

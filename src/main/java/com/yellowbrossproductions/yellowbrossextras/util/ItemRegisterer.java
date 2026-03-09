@@ -30,6 +30,7 @@ public class ItemRegisterer {
 
     // Spawn Eggs
     public static final RegistryObject<Item> DEFENDER_SPAWN_EGG = ITEMS.register("defender_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.Defender, 6012148, 8115455, (new Item.Properties()).tab(YellowbrossExtras.YELLOWBROSSEXTRAS_GROUP)));
+    public static final RegistryObject<Item> SENTRY_GUN_SPAWN_EGG = ITEMS.register("sentry_gun_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.SentryGun, 2840946, 8115455, (new Item.Properties()).tab(YellowbrossExtras.YELLOWBROSSEXTRAS_GROUP)));
 
     public static final RegistryObject<Item> SNEAKER_SPAWN_EGG = ITEMS.register("sneaker_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.Sneaker, 894731, 16777215, (new Item.Properties()).tab(YellowbrossExtras.YELLOWBROSSEXTRAS_GROUP)));
     public static final RegistryObject<Item> PARACREEPER_SPAWN_EGG = ITEMS.register("paracreeper_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.Paracreeper, 894731, 16777215, (new Item.Properties()).tab(YellowbrossExtras.YELLOWBROSSEXTRAS_GROUP)));

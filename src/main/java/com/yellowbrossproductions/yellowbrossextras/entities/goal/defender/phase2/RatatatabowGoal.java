@@ -1,8 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase2;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
-import net.minecraft.world.entity.LivingEntity;
 
 public class RatatatabowGoal extends CustomAttackGoal {
 
