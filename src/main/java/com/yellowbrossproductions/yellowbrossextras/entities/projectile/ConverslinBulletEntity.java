@@ -26,13 +26,13 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
 
-public class ConverslinBulletEntity extends AbstractHurtingProjectile implements ItemSupplier {
+public class ConverslinBulletEntity extends CustomAbstractHurtingProjectile implements ItemSupplier {
 
-    public ConverslinBulletEntity(EntityType<? extends AbstractHurtingProjectile> p_36833_, Level p_36834_) {
+    public ConverslinBulletEntity(EntityType<? extends CustomAbstractHurtingProjectile> p_36833_, Level p_36834_) {
         super(p_36833_, p_36834_);
     }
 
-    public ConverslinBulletEntity(EntityType<? extends AbstractHurtingProjectile> p_36817_, double p_36818_, double p_36819_, double p_36820_, double p_36821_, double p_36822_, double p_36823_, Level p_36824_) {
+    public ConverslinBulletEntity(EntityType<? extends CustomAbstractHurtingProjectile> p_36817_, double p_36818_, double p_36819_, double p_36820_, double p_36821_, double p_36822_, double p_36823_, Level p_36824_) {
         super(ModEntityTypes.ConverslinBullet.get(), p_36818_, p_36819_, p_36820_, p_36821_, p_36822_, p_36823_, p_36824_);
     }
 

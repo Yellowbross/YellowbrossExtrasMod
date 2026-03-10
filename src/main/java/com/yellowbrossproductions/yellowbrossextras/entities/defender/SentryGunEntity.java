@@ -2,6 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
+import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ConverslinBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
-public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, IsDefenderAligned {
+public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, IsDefenderAligned, YextrasEntity {
     private static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(SentryGunEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> ACTIVE = SynchedEntityData.defineId(SentryGunEntity.class, EntityDataSerializers.BOOLEAN);
 

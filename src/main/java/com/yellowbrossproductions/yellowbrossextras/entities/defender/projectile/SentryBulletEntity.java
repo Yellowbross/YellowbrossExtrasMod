@@ -4,6 +4,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEn
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.IsDefenderAligned;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.AbstractOryctolin;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
+import com.yellowbrossproductions.yellowbrossextras.entities.projectile.CustomAbstractHurtingProjectile;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
@@ -33,13 +34,13 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
 
-public class SentryBulletEntity extends AbstractHurtingProjectile implements ItemSupplier {
+public class SentryBulletEntity extends CustomAbstractHurtingProjectile implements ItemSupplier {
 
-    public SentryBulletEntity(EntityType<? extends AbstractHurtingProjectile> p_36833_, Level p_36834_) {
+    public SentryBulletEntity(EntityType<? extends CustomAbstractHurtingProjectile> p_36833_, Level p_36834_) {
         super(p_36833_, p_36834_);
     }
 
-    public SentryBulletEntity(EntityType<? extends AbstractHurtingProjectile> p_36817_, double p_36818_, double p_36819_, double p_36820_, double p_36821_, double p_36822_, double p_36823_, Level p_36824_) {
+    public SentryBulletEntity(EntityType<? extends CustomAbstractHurtingProjectile> p_36817_, double p_36818_, double p_36819_, double p_36820_, double p_36821_, double p_36822_, double p_36823_, Level p_36824_) {
         super(ModEntityTypes.SentryBullet.get(), p_36818_, p_36819_, p_36820_, p_36821_, p_36822_, p_36823_, p_36824_);
     }
 
@@ -164,6 +165,11 @@ public class SentryBulletEntity extends AbstractHurtingProjectile implements Ite
         if (p_36839_ == DamageSource.OUT_OF_WORLD) {
             return super.hurt(p_36839_, p_36840_);
         }
+        return false;
+    }
+
+    @Override
+    public boolean isPickable() {
         return false;
     }
 }
