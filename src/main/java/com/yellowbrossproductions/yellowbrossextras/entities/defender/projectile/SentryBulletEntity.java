@@ -9,11 +9,15 @@ import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.ItemRegisterer;
+import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -62,7 +66,7 @@ public class SentryBulletEntity extends AbstractHurtingProjectile implements Ite
         super.onHit(p_37406_);
         if (!this.level.isClientSide) {
             this.level.broadcastEntityEvent(this, (byte)3);
-            this.explode(1.0D);
+            this.explode(2.0D);
             this.discard();
         }
     }
@@ -77,7 +81,8 @@ public class SentryBulletEntity extends AbstractHurtingProjectile implements Ite
 
         boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
         this.makeExplodeParticles();
-        this.playSound(SoundEvents.SPLASH_POTION_BREAK, 1.0F, 1.0F);
+        this.stopShootingSound(this.level);
+        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_HIT.get(), 2.0F, 1.0F);
         for (Entity entity : list) {
             if (entity instanceof LivingEntity living) {
                 boolean team = true;
@@ -86,7 +91,7 @@ public class SentryBulletEntity extends AbstractHurtingProjectile implements Ite
                 }
                 if (team && entity.isAlive() && !entity.isInvulnerable() && !entity.isSpectator()) {
                     living.hurt(DamageSource.thrown(this, this.getOwner()), 1.0F);
-                    living.invulnerableTime = 0;
+                    living.invulnerableTime -= 9;
                     if (!this.level.isClientSide) {
                         this.discard();
                     }
@@ -102,7 +107,7 @@ public class SentryBulletEntity extends AbstractHurtingProjectile implements Ite
         if (this.tickCount > 80) {
             if (!this.level.isClientSide) {
                 this.level.broadcastEntityEvent(this, (byte)3);
-                this.explode(1.0D);
+                this.explode(2.0D);
                 this.discard();
             }
         }
@@ -140,6 +145,18 @@ public class SentryBulletEntity extends AbstractHurtingProjectile implements Ite
 
     public float getLightLevelDependentMagicValue() {
         return 1.0F;
+    }
+
+    public void stopShootingSound(Level world) {
+        MinecraftServer server = world.getServer();
+        if (server == null) {
+            return;
+        }
+
+        ClientboundStopSoundPacket sstopsoundpacket = new ClientboundStopSoundPacket(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_HIT.get().getLocation(), SoundSource.NEUTRAL);
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            player.connection.send(sstopsoundpacket);
+        }
     }
 
     @Override

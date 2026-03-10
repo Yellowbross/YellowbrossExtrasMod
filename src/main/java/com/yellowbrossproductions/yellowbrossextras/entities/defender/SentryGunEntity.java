@@ -5,10 +5,14 @@ import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanB
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ConverslinBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -155,21 +159,20 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
         }
         if (this.setupTicks < 60) this.setupTicks -= 1;
 
-        if (this.getTarget() != null && this.isActive()) {
+        if (this.getTarget() != null && this.isActive() && this.isAlive()) {
             if (this.tickCount % 5 == 0) {
                 this.setAnimationState(0);
                 this.setAnimationState(1);
-                this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get(), 2.0F, 1.0F);
+                this.stopShootingSound(this.level);
+                this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get(), 3.0F, 1.0F);
                 this.performRangedAttack(this.getTarget());
             }
         }
     }
 
     public void performRangedAttack(LivingEntity target) {
-        float radius2 = 1.1f;
-        double x = this.getX() + 0.5F * Math.sin(-this.getYRot() * Math.PI / 180) + radius2 * Math.sin(-this.yHeadRot * Math.PI / 180) * Math.cos(-this.getXRot() * Math.PI / 180);
-        double y = this.getY() + 1.0 + radius2 * Math.sin(-this.getXRot() * Math.PI / 180);
-        double z = this.getZ() + 0.5F * Math.cos(-this.getYRot() * Math.PI / 180) + radius2 * Math.cos(-this.yHeadRot * Math.PI / 180) * Math.cos(-this.getXRot() * Math.PI / 180);
+        double x = this.getX();
+        double z = this.getZ();
         for (int i = 0; i < 5; ++i) {
             double y1 = this.getY() + 0.75D;
 
@@ -184,6 +187,18 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
             bullet.setPos(x, y1, z);
             bullet.setOwner(this);
             this.level.addFreshEntity(bullet);
+        }
+    }
+
+    public void stopShootingSound(Level world) {
+        MinecraftServer server = world.getServer();
+        if (server == null) {
+            return;
+        }
+
+        ClientboundStopSoundPacket sstopsoundpacket = new ClientboundStopSoundPacket(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get().getLocation(), SoundSource.NEUTRAL);
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            player.connection.send(sstopsoundpacket);
         }
     }
 

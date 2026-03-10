@@ -179,11 +179,14 @@
   "entity.defender.sentry_gun.shoot": {
     "subtitle": "subtitles.entity.defender.sentry_gun.shoot",
     "sounds": [
-      "yellowbrossextras:defender/sentry_shoot1",
-      "yellowbrossextras:defender/sentry_shoot2",
-      "yellowbrossextras:defender/sentry_shoot3",
-      "yellowbrossextras:defender/sentry_shoot4",
-      "yellowbrossextras:defender/sentry_shoot5"
+      "yellowbrossextras:defender/sentry_shoot"
+    ]
+  },
+
+  "entity.defender.sentry_gun.hit": {
+    "subtitle": "subtitles.entity.defender.sentry_gun.hit",
+    "sounds": [
+      "yellowbrossextras:defender/sentry_hit"
     ]
   },
 
