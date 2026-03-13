@@ -52,6 +52,7 @@ public class YellowbrossExtrasSoundEvents {
     public static final RegistryObject<SoundEvent> ENTITY_CONVERSLIN_JUMP = addSoundsToRegistry("entity.converslin.jump");
 
     public static final RegistryObject<SoundEvent> HUGE_EXPLOSION = addSoundsToRegistry("huge_explosion");
+    public static final RegistryObject<SoundEvent> YEET = addSoundsToRegistry("yeet");
 
     public static final RegistryObject<SoundEvent> ENTITY_AMOEBIC_DEVOURER_GULP = addSoundsToRegistry("entity.amoebic_devourer.gulp");
     public static final RegistryObject<SoundEvent> ENTITY_AMOEBIC_DEVOURER_BIG_GULP = addSoundsToRegistry("entity.amoebic_devourer.big_gulp");

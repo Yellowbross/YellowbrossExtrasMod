@@ -317,6 +317,13 @@
     ]
   },
 
+  "yeet": {
+    "subtitle": "subtitles.yeet",
+    "sounds": [
+      "yellowbrossextras:yeet"
+    ]
+  },
+
   "gamemode_fun.ctf.friendly_take": {
     "sounds": [
       "yellowbrossextras:gamemode_fun/ctf/friendly_take"
