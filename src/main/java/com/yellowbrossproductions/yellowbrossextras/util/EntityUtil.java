@@ -433,4 +433,8 @@ public class EntityUtil {
             mob.setDeltaMovement(mob.getDeltaMovement().add(0, -0.01, 0));
         }
     }
+
+    public static List<Entity> getEntitiesFromAABB(Level level, double size, Entity attacker, Predicate<? super Entity> predicate) {
+        return level.getEntities(attacker, new AABB(attacker.getX() - size, attacker.getY() - size, attacker.getZ() - size, attacker.getX() + size, attacker.getY() + size, attacker.getZ() + size), predicate);
+    }
 }

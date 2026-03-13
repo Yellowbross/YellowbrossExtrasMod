@@ -78,7 +78,7 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
     }
 
     private void explode(double size) {
-        List<Entity> list = this.level.getEntities(this, new AABB(this.getX() - size, this.getY() - size, this.getZ() - size, this.getX() + size, this.getY() + size, this.getZ() + size), Entity::isAlive);
+        List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level, size, this, Entity::isAlive);
 
         boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
         this.makeExplodeParticles();

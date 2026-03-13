@@ -2,12 +2,14 @@ package com.yellowbrossproductions.yellowbrossextras.item;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
+import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -48,7 +50,15 @@ public class TheFingerItemBase extends Item {
     @Override
     public InteractionResult interactLivingEntity(ItemStack p_41398_, Player player, LivingEntity p_41400_, InteractionHand p_41401_) {
         this.yeetMobs(player.getLevel(), 8.0D, player);
+        player.swing(p_41401_);
         return super.interactLivingEntity(p_41398_, player, p_41400_, p_41401_);
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        this.yeetMobs(player.getLevel(), 8.0D, player);
+        player.swing(hand);
+        return super.use(level, player, hand);
     }
 
     @Override
@@ -57,13 +67,15 @@ public class TheFingerItemBase extends Item {
     }
 
     public void yeetMobs(Level level, double size, Entity attacker) {
-        List<Entity> entities = level.getEntities(attacker, new AABB(attacker.getX() - size, attacker.getY() - size, attacker.getZ() - size, attacker.getX() + size, attacker.getY() + size, attacker.getZ() + size), predicate -> (predicate != attacker));
-        Vec3 viewVec = attacker.getViewVector(1.0F);
+        List<Entity> entities = EntityUtil.getEntitiesFromAABB(level, size, attacker, predicate -> (predicate != attacker));
+        Vec3 viewVec = attacker.getLookAngle();
         for (Entity hit : entities) {
-            Vec3 vector2 = hit.position().vectorTo(attacker.position().normalize());
-            if (vector2.dot(viewVec) < 0.0D) {
+            Vec3 hitVec = hit.position().subtract(attacker.position()).normalize();
+            if (hitVec.length() > size) continue;
+            if (viewVec.dot(hitVec) > -0.5D) {
                 attacker.playSound(YellowbrossExtrasSoundEvents.YEET.get(), 2.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-                hit.setDeltaMovement(attacker.position().subtract(hit.position()).normalize().scale(-1.0));
+                hit.setDeltaMovement(hit.position().add(0, 0.5, 0).subtract(attacker.position()).normalize().scale(6.0));
+                if (hit.isOnGround()) hit.setDeltaMovement(hit.getDeltaMovement().x, Math.abs(hit.getDeltaMovement().y), hit.getDeltaMovement().z);
             }
         }
     }

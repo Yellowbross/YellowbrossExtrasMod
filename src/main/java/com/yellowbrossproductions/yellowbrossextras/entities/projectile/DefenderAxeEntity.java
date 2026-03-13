@@ -59,7 +59,7 @@ public class DefenderAxeEntity extends PathfinderMob implements MobAttack {
 
         Mob attacker = this.shooter != null ? this.shooter : this;
 
-        List<Entity> list = this.level.getEntities(this, new AABB(this.getX() - 0.4D, this.getY() - 0.4D, this.getZ() - 0.4D, this.getX() + 0.4D, this.getY() + 0.4D, this.getZ() + 0.4D), Entity::isAlive);
+        List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level, 0.4d, this, Entity::isAlive);
         for (Entity entity : list) {
             if (entity instanceof LivingEntity living && EntityUtil.canHurtThisMob(living, attacker) && entity != attacker) {
                 if (entity.isAlive() && !entity.isInvulnerable() && !entity.isSpectator()) {
