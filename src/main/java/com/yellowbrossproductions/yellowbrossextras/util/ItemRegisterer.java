@@ -5,6 +5,7 @@ import com.yellowbrossproductions.yellowbrossextras.block.FrozenLavaBlock;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.item.ItemBase;
 import com.yellowbrossproductions.yellowbrossextras.item.MobRemoverItemBase;
+import com.yellowbrossproductions.yellowbrossextras.item.TheFingerItemBase;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -27,6 +28,7 @@ public class ItemRegisterer {
 
     // Items
     public static final RegistryObject<Item> MOB_REMOVER = ITEMS.register("mob_remover", MobRemoverItemBase::new);
+    public static final RegistryObject<Item> THE_FINGER = ITEMS.register("the_finger", TheFingerItemBase::new);
 
     // Spawn Eggs
     public static final RegistryObject<Item> DEFENDER_SPAWN_EGG = ITEMS.register("defender_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.Defender, 6012148, 8115455, (new Item.Properties()).tab(YellowbrossExtras.YELLOWBROSSEXTRAS_GROUP)));
