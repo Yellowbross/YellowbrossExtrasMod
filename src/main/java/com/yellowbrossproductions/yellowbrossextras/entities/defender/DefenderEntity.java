@@ -182,7 +182,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         this.goalSelector.addGoal(0, new DefeatedGoal());
         this.goalSelector.addGoal(0, new JumpAwayGoal(this));
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, true));
+        this.goalSelector.addGoal(4, new CustomMeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.7D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
@@ -1675,6 +1675,51 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     public void setChainsawLookX(float amount) {
         if (!level.isClientSide) {
             this.entityData.set(CHAINSAW_LOOK_X, amount);
+        }
+    }
+
+    public int howShouldDefenderApproachHisTarget() {
+        return switch (this.getPhase()) {
+            default -> 1;
+            case 2 -> 2;
+        };
+    }
+
+    // code borrowed from Mowzie's Mobs
+    private void circleEnemy(Entity target, float radius, float speed, boolean direction, int circleFrame, float offset, float moveSpeedMultiplier) {
+        int directionInt = direction ? 1 : 1;
+        double t = directionInt * circleFrame * 0.5 * speed / radius + offset;
+        Vec3 movePos = target.position().add(radius * Math.cos(t), 0, radius * Math.sin(t));
+        this.getNavigation().moveTo(movePos.x(), movePos.y(), movePos.z(), speed * moveSpeedMultiplier);
+    }
+
+    class CustomMeleeAttackGoal extends MeleeAttackGoal {
+        final DefenderEntity defender;
+        int circleTime;
+
+        public CustomMeleeAttackGoal(DefenderEntity defender, double speed, boolean followEvenIfNotSeen) {
+            super(defender, speed, followEvenIfNotSeen);
+            this.defender = defender;
+        }
+
+        @Override
+        public void tick() {
+            if (this.defender.getTarget() != null) {
+                LivingEntity target = this.defender.getTarget();
+                double d0 = this.mob.distanceToSqr(target.getX(), target.getY(), target.getZ());
+
+                if (this.defender.howShouldDefenderApproachHisTarget() == 1) {
+                    super.tick();
+                }
+                if (this.defender.howShouldDefenderApproachHisTarget() == 2) {
+                    if (this.defender.tickCount % 15 == 0) {
+                        this.circleTime += 1;
+                    }
+                    this.mob.getLookControl().setLookAt(target, 100.0F, 30.0F);
+                    this.defender.circleEnemy(target, 18, 1.2f, true, this.circleTime, Mth.cos((this.defender.tickCount / 15.0F)), 1);
+                    this.checkAndPerformAttack(target, d0);
+                }
+            }
         }
     }
 }
