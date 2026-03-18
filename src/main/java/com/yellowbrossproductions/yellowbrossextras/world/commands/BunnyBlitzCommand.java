@@ -5,26 +5,20 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.yellowbrossproductions.yellowbrossextras.world.bunnyblitz.BlitzManager;
-import com.yellowbrossproductions.yellowbrossextras.world.bunnyblitz.BunnyBlitz;
+import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.BlitzManager;
+import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.BunnyBlitz;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.SectionPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.raid.Raid;
-import net.minecraft.world.entity.raid.Raids;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public class BunnyBlitzCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {

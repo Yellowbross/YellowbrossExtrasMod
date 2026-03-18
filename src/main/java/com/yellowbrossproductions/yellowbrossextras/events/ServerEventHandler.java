@@ -14,7 +14,7 @@ import com.yellowbrossproductions.yellowbrossextras.util.EffectRegisterer;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.ItemRegisterer;
 import com.yellowbrossproductions.yellowbrossextras.util.VilvgaverSpawner;
-import com.yellowbrossproductions.yellowbrossextras.world.bunnyblitz.BlitzManager;
+import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.BlitzManager;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.core.BlockPos;

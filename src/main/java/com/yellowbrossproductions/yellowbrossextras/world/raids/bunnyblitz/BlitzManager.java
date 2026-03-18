@@ -1,10 +1,10 @@
-package com.yellowbrossproductions.yellowbrossextras.world.bunnyblitz;
+package com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz;
 
+import com.yellowbrossproductions.yellowbrossextras.world.raids.WorldRaidData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class BlitzManager {
 
     public static void tickRaids(Level world) {
         if(!world.isClientSide) {
-            final WorldBlitzData data = WorldBlitzData.getInvasionData(world);
+            final WorldRaidData data = WorldRaidData.getInvasionData(world);
             data.tick(world);
         }
     }
@@ -34,17 +34,17 @@ public class BlitzManager {
     }
 
     public static BunnyBlitz createRaid(ServerLevel world, BlockPos pos) {
-        final WorldBlitzData data = WorldBlitzData.getInvasionData(world);
-        return data.createRaid(world, pos);
+        final WorldRaidData data = WorldRaidData.getInvasionData(world);
+        return data.createBunnyBlitz(world, pos);
     }
 
     public static List<BunnyBlitz> getRaids(ServerLevel world) {
-        return WorldBlitzData.getInvasionData(world).getRaids();
+        return WorldRaidData.getInvasionData(world).getBunnyBlitzes();
     }
 
     public static boolean isRaider(ServerLevel world, LivingEntity entity) {
-        final WorldBlitzData data = WorldBlitzData.getInvasionData(world);
-        for(BunnyBlitz raid : data.getRaids()) {
+        final WorldRaidData data = WorldRaidData.getInvasionData(world);
+        for(BunnyBlitz raid : data.getBunnyBlitzes()) {
             if(raid.isRaider(entity)) {
                 return true;
             }

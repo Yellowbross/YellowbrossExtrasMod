@@ -1,4 +1,4 @@
-package com.yellowbrossproductions.yellowbrossextras.world.bunnyblitz;
+package com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz;
 
 import com.google.common.collect.Sets;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;

@@ -1,15 +1,13 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal;
 
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.world.bunnyblitz.BlitzManager;
-import com.yellowbrossproductions.yellowbrossextras.world.bunnyblitz.BunnyBlitz;
+import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.BlitzManager;
+import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.BunnyBlitz;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
-import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
