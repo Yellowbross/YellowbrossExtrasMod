@@ -15,8 +15,11 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 // THANK YOU DARKPEASANT THANK YOU THANK YOU THANK YOUUUUUUUUUUU
+@OnlyIn(Dist.CLIENT)
 public class StickFigureHeadLayer<T extends StickFigureEntity, M extends StickFigureModel<T>> extends RenderLayer<T, M> {
     private static final ResourceLocation HEAD = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/stick_figure/head.png");
 
