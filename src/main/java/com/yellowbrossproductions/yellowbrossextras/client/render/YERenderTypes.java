@@ -22,11 +22,11 @@ public abstract class YERenderTypes extends RenderType {
         RenderType.CompositeState rendertype$compositestate = RenderType.CompositeState.builder()
                 .setShaderState(RenderStateShard.RENDERTYPE_BEACON_BEAM_SHADER)
                 .setTextureState(new RenderStateShard.TextureStateShard(p_173227_, false, false))
-                .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                .setCullState(NO_CULL)
+                .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                .setCullState(RenderStateShard.CULL)
                 .setLightmapState(RenderStateShard.LIGHTMAP)
                 .setOverlayState(RenderStateShard.OVERLAY)
-                .setWriteMaskState(COLOR_WRITE)
+                .setWriteMaskState(RenderStateShard.COLOR_WRITE)
                 .createCompositeState(p_173228_);
         return create("stickFigure", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, rendertype$compositestate);
     });

@@ -6,6 +6,7 @@ import com.mojang.math.*;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.StickFigureModel;
 import com.yellowbrossproductions.yellowbrossextras.client.render.layer.HeadItemLayer;
+import com.yellowbrossproductions.yellowbrossextras.client.render.layer.StickFigureColorLayer;
 import com.yellowbrossproductions.yellowbrossextras.client.render.layer.StickFigureHeadLayer;
 import com.yellowbrossproductions.yellowbrossextras.entities.StickFigureEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -25,6 +26,7 @@ public class StickFigureRenderer extends MobRenderer<StickFigureEntity, StickFig
     public StickFigureRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new StickFigureModel<>(renderManagerIn.bakeLayer(StickFigureModel.LAYER_LOCATION)), 0.3F);
         this.addLayer(new HeadItemLayer<>(this, renderManagerIn.getModelSet(), renderManagerIn.getItemInHandRenderer()));
+        this.addLayer(new StickFigureColorLayer<>(this, TEXTURE));
         this.addLayer(new StickFigureHeadLayer<>(this, renderManagerIn.getEntityRenderDispatcher()));
     }
 
@@ -36,5 +38,10 @@ public class StickFigureRenderer extends MobRenderer<StickFigureEntity, StickFig
     @Override
     public void render(StickFigureEntity stick, float p_115456_, float p_115457_, PoseStack poseStack, MultiBufferSource bufferSource, int light) {
         super.render(stick, p_115456_, p_115457_, poseStack, bufferSource, light);
+    }
+
+    @Override
+    protected void scale(StickFigureEntity p_115314_, PoseStack p_115315_, float p_115316_) {
+        p_115315_.scale(0.9F, 0.9F,0.9F);
     }
 }
