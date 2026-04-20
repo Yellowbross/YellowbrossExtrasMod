@@ -44,6 +44,10 @@ public class HeadItemLayer<T extends LivingEntity, M extends EntityModel<T> & Cu
       this(p_234829_, p_234830_, 1.0F, 1.0F, 1.0F, p_234831_);
    }
 
+    public HeadItemLayer(RenderLayerParent<T, M> p_234829_, EntityModelSet p_234830_, ItemInHandRenderer p_234831_, float scale) {
+        this(p_234829_, p_234830_, scale, scale, scale, p_234831_);
+    }
+
    public HeadItemLayer(RenderLayerParent<T, M> p_234822_, EntityModelSet p_234823_, float p_234824_, float p_234825_, float p_234826_, ItemInHandRenderer p_234827_) {
       super(p_234822_);
       this.scaleX = p_234824_;

@@ -25,7 +25,7 @@ public class StickFigureRenderer extends MobRenderer<StickFigureEntity, StickFig
 
     public StickFigureRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new StickFigureModel<>(renderManagerIn.bakeLayer(StickFigureModel.LAYER_LOCATION)), 0.3F);
-        this.addLayer(new HeadItemLayer<>(this, renderManagerIn.getModelSet(), renderManagerIn.getItemInHandRenderer()));
+        this.addLayer(new HeadItemLayer<>(this, renderManagerIn.getModelSet(), renderManagerIn.getItemInHandRenderer(), 1.2F));
         this.addLayer(new StickFigureColorLayer<>(this, TEXTURE));
         this.addLayer(new StickFigureHeadLayer<>(this, renderManagerIn.getEntityRenderDispatcher()));
     }

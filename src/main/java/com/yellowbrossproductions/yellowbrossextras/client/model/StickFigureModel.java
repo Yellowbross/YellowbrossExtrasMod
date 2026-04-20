@@ -404,8 +404,15 @@ public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> imp
         this.root().getAllParts().forEach(ModelPart::resetPose);
         this.head.visible = false;
 
+        this.head.x -= (netHeadYaw * ((float)Math.PI / 180F)) * 0.5F;
+        this.spine1.zRot -= (netHeadYaw * ((float)Math.PI / 180F)) * 0.1F;
+        this.spine_end1.yRot += (netHeadYaw * ((float)Math.PI / 180F));
+
+        this.spine_end1.xRot += (headPitch * ((float)Math.PI / 180F)) * 0.5F;
+        this.spine1.xRot += (headPitch * ((float)Math.PI / 180F)) * 0.5F;
+
         if (entity instanceof StickFigureEntity sticky) {
-            this.animate(sticky.getAnimationState("base"), StickFigureAnimation.debugging, ageInTicks, sticky.getAnimationSpeed());
+            this.animate(sticky.getAnimationState("base"), StickFigureAnimation.base, ageInTicks, sticky.getAnimationSpeed());
         }
     }
 
