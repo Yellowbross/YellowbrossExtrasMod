@@ -96,7 +96,7 @@ public class StickFigureHeadLayer<T extends StickFigureEntity, M extends StickFi
 
     private void drawVertex(Matrix4f pPose, Matrix3f pNormals, VertexConsumer pBuffer, float pOffsetX, float pOffsetY, float pTextureX, float pTextureY) {
         pBuffer.vertex(pPose, pOffsetX, pOffsetY, 0)
-                .color(1F, 1F, 1F, 1F)
+                .color(0.8F, 0.4F, 0.0F, 1F)
                 .uv(pTextureX, pTextureY)
                 .overlayCoords(OverlayTexture.NO_OVERLAY)
                 .uv2(15)
