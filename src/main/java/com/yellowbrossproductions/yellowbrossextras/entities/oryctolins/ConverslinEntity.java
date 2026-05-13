@@ -42,7 +42,14 @@ public class ConverslinEntity extends AbstractOryctolin {
     int runAwayTimer;
     boolean canAttack = false;
 
-    private int ATTACK1 = 1;
+    private final int ATTACK1 = 1;
+
+    private final int FACE_DEFAULT = 0;
+    private final int FACE_SCARE = 1;
+    private final int FACE_CRY = 2;
+    private final int FACE_AGGRESSIVE = 3;
+    private final int FACE_CELEBRATE = 4;
+    private final int FACE_BLINK = 5;
 
     public AnimationState anim_attack1 = new AnimationState();
 
@@ -96,7 +103,7 @@ public class ConverslinEntity extends AbstractOryctolin {
     @Override
     public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
         if (this.getFace() == 1) {
-            this.setFace(2);
+            this.setFace(FACE_CRY);
         }
         return super.causeFallDamage(p_147187_, p_147188_, p_147189_);
     }
@@ -159,10 +166,10 @@ public class ConverslinEntity extends AbstractOryctolin {
             if (target != null) {
                 if (this.attackType == ATTACK1) {
                     if (this.attackTicks == 4) {
-                        this.setFace(5);
+                        this.setFace(FACE_BLINK);
                     }
                     if (this.attackTicks == 6) {
-                        this.setFace(3);
+                        this.setFace(FACE_AGGRESSIVE);
                         double d1 = target.getX() - this.getX();
                         double d3 = target.getZ() - this.getZ();
                         double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
@@ -228,7 +235,7 @@ public class ConverslinEntity extends AbstractOryctolin {
         this.runAwayTimer--;
         if (this.AHHHHHH && this.runAwayTimer < 1) {
             this.AHHHHHH = false;
-            this.setFace(0);
+            this.setFace(FACE_DEFAULT);
         }
 
         if (this.getTarget() != null && !this.getTarget().isAlive()) this.setTarget(null);
@@ -240,12 +247,12 @@ public class ConverslinEntity extends AbstractOryctolin {
         }
 
         if (this.getFace() == 1 && this.isInWater()) {
-            this.setFace(2);
+            this.setFace(FACE_CRY);
         }
 
         if (this.AHHHHHH && this.runAwayFrom != null && this.getFace() != 1 && this.getFace() != 2) {
             this.playSound(YellowbrossExtrasSoundEvents.ENTITY_CONVERSLIN_SHRIEK.get(), 1.5F, this.getVoicePitch());
-            this.setFace(1);
+            this.setFace(FACE_SCARE);
             this.setAnimationState(0);
             double d1 = this.runAwayFrom.getX() - this.getX();
             double d3 = this.runAwayFrom.getZ() - this.getZ();
@@ -279,7 +286,7 @@ public class ConverslinEntity extends AbstractOryctolin {
                             this.celebrating = raid.celebrationTicks < 580;
                             if (this.celebrating && this.getTarget() == null) {
                                 if (this.getAnimationState() == 0) {
-                                    this.setFace(4);
+                                    this.setFace(FACE_CELEBRATE);
                                     this.setAnimationState(1);
                                 }
                             } else {
@@ -363,7 +370,7 @@ public class ConverslinEntity extends AbstractOryctolin {
         public void start() {
             super.start();
             if (!ConverslinEntity.this.AHHHHHH) {
-                ConverslinEntity.this.setFace(2);
+                ConverslinEntity.this.setFace(FACE_CRY);
             }
         }
 
@@ -454,7 +461,7 @@ public class ConverslinEntity extends AbstractOryctolin {
 
         @Override
         public void start() {
-            setFace(4);
+            setFace(FACE_CELEBRATE);
         }
 
         @Override
