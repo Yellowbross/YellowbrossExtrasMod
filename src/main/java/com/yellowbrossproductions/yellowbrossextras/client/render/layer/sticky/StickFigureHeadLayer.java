@@ -1,4 +1,4 @@
-package com.yellowbrossproductions.yellowbrossextras.client.render.layer;
+package com.yellowbrossproductions.yellowbrossextras.client.render.layer.sticky;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

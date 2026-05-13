@@ -18,9 +18,6 @@ import net.minecraft.world.entity.Entity;
 public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> implements CustomHeadedModel {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(YellowbrossExtras.MOD_ID, "stick_figure"), "main");
-    private static final float TEXTURE_WIDTH = 16;
-    private static final float TEXTURE_HEIGHT = 16;
-    private static final float START_RADIUS = -0.25f;
 
     private final ModelPart root;
     private final ModelPart all;
