@@ -182,9 +182,7 @@ public class EntityUtil {
                         }
                     }
 
-                    if (!level.isClientSide) {
-                        level.addFreshEntity(creeper);
-                    }
+                    if (!level.isClientSide) level.addFreshEntity(creeper);
                     entity.discard();
 
                     creeper.playSound(SoundEvents.ZOMBIE_INFECT, 3.0F, creeper.getVoicePitch());

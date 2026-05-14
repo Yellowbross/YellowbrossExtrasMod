@@ -190,6 +190,24 @@
     ]
   },
 
+  "entity.defender.sentry_gun.mitosis": {
+    "subtitle": "subtitles.entity.defender.sentry_gun.mitosis",
+    "sounds": [
+      "yellowbrossextras:defender/sentry_mitosis1",
+      "yellowbrossextras:defender/sentry_mitosis2",
+      "yellowbrossextras:defender/sentry_mitosis3",
+      "yellowbrossextras:defender/sentry_mitosis4",
+      "yellowbrossextras:defender/sentry_mitosis5"
+    ]
+  },
+
+  "entity.defender.sentry_gun.pop": {
+    "subtitle": "subtitles.entity.defender.sentry_gun.pop",
+    "sounds": [
+      "yellowbrossextras:defender/sentry_pop"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [

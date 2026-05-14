@@ -337,15 +337,17 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
     @Override
     public void tick() {
-        this.sawsCooldown--;
-        this.axesCooldown--;
-        this.boomerangCooldown--;
-        this.spikesCooldown--;
-        this.shurikensCooldown--;
-        this.chainsawCooldown--;
-        this.clawsCooldown--;
-
-        this.ratatatabowCooldown--;
+        if (this.getPhase() == 1) {
+            this.sawsCooldown--;
+            this.axesCooldown--;
+            this.boomerangCooldown--;
+            this.spikesCooldown--;
+            this.shurikensCooldown--;
+            this.chainsawCooldown--;
+            this.clawsCooldown--;
+        } else if (this.getPhase() == 2) {
+            this.ratatatabowCooldown--;
+        }
 
         if (this.attackType > 0) {
             this.attackTicks += 1;
@@ -424,7 +426,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
             if (this.doesAttackMeetNormalRequirements() && this.getTarget() != null && this.distanceTo(getTarget()) < 3.0D && this.meleeAttackType == 0) {
                 this.meleeAttackType = 1;
                 if (this.random.nextInt(5) == 0 && this.getPhase() == 1 && this.clawsCooldown < 1) {
-                    if (this.getTarget() != null && this.getTarget().getMaxHealth() >= 40.0F) {
+                    if (this.getTarget() != null && (this.getTarget().getMaxHealth() >= 40.0F || this.getTarget() instanceof Player)) {
                         this.meleeAttackType = 2;
                     }
                 }

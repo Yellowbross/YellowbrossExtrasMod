@@ -2,19 +2,28 @@ package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
+import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ConverslinBulletEntity;
+import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
+import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
+import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -25,10 +34,16 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
+import java.util.List;
 
 public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, IsDefenderAligned, YextrasEntity {
     private static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(SentryGunEntity.class, EntityDataSerializers.INT);
@@ -37,8 +52,12 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
     public AnimationState anim_shoot = new AnimationState();
     public AnimationState anim_intro = new AnimationState();
     public AnimationState anim_flying = new AnimationState();
+    public AnimationState anim_mitosis = new AnimationState();
 
     int setupTicks = 60;
+    int mitosisTicks = 11;
+    int explodeTimer = 20 * 20;
+    boolean mitosisInitiated = false;
 
     public SentryGunEntity(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
@@ -50,7 +69,7 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
         this.goalSelector.addGoal(2, new ShootGoal(this));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, IsDefenderAligned.class));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, IsDefenderAligned.class).setAlertOthers());
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Mob.class, 10, true, false, (p_29932_) -> {
             return p_29932_ instanceof Enemy;
         }));
@@ -83,6 +102,7 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
             case "shoot" -> anim_shoot;
             case "intro" -> anim_intro;
             case "flying" -> anim_flying;
+            case "mitosis" -> anim_mitosis;
 
             default -> new AnimationState();
         };
@@ -111,6 +131,10 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
                     case 3 :
                         this.stopAllAnimationStates();
                         this.anim_flying.start(this.tickCount);
+                        break;
+                    case 4 :
+                        this.stopAllAnimationStates();
+                        this.anim_mitosis.start(this.tickCount);
                         break;
                 }
             }
@@ -148,25 +172,105 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
 
     @Override
     public void tick() {
-        this.setDeltaMovement(0.0, this.getDeltaMovement().y, 0.0);
+        if (this.isActive()) this.setDeltaMovement(0.0, this.getDeltaMovement().y, 0.0);
         super.tick();
 
-        if (this.isOnGround() && !this.isActive()) {
-            if (this.setupTicks == 60) {
+        if (!this.isActive() && this.setupTicks == 60) {
+            if (!this.isOnGround()) this.setAnimationState(3);
+            else {
                 this.setupTicks = 59;
                 this.setAnimationState(2);
             }
-            if (this.setupTicks < 1) this.setActive(true);
         }
         if (this.setupTicks < 60) this.setupTicks -= 1;
+        if (this.setupTicks < 1) this.setActive(true);
 
-        if (this.getTarget() != null && this.isActive() && this.isAlive()) {
-            if (this.tickCount % 5 == 0) {
+        if (this.isActive() && this.isAlive()) {
+            if (this.getTarget() != null && !this.getTarget().isRemoved() && this.getTarget().isAlive() && this.tickCount % 5 == 0 && !this.mitosisInitiated) {
                 this.setAnimationState(0);
                 this.setAnimationState(1);
                 this.stopShootingSound(this.level);
                 this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get(), 3.0F, 1.0F);
                 this.performRangedAttack(this.getTarget());
+            }
+            explodeTimer--;
+            if (explodeTimer < 1 && this.random.nextInt(4) == 0) {
+                List<SentryGunEntity> list = this.level.getEntitiesOfClass(SentryGunEntity.class, this.getBoundingBox().inflate(50.0D), p -> {
+                    return p != this;
+                });
+                if (list.size() < 25 && !this.mitosisInitiated) {
+                    if (!this.level.isClientSide) {
+                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_MITOSIS.get(), 2.0F, 1.0F);
+                        this.setAnimationState(4);
+                        this.mitosisInitiated = true;
+                    }
+                }
+            }
+            if (this.mitosisInitiated) {
+                this.mitosisTicks -= 1;
+                if (this.mitosisTicks < 1 && !this.level.isClientSide) {
+                    this.dead = true;
+                    this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_POP.get(), 2.0F, 1.0F);
+                    this.explode(5.0d);
+                    this.makePopParticles();
+                    CameraShakeEntity.cameraShake(this.level, position(), 35, 0.2f, 0, 10);
+                    for (int i = 0; i < 2; i++) {
+                        SentryGunEntity iGaveBirth = ModEntityTypes.SentryGun.get().create(this.level);
+                        assert iGaveBirth != null;
+                        iGaveBirth.setPos(this.getX(), this.getY() + 0.5D, this.getZ());
+
+                        double mult = 0.6d;
+                        iGaveBirth.setDeltaMovement(
+                                (-0.5 + this.random.nextDouble()) * mult,
+                                0.3d + (this.random.nextDouble() * 0.3d),
+                                (-0.5 + this.random.nextDouble()) * mult
+                        );
+
+                        iGaveBirth.setTarget(this.getTarget());
+
+                        if (this.getTeam() != null) {
+                            this.level.getScoreboard().addPlayerToTeam(iGaveBirth.getStringUUID(),
+                                    this.level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                        }
+                        this.level.addFreshEntity(iGaveBirth);
+                    }
+                    this.discard();
+                }
+            }
+        }
+    }
+
+    public void makePopParticles() {
+        if (!this.level.isClientSide) {
+            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
+                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
+                    ParticlePacket packet = new ParticlePacket();
+
+                    EntityUtil.makeCircleParticles(this.level, this, ParticleTypes.POOF, 30, 0.4D, 1.0F);
+                    for(int i = 0; i < 30; ++i) {
+                        packet.queueParticle(ParticleTypes.POOF, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(0, this.random.nextGaussian(), 0));
+                    }
+                    packet.queueParticle(ParticleTypes.EXPLOSION, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(0, 0, 0));
+
+                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
+                }
+            }
+        }
+    }
+
+    public int getExplodeTimer() {
+        return this.explodeTimer;
+    }
+
+    private void explode(double size) {
+        List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level, size, this, Entity::isAlive);
+
+        for (Entity entity : list) {
+            if (entity instanceof LivingEntity living) {
+                boolean team = EntityUtil.canHurtThisMob(living, this) && !(living instanceof IsDefenderAligned);
+                if (team && entity.isAlive() && !entity.isInvulnerable() && !entity.isSpectator()) {
+                    living.hurt(DamageSource.explosion(this), 24.0F);
+                }
             }
         }
     }
@@ -201,6 +305,12 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             player.connection.send(sstopsoundpacket);
         }
+    }
+
+    @Override
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor p_21434_, DifficultyInstance p_21435_, MobSpawnType p_21436_, @Nullable SpawnGroupData p_21437_, @Nullable CompoundTag p_21438_) {
+        if (!this.isActive() && !this.isOnGround()) this.setAnimationState(3);
+        return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
     }
 
     public boolean isActive() {

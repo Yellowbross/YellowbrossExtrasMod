@@ -96,6 +96,7 @@ public class SentryGunModel<T extends Entity> extends HierarchicalModel<T> {
             this.animate(defender.getAnimationState("shoot"), SentryGunAnimation.shoot, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.getAnimationState("intro"), SentryGunAnimation.intro, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.getAnimationState("flying"), SentryGunAnimation.flying, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.getAnimationState("mitosis"), SentryGunAnimation.mitosis, ageInTicks, defender.getAnimationSpeed());
         }
     }
 
