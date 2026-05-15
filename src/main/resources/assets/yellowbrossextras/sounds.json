@@ -87,6 +87,13 @@
     ]
   },
 
+  "entity.defender.shuriken_launcher_warn": {
+    "subtitle": "subtitles.entity.defender.shuriken_launcher_warn",
+    "sounds": [
+      "yellowbrossextras:defender/shuriken_launcher_warn"
+    ]
+  },
+
   "entity.defender.chainsaw_warn": {
     "subtitle": "subtitles.entity.defender.chainsaw_warn",
     "sounds": [

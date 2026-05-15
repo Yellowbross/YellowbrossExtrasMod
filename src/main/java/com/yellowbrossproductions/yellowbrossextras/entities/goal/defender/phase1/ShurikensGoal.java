@@ -23,7 +23,7 @@ public class ShurikensGoal extends CustomAttackGoal {
 
     @Override
     public boolean canContinueToUse() {
-        return getDefender().attackTicks <= 30;
+        return getDefender().attackTicks <= 50;
     }
 
     @Override

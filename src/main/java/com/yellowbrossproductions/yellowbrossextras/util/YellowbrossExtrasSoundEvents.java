@@ -22,6 +22,7 @@ public class YellowbrossExtrasSoundEvents {
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_CRASH = addSoundsToRegistry("entity.defender.crash");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SPIKE = addSoundsToRegistry("entity.defender.spike");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SHOOT = addSoundsToRegistry("entity.defender.shoot");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SHURIKEN_LAUNCHER_WARN = addSoundsToRegistry("entity.defender.shuriken_launcher_warn");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_CHAINSAW_WARN = addSoundsToRegistry("entity.defender.chainsaw_warn");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_CHAINSAW_CATCH = addSoundsToRegistry("entity.defender.chainsaw_catch");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_CHAINSAW = addSoundsToRegistry("entity.defender.chainsaw");

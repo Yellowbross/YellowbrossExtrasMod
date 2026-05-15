@@ -52,6 +52,7 @@
   "subtitles.entity.defender.crash": "Defender crashes",
   "subtitles.entity.defender.spike": "Spikes slice",
   "subtitles.entity.defender.shoot": "Defender shoots",
+  "subtitles.entity.defender.shuriken_launcher_warn": "Defender cocks a gun",
   "subtitles.entity.defender.chainsaw_warn": "Chainsaw revs up",
   "subtitles.entity.defender.chainsaw_catch": "Defender catches",
   "subtitles.entity.defender.chainsaw": "Chainsaw roars",
@@ -66,6 +67,9 @@
   "subtitles.entity.defender.gag3": "OOOUUUUUHHHHHH",
   "subtitles.entity.defender.carnage": "Mindless carnage",
   "subtitles.entity.defender.sentry_gun.shoot": "Sentry Gun shoots",
+  "subtitles.entity.defender.sentry_gun.hit": "Something got brutally shot",
+  "subtitles.entity.defender.sentry_gun.mitosis": "Sentry Gun commits mitosis",
+  "subtitles.entity.defender.sentry_gun.pop": "Sentry Gun gives birth",
 
   "subtitles.entity.vilvgaver.attack": "Vilvgaver attacks",
   "subtitles.entity.vilvgaver.loop": "Vilvgaver screams",

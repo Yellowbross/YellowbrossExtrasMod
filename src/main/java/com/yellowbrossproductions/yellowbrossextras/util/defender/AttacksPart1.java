@@ -248,7 +248,10 @@ public class AttacksPart1 {
                 if (ticks == 6) {
                     defender.playSound(SoundEvents.WITCH_THROW, 2.0F, 1.5F);
                 }
-                if (ticks == 16) {
+                if (ticks == 25) {
+                    defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SHURIKEN_LAUNCHER_WARN.get(), 2.0F, 1.0F);
+                }
+                if (ticks == 36) {
                     defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SHOOT.get(), 3.0F, 1.0F);
 
                     float radius2 = 1.1f;
@@ -273,7 +276,7 @@ public class AttacksPart1 {
                         double d2 = d0 - shuriken.getY();
                         double d3 = target.getZ() - defender.getZ();
                         double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
-                        shuriken.shoot(d1, d2 + d4, d3, 1.0F, 16.0F);
+                        shuriken.shoot(d1, d2 + d4, d3, 1.0F, 24.0F);
                         defender.level.addFreshEntity(shuriken);
                     }
                 }
