@@ -261,7 +261,11 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
                             this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SMACK.get(), 2.0F, this.getVoicePitch());
                             this.clawsTarget.invulnerableTime = 0;
                             this.clawsTarget.hurtMarked = true;
-                            this.clawsTarget.setDeltaMovement(this.clawsTarget.getDeltaMovement().add(-x / d * 2.5D, (-y / d * 0.4D) + 0.5D, -z / d * 2.5D));
+                            double mult = 3.5d;
+                            this.clawsTarget.setDeltaMovement(
+                                    this.clawsTarget.getDeltaMovement().add(-x / d * mult,
+                                            (-y / d * 0.4D) + 0.5D,
+                                            -z / d * mult));
                         }
                     }
                 }
@@ -425,7 +429,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
             if (this.doesAttackMeetNormalRequirements() && this.getTarget() != null && this.distanceTo(getTarget()) < 3.0D && this.meleeAttackType == 0) {
                 this.meleeAttackType = 1;
-                if (this.random.nextInt(5) == 0 && this.getPhase() == 1 && this.clawsCooldown < 1) {
+                if ((this.random.nextInt(5) == 0 || this.sawsCooldown >= 140) && this.getPhase() == 1 && this.clawsCooldown < 1) {
                     if (this.getTarget() != null && (this.getTarget().getMaxHealth() >= 40.0F || this.getTarget() instanceof Player)) {
                         this.meleeAttackType = 2;
                     }

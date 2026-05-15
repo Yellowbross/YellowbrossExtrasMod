@@ -12,7 +12,7 @@ public class ChainsawGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().chainsawCooldown < 1 && getDefender().getPhase() == 1 && (getDefender().distanceTo(getDefender().getTarget()) > 6.0D) && (getDefender().distanceTo(getDefender().getTarget()) < 35.0D);
+        return doesAttackMeetNormalRequirements() && (getRandom().nextInt(16) == 0 || getDefender().clawsCooldown >= 540) && getDefender().chainsawCooldown < 1 && getDefender().getPhase() == 1 && (getDefender().distanceTo(getDefender().getTarget()) > 6.0D) && (getDefender().distanceTo(getDefender().getTarget()) < 35.0D);
     }
 
     @Override
