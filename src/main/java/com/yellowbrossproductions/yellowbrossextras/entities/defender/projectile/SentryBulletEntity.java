@@ -91,7 +91,7 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
                     team = EntityUtil.canHurtThisMob(living, (Mob) this.getOwner()) && entity != this.getOwner() && !(living instanceof IsDefenderAligned);
                 }
                 if (team && entity.isAlive() && !entity.isInvulnerable() && !entity.isSpectator()) {
-                    living.hurt(DamageSource.thrown(this, this.getOwner()), 1.0F);
+                    living.hurt(DamageSource.thrown(this, this.getOwner()), 5.0F);
                     living.invulnerableTime -= 9;
                     if (!this.level.isClientSide) {
                         this.discard();

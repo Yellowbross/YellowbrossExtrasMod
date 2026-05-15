@@ -10,7 +10,10 @@ public class YellowbrossExtrasConfig {
     public static ForgeConfigSpec.IntValue vilvgaverTotalFrames;
 
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> aiChangesNotAllowed;
+
     public static ForgeConfigSpec.BooleanValue defender_distractEnemies;
+    public static ForgeConfigSpec.IntValue defender_sentryGun_mitosisTimer;
+    public static ForgeConfigSpec.IntValue defender_sentryGun_mitosisCap;
 
     public static ForgeConfigSpec.DoubleValue vilvgaverChallenge_defaultSpeed;
     public static ForgeConfigSpec.IntValue vilvgaverChallenge_glowTime;
@@ -73,6 +76,18 @@ public class YellowbrossExtrasConfig {
                 .comment("Determines if mobs should stop to stare at Defender's ultimate attacks.",
                         "Default = true")
                 .define("defender_distractEnemies", true);
+
+        defender_sentryGun_mitosisTimer = common
+                .comment(" ")
+                .comment("Determines the timer, in seconds, which Defender's Sentry Guns (phase 2) can stay alive before they multiply.",
+                        "Default = 20")
+                .defineInRange("defender_sentryGun_mitosisTimer", 20, 0, Integer.MAX_VALUE);
+
+        defender_sentryGun_mitosisCap = common
+                .comment(" ")
+                .comment("Determines how many Sentry Guns can be near each other before they stop multiplying. Don't get carried away.",
+                        "Default = 25")
+                .defineInRange("defender_sentryGun_mitosisCap", 25, 1, Integer.MAX_VALUE);
 
         common.pop();
 

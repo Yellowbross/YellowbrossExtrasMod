@@ -2,6 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
+import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
@@ -56,7 +57,7 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
 
     int setupTicks = 60;
     int mitosisTicks = 11;
-    int explodeTimer = 20 * 20;
+    int explodeTimer = YellowbrossExtrasConfig.defender_sentryGun_mitosisTimer.get() * 20;
     boolean mitosisInitiated = false;
 
     public SentryGunEntity(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
@@ -94,6 +95,11 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
 
     public void setAnimationState(int input) {
         this.entityData.set(ANIMATION_STATE, input);
+    }
+
+    @Override
+    public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
+        return false;
     }
 
     @Override
@@ -198,7 +204,7 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
                 List<SentryGunEntity> list = this.level.getEntitiesOfClass(SentryGunEntity.class, this.getBoundingBox().inflate(50.0D), p -> {
                     return p != this;
                 });
-                if (list.size() < 25 && !this.mitosisInitiated) {
+                if (list.size() < YellowbrossExtrasConfig.defender_sentryGun_mitosisCap.get() && !this.mitosisInitiated) {
                     if (!this.level.isClientSide) {
                         this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_MITOSIS.get(), 2.0F, 1.0F);
                         this.setAnimationState(4);
@@ -219,14 +225,16 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
                         assert iGaveBirth != null;
                         iGaveBirth.setPos(this.getX(), this.getY() + 0.5D, this.getZ());
 
-                        double mult = 0.6d;
+                        double mult = 1.0d;
                         iGaveBirth.setDeltaMovement(
                                 (-0.5 + this.random.nextDouble()) * mult,
-                                0.3d + (this.random.nextDouble() * 0.3d),
+                                0.3d + (this.random.nextDouble() * 0.5d),
                                 (-0.5 + this.random.nextDouble()) * mult
                         );
 
                         iGaveBirth.setTarget(this.getTarget());
+
+                        if (this.level instanceof ServerLevel serverLevel) iGaveBirth.finalizeSpawn(serverLevel, this.level.getCurrentDifficultyAt(this.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
 
                         if (this.getTeam() != null) {
                             this.level.getScoreboard().addPlayerToTeam(iGaveBirth.getStringUUID(),
@@ -278,21 +286,19 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
     public void performRangedAttack(LivingEntity target) {
         double x = this.getX();
         double z = this.getZ();
-        for (int i = 0; i < 5; ++i) {
-            double y1 = this.getY() + 0.75D;
+        double y1 = this.getY() + 0.75D;
 
-            double d0 = target.getEyeY();
-            double d1 = target.getX() - x;
-            double d2 = d0 - y1;
-            double d3 = target.getZ() - z;
-            double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
+        double d0 = target.getEyeY();
+        double d1 = target.getX() - x;
+        double d2 = d0 - y1;
+        double d3 = target.getZ() - z;
+        double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
 
-            SentryBulletEntity bullet = new SentryBulletEntity(this.level, this, d1, d2, d3);
+        SentryBulletEntity bullet = new SentryBulletEntity(this.level, this, d1, d2, d3);
 
-            bullet.setPos(x, y1, z);
-            bullet.setOwner(this);
-            this.level.addFreshEntity(bullet);
-        }
+        bullet.setPos(x, y1, z);
+        bullet.setOwner(this);
+        this.level.addFreshEntity(bullet);
     }
 
     public void stopShootingSound(Level world) {
