@@ -18,7 +18,7 @@ public class ClawsGoal extends CustomAttackGoal {
     public void start() {
         getDefender().setAnimationState(10);
         getDefender().setWeaponToShow(7);
-        getDefender().attackType = getDefender().CLAWS_ATTACK;
+        getDefender().attackType = getDefender().attack_claws;
         getDefender().setImmediateTurn(true);
     }
 
@@ -48,7 +48,7 @@ public class ClawsGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().clawsCooldown = 600;
+        getDefender().cooldown_claws = 600;
         getDefender().clawsTarget = null;
         getDefender().itsTimeToClawTarget = false;
     }

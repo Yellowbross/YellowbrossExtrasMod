@@ -11,14 +11,14 @@ public class BoomerangGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().boomerangCooldown < 1 && getDefender().getPhase() == 1;
+        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_boomerang < 1 && getDefender().getPhase() == 1;
     }
 
     @Override
     public void start() {
         getDefender().setAnimationState(5);
         getDefender().setWeaponToShow(3);
-        getDefender().attackType = getDefender().BOOMERANG_ATTACK;
+        getDefender().attackType = getDefender().attack_boomerang;
     }
 
     @Override
@@ -29,6 +29,6 @@ public class BoomerangGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().boomerangCooldown = 600;
+        getDefender().cooldown_boomerang = 600;
     }
 }

@@ -11,14 +11,14 @@ public class ShurikensGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().shurikensCooldown < 1 && getDefender().getPhase() == 1;
+        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_shurikens < 1 && getDefender().getPhase() == 1;
     }
 
     @Override
     public void start() {
         getDefender().setAnimationState(8);
         getDefender().setWeaponToShow(5);
-        getDefender().attackType = getDefender().SHURIKENS_ATTACK;
+        getDefender().attackType = getDefender().attack_shurikens;
     }
 
     @Override
@@ -29,6 +29,6 @@ public class ShurikensGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().shurikensCooldown = 200;
+        getDefender().cooldown_shurikens = 200;
     }
 }

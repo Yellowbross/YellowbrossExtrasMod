@@ -11,7 +11,7 @@ public class ExcaliburGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return getDefender().attackType == getDefender().EXCALIBUR_ATTACK;
+        return getDefender().attackType == getDefender().attack_excalibur;
     }
 
     @Override

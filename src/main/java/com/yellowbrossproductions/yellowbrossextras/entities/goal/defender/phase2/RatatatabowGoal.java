@@ -11,7 +11,7 @@ public class RatatatabowGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().ratatatabowCooldown < 1 && getDefender().getPhase() == 2 && (getDefender().distanceTo(getDefender().getTarget()) > 15.0D) && (getDefender().distanceTo(getDefender().getTarget()) < 35.0D);
+        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_ratatatabow < 1 && getDefender().getPhase() == 2 && (getDefender().distanceTo(getDefender().getTarget()) > 15.0D) && (getDefender().distanceTo(getDefender().getTarget()) < 35.0D);
     }
 
     @Override
@@ -19,7 +19,7 @@ public class RatatatabowGoal extends CustomAttackGoal {
         getDefender().setAnimationState(16);
         getDefender().setWeaponToShow(9);
         getDefender().setImmediateTurn(true);
-        getDefender().attackType = getDefender().RATATATABOW_ATTACK;
+        getDefender().attackType = getDefender().attack_ratatatabow;
     }
 
     @Override
@@ -30,6 +30,6 @@ public class RatatatabowGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().ratatatabowCooldown = 200;
+        getDefender().cooldown_ratatatabow = 200;
     }
 }

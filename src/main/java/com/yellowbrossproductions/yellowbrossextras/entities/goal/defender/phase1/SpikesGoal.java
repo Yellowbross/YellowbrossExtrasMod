@@ -12,14 +12,14 @@ public class SpikesGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && getRandom().nextInt(8) == 0 && getDefender().spikesCooldown < 1 && getDefender().getPhase() == 1 && getDefender().isOnGround();
+        return doesAttackMeetNormalRequirements() && getRandom().nextInt(8) == 0 && getDefender().cooldown_spikes < 1 && getDefender().getPhase() == 1 && getDefender().isOnGround();
     }
 
     @Override
     public void start() {
         getDefender().setAnimationState(6);
         getDefender().setWeaponToShow(4);
-        getDefender().attackType = getDefender().SPIKES_ATTACK;
+        getDefender().attackType = getDefender().attack_spikes;
         getDefender().playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SPIN_SHORT.get(), 1.5F, 1.0F);
     }
 
@@ -31,6 +31,6 @@ public class SpikesGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().spikesCooldown = 600;
+        getDefender().cooldown_spikes = 600;
     }
 }

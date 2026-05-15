@@ -102,16 +102,30 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     // Phase 2
     public AnimationState anim_ratatatabow = new AnimationState();
     public AnimationState anim_ratatatabow2 = new AnimationState();
+    public AnimationState anim_poisondarts = new AnimationState();
+    public AnimationState anim_forcegun = new AnimationState();
+    public AnimationState anim_snipe = new AnimationState();
+    public AnimationState anim_sentryguns = new AnimationState();
+    public AnimationState anim_icethrower = new AnimationState();
+    public AnimationState anim_witherbazooka = new AnimationState();
+    public AnimationState anim_creepergun = new AnimationState();
+    public AnimationState anim_flamethrower = new AnimationState();
 
-    public int sawsCooldown;
-    public int axesCooldown;
-    public int boomerangCooldown;
-    public int spikesCooldown;
-    public int shurikensCooldown;
-    public int chainsawCooldown;
-    public int clawsCooldown;
+    public int cooldown_saws;
+    public int cooldown_axes;
+    public int cooldown_boomerang;
+    public int cooldown_spikes;
+    public int cooldown_shurikens;
+    public int cooldown_chainsaw;
+    public int cooldown_claws;
 
-    public int ratatatabowCooldown;
+    public int cooldown_ratatatabow;
+    public int cooldown_poisondarts;
+    public int cooldown_snipe;
+    public int cooldown_sentryguns;
+    public int cooldown_icethrower;
+    public int cooldown_witherbazooka;
+    public int cooldown_creepergun;
 
     public int attackType;
     public int attackTicks;
@@ -121,18 +135,26 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     public int jumpTicks;
     private int inWaterJumpTicks;
 
-    public int SAWS_ATTACK = 1;
-    public int JUMP_ATTACK = 2;
-    public int SWORD_ATTACK = 3;
-    public int AXES_ATTACK = 4;
-    public int BOOMERANG_ATTACK = 5;
-    public int SPIKES_ATTACK = 6;
-    public int SHURIKENS_ATTACK = 7;
-    public int CHAINSAW_ATTACK = 8;
-    public int CLAWS_ATTACK = 9;
-    public int EXCALIBUR_ATTACK = 10;
+    public int attack_saws = 1;
+    public int attack_jump = 2;
+    public int attack_swords = 3;
+    public int attack_axes = 4;
+    public int attack_boomerang = 5;
+    public int attack_spikes = 6;
+    public int attack_shurikens = 7;
+    public int attack_chainsaw = 8;
+    public int attack_claws = 9;
+    public int attack_excalibur = 10;
 
-    public int RATATATABOW_ATTACK = 11;
+    public int attack_ratatatabow = 11;
+    public int attack_poisondarts = 12;
+    public int attack_forcegun = 13;
+    public int attack_snipe = 14;
+    public int attack_sentryguns = 15;
+    public int attack_icethrower = 16;
+    public int attack_witherbazooka = 17;
+    public int attack_creepergun = 18;
+    public int attack_flamethrower = 19;
 
     public double chargeX;
     double chargeY;
@@ -224,7 +246,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     @Override
     public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
         if (this.jumpAttacking) {
-            if (this.attackType == SPIKES_ATTACK) {
+            if (this.attackType == attack_spikes) {
                 this.setAnimationState(7);
                 this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
                 this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 3.0F, 1.0F);
@@ -245,7 +267,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
                 averageXCord = 0;
                 averageZCord = 0;
             }
-            if (this.attackType == CLAWS_ATTACK) {
+            if (this.attackType == attack_claws) {
                 if (this.clawsTarget != null) {
                     if (this.distanceToSqr(this.clawsTarget) < 7.5D) {
                         if (this.clawsTarget.hurt(DamageSource.mobAttack(this), 10.0F)) {
@@ -320,7 +342,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     }
 
     public boolean isCarnageAttack() {
-        return this.attackType == EXCALIBUR_ATTACK;
+        return this.attackType == attack_excalibur;
     }
 
     @Nullable
@@ -342,15 +364,21 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     @Override
     public void tick() {
         if (this.getPhase() == 1) {
-            this.sawsCooldown--;
-            this.axesCooldown--;
-            this.boomerangCooldown--;
-            this.spikesCooldown--;
-            this.shurikensCooldown--;
-            this.chainsawCooldown--;
-            this.clawsCooldown--;
+            this.cooldown_saws--;
+            this.cooldown_axes--;
+            this.cooldown_boomerang--;
+            this.cooldown_spikes--;
+            this.cooldown_shurikens--;
+            this.cooldown_chainsaw--;
+            this.cooldown_claws--;
         } else if (this.getPhase() == 2) {
-            this.ratatatabowCooldown--;
+            this.cooldown_ratatatabow--;
+            this.cooldown_poisondarts--;
+            this.cooldown_snipe--;
+            this.cooldown_sentryguns--;
+            this.cooldown_icethrower--;
+            this.cooldown_witherbazooka--;
+            this.cooldown_creepergun--;
         }
 
         if (this.attackType > 0) {
@@ -410,7 +438,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
             if (this.getPhase() == 1) AttacksPart1.tickPhase1Attacks(this);
             if (this.getPhase() == 2) AttacksPart1.tickPhase2Attacks(this);
 
-            if (this.attackType == JUMP_ATTACK) {
+            if (this.attackType == attack_jump) {
                 if (this.attackTicks == 4) {
                     this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_JUMP.get(), 2.0F, 1.0F);
                     if (this.getTarget() != null) {
@@ -429,7 +457,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
             if (this.doesAttackMeetNormalRequirements() && this.getTarget() != null && this.distanceTo(getTarget()) < 3.0D && this.meleeAttackType == 0) {
                 this.meleeAttackType = 1;
-                if ((this.random.nextInt(5) == 0 || this.sawsCooldown >= 140) && this.getPhase() == 1 && this.clawsCooldown < 1) {
+                if ((this.random.nextInt(5) == 0 || this.cooldown_saws >= 140) && this.getPhase() == 1 && this.cooldown_claws < 1) {
                     if (this.getTarget() != null && (this.getTarget().getMaxHealth() >= 40.0F || this.getTarget() instanceof Player)) {
                         this.meleeAttackType = 2;
                     }
@@ -1041,16 +1069,16 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
             }
         }
         if (!this.killedByCommand(p_21016_, p_21017_)) {
-            if (this.attackType == CLAWS_ATTACK && this.shouldContinueAttacking) {
+            if (this.attackType == attack_claws && this.shouldContinueAttacking) {
                 return false;
             }
-            if (this.attackType == SAWS_ATTACK) {
+            if (this.attackType == attack_saws) {
                 return false;
             }
-            if (this.attackType == CHAINSAW_ATTACK) {
+            if (this.attackType == attack_chainsaw) {
                 p_21017_ /= 2;
             }
-            if (this.attackType == RATATATABOW_ATTACK && this.attackTicks2 > 0) {
+            if (this.attackType == attack_ratatatabow && this.attackTicks2 > 0) {
                 p_21017_ = 0;
             }
         }
@@ -1185,7 +1213,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
             CameraShakeEntity.cameraShake(this.level, position(), 30, 0.3f, 0, 15);
             this.makePhaseEndParticles();
             this.setAnimationState(13);
-            this.attackType = EXCALIBUR_ATTACK;
+            this.attackType = attack_excalibur;
         }
     }
 
@@ -1428,6 +1456,14 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
             case "ratatatabow" -> anim_ratatatabow;
             case "ratatatabow2" -> anim_ratatatabow2;
+            case "poisondarts" -> anim_poisondarts;
+            case "forcegun" -> anim_forcegun;
+            case "snipe" -> anim_snipe;
+            case "sentryguns" -> anim_sentryguns;
+            case "icethrower" -> anim_icethrower;
+            case "witherbazooka" -> anim_witherbazooka;
+            case "creepergun" -> anim_creepergun;
+            case "flamethrower" -> anim_flamethrower;
 
             default -> new AnimationState();
         };
@@ -1517,6 +1553,38 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
                         this.stopAllAnimationStates();
                         this.anim_ratatatabow2.start(this.tickCount);
                         break;
+                    case 19 :
+                        this.stopAllAnimationStates();
+                        this.anim_poisondarts.start(this.tickCount);
+                        break;
+                    case 20 :
+                        this.stopAllAnimationStates();
+                        this.anim_forcegun.start(this.tickCount);
+                        break;
+                    case 21 :
+                        this.stopAllAnimationStates();
+                        this.anim_snipe.start(this.tickCount);
+                        break;
+                    case 22 :
+                        this.stopAllAnimationStates();
+                        this.anim_sentryguns.start(this.tickCount);
+                        break;
+                    case 23 :
+                        this.stopAllAnimationStates();
+                        this.anim_icethrower.start(this.tickCount);
+                        break;
+                    case 24 :
+                        this.stopAllAnimationStates();
+                        this.anim_witherbazooka.start(this.tickCount);
+                        break;
+                    case 25 :
+                        this.stopAllAnimationStates();
+                        this.anim_creepergun.start(this.tickCount);
+                        break;
+                    case 26 :
+                        this.stopAllAnimationStates();
+                        this.anim_flamethrower.start(this.tickCount);
+                        break;
                 }
             }
         }
@@ -1543,6 +1611,14 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         this.anim_claws_punch.stop();
         this.anim_ratatatabow.stop();
         this.anim_ratatatabow2.stop();
+        this.anim_poisondarts.stop();
+        this.anim_forcegun.stop();
+        this.anim_snipe.stop();
+        this.anim_sentryguns.stop();
+        this.anim_icethrower.stop();
+        this.anim_witherbazooka.stop();
+        this.anim_creepergun.stop();
+        this.anim_flamethrower.stop();
     }
 
     public boolean doesJumpMeetNormalRequirements() {
@@ -1624,7 +1700,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         @Override
         public void start() {
             setAnimationState(2);
-            attackType = JUMP_ATTACK;
+            attackType = attack_jump;
         }
 
         @Override

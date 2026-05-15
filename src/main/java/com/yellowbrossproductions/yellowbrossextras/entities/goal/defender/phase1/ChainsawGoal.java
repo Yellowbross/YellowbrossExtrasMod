@@ -12,14 +12,14 @@ public class ChainsawGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && (getRandom().nextInt(16) == 0 || getDefender().clawsCooldown >= 540) && getDefender().chainsawCooldown < 1 && getDefender().getPhase() == 1 && (getDefender().distanceTo(getDefender().getTarget()) > 6.0D) && (getDefender().distanceTo(getDefender().getTarget()) < 35.0D);
+        return doesAttackMeetNormalRequirements() && (getRandom().nextInt(16) == 0 || getDefender().cooldown_claws >= 540) && getDefender().cooldown_chainsaw < 1 && getDefender().getPhase() == 1 && (getDefender().distanceTo(getDefender().getTarget()) > 6.0D) && (getDefender().distanceTo(getDefender().getTarget()) < 35.0D);
     }
 
     @Override
     public void start() {
         getDefender().setAnimationState(9);
         getDefender().setWeaponToShow(6);
-        getDefender().attackType = getDefender().CHAINSAW_ATTACK;
+        getDefender().attackType = getDefender().attack_chainsaw;
         getDefender().setImmediateTurn(true);
         getDefender().setChainsawLookX(0.0F);
     }
@@ -49,7 +49,7 @@ public class ChainsawGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().chainsawCooldown = 200;
+        getDefender().cooldown_chainsaw = 200;
         getDefender().setLaserPosition(0,0,0);
     }
 }

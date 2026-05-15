@@ -30,7 +30,7 @@ public class AttacksPart1 {
     public static void tickPhase1Attacks(DefenderEntity defender) {
         LivingEntity target = defender.tryToFindTarget();
         if (target != null) {
-            if (defender.attackType == defender.SAWS_ATTACK) {
+            if (defender.attackType == defender.attack_saws) {
                 if (defender.attackTicks == 7) {
                     defender.playSound(SoundEvents.GENERIC_EXPLODE, 3.0F, 0.8F);
                     defender.makeExplodeParticles();
@@ -77,7 +77,7 @@ public class AttacksPart1 {
                     }
                 }
             }
-            if (defender.attackType == defender.SWORD_ATTACK) {
+            if (defender.attackType == defender.attack_swords) {
                 if (defender.attackTicks == 11) {
                     defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SWORD_WHOOSH.get(), 2.0F, 1.0F);
                 }
@@ -107,7 +107,7 @@ public class AttacksPart1 {
                     }
                 }
             }
-            if (defender.attackType == defender.AXES_ATTACK) {
+            if (defender.attackType == defender.attack_axes) {
                 if (defender.attackTicks == (24 * defender.throwTimes)) {
                     defender.setAnimationState(0);
                     defender.setAnimationState(4);
@@ -131,7 +131,7 @@ public class AttacksPart1 {
                     }
                 }
             }
-            if (defender.attackType == defender.BOOMERANG_ATTACK) {
+            if (defender.attackType == defender.attack_boomerang) {
                 if (defender.attackTicks == 10) {
                     defender.playSound(SoundEvents.WITCH_THROW, 2.0F, 0.9F);
                     defender.setWeaponToShow(0);
@@ -157,7 +157,7 @@ public class AttacksPart1 {
                     }
                 }
             }
-            if (defender.attackType == defender.SPIKES_ATTACK) {
+            if (defender.attackType == defender.attack_spikes) {
                 if (defender.attackTicks == 15) {
                     defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 2.0F, 1.0F);
                     defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SPIKE.get(), 2.0F, 1.0F);
@@ -228,7 +228,7 @@ public class AttacksPart1 {
                     }
                 }
             }
-            if (defender.attackType == defender.SHURIKENS_ATTACK) {
+            if (defender.attackType == defender.attack_shurikens) {
                 if (defender.attackTicks == 4) {
                     defender.playSound(SoundEvents.WITCH_THROW, 2.0F, 1.2F);
                 }
@@ -272,7 +272,7 @@ public class AttacksPart1 {
                     }
                 }
             }
-            if (defender.attackType == defender.CHAINSAW_ATTACK) {
+            if (defender.attackType == defender.attack_chainsaw) {
                 defender.setLaserPosition(target.getX(), target.getY() + (target.getBbHeight() / 2), target.getZ());
                 if (defender.attackTicks == 3) {
                     defender.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, 0.5F);
@@ -318,7 +318,7 @@ public class AttacksPart1 {
                     defender.setShakeMultiplier(0);
                 }
             }
-            if (defender.attackType == defender.CLAWS_ATTACK) {
+            if (defender.attackType == defender.attack_claws) {
                 if (defender.attackTicks == 12) {
                     float radius2 = 1.2f;
                     double x = defender.getX() + 0.8F * Math.sin(-defender.getYRot() * Math.PI / 180) + radius2 * Math.sin(-defender.yHeadRot * Math.PI / 180) * Math.cos(-defender.getXRot() * Math.PI / 180);
@@ -409,7 +409,7 @@ public class AttacksPart1 {
     public static void tickPhase2Attacks(DefenderEntity defender) {
         LivingEntity target = defender.tryToFindTarget();
         if (target != null) {
-            if (defender.attackType == defender.RATATATABOW_ATTACK) {
+            if (defender.attackType == defender.attack_ratatatabow) {
                 if (defender.attackTicks == 30) {
                     if (!defender.level.isClientSide) {
                         defender.setDeltaMovement(((target.getX() - defender.getX()) * 2.5D) * 0.08D, 1.0D, ((target.getZ() - defender.getZ()) * 2.5D) * 0.08D);

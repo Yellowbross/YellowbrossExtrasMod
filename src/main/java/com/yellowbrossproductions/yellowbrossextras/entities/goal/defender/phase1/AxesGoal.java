@@ -11,13 +11,13 @@ public class AxesGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().axesCooldown < 1 && getDefender().getPhase() == 1 && (getDefender().distanceTo(getDefender().getTarget()) > 10.0D);
+        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_axes < 1 && getDefender().getPhase() == 1 && (getDefender().distanceTo(getDefender().getTarget()) > 10.0D);
     }
 
     @Override
     public void start() {
         getDefender().setAnimationState(4);
-        getDefender().attackType = getDefender().AXES_ATTACK;
+        getDefender().attackType = getDefender().attack_axes;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class AxesGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().axesCooldown = 200;
+        getDefender().cooldown_axes = 200;
         getDefender().throwTimes = 1;
     }
 

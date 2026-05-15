@@ -11,13 +11,13 @@ public class SawsGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return getDefender().doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().sawsCooldown < 1 && getDefender().getPhase() == 1 && getDefender().getTarget() != null && getDefender().getTarget().getBlockStateOn() != Blocks.AIR.defaultBlockState();
+        return getDefender().doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_saws < 1 && getDefender().getPhase() == 1 && getDefender().getTarget() != null && getDefender().getTarget().getBlockStateOn() != Blocks.AIR.defaultBlockState();
     }
 
     @Override
     public void start() {
         getDefender().setAnimationState(1);
-        getDefender().attackType = getDefender().SAWS_ATTACK;
+        getDefender().attackType = getDefender().attack_saws;
     }
 
     @Override
@@ -28,6 +28,6 @@ public class SawsGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().sawsCooldown = 200;
+        getDefender().cooldown_saws = 200;
     }
 }
