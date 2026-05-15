@@ -137,7 +137,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
     public int attack_saws = 1;
     public int attack_jump = 2;
-    public int attack_swords = 3;
+    public int attack_sword = 3;
     public int attack_axes = 4;
     public int attack_boomerang = 5;
     public int attack_spikes = 6;
@@ -189,7 +189,8 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new RatatatabowGoal(this));
+        this.goalSelector.addGoal(0, new SentryGunsGoal(this));
+        // this.goalSelector.addGoal(0, new RatatatabowGoal(this));
 
         this.goalSelector.addGoal(0, new ExcaliburGoal(this));
         this.goalSelector.addGoal(0, new ClawsGoal(this));

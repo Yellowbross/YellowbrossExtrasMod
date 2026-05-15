@@ -2,9 +2,8 @@ package com.yellowbrossproductions.yellowbrossextras.entities;
 
 import com.google.common.collect.Sets;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
-import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperEnemy;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.ItemRegisterer;
+import com.yellowbrossproductions.yellowbrossextras.util.RegistryHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.LoopingSound;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -24,16 +23,13 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.PowderSnowBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
@@ -41,7 +37,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.NetworkHooks;
@@ -370,7 +365,7 @@ public class VilvgaverEntity extends PathfinderMob implements IEntityAdditionalS
                         BlockPos blockpos1 = blockpos.immutable();
                         this.level.getProfiler().push("explosion_blocks");
 
-                        this.level.setBlockAndUpdate(blockpos1, ItemRegisterer.FROZEN_LAVA.get().defaultBlockState());
+                        this.level.setBlockAndUpdate(blockpos1, RegistryHandler.FROZEN_LAVA.get().defaultBlockState());
                         this.level.getProfiler().pop();
                     }
                 }

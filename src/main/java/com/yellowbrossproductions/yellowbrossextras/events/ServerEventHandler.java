@@ -12,7 +12,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOrycto
 import com.yellowbrossproductions.yellowbrossextras.init.YellowbrossExtrasGameRules;
 import com.yellowbrossproductions.yellowbrossextras.util.EffectRegisterer;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.ItemRegisterer;
+import com.yellowbrossproductions.yellowbrossextras.util.RegistryHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.VilvgaverSpawner;
 import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.BlitzManager;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -222,7 +222,7 @@ public class ServerEventHandler {
                             BlockPos blockpos1 = blockpos.immutable();
                             mob.level.getProfiler().push("explosion_blocks");
 
-                            mob.level.setBlockAndUpdate(blockpos1, ItemRegisterer.FROZEN_LAVA.get().defaultBlockState());
+                            mob.level.setBlockAndUpdate(blockpos1, RegistryHandler.FROZEN_LAVA.get().defaultBlockState());
                             mob.level.getProfiler().pop();
                         }
                     }

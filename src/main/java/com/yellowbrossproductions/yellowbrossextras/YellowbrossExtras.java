@@ -52,8 +52,8 @@ public class YellowbrossExtras
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
-        ItemRegisterer.itemInit();
-        ItemRegisterer.blockInit();
+        RegistryHandler.itemInit();
+        RegistryHandler.blockInit();
         ModEntityTypes.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         EffectRegisterer.EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
         YellowbrossExtrasSoundEvents.SOUND_EVENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -132,7 +132,7 @@ public class YellowbrossExtras
 
         @Override
         public ItemStack makeIcon() {
-            return ItemRegisterer.ICON.get().getDefaultInstance();
+            return RegistryHandler.ICON.get().getDefaultInstance();
         }
     }
 }

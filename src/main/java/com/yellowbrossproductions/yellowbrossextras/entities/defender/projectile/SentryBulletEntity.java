@@ -1,15 +1,12 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.IsDefenderAligned;
-import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.AbstractOryctolin;
-import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.CustomAbstractHurtingProjectile;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.ItemRegisterer;
+import com.yellowbrossproductions.yellowbrossextras.util.RegistryHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -17,14 +14,12 @@ import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
@@ -141,7 +136,7 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
 
     @Override
     public ItemStack getItem() {
-        return ItemRegisterer.CONVERSLIN_BULLET.get().getDefaultInstance();
+        return RegistryHandler.CONVERSLIN_BULLET.get().getDefaultInstance();
     }
 
     public float getLightLevelDependentMagicValue() {

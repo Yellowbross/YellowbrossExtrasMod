@@ -2,11 +2,13 @@ package com.yellowbrossproductions.yellowbrossextras.util;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.block.FrozenLavaBlock;
+import com.yellowbrossproductions.yellowbrossextras.block.PvEBlock;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.item.ItemBase;
 import com.yellowbrossproductions.yellowbrossextras.item.MobRemoverItemBase;
+import com.yellowbrossproductions.yellowbrossextras.item.PvEBlockItem;
 import com.yellowbrossproductions.yellowbrossextras.item.TheFingerItemBase;
-import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -18,7 +20,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class ItemRegisterer {
+public class RegistryHandler {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, YellowbrossExtras.MOD_ID);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, YellowbrossExtras.MOD_ID);
@@ -55,4 +57,11 @@ public class ItemRegisterer {
     // Blocks
     public static final RegistryObject<Block> FROZEN_LAVA = BLOCKS.register("frozen_lava",
             () -> new FrozenLavaBlock(BlockBehaviour.Properties.of(Material.STONE).strength(1.0F, 10.0F).sound(SoundType.NETHERRACK).instabreak()));
+
+    public static final RegistryObject<Block> PVE_BLOCK = BLOCKS.register("pve_block",
+            () -> new PvEBlock(BlockBehaviour.Properties.of(Material.STONE).strength(1.0F, 10.0F).sound(SoundType.STONE).instabreak()));
+
+    // Block Items
+    public static final RegistryObject<BlockItem> PVE_BLOCK_ITEM = ITEMS.register("pve_block",
+            () -> new PvEBlockItem(PVE_BLOCK.get(), new Item.Properties().tab(YellowbrossExtras.YELLOWBROSSEXTRAS_GROUP)));
 }

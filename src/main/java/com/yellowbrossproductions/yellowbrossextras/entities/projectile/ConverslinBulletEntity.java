@@ -6,7 +6,7 @@ import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.ItemRegisterer;
+import com.yellowbrossproductions.yellowbrossextras.util.RegistryHandler;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,7 +16,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
@@ -141,7 +140,7 @@ public class ConverslinBulletEntity extends CustomAbstractHurtingProjectile impl
 
     @Override
     public ItemStack getItem() {
-        return ItemRegisterer.CONVERSLIN_BULLET.get().getDefaultInstance();
+        return RegistryHandler.CONVERSLIN_BULLET.get().getDefaultInstance();
     }
 
     public float getLightLevelDependentMagicValue() {
