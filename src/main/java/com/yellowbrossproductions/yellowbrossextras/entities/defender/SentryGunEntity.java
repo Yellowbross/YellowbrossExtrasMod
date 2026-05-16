@@ -210,6 +210,8 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
                         this.setAnimationState(4);
                         this.mitosisInitiated = true;
                     }
+                } else {
+                    explodeTimer = 3 * 20;
                 }
             }
             if (this.mitosisInitiated) {
