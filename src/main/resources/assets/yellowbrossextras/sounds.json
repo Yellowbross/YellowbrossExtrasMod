@@ -222,6 +222,13 @@
     ]
   },
 
+  "entity.defender.ratatatabow_warn": {
+    "subtitle": "subtitles.entity.defender.ratatatabow_warn",
+    "sounds": [
+      "yellowbrossextras:defender/ratatatabow_warn"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [

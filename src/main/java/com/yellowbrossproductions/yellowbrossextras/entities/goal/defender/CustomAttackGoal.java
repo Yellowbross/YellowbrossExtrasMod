@@ -25,7 +25,7 @@ public class CustomAttackGoal extends Goal {
     }
 
     public boolean doesAttackMeetNormalRequirements() {
-        return getDefender().attackType == 0 && getDefender().getTarget() != null && getDefender().isInAttackSight(getDefender().getTarget()) && getDefender().getTarget().isAlive() && !((getDefender().damageTaken >= 30.0F) && getDefender().isOnGround()) && !getDefender().isRemoved() && getDefender().deathAttackTicks <= 0;
+        return getDefender().attackType == 0 && getDefender().getTarget() != null && getDefender().isInAttackSight(getDefender().getTarget()) && getDefender().getTarget().isAlive() && !((getDefender().damageTaken >= 30.0F) && getDefender().isOnGround()) && !getDefender().isRemoved() && getDefender().deathAttackTicks <= 0 && getDefender().timeToWaitBeforeUsingAnyOtherAttack < 1;
     }
 
     @Override

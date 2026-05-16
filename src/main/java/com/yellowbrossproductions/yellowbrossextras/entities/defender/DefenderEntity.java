@@ -156,6 +156,8 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     public int attack_creepergun = 18;
     public int attack_flamethrower = 19;
 
+    public int timeToWaitBeforeUsingAnyOtherAttack = 0;
+
     public double chargeX;
     double chargeY;
     public double chargeZ;
@@ -189,7 +191,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
     @Override
     protected void registerGoals() {
-        // this.goalSelector.addGoal(0, new SentryGunsGoal(this));
+        this.goalSelector.addGoal(0, new SentryGunsGoal(this));
         this.goalSelector.addGoal(0, new RatatatabowGoal(this));
 
         this.goalSelector.addGoal(0, new ExcaliburGoal(this));
@@ -396,6 +398,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         this.setHealthIFrames--;
         this.clawsPunchTimer--;
         this.gagTimer--;
+        this.timeToWaitBeforeUsingAnyOtherAttack--;
 
         if (this.gagTimer == 0 && this.guysKilled >= 10) {
             int randomGag = this.random.nextInt(3);
@@ -694,22 +697,8 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     }
 
     public void fireProjectile(LivingEntity p_82196_1_, float p_82196_2_, float inaccuracy) {
-        AbstractArrow projectile1 = this.getArrow(Items.BOW.getDefaultInstance(), p_82196_2_);
-        if (this.getMainHandItem().getItem() instanceof BowItem)
-            projectile1 = ((BowItem)this.getMainHandItem().getItem()).customArrow(projectile1);
-        projectile1.setBaseDamage(2.5D);
-        projectile1.setCritArrow(true);
-
-        Snowball projectile2 = EntityType.SNOWBALL.create(this.level);
-
-        ThrownTrident projectile3 = EntityType.TRIDENT.create(this.level);
-        assert projectile3 != null;
-        projectile3.setCritArrow(true);
-
-        ThrownPotion projectile4 = new ThrownPotion(this.level, this);
-
         double d0 = p_82196_1_.getX() - this.getX();
-        double d1 = p_82196_1_.getY(0.3333333333333333D) - projectile1.getY() - (p_82196_1_.getBbHeight() / 2.0D);
+        double d1 = p_82196_1_.getY(0.3333333333333333D) - this.getY() - (p_82196_1_.getBbHeight() / 2.0D);
         double d2 = p_82196_1_.getZ() - this.getZ();
         double d3 = (double)Mth.sqrt((float) (d0 * d0 + d2 * d2));
         float speed;
@@ -718,42 +707,65 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         } else {
             speed = (float) (this.distanceToSqr(p_82196_1_) / 9);
         }
-        assert projectile2 != null;
 
-        projectile1.setOwner(this);
-        projectile2.setOwner(this);
-        projectile3.setOwner(this);
-        projectile4.setOwner(this);
-
-        projectile1.setPierceLevel((byte) 50);
-        projectile3.setPierceLevel((byte) 50);
-        projectile1.setCritArrow(true);
-        projectile3.setCritArrow(true);
-        projectile1.setBaseDamage(3.0D);
-        projectile3.setBaseDamage(3.0D);
-
-        projectile4.setItem(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), Potions.STRONG_HARMING));
-
-        projectile1.shoot(d0, (d1 + d3 * (double)0.2F), d2, speed, inaccuracy);
-        projectile2.shoot(d0, (d1 + d3 * (double)0.2F), d2, speed, inaccuracy);
-        projectile3.shoot(d0, (d1 + d3 * (double)0.2F), d2, speed, inaccuracy);
-        projectile4.shoot(d0, (d1 + d3 * (double)0.35F), d2, speed, inaccuracy);
-
-        projectile1.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
-        projectile2.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
-        projectile3.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
-        projectile4.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
         int rand = this.random.nextInt(4);
         if (rand == 0) {
+            AbstractArrow projectile1 = this.getArrow(Items.BOW.getDefaultInstance(), p_82196_2_);
+            if (this.getMainHandItem().getItem() instanceof BowItem)
+                projectile1 = ((BowItem)this.getMainHandItem().getItem()).customArrow(projectile1);
+            projectile1.setBaseDamage(2.5D);
+            projectile1.setCritArrow(true);
+
+            projectile1.setPierceLevel((byte) 50);
+            projectile1.setOwner(this);
+            projectile1.setCritArrow(true);
+            projectile1.setBaseDamage(3.0D);
+
+            projectile1.shoot(d0, (d1 + d3 * (double)0.2F), d2, speed, inaccuracy);
+
+            projectile1.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
+
             this.level.addFreshEntity(projectile1);
             this.playSound(SoundEvents.ARROW_SHOOT, 2.0F, this.getVoicePitch());
         } else if (rand == 1) {
+            Snowball projectile2 = EntityType.SNOWBALL.create(this.level);
+            assert projectile2 != null;
+
+            projectile2.setOwner(this);
+            projectile2.shoot(d0, (d1 + d3 * (double)0.2F), d2, speed, inaccuracy);
+
+            projectile2.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
+
             this.level.addFreshEntity(projectile2);
             this.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, this.getVoicePitch());
         } else if (rand == 2) {
+            ThrownTrident projectile3 = EntityType.TRIDENT.create(this.level);
+            assert projectile3 != null;
+            projectile3.setCritArrow(true);
+
+            projectile3.setOwner(this);
+
+            projectile3.setPierceLevel((byte) 50);
+            projectile3.setCritArrow(true);
+            projectile3.setBaseDamage(3.0D);
+
+            projectile3.shoot(d0, (d1 + d3 * (double)0.2F), d2, speed, inaccuracy);
+
+            projectile3.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
+
             this.level.addFreshEntity(projectile3);
             this.playSound(SoundEvents.TRIDENT_THROW, 2.0F, this.getVoicePitch());
         } else {
+            ThrownPotion projectile4 = new ThrownPotion(this.level, this);
+
+            projectile4.setOwner(this);
+
+            projectile4.setItem(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), Potions.STRONG_HARMING));
+
+            projectile4.shoot(d0, (d1 + d3 * (double)0.35F), d2, speed, inaccuracy);
+
+            projectile4.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
+
             this.level.addFreshEntity(projectile4);
             this.playSound(SoundEvents.WITCH_THROW, 2.0F, this.getVoicePitch());
         }

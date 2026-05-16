@@ -30,5 +30,6 @@ public class SentryGunsGoal extends CustomAttackGoal {
     public void stop() {
         super.stop();
         getDefender().cooldown_sentryguns = 600;
+        getDefender().timeToWaitBeforeUsingAnyOtherAttack = 120;
     }
 }

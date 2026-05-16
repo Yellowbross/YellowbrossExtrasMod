@@ -1,7 +1,9 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase2;
 
+import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
+import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 
 public class RatatatabowGoal extends CustomAttackGoal {
 
@@ -20,6 +22,7 @@ public class RatatatabowGoal extends CustomAttackGoal {
         getDefender().setWeaponToShow(9);
         getDefender().setImmediateTurn(true);
         getDefender().attackType = getDefender().attack_ratatatabow;
+        getDefender().playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_RATATATABOW_WARN.get(), 3.0F, 1.0F);
     }
 
     @Override

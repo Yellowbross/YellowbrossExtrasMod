@@ -438,9 +438,24 @@ public class AttacksPart1 {
                 if (ticks > 30) {
                     if (defender.isOnGround() && ticks2 == 0) {
                         defender.setDiscardFriction(false);
-                        ticks2 = 1;
+                        defender.attackTicks2 = 1;
                         defender.setCustomRender(0);
                         defender.setAnimationState(18);
+
+                        for (Entity entity : defender.level.getEntities(defender, defender.getBoundingBox().inflate(15.0F))) {
+                            if (EntityUtil.canHurtThisMob(entity, defender) && entity instanceof LivingEntity && entity.isAlive()) {
+                                double x = defender.getX() - entity.getX();
+                                double y = defender.getY() - entity.getY();
+                                double z = defender.getZ() - entity.getZ();
+                                double d = Math.sqrt(x * x + y * y + z * z);
+                                if (defender.distanceTo(entity) < 10.0D) {
+                                    defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, defender.getVoicePitch());
+                                    entity.hurt(DamageSource.mobAttack(defender), (float) defender.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
+                                    entity.hurtMarked = true;
+                                    entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 3.5D, (-y / d * 0.4D) + 0.75D, -z / d * 3.5D));
+                                }
+                            }
+                        }
                     }
                     if (!defender.isOnGround() && ticks % 3 == 0) {
                         defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH2.get(), 1.0F, 0.7f);
