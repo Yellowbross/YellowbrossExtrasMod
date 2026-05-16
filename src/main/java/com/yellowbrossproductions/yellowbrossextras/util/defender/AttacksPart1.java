@@ -425,19 +425,26 @@ public class AttacksPart1 {
         if (target != null) {
             if (defender.attackType == defender.attack_ratatatabow) {
                 if (ticks == 30) {
+                    double mult = 0.04d;
+
                     if (!defender.level.isClientSide) {
-                        defender.setDeltaMovement(((target.getX() - defender.getX()) * 2.5D) * 0.08D, 1.0D, ((target.getZ() - defender.getZ()) * 2.5D) * 0.08D);
+                        defender.setDiscardFriction(true);
+                        defender.setDeltaMovement(((target.getX() - defender.getX()) * 2.0D) * mult,
+                                1.5D,
+                                ((target.getZ() - defender.getZ()) * 2.0D) * mult);
                     }
                     defender.setCustomRender(1);
                 }
                 if (ticks > 30) {
                     if (defender.isOnGround() && ticks2 == 0) {
+                        defender.setDiscardFriction(false);
                         ticks2 = 1;
                         defender.setCustomRender(0);
                         defender.setAnimationState(18);
                     }
                     if (!defender.isOnGround() && ticks % 3 == 0) {
-                        defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH.get(), 3.0F, defender.getVoicePitch() + 0.5F);
+                        defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH2.get(), 1.0F, 0.7f);
+                        defender.setDeltaMovement(defender.getDeltaMovement().add(0, -0.1, 0));
                     }
                 }
                 if (ticks2 > 0 && ticks2 <= 60) {

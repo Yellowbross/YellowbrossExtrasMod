@@ -189,8 +189,8 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new SentryGunsGoal(this));
-        // this.goalSelector.addGoal(0, new RatatatabowGoal(this));
+        // this.goalSelector.addGoal(0, new SentryGunsGoal(this));
+        this.goalSelector.addGoal(0, new RatatatabowGoal(this));
 
         this.goalSelector.addGoal(0, new ExcaliburGoal(this));
         this.goalSelector.addGoal(0, new ClawsGoal(this));

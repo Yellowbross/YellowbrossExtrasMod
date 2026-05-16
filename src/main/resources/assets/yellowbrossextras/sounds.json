@@ -136,6 +136,13 @@
     ]
   },
 
+  "entity.defender.quick_whoosh2": {
+    "subtitle": "subtitles.entity.defender.quick_whoosh",
+    "sounds": [
+      "yellowbrossextras:defender/quick_whoosh2"
+    ]
+  },
+
   "entity.defender.earth_rumble": {
     "subtitle": "subtitles.entity.defender.earth_rumble",
     "sounds": [
