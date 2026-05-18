@@ -2,6 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phas
 
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
+import net.minecraft.world.entity.player.Player;
 
 public class SentryGunsGoal extends CustomAttackGoal {
 
@@ -30,6 +31,6 @@ public class SentryGunsGoal extends CustomAttackGoal {
     public void stop() {
         super.stop();
         getDefender().cooldown_sentryguns = 600;
-        getDefender().timeToWaitBeforeUsingAnyOtherAttack = 120;
+        if (getDefender().getTarget() instanceof Player) getDefender().timeToWaitBeforeUsingAnyOtherAttack = 120;
     }
 }

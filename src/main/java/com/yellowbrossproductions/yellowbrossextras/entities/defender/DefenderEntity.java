@@ -1,5 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 
+import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
@@ -10,6 +11,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.*;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
+import com.yellowbrossproductions.yellowbrossextras.util.DelayedActionHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.util.defender.AttacksPart1;
@@ -22,6 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -59,6 +62,7 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -298,6 +302,26 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
             }
             this.jumpAttacking = false;
         }
+        if (this.shouldDiscardFriction()) {
+            this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 2.0F, 1.0F);
+            for (Entity entity : this.level.getEntities(this, this.getBoundingBox().inflate(15.0F))) {
+                if (EntityUtil.canHurtThisMob(entity, this) && entity instanceof LivingEntity && entity.isAlive()) {
+                    double x = this.getX() - entity.getX();
+                    double y = this.getY() - entity.getY();
+                    double z = this.getZ() - entity.getZ();
+                    double d = Math.sqrt(x * x + y * y + z * z);
+                    if (this.distanceTo(entity) < 10.0D) {
+                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, this.getVoicePitch());
+                        entity.hurt(DamageSource.mobAttack(this), 20.0f);
+                        entity.hurtMarked = true;
+                        entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 3.5D, (-y / d * 0.4D) + 0.75D, -z / d * 3.5D));
+                    }
+                }
+            }
+            CameraShakeEntity.cameraShake(this.level, position(), 20, 0.1f, 0, 15);
+            EntityUtil.makeCircleParticles(this.level, this, ParticleTypes.LARGE_SMOKE, 30, 0.4D, 1.0F);
+            this.setDiscardFriction(false);
+        }
         return false;
     }
 
@@ -443,18 +467,28 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
             if (this.getPhase() == 2) AttacksPart1.tickPhase2Attacks(this);
 
             if (this.attackType == attack_jump) {
-                if (this.attackTicks == 4) {
+                if (this.attackTicks == 4 && this.getTarget() != null) {
                     this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_JUMP.get(), 2.0F, 1.0F);
-                    if (this.getTarget() != null) {
+                    if (this.howShouldDefenderApproachHisTarget() == 1 || this.distanceTo(this.getTarget()) < 6.0D) {
                         double x = this.getX() - this.getTarget().getX();
                         double y = this.getY() - this.getTarget().getY();
                         double z = this.getZ() - this.getTarget().getZ();
                         double d = Math.sqrt(x * x + y * y + z * z);
                         float power = (float) 6.5F;
-                        double motionX = (x / d * (double) power * 0.2D);
+                        double bonusMovement = this.howShouldDefenderApproachHisTarget() == 2 ? 2 : 1;
+
+                        double motionX = (x / d * (double) power * 0.2D) * bonusMovement;
                         double motionY = (y / d * (double) power * 0.2D);
-                        double motionZ = (z / d * (double) power * 0.2D);
+                        double motionZ = (z / d * (double) power * 0.2D) * bonusMovement;
+
                         this.setDeltaMovement(motionX, 0.5D, motionZ);
+                    } else if (this.howShouldDefenderApproachHisTarget() == 2) {
+                        double mult = 0.04d;
+
+                        this.setDiscardFriction(true);
+                        this.setDeltaMovement(((this.getTarget().getX() - this.getX()) * 2.5D) * mult,
+                                1.2D,
+                                ((this.getTarget().getZ() - this.getZ()) * 2.5D) * mult);
                     }
                 }
             }
@@ -1199,6 +1233,15 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     @Override
     public void die(DamageSource p_21014_) {
         if (!this.wasKilledByVoid()) {
+            List<Mob> list = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(50.0D), p -> {
+                return p instanceof Enemy && EntityUtil.canHurtThisMob(p, this);
+            });
+
+            DelayedActionHandler.queueAction(() -> {
+                for (Mob entity : list) {
+                    entity.goalSelector.addGoal(0, new StareAtDefenderGoal(entity, this));
+                }
+            });
             this.processDeath();
         } else {
             super.die(p_21014_);
@@ -1206,14 +1249,6 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     }
 
     private void processDeath() {
-        List<Mob> list = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(50.0D), p -> {
-            return p instanceof Enemy && EntityUtil.canHurtThisMob(p, this);
-        });
-        for (Mob entity : list) {
-            Set<WrappedGoal> goals = entity.goalSelector.getAvailableGoals();
-            boolean hasGoal = goals.stream().anyMatch(goal -> goal.getGoal() instanceof StareAtDefenderGoal);
-            if (!hasGoal) entity.goalSelector.addGoal(0, new StareAtDefenderGoal(entity, this));
-        }
         if (this.getPhase() == 1) {
             if (!this.level.isClientSide) {
                 this.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
@@ -1707,7 +1742,11 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
         @Override
         public boolean canUse() {
-            return doesJumpMeetNormalRequirements() && getTarget() != null && ((distanceTo(getTarget()) < 10.0D && random.nextInt(16) == 0) || damageTaken >= 30.0F) && isOnGround() && shouldJumpAway(getTarget());
+            return doesJumpMeetNormalRequirements()
+                    && getTarget() != null
+                    && ((distanceTo(getTarget()) < 10.0D && random.nextInt(howShouldDefenderApproachHisTarget() == 2 ? 4 : 16) == 0) || damageTaken >= 30.0F || (howShouldDefenderApproachHisTarget() == 2 && DefenderEntity.this.horizontalCollision))
+                    && isOnGround()
+                    && shouldJumpAway(getTarget());
         }
 
         @Override
