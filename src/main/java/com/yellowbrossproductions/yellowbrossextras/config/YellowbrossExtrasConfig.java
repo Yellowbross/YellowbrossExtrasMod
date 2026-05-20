@@ -95,13 +95,11 @@ public class YellowbrossExtrasConfig {
 
         creeperInfection_turnTo = common
                 .comment(" ")
-                .comment("Creeper Infection custom transformations. (Currently, this config option does not work.)",
+                .comment("Creeper Infection custom transformations.",
                         "Format MUST be the entity name, followed by the creeper you want the mob to turn into. Example: \"minecraft:zombie,yellowbrossextras:freaker\"",
                         "Use the /summon command to scroll through and find the IDs for mobs you want",
                         "Requires game restart")
                 .defineList("creeperInfection_turnTo", Arrays.asList(
-                        "minecraft:zombie,yellowbrossextras:freaker",
-                        "minecraft:creeper,yellowbrossextras:freaker"
                 ), String.class::isInstance);
 
         common.pop();

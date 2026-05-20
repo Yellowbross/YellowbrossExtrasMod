@@ -1,5 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.util;
 
+import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.AbstractCreeperEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperEnemy;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.SneakerEntity;
@@ -14,22 +15,28 @@ import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.Blitz
 import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.BunnyBlitz;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.*;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.compress.utils.Lists;
 
 import javax.annotation.Nullable;
@@ -64,12 +71,11 @@ public class EntityUtil {
     }
 
     public static void convertMobToCreeper(Mob entity, LivingEntity killer, Level level) {
-        Map<EntityType<?>, EntityType<?>> creeperConversions;
-        
+
 
         Random random = new Random();
-        if (!entity.isRemoved()) {
-            if (!(entity instanceof CreeperEnemy)) {
+        if (!entity.isRemoved() && !(entity instanceof CreeperEnemy)) {
+            if (!tryConvertCustomCreeper(entity, killer, level)) {
                 AbstractCreeperEntity creeper = null;
 
                 float paraCreeperWidth = 0.5F;
@@ -144,6 +150,62 @@ public class EntityUtil {
                 }
             }
         }
+    }
+
+    // code adapted from Dungeons Mobs
+    public static boolean tryConvertCustomCreeper(Mob infected, LivingEntity killer, Level level) {
+        List<? extends String> creeperConversions = YellowbrossExtrasConfig.creeperInfection_turnTo.get();
+        if (creeperConversions.isEmpty()) return false;
+        for (String string : creeperConversions) {
+            List<String> splitArray = List.of(string.split(","));
+            if (splitArray.size() == 2) {
+                String entityID = splitArray.get(0);
+                String convertTo = splitArray.get(1);
+
+                if (entityID.equals(infected.getEncodeId())) {
+                    EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(convertTo));
+                    if (entityType != null) {
+                        Entity entity = entityType.create(level);
+                        if (entity instanceof Mob creeper) {
+                            DifficultyInstance difficultyForLocation = level.getCurrentDifficultyAt(infected.blockPosition().above());
+                            creeper.copyPosition(infected);
+                            if (!level.isClientSide) {
+                                creeper.finalizeSpawn((ServerLevelAccessor)level, difficultyForLocation, MobSpawnType.CONVERSION, (SpawnGroupData) null, (CompoundTag) null);
+                            }
+                            if (creeper instanceof Raider) {
+                                ((Raider) creeper).setCanJoinRaid(false);
+                            }
+
+                            creeper.setNoAi(infected.isNoAi());
+                            if (infected.hasCustomName()) {
+                                creeper.setCustomName(infected.getCustomName());
+                                creeper.setCustomNameVisible(infected.isCustomNameVisible());
+                            }
+
+                            if (killer.getTeam() != null) {
+                                level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                                        level.getScoreboard().getPlayerTeam(killer.getTeam().getName()));
+                            }
+
+                            if (infected.isPassenger() && infected.getVehicle() != null) {
+                                Entity vehicle = infected.getVehicle();
+                                infected.stopRiding();
+                                creeper.startRiding(vehicle, true);
+                            }
+
+                            creeper.setPersistenceRequired();
+                            if (!level.isClientSide) {
+                                infected.discard();
+                            }
+                            creeper.playSound(SoundEvents.ZOMBIE_CONVERTED_TO_DROWNED, 3.0F, creeper.getVoicePitch());
+                            return level.addFreshEntity(creeper);
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public static void convertMobToCarrot(Mob entity, LivingEntity killer, Level level) {
