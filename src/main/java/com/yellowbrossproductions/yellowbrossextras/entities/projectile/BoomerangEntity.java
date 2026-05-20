@@ -72,10 +72,15 @@ public class BoomerangEntity extends PathfinderMob implements MobAttack {
 
         Mob attacker = this.shooter != null ? this.shooter : this;
 
-        List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level, 0.4d, this, Entity::isAlive);
-        for (Entity entity : list) {
-            if (entity instanceof LivingEntity living && EntityUtil.canHurtThisMob(living, attacker) && entity != attacker) {
-                if (entity.isAlive() && !entity.isInvulnerable() && !entity.isSpectator()) {
+        List<Entity> checkList = EntityUtil.getEntitiesFromAABB(this.level, 0.4d, this,
+                predicate -> predicate.isAlive() && !predicate.isRemoved() && predicate instanceof LivingEntity living && EntityUtil.canHurtThisMob(living, attacker) && predicate != attacker && predicate != this);
+        if (!checkList.isEmpty()) {
+            List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level, 2.5d, this,
+                    predicate -> predicate.isAlive() && !predicate.isRemoved() && predicate instanceof LivingEntity living && EntityUtil.canHurtThisMob(living, attacker) && predicate != attacker && predicate != this);
+            for (Entity entity : list) {
+                LivingEntity living = (LivingEntity) entity;
+
+                if (!entity.isInvulnerable() && !entity.isSpectator()) {
                     DamageSource damageSource = new IndirectEntityDamageSource("thrown", this, this.shooter){
                         @Nullable
                         @Override
