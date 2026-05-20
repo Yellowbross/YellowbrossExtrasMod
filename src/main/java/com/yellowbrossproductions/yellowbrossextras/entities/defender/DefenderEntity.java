@@ -15,6 +15,7 @@ import com.yellowbrossproductions.yellowbrossextras.util.DelayedActionHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.util.defender.AttacksPart1;
+import com.yellowbrossproductions.yellowbrossextras.world.CustomExplosion;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -239,7 +240,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         this.entityData.define(ANIMATION_STATE, 0);
         this.entityData.define(WEAPON_TO_SHOW, 0);
         this.entityData.define(PHASE, 1);
-        this.entityData.define(PHASE_LIMIT, 1);
+        this.entityData.define(PHASE_LIMIT, 2);
         this.entityData.define(SHAKE_MULTIPLIER, 0);
         this.entityData.define(KILLED_BY_VOID, false);
         this.entityData.define(SHOULD_HIDE_ALL_HATS, false);
@@ -258,9 +259,9 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
                 this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
                 this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 3.0F, 1.0F);
                 if (!this.level.isClientSide) {
-                    this.level.explode(this, this.getX(), this.getY() + 0.3, this.getZ(), 6.0F, Explosion.BlockInteraction.NONE);
-                    this.level.explode(this, this.getX(), this.getY() + 0.3, this.getZ(), 3.0F, Explosion.BlockInteraction.NONE);
-                    this.level.explode(this, this.getX(), this.getY() + 0.3, this.getZ(), 3.0F, Explosion.BlockInteraction.NONE);
+                    CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), 6.0F, true);
+                    CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), 3.0F, true);
+                    CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), 3.0F, true);
                 }
                 this.performSpellCasting(true);
                 int thing = 2;
@@ -312,7 +313,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
                     double d = Math.sqrt(x * x + y * y + z * z);
                     if (this.distanceTo(entity) < 10.0D) {
                         this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, this.getVoicePitch());
-                        entity.hurt(DamageSource.mobAttack(this), 20.0f);
+                        entity.hurt(DamageSource.mobAttack(this), 20.0f * Math.max(((LivingEntity) entity).getArmorValue() * 0.5f, 1.0f));
                         entity.hurtMarked = true;
                         entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 3.5D, (-y / d * 0.4D) + 0.75D, -z / d * 3.5D));
                     }
@@ -666,11 +667,11 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
                                 double z = this.getZ() - entity.getZ();
                                 double d = Math.sqrt(x * x + y * y + z * z);
                                 if (this.distanceTo(entity) < 5.0D) {
-                                    if (entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F)) {
-                                        entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F);
-                                        entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F);
-                                        entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F);
-                                        entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F);
+                                    if (entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * Math.max(((LivingEntity) entity).getArmorValue()  * 0.25f, 1.0f))) {
+                                        entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * Math.max(((LivingEntity) entity).getArmorValue()  * 0.25f, 1.0f));
+                                        entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * Math.max(((LivingEntity) entity).getArmorValue()  * 0.25f, 1.0f));
+                                        entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * Math.max(((LivingEntity) entity).getArmorValue()  * 0.25f, 1.0f));
+                                        entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * Math.max(((LivingEntity) entity).getArmorValue()  * 0.25f, 1.0f));
                                         this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, this.getVoicePitch() - 0.2F);
                                         CameraShakeEntity.cameraShake(this.level, position(), 10, 0.2f, 0, 8);
                                         entity.hurtMarked = true;
