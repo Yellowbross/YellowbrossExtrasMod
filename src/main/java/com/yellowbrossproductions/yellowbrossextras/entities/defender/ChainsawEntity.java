@@ -156,8 +156,8 @@ public class ChainsawEntity extends Entity {
         }
     }
 
-    public SolarbeamHitResult raytraceEntities(Level world, Vec3 from, Vec3 to, boolean stopOnLiquid, boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock) {
-        SolarbeamHitResult result = new SolarbeamHitResult();
+    public ChainsawHitResult raytraceEntities(Level world, Vec3 from, Vec3 to, boolean stopOnLiquid, boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock) {
+        ChainsawHitResult result = new ChainsawHitResult();
         result.setBlockHit(world.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)));
         if (result.blockHit != null) {
             Vec3 hitVec = result.blockHit.getLocation();
@@ -207,7 +207,7 @@ public class ChainsawEntity extends Entity {
         return distance < 1024;
     }
 
-    public static class SolarbeamHitResult {
+    public static class ChainsawHitResult {
         private BlockHitResult blockHit;
 
         private final List<LivingEntity> entities = new ArrayList<>();
@@ -271,15 +271,20 @@ public class ChainsawEntity extends Entity {
         }
         this.calculateEndPos();
         List<LivingEntity> hit = raytraceEntities(level, new Vec3(getX(), getY(), getZ()), new Vec3(endPosX, endPosY, endPosZ), false, true, true).entities;
-        if (!level.isClientSide) {
+        if (!level.isClientSide && this.caster != null) {
+            float healing = 0.0f;
+
             for (LivingEntity target : hit) {
                 if (this.tickCount % 6 == 0) {
                     target.hurt(DamageSource.indirectMagic(this, this.caster), 3.0F);
                     target.invulnerableTime = 0;
+                    healing += 0.5f;
                 }
                 target.hurtMarked = true;
                 target.setDeltaMovement(0.0D, 0.0D, 0.0D);
             }
+
+            if (this.tickCount % 6 == 0) this.caster.heal(Math.min(healing, 15.0f));
         }
         if (tickCount > getDuration()) {
             on = false;

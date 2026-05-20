@@ -1122,6 +1122,9 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
             if (this.attackType == attack_saws) {
                 return false;
             }
+            if (this.attackType == attack_shurikens) {
+                return false;
+            }
             if (this.attackType == attack_chainsaw) {
                 p_21017_ /= 2;
             }
