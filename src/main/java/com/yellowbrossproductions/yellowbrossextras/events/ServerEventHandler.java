@@ -272,4 +272,12 @@ public class ServerEventHandler {
             }
         }
     }
+
+    @SubscribeEvent
+    public void cancelHealing(LivingHealEvent event) {
+        LivingEntity entity = event.getEntity();
+        if (entity.hasEffect(EffectRegisterer.KNOCKED_OUT.get())) {
+            event.setCanceled(true);
+        }
+    }
 }
