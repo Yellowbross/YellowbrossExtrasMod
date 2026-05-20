@@ -19,7 +19,7 @@ public class StareAtDefenderGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return YellowbrossExtrasConfig.defender_distractEnemies.get() && defender != null && defender.isDeadOrDying() && defender.deathAttackTicks > 0;
+        return YellowbrossExtrasConfig.defender_distractEnemies.get() && defender != null && defender.isDeadOrDying() && defender.deathAttackTicks > 0 && !defender.isRemoved();
     }
 
     @Override
