@@ -40,6 +40,7 @@ public class SprayerEntity extends AbstractCreeperEntity implements CreeperEnemy
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new CreeperExplodeGoal(this));
+        this.goalSelector.addGoal(3, new MergeWithMyLoveGoal(this, SprayerEntity.class));
         this.goalSelector.addGoal(4, new RangedAttackGoal(this, 1.0D, 4, 15.0F));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -80,6 +81,11 @@ public class SprayerEntity extends AbstractCreeperEntity implements CreeperEnemy
     }
 
     @Override
+    protected int getMaxAbsorbs() {
+        return 4;
+    }
+
+    @Override
     public void die(DamageSource p_21014_) {
         this.ignite();
     }
@@ -87,5 +93,57 @@ public class SprayerEntity extends AbstractCreeperEntity implements CreeperEnemy
     @Override
     protected void tickDeath() {
         this.setDeltaMovement(0.0D, this.getDeltaMovement().y, 0.0D);
+    }
+
+    @Override
+    public void explodeCreeper() {
+        super.explodeCreeper();
+        if (this.absorbedCreepers >= this.getMaxAbsorbs()) {
+            if (!this.level.isClientSide) {
+                CrawlerEntity creeper = ModEntityTypes.Crawler.get().create(this.level);
+                assert creeper != null;
+                creeper.copyPosition(this);
+                if (this.getTeam() != null) {
+                    level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                            level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                }
+                this.level.addFreshEntity(creeper);
+
+                this.makeExplodeParticles();
+                this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.2F);
+                CameraShakeEntity.cameraShake(this.level, position(), 40, 0.2f, 0, 30);
+            }
+        }
+    }
+
+    public void makeExplodeParticles() {
+        if (!this.level.isClientSide) {
+            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
+                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
+                    ParticlePacket packet = new ParticlePacket();
+
+                    for(int i = 0; i < 250; ++i) {
+                        double d0 = (-0.5 + this.random.nextGaussian()) / 2;
+                        double d1 = (-0.5 + this.random.nextGaussian()) / 2;
+                        double d2 = (-0.5 + this.random.nextGaussian()) / 2;
+                        packet.queueParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+                    }
+                    for(int i = 0; i < 200; ++i) {
+                        double d0 = (-0.5 + this.random.nextGaussian()) / 2;
+                        double d1 = (-0.5 + this.random.nextGaussian()) / 2;
+                        double d2 = (-0.5 + this.random.nextGaussian()) / 2;
+                        packet.queueParticle(ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+                    }
+                    for(int i = 0; i < 150; ++i) {
+                        double d0 = (-0.5 + this.random.nextGaussian()) / 2;
+                        double d1 = (-0.5 + this.random.nextGaussian()) / 2;
+                        double d2 = (-0.5 + this.random.nextGaussian()) / 2;
+                        packet.queueParticle(ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+                    }
+
+                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
+                }
+            }
+        }
     }
 }

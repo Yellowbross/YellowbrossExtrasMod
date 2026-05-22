@@ -43,6 +43,7 @@ public class SneakerEntity extends AbstractCreeperEntity implements CreeperEnemy
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new CreeperExplodeGoal(this));
+        this.goalSelector.addGoal(3, new MergeWithMyLoveGoal(this, SneakerEntity.class));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -76,6 +77,11 @@ public class SneakerEntity extends AbstractCreeperEntity implements CreeperEnemy
         super.readAdditionalSaveData(p_32296_);
 
         this.setCreeperType(p_32296_.getInt("CreeperType"));
+    }
+
+    @Override
+    protected int getMaxAbsorbs() {
+        return 4;
     }
 
     @Override
@@ -187,50 +193,65 @@ public class SneakerEntity extends AbstractCreeperEntity implements CreeperEnemy
     public void explodeCreeper() {
         if (!this.level.isClientSide) {
             Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
-            float f = this.isPowered() ? 2.0F : 1.0F;
             this.dead = true;
             CameraShakeEntity.cameraShake(this.level, position(), 30, 0.1f, 0, 15);
-            if (this.getCreeperType() == 0) {
-                if (this.random.nextBoolean()) {
-                    ParacreeperEntity creeper = ModEntityTypes.Paracreeper.get().create(this.level);
+            if (this.absorbedCreepers < this.getMaxAbsorbs()) {
+                if (this.getCreeperType() == 0) {
+                    if (this.random.nextBoolean()) {
+                        ParacreeperEntity creeper = ModEntityTypes.Paracreeper.get().create(this.level);
+                        assert creeper != null;
+                        creeper.copyPosition(this);
+                        creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
+                        if (this.getTeam() != null) {
+                            level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                                    level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                        }
+                        this.level.addFreshEntity(creeper);
+                    }
+                    this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * f), explosion$blockinteraction);
+                } else if (this.getCreeperType() == 1) {
+                    for (int i = 0; i < 5; ++i) {
+                        ParacreeperEntity creeper = ModEntityTypes.Paracreeper.get().create(this.level);
+                        assert creeper != null;
+                        creeper.copyPosition(this);
+                        creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
+                        creeper.setDeltaMovement(this.random.nextDouble() - 0.5D,
+                                this.random.nextDouble() - 0.5D,
+                                this.random.nextDouble() - 0.5D);
+                        if (this.getTeam() != null) {
+                            level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                                    level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                        }
+                        this.level.addFreshEntity(creeper);
+                    }
+                    this.makeExplodeParticles();
+                    this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.2F);
+                    CameraShakeEntity.cameraShake(this.level, position(), 40, 0.2f, 0, 30);
+                    this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 2.5F * f), explosion$blockinteraction);
+                } else if (this.getCreeperType() == 2) {
+                    SneakerEntity creeper = ModEntityTypes.Sneaker.get().create(this.level);
                     assert creeper != null;
                     creeper.copyPosition(this);
-                    creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
                     if (this.getTeam() != null) {
                         level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
                                 level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
                     }
+                    creeper.setCreeperType(1);
                     this.level.addFreshEntity(creeper);
+
+                    this.makeExplodeParticles();
+                    this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.2F);
+                    CameraShakeEntity.cameraShake(this.level, position(), 40, 0.2f, 0, 30);
+                    this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 2.5F * f), explosion$blockinteraction);
                 }
-                this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * f), explosion$blockinteraction);
-            } else if (this.getCreeperType() == 1) {
-                for (int i = 0; i < 5; ++i) {
-                    ParacreeperEntity creeper = ModEntityTypes.Paracreeper.get().create(this.level);
-                    assert creeper != null;
-                    creeper.copyPosition(this);
-                    creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
-                    creeper.setDeltaMovement(this.random.nextDouble() - 0.5D,
-                            this.random.nextDouble() - 0.5D,
-                            this.random.nextDouble() - 0.5D);
-                    if (this.getTeam() != null) {
-                        level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
-                                level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
-                    }
-                    this.level.addFreshEntity(creeper);
-                }
-                this.makeExplodeParticles();
-                this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.2F);
-                CameraShakeEntity.cameraShake(this.level, position(), 40, 0.2f, 0, 30);
-                this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 2.5F * f), explosion$blockinteraction);
-            } else if (this.getCreeperType() == 2) {
-                SneakerEntity creeper = ModEntityTypes.Sneaker.get().create(this.level);
+            } else {
+                CrawlerEntity creeper = ModEntityTypes.Crawler.get().create(this.level);
                 assert creeper != null;
                 creeper.copyPosition(this);
                 if (this.getTeam() != null) {
                     level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
                             level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
                 }
-                creeper.setCreeperType(1);
                 this.level.addFreshEntity(creeper);
 
                 this.makeExplodeParticles();

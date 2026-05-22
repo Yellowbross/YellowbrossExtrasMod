@@ -36,6 +36,7 @@ public class CrawlerEntity extends AbstractCreeperEntity implements CreeperEnemy
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new CreeperExplodeFurtherGoal(this));
+        this.goalSelector.addGoal(3, new MergeWithMyLoveGoal(this, CrawlerEntity.class));
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.6D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -70,25 +71,40 @@ public class CrawlerEntity extends AbstractCreeperEntity implements CreeperEnemy
     }
 
     @Override
+    protected int getMaxAbsorbs() {
+        return 4;
+    }
+
+    @Override
     public void explodeCreeper() {
         if (!this.level.isClientSide) {
             Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
-            float f = this.isPowered() ? 2.0F : 1.0F;
             this.dead = true;
-            for (int i = 0; i < 3; ++i) {
-                SneakerEntity creeper = ModEntityTypes.Sneaker.get().create(this.level);
+            if (this.absorbedCreepers < this.getMaxAbsorbs()) {
+                for (int i = 0; i < 3; ++i) {
+                    SneakerEntity creeper = ModEntityTypes.Sneaker.get().create(this.level);
+                    assert creeper != null;
+                    creeper.copyPosition(this);
+                    creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
+                    creeper.setDeltaMovement(this.random.nextDouble() - 0.5D,
+                            this.random.nextDouble() - 0.5D,
+                            this.random.nextDouble() - 0.5D);
+                    if (this.getTeam() != null) {
+                        level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                                level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                    }
+                    if (this.random.nextInt(4) == 0) {
+                        creeper.setCreeperType(1);
+                    }
+                    this.level.addFreshEntity(creeper);
+                }
+            } else {
+                FreakerEntity creeper = ModEntityTypes.Freaker.get().create(this.level);
                 assert creeper != null;
                 creeper.copyPosition(this);
-                creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
-                creeper.setDeltaMovement(this.random.nextDouble() - 0.5D,
-                        this.random.nextDouble() - 0.5D,
-                        this.random.nextDouble() - 0.5D);
                 if (this.getTeam() != null) {
                     level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
                             level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
-                }
-                if (this.random.nextInt(4) == 0) {
-                    creeper.setCreeperType(1);
                 }
                 this.level.addFreshEntity(creeper);
             }

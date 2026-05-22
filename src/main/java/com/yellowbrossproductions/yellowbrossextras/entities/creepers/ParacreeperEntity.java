@@ -1,7 +1,9 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
+import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
+import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.EnumSet;
+import java.util.List;
 
 public class ParacreeperEntity extends AbstractCreeperEntity implements CreeperEnemy {
 
@@ -28,6 +31,7 @@ public class ParacreeperEntity extends AbstractCreeperEntity implements CreeperE
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new CreeperExplodeGoal(this));
+        this.goalSelector.addGoal(3, new MergeWithMyLoveGoal(this, ParacreeperEntity.class));
         this.goalSelector.addGoal(3, new AlwaysWatchTargetGoal());
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8D));
@@ -65,9 +69,34 @@ public class ParacreeperEntity extends AbstractCreeperEntity implements CreeperE
     public void explodeCreeper() {
         if (!this.level.isClientSide) {
             Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
-            float f = this.isPowered() ? 2.0F : 1.0F;
             this.dead = true;
             this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 0.75F * f), explosion$blockinteraction);
+
+            if (this.absorbedCreepers >= this.getMaxAbsorbs()) {
+                SneakerEntity creeper = ModEntityTypes.Sneaker.get().create(this.level);
+                assert creeper != null;
+                creeper.copyPosition(this);
+                if (this.getTeam() != null) {
+                    level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                            level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                }
+                if (random.nextInt(4) == 0) {
+                    creeper.setCreeperType(1);
+                    List<SneakerEntity> list = level.getEntitiesOfClass(SneakerEntity.class, creeper.getBoundingBox().inflate(30.0F), predicate -> {
+                        return predicate.getCreeperType() == 2 && predicate != creeper;
+                    });
+                    if (list.isEmpty()) {
+                        if (random.nextInt(3) == 0) {
+                            creeper.setCreeperType(2);
+                        }
+                    }
+                }
+
+                this.level.addFreshEntity(creeper);
+
+                CameraShakeEntity.cameraShake(this.level, position(), 40, 0.2f, 0, 30);
+            }
+
             CameraShakeEntity.cameraShake(this.level, position(), 20, 0.05f, 0, 15);
             this.discard();
             this.spawnLingeringCloud();
@@ -83,6 +112,11 @@ public class ParacreeperEntity extends AbstractCreeperEntity implements CreeperE
     @Override
     protected void tickDeath() {
         this.setDeltaMovement(0.0D, this.getDeltaMovement().y, 0.0D);
+    }
+
+    @Override
+    protected int getMaxAbsorbs() {
+        return 2;
     }
 
     class AlwaysWatchTargetGoal extends Goal {

@@ -35,6 +35,8 @@ import net.minecraftforge.network.PacketDistributor;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Random;
 
 public class AbstractCreeperEntity extends Monster implements CreeperEnemy, YextrasEntity {
     private static final EntityDataAccessor<Integer> DATA_SWELL_DIR = SynchedEntityData.defineId(AbstractCreeperEntity.class, EntityDataSerializers.INT);
@@ -46,6 +48,9 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
     public int explosionRadius = 3;
     private int droppedSkulls;
     public boolean shouldCalculateSwell = true;
+
+    public float absorbedCreepers = 0;
+    float f;
 
     public AbstractCreeperEntity(EntityType<? extends Monster> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
@@ -112,6 +117,10 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
         return SoundEvents.CREEPER_DEATH;
     }
 
+    protected int getMaxAbsorbs() {
+        return 1;
+    }
+
     public void addAdditionalSaveData(CompoundTag p_32304_) {
         super.addAdditionalSaveData(p_32304_);
         if (this.entityData.get(DATA_IS_POWERED)) {
@@ -172,6 +181,10 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
     public void tick() {
         this.calculateSwell();
 
+        if (this.absorbedCreepers >= this.getMaxAbsorbs() && this.random.nextInt(16) == 0) {
+            this.ignite();
+        }
+
         super.tick();
     }
 
@@ -195,6 +208,7 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
 
             if (this.swell >= this.maxSwell) {
                 this.swell = this.maxSwell;
+                f = ((this.absorbedCreepers / 3) + 1) * (this.isPowered() ? 2.0F : 1.0F);
                 this.explodeCreeper();
             }
         }
@@ -251,7 +265,6 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
     public void explodeCreeper() {
         if (!this.level.isClientSide) {
             Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
-            float f = this.isPowered() ? 2.0F : 1.0F;
             this.dead = true;
             this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)this.explosionRadius * f, explosion$blockinteraction);
             CameraShakeEntity.cameraShake(this.level, position(), 30, 0.1f, 0, 15);
@@ -336,6 +349,65 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
             } else {
                 this.creeper.setSwellDir(1);
             }
+        }
+    }
+
+    class MergeWithMyLoveGoal extends Goal {
+        private final AbstractCreeperEntity creeper;
+        private final Class<? extends AbstractCreeperEntity> lookingForType;
+        private AbstractCreeperEntity myLove = null;
+
+        MergeWithMyLoveGoal(AbstractCreeperEntity creeper, Class<? extends AbstractCreeperEntity> lookingForType) {
+            this.creeper = creeper;
+            this.lookingForType = lookingForType;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
+        }
+
+        @Override
+        public boolean canUse() {
+            if (this.creeper.getTarget() != null || (!(this.creeper instanceof ParacreeperEntity) && !this.creeper.isOnGround())) return false;
+
+            List<? extends AbstractCreeperEntity> nearbyMobs = this.creeper.level.getEntitiesOfClass(this.lookingForType, this.creeper.getBoundingBox().inflate(10.0d), predicate -> predicate.absorbedCreepers < predicate.getMaxAbsorbs());
+
+            double closestDistanceSq = Double.MAX_VALUE;
+            for (AbstractCreeperEntity potentialLove : nearbyMobs) {
+                if (potentialLove != this.creeper && potentialLove.isAlive() && !potentialLove.isRemoved()) {
+                    double distanceSq = potentialLove.distanceToSqr(this.creeper);
+                    if (distanceSq < closestDistanceSq) {
+                        closestDistanceSq = distanceSq;
+                        this.myLove = potentialLove;
+                    }
+                }
+            }
+
+            return this.myLove != null;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            double maxDist = 10.0d * 10.0d;
+
+            return this.myLove != null && this.myLove.isAlive() && !this.myLove.isRemoved() && this.myLove.absorbedCreepers < this.myLove.getMaxAbsorbs() && this.creeper.distanceToSqr(this.myLove) <= maxDist && this.creeper.getTarget() == null;
+        }
+
+        @Override
+        public void tick() {
+            if (this.myLove != null) {
+                this.creeper.getNavigation().moveTo(this.myLove, 1.0D);
+
+                if (this.creeper.distanceToSqr(this.myLove) < 9.0D && AbstractCreeperEntity.this.random.nextInt(8) == 0 && !this.creeper.level.isClientSide) {
+                    this.myLove.absorbedCreepers += this.creeper.absorbedCreepers + 1;
+                    this.creeper.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, 1.0F);
+                    this.creeper.dead = true;
+                    this.creeper.discard();
+                }
+            }
+        }
+
+        @Override
+        public void stop() {
+            this.myLove = null;
+            this.creeper.getNavigation().stop();
         }
     }
 }
