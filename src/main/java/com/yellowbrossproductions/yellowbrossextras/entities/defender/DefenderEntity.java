@@ -1105,18 +1105,16 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     }
 
     @Override
-    public boolean hurt(DamageSource p_21016_, float p_21017_) {
+    public boolean hurt(DamageSource source, float damage) {
         if (this.deathAttackTicks > 0) {
             return false;
         }
-        if (p_21017_ > 15.0F) {
-            if (!this.killedByCommand(p_21016_, p_21017_)) {
-                p_21017_ = 15.0F;
-            } else {
-                this.setKilledByVoid(true);
-            }
+        if (!this.killedByCommand(source, damage)) {
+            damage = Math.min(damage, 15.0F);
+        } else {
+            this.setKilledByVoid(true);
         }
-        if (!this.killedByCommand(p_21016_, p_21017_)) {
+        if (!this.killedByCommand(source, damage)) {
             if (this.attackType == attack_claws && this.shouldContinueAttacking) {
                 return false;
             }
@@ -1127,19 +1125,19 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
                 return false;
             }
             if (this.attackType == attack_chainsaw) {
-                p_21017_ /= 2;
+                damage /= 2;
             }
             if (this.attackType == attack_ratatatabow && this.attackTicks2 > 0) {
-                p_21017_ = 0;
+                damage = 0;
             }
         }
-        if (p_21016_.getEntity() != null && p_21016_.getEntity() != this) {
-            if (EntityUtil.canHurtThisMob(p_21016_.getEntity(), this) && EntityUtil.isMobNotInCreativeMode(p_21016_.getEntity()) && p_21016_.getEntity() instanceof LivingEntity) {
-                this.setTarget((LivingEntity) p_21016_.getEntity());
+        if (source.getEntity() != null && source.getEntity() != this) {
+            if (EntityUtil.canHurtThisMob(source.getEntity(), this) && EntityUtil.isMobNotInCreativeMode(source.getEntity()) && source.getEntity() instanceof LivingEntity) {
+                this.setTarget((LivingEntity) source.getEntity());
             }
-            this.damageTaken += p_21017_;
+            this.damageTaken += damage;
         }
-        return super.hurt(p_21016_, p_21017_);
+        return super.hurt(source, damage);
     }
 
     private boolean killedByCommand(DamageSource damageSource, float value) {

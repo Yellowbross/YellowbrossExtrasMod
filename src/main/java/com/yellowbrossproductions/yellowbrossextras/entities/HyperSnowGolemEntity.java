@@ -97,8 +97,16 @@ public class HyperSnowGolemEntity extends SnowGolem implements YextrasEntity {
         if (source.getEntity() == this) {
             return false;
         }
-        damage = Math.min(damage, 4);
+        if (!this.killedByCommand(source, damage)) damage = Math.min(damage, 4.0F);
         return super.hurt(source, damage);
+    }
+
+    private boolean killedByCommand(DamageSource damageSource, float value) {
+        if (damageSource != DamageSource.OUT_OF_WORLD) {
+            return false;
+        } else {
+            return value >= 1000000000000.0F;
+        }
     }
 
     @Override
