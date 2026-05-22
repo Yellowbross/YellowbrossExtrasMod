@@ -93,11 +93,12 @@ public class HyperSnowGolemEntity extends SnowGolem implements YextrasEntity {
     }
 
     @Override
-    public boolean hurt(DamageSource p_21016_, float p_21017_) {
-        if (p_21016_.getEntity() == this) {
+    public boolean hurt(DamageSource source, float damage) {
+        if (source.getEntity() == this) {
             return false;
         }
-        return super.hurt(p_21016_, p_21017_);
+        damage = Math.min(damage, 4);
+        return super.hurt(source, damage);
     }
 
     @Override
