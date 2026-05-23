@@ -116,7 +116,7 @@ public class AttacksPart1 {
             // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (defender.attackType == defender.attack_axes) {
                 if (ticks == (24 * defender.throwTimes)) {
-                    defender.stopAllAnimationStates();
+                    defender.setAnimationState("none");
                     defender.setAnimationState("axes");
                     defender.throwTimes += 1;
                 }
