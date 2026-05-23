@@ -3,6 +3,8 @@ package com.yellowbrossproductions.yellowbrossextras.client.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
+import com.yellowbrossproductions.yellowbrossextras.entities.creepers.AbstractCreeperEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CrawlerEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -16,9 +18,43 @@ public class CrawlerModel<T extends Entity> extends EntityModel<T> {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(YellowbrossExtras.MOD_ID, "crawler"), "main");
     private final ModelPart center;
+    private final ModelPart leg1;
+    private final ModelPart legrotated1;
+    private final ModelPart knee1;
+    private final ModelPart leg2;
+    private final ModelPart legrotated2;
+    private final ModelPart knee2;
+    private final ModelPart leg3;
+    private final ModelPart legrotated3;
+    private final ModelPart knee3;
+    private final ModelPart leg4;
+    private final ModelPart legrotated4;
+    private final ModelPart knee4;
+    private final ModelPart head;
+    private final ModelPart head2;
+    private final ModelPart head3;
+    private final ModelPart head4;
+    private final ModelPart head5;
 
     public CrawlerModel(ModelPart root) {
         this.center = root.getChild("center");
+        this.leg1 = this.center.getChild("leg1");
+        this.legrotated1 = this.leg1.getChild("legrotated1");
+        this.knee1 = this.legrotated1.getChild("knee1");
+        this.leg2 = this.center.getChild("leg2");
+        this.legrotated2 = this.leg2.getChild("legrotated2");
+        this.knee2 = this.legrotated2.getChild("knee2");
+        this.leg3 = this.center.getChild("leg3");
+        this.legrotated3 = this.leg3.getChild("legrotated3");
+        this.knee3 = this.legrotated3.getChild("knee3");
+        this.leg4 = this.center.getChild("leg4");
+        this.legrotated4 = this.leg4.getChild("legrotated4");
+        this.knee4 = this.legrotated4.getChild("knee4");
+        this.head = this.center.getChild("head");
+        this.head2 = this.head.getChild("head2");
+        this.head3 = this.head.getChild("head3");
+        this.head4 = this.head.getChild("head4");
+        this.head5 = this.head.getChild("head5");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -61,36 +97,46 @@ public class CrawlerModel<T extends Entity> extends EntityModel<T> {
 
         PartDefinition head = center.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 28).addBox(-12.0F, -16.0F, -12.0F, 24.0F, 24.0F, 24.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -9.0F, 0.0F));
 
+        PartDefinition head2 = head.addOrReplaceChild("head2", CubeListBuilder.create().texOffs(0, 28).addBox(-12.0F, -16.0F, -12.0F, 24.0F, 24.0F, 24.0F, new CubeDeformation(-2.0F)), PartPose.offsetAndRotation(22.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+
+        PartDefinition head3 = head.addOrReplaceChild("head3", CubeListBuilder.create().texOffs(0, 28).addBox(-12.0F, -16.0F, -12.0F, 24.0F, 24.0F, 24.0F, new CubeDeformation(-2.0F)), PartPose.offsetAndRotation(-22.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
+
+        PartDefinition head4 = head.addOrReplaceChild("head4", CubeListBuilder.create().texOffs(0, 28).addBox(-12.0F, -16.0F, -12.0F, 24.0F, 24.0F, 24.0F, new CubeDeformation(-2.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 22.0F, 0.0F, 3.1416F, 0.0F));
+
+        PartDefinition head5 = head.addOrReplaceChild("head5", CubeListBuilder.create().texOffs(0, 28).addBox(-12.0F, -16.0F, -12.0F, 24.0F, 24.0F, 24.0F, new CubeDeformation(-2.0F)), PartPose.offset(0.0F, -22.0F, 0.0F));
+
         return LayerDefinition.create(meshdefinition, 128, 128);
     }
 
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.center.getAllParts().forEach(ModelPart::resetPose);
-        ModelPart head = this.center.getChild("head");
-        ModelPart leg1 = this.center.getChild("leg1");
-        ModelPart leg2 = this.center.getChild("leg2");
-        ModelPart leg3 = this.center.getChild("leg3");
-        ModelPart leg4 = this.center.getChild("leg4");
 
-        head.yRot = netHeadYaw * ((float)Math.PI / 180F);
-        head.xRot = headPitch * ((float)Math.PI / 180F);
+        this.head.yRot = netHeadYaw * ((float)Math.PI / 180F);
+        this.head.xRot = headPitch * ((float)Math.PI / 180F);
+
+        if (entity instanceof AbstractCreeperEntity creeper) {
+            this.head2.visible = creeper.getAbsorbedCreepers() >= 1;
+            this.head3.visible = creeper.getAbsorbedCreepers() >= 2;
+            this.head4.visible = creeper.getAbsorbedCreepers() >= 3;
+            this.head5.visible = creeper.getAbsorbedCreepers() >= 4;
+        }
 
         float mult = 0.2F;
-        leg1.yRot += ((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) / 2);
-        leg3.yRot += ((Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount) / 2);
-        leg2.yRot += ((Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount) / 2);
-        leg4.yRot += ((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) / 2);
+        this.leg1.yRot += ((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) / 2);
+        this.leg3.yRot += ((Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount) / 2);
+        this.leg2.yRot += ((Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount) / 2);
+        this.leg4.yRot += ((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) / 2);
         if ((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount) >= 0) {
-            leg1.xRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount)) * -1) * mult;
-            leg1.zRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount)) * -1) * mult;
-            leg4.xRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount)) * -1) * mult;
-            leg4.zRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount))) * mult;
+            this.leg1.xRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount)) * -1) * mult;
+            this.leg1.zRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount)) * -1) * mult;
+            this.leg4.xRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount)) * -1) * mult;
+            this.leg4.zRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount))) * mult;
         } else {
-            leg2.xRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount))) * mult;
-            leg2.zRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount))) * mult;
-            leg3.xRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount))) * mult;
-            leg3.zRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount)) * -1) * mult;
+            this.leg2.xRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount))) * mult;
+            this.leg2.zRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount))) * mult;
+            this.leg3.xRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount))) * mult;
+            this.leg3.zRot = (Math.abs((Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount)) * -1) * mult;
         }
     }
 

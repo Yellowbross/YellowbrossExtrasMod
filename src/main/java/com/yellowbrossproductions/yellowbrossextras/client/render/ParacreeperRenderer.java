@@ -21,15 +21,15 @@ public class ParacreeperRenderer extends MobRenderer<ParacreeperEntity, Paracree
         super(renderManagerIn, new ParacreeperModel<>(renderManagerIn.bakeLayer(ParacreeperModel.LAYER_LOCATION)), 0.5F);
     }
 
-    protected void scale(ParacreeperEntity p_114046_, PoseStack p_114047_, float p_114048_) {
-        float f = p_114046_.getSwelling(p_114048_);
+    protected void scale(ParacreeperEntity creeper, PoseStack poseStack, float partialTick) {
+        float f = creeper.getSwelling(partialTick);
         float f1 = 1.0F + Mth.sin(f * 100.0F) * f * 0.01F;
         f = Mth.clamp(f, 0.0F, 1.0F);
         f *= f;
         f *= f;
         float f2 = (1.0F + f * 0.4F) * f1;
         float f3 = (1.0F + f * 0.1F) / f1;
-        p_114047_.scale(f2, f3, f2);
+        poseStack.scale(f2, f3, f2);
     }
 
     protected float getWhiteOverlayProgress(ParacreeperEntity p_114043_, float p_114044_) {

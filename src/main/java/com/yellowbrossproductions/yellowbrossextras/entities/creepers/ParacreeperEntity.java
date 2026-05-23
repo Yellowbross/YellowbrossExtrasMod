@@ -72,7 +72,7 @@ public class ParacreeperEntity extends AbstractCreeperEntity implements CreeperE
             this.dead = true;
             this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 0.75F * f), explosion$blockinteraction);
 
-            if (this.absorbedCreepers >= this.getMaxAbsorbs()) {
+            if (this.getAbsorbedCreepers() >= this.getMaxAbsorbs()) {
                 SneakerEntity creeper = ModEntityTypes.Sneaker.get().create(this.level);
                 assert creeper != null;
                 creeper.copyPosition(this);

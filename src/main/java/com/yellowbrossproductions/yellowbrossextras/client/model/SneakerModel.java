@@ -3,6 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
+import com.yellowbrossproductions.yellowbrossextras.entities.creepers.AbstractCreeperEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -16,6 +17,20 @@ public class SneakerModel<T extends Entity> extends EntityModel<T> {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(YellowbrossExtras.MOD_ID, "sneaker"), "main");
     private final ModelPart head;
+    private final ModelPart sprout;
+    private final ModelPart leaves1;
+    private final ModelPart leaf1;
+    private final ModelPart leaves2;
+    private final ModelPart leaf2;
+    private final ModelPart leaves3;
+    private final ModelPart leaf3;
+    private final ModelPart leaves4;
+    private final ModelPart leaf4;
+    private final ModelPart sprout2;
+    private final ModelPart head2;
+    private final ModelPart head3;
+    private final ModelPart head4;
+    private final ModelPart head5;
     private final ModelPart body;
     private final ModelPart leg1;
     private final ModelPart leg2;
@@ -25,6 +40,20 @@ public class SneakerModel<T extends Entity> extends EntityModel<T> {
 
     public SneakerModel(ModelPart root) {
         this.head = root.getChild("head");
+        this.sprout = this.head.getChild("sprout");
+        this.leaves1 = this.sprout.getChild("leaves1");
+        this.leaf1 = this.leaves1.getChild("leaf1");
+        this.leaves2 = this.sprout.getChild("leaves2");
+        this.leaf2 = this.leaves2.getChild("leaf2");
+        this.leaves3 = this.sprout.getChild("leaves3");
+        this.leaf3 = this.leaves3.getChild("leaf3");
+        this.leaves4 = this.sprout.getChild("leaves4");
+        this.leaf4 = this.leaves4.getChild("leaf4");
+        this.sprout2 = this.sprout.getChild("sprout2");
+        this.head2 = this.head.getChild("head2");
+        this.head3 = this.head.getChild("head3");
+        this.head4 = this.head.getChild("head4");
+        this.head5 = this.head.getChild("head5");
         this.body = root.getChild("body");
         this.leg1 = root.getChild("leg1");
         this.leg2 = root.getChild("leg2");
@@ -59,6 +88,14 @@ public class SneakerModel<T extends Entity> extends EntityModel<T> {
 
         PartDefinition sprout2 = sprout.addOrReplaceChild("sprout2", CubeListBuilder.create().texOffs(28, 0).addBox(-4.0F, -8.0F, 0.0F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
+        PartDefinition head2 = head.addOrReplaceChild("head2", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(8.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+
+        PartDefinition head3 = head.addOrReplaceChild("head3", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-8.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
+
+        PartDefinition head4 = head.addOrReplaceChild("head4", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 8.0F, 0.0F, 3.1416F, 0.0F));
+
+        PartDefinition head5 = head.addOrReplaceChild("head5", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -8.0F, 0.0F));
+
         PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(16, 16).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 6.0F, 0.0F));
 
         PartDefinition leg1 = partdefinition.addOrReplaceChild("leg1", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.0F, 18.0F, 4.0F));
@@ -77,6 +114,13 @@ public class SneakerModel<T extends Entity> extends EntityModel<T> {
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.head.getAllParts().forEach(ModelPart::resetPose);
+
+        if (entity instanceof AbstractCreeperEntity creeper) {
+            this.head2.visible = creeper.getAbsorbedCreepers() >= 1;
+            this.head3.visible = creeper.getAbsorbedCreepers() >= 2;
+            this.head4.visible = creeper.getAbsorbedCreepers() >= 3;
+            this.head5.visible = creeper.getAbsorbedCreepers() >= 4;
+        }
 
         this.head.yRot = netHeadYaw * ((float)Math.PI / 180F);
         this.head.xRot = headPitch * ((float)Math.PI / 180F);

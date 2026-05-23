@@ -80,7 +80,7 @@ public class CrawlerEntity extends AbstractCreeperEntity implements CreeperEnemy
         if (!this.level.isClientSide) {
             Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
             this.dead = true;
-            if (this.absorbedCreepers < this.getMaxAbsorbs()) {
+            if (this.getAbsorbedCreepers() < this.getMaxAbsorbs()) {
                 for (int i = 0; i < 3; ++i) {
                     SneakerEntity creeper = ModEntityTypes.Sneaker.get().create(this.level);
                     assert creeper != null;

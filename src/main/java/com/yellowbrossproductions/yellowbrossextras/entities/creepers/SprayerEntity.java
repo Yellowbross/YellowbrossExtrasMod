@@ -98,7 +98,7 @@ public class SprayerEntity extends AbstractCreeperEntity implements CreeperEnemy
     @Override
     public void explodeCreeper() {
         super.explodeCreeper();
-        if (this.absorbedCreepers >= this.getMaxAbsorbs()) {
+        if (this.getAbsorbedCreepers() >= this.getMaxAbsorbs()) {
             if (!this.level.isClientSide) {
                 CrawlerEntity creeper = ModEntityTypes.Crawler.get().create(this.level);
                 assert creeper != null;

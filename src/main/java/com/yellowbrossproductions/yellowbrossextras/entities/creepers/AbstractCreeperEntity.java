@@ -42,6 +42,7 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
     private static final EntityDataAccessor<Integer> DATA_SWELL_DIR = SynchedEntityData.defineId(AbstractCreeperEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_IS_POWERED = SynchedEntityData.defineId(AbstractCreeperEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_IS_IGNITED = SynchedEntityData.defineId(AbstractCreeperEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> ABSORBED_CREEPERS = SynchedEntityData.defineId(AbstractCreeperEntity.class, EntityDataSerializers.INT);
     public int oldSwell;
     public int swell;
     public int maxSwell = 30;
@@ -49,7 +50,6 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
     private int droppedSkulls;
     public boolean shouldCalculateSwell = true;
 
-    public float absorbedCreepers = 0;
     float f;
 
     public AbstractCreeperEntity(EntityType<? extends Monster> p_33002_, Level p_33003_) {
@@ -75,6 +75,7 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
         this.entityData.define(DATA_SWELL_DIR, -1);
         this.entityData.define(DATA_IS_POWERED, false);
         this.entityData.define(DATA_IS_IGNITED, false);
+        this.entityData.define(ABSORBED_CREEPERS, 0);
     }
 
     @Override
@@ -101,6 +102,25 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
                         double d1 = (-0.5 + this.random.nextGaussian());
                         double d2 = (-0.5 + this.random.nextGaussian());
                         packet.queueParticle(ParticleTypes.HEART, false, new Vec3(this.getRandomX(0.5D), this.getY() + 1.0D, this.getRandomZ(0.5D)), new Vec3(d0, 0.0D, d2));
+                    }
+
+                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
+                }
+            }
+        }
+    }
+
+    public void makeMergeParticles() {
+        if (!this.level.isClientSide) {
+            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
+                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
+                    ParticlePacket packet = new ParticlePacket();
+
+                    for(int i = 0; i < 20; ++i) {
+                        double d0 = (-0.5 + this.random.nextGaussian());
+                        double d1 = (-0.5 + this.random.nextGaussian());
+                        double d2 = (-0.5 + this.random.nextGaussian());
+                        packet.queueParticle(ParticleTypes.HAPPY_VILLAGER, false, new Vec3(this.getRandomX(1.5D), this.getRandomY(), this.getRandomZ(1.5D)), new Vec3(d0, 0.0D, d2));
                     }
 
                     PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
@@ -178,10 +198,18 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
         }
     }
 
+    public int getAbsorbedCreepers() {
+        return this.entityData.get(ABSORBED_CREEPERS);
+    }
+
+    public void setAbsorbedCreepers(int absorbedCreepers) {
+        this.entityData.set(ABSORBED_CREEPERS, absorbedCreepers);
+    }
+
     public void tick() {
         this.calculateSwell();
 
-        if (this.absorbedCreepers >= this.getMaxAbsorbs() && this.random.nextInt(16) == 0) {
+        if (this.getAbsorbedCreepers() >= this.getMaxAbsorbs() && this.random.nextInt(16) == 0 && !this.level.isClientSide) {
             this.ignite();
         }
 
@@ -208,7 +236,7 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
 
             if (this.swell >= this.maxSwell) {
                 this.swell = this.maxSwell;
-                f = ((this.absorbedCreepers / 3) + 1) * (this.isPowered() ? 2.0F : 1.0F);
+                f = (((float)this.getAbsorbedCreepers() / 3) + 1) * (this.isPowered() ? 2.0F : 1.0F);
                 this.explodeCreeper();
             }
         }
@@ -367,7 +395,7 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
         public boolean canUse() {
             if (this.creeper.getTarget() != null || (!(this.creeper instanceof ParacreeperEntity) && !this.creeper.isOnGround())) return false;
 
-            List<? extends AbstractCreeperEntity> nearbyMobs = this.creeper.level.getEntitiesOfClass(this.lookingForType, this.creeper.getBoundingBox().inflate(10.0d), predicate -> predicate.absorbedCreepers < predicate.getMaxAbsorbs());
+            List<? extends AbstractCreeperEntity> nearbyMobs = this.creeper.level.getEntitiesOfClass(this.lookingForType, this.creeper.getBoundingBox().inflate(10.0d), predicate -> predicate.getAbsorbedCreepers() < predicate.getMaxAbsorbs());
 
             double closestDistanceSq = Double.MAX_VALUE;
             for (AbstractCreeperEntity potentialLove : nearbyMobs) {
@@ -387,7 +415,7 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
         public boolean canContinueToUse() {
             double maxDist = 10.0d * 10.0d;
 
-            return this.myLove != null && this.myLove.isAlive() && !this.myLove.isRemoved() && this.myLove.absorbedCreepers < this.myLove.getMaxAbsorbs() && this.creeper.distanceToSqr(this.myLove) <= maxDist && this.creeper.getTarget() == null;
+            return this.myLove != null && this.myLove.isAlive() && !this.myLove.isRemoved() && this.myLove.getAbsorbedCreepers() < this.myLove.getMaxAbsorbs() && this.creeper.distanceToSqr(this.myLove) <= maxDist && this.creeper.getTarget() == null;
         }
 
         @Override
@@ -396,7 +424,8 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
                 this.creeper.getNavigation().moveTo(this.myLove, 1.0D);
 
                 if (this.creeper.distanceToSqr(this.myLove) < 9.0D && AbstractCreeperEntity.this.random.nextInt(8) == 0 && !this.creeper.level.isClientSide) {
-                    this.myLove.absorbedCreepers += this.creeper.absorbedCreepers + 1;
+                    this.myLove.setAbsorbedCreepers(this.myLove.getAbsorbedCreepers() + this.creeper.getAbsorbedCreepers() + 1);
+                    this.myLove.makeMergeParticles();
                     this.creeper.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, 1.0F);
                     this.creeper.dead = true;
                     this.creeper.discard();

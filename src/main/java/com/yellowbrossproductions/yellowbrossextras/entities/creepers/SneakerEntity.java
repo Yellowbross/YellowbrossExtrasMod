@@ -195,7 +195,7 @@ public class SneakerEntity extends AbstractCreeperEntity implements CreeperEnemy
             Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
             this.dead = true;
             CameraShakeEntity.cameraShake(this.level, position(), 30, 0.1f, 0, 15);
-            if (this.absorbedCreepers < this.getMaxAbsorbs()) {
+            if (this.getAbsorbedCreepers() < this.getMaxAbsorbs()) {
                 if (this.getCreeperType() == 0) {
                     if (this.random.nextBoolean()) {
                         ParacreeperEntity creeper = ModEntityTypes.Paracreeper.get().create(this.level);
