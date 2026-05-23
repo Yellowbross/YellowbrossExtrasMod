@@ -16,7 +16,7 @@ public class ClawsGoal extends CustomAttackGoal {
 
     @Override
     public void start() {
-        getDefender().setAnimationState(10);
+        getDefender().setAnimationState("claws_start");
         getDefender().setWeaponToShow(7);
         getDefender().attackType = getDefender().attack_claws;
         getDefender().setImmediateTurn(true);

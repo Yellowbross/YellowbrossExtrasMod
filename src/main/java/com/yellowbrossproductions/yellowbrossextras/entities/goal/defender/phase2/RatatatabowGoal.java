@@ -18,7 +18,7 @@ public class RatatatabowGoal extends CustomAttackGoal {
 
     @Override
     public void start() {
-        getDefender().setAnimationState(16);
+        getDefender().setAnimationState("ratatatabow");
         getDefender().setWeaponToShow(9);
         getDefender().setImmediateTurn(true);
         getDefender().attackType = getDefender().attack_ratatatabow;

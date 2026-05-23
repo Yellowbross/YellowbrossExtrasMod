@@ -17,7 +17,7 @@ public class SentryGunsGoal extends CustomAttackGoal {
 
     @Override
     public void start() {
-        getDefender().setAnimationState(22);
+        getDefender().setAnimationState("sentryguns");
         getDefender().setImmediateTurn(true);
         getDefender().attackType = getDefender().attack_sentryguns;
     }

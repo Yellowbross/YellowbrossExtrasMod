@@ -14,6 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
+import java.util.Objects;
+
 public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(YellowbrossExtras.MOD_ID, "defender"), "main");
@@ -400,6 +402,7 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
 
         if (entity instanceof DefenderEntity defender) {
             this.animate(defender.getAnimationState("jump"), DefenderAnimation.jump, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.getAnimationState("jump2"), DefenderAnimation.jump2, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.getAnimationState("defeated"), DefenderAnimation.defeated, ageInTicks, defender.getAnimationSpeed());
 
             this.animate(defender.getAnimationState("saws"), DefenderAnimation.saws, ageInTicks, defender.getAnimationSpeed());
@@ -460,7 +463,7 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
             this.chainsaw_handle.yRot += netHeadYaw * ((float)Math.PI / 180F);
             this.chainsaw_handle.xRot += defender.getChainsawLookX() * ((float)Math.PI / 180F);
 
-            if (defender.getAnimationState() == 0) {
+            if (Objects.equals(defender.getAnimationState(), "none")) {
                 float moveX = (float) (defender.getX() - defender.xo);
                 float moveZ = (float) (defender.getZ() - defender.zo);
                 float speed = Mth.sqrt(moveX * moveX + moveZ * moveZ);
@@ -474,7 +477,8 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
             }
 
             if (defender.getWeaponToShow() != 1 &&
-                    defender.getWeaponToShow() != 4) {
+                    defender.getWeaponToShow() != 4 &&
+                    !Objects.equals(defender.getAnimationState(), "jump2")) {
                 this.left_leg.xRot += Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.5F;
                 this.right_leg.xRot += Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount * 0.5F;
             }

@@ -16,7 +16,7 @@ public class ShurikensGoal extends CustomAttackGoal {
 
     @Override
     public void start() {
-        getDefender().setAnimationState(8);
+        getDefender().setAnimationState("shurikens");
         getDefender().setWeaponToShow(5);
         getDefender().attackType = getDefender().attack_shurikens;
     }

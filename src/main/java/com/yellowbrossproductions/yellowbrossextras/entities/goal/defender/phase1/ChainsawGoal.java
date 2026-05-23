@@ -17,7 +17,7 @@ public class ChainsawGoal extends CustomAttackGoal {
 
     @Override
     public void start() {
-        getDefender().setAnimationState(9);
+        getDefender().setAnimationState("chainsaw");
         getDefender().setWeaponToShow(6);
         getDefender().attackType = getDefender().attack_chainsaw;
         getDefender().setImmediateTurn(true);

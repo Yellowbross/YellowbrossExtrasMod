@@ -16,7 +16,7 @@ public class SwordGoal  extends CustomAttackGoal {
 
     @Override
     public void start() {
-        getDefender().setAnimationState(3);
+        getDefender().setAnimationState("sword");
         getDefender().setWeaponToShow(2);
         getDefender().attackType = getDefender().attack_sword;
     }

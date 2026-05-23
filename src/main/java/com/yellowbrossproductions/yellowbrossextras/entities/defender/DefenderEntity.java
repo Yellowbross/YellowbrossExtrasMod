@@ -4,6 +4,8 @@ import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderArrowEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.StareAtDefenderGoal;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase1.*;
@@ -72,7 +74,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     int frame;
     private final ServerBossEvent bossEvent = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.NOTCHED_10));
     private static final EntityDataAccessor<Boolean> SHOULD_SHOW_BOSSBAR = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<String> ANIMATION_STATE = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> WEAPON_TO_SHOW = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> PHASE_LIMIT = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.INT);
@@ -86,6 +88,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     private static final EntityDataAccessor<Integer> USING_CUSTOM_RENDER = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.INT);
 
     public AnimationState anim_jump = new AnimationState();
+    public AnimationState anim_jump2 = new AnimationState();
     public AnimationState anim_defeated = new AnimationState();
 
     // Phase 1
@@ -196,7 +199,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new SentryGunsGoal(this));
+        // this.goalSelector.addGoal(0, new SentryGunsGoal(this));
         this.goalSelector.addGoal(0, new RatatatabowGoal(this));
 
         this.goalSelector.addGoal(0, new ExcaliburGoal(this));
@@ -237,7 +240,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(SHOULD_SHOW_BOSSBAR, true);
-        this.entityData.define(ANIMATION_STATE, 0);
+        this.entityData.define(ANIMATION_STATE, "none");
         this.entityData.define(WEAPON_TO_SHOW, 0);
         this.entityData.define(PHASE, 1);
         this.entityData.define(PHASE_LIMIT, 2);
@@ -255,7 +258,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
         if (this.jumpAttacking) {
             if (this.attackType == attack_spikes) {
-                this.setAnimationState(7);
+                this.setAnimationState("spikes_land");
                 this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
                 this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 3.0F, 1.0F);
                 if (!this.level.isClientSide) {
@@ -285,7 +288,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
                             double z = this.getZ() - this.clawsTarget.getZ();
                             double d = Math.sqrt(x * x + y * y + z * z);
 
-                            this.setAnimationState(15);
+                            this.setAnimationState("claws_punch");
                             this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, 0.8F);
                             CameraShakeEntity.cameraShake(this.level, position(), 30, 0.1f, 0, 15);
                             this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SMACK.get(), 2.0F, this.getVoicePitch());
@@ -469,7 +472,6 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
             if (this.attackType == attack_jump) {
                 if (this.attackTicks == 4 && this.getTarget() != null) {
-                    this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_JUMP.get(), 2.0F, 1.0F);
                     if (this.howShouldDefenderApproachHisTarget() == 1 || this.distanceTo(this.getTarget()) < 6.0D) {
                         double x = this.getX() - this.getTarget().getX();
                         double y = this.getY() - this.getTarget().getY();
@@ -482,10 +484,12 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
                         double motionY = (y / d * (double) power * 0.2D);
                         double motionZ = (z / d * (double) power * 0.2D) * bonusMovement;
 
+                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_JUMP.get(), 2.0F, 1.0F);
                         this.setDeltaMovement(motionX, 0.5D, motionZ);
                     } else if (this.howShouldDefenderApproachHisTarget() == 2) {
                         double mult = 0.04d;
 
+                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_JUMP2.get(), 2.0F, 1.0F);
                         this.setDiscardFriction(true);
                         this.setDeltaMovement(((this.getTarget().getX() - this.getX()) * 2.5D) * mult,
                                 1.2D,
@@ -710,7 +714,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
             }
 
             if (this.wasKilledByVoid()) {
-                this.setAnimationState(0);
+                this.setAnimationState("none");
             }
             if (!this.wasKilledByVoid() && this.getHealth() <= 0 && this.deathAttackTicks == 0) {
                 this.processDeath();
@@ -731,83 +735,91 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         }
     }
 
-    public void fireProjectile(LivingEntity p_82196_1_, float p_82196_2_, float inaccuracy) {
-        double d0 = p_82196_1_.getX() - this.getX();
-        double d1 = p_82196_1_.getY(0.3333333333333333D) - this.getY() - (p_82196_1_.getBbHeight() / 2.0D);
-        double d2 = p_82196_1_.getZ() - this.getZ();
+    public void fireProjectile(LivingEntity target, float enchantments, float inaccuracy) {
+        double d0 = target.getX() - this.getX();
+        double d1 = target.getY(0.3333333333333333D) - this.getY() - (target.getBbHeight() / 2.0D);
+        double d2 = target.getZ() - this.getZ();
         double d3 = (double)Mth.sqrt((float) (d0 * d0 + d2 * d2));
         float speed;
-        if (this.distanceToSqr(p_82196_1_) > 22.5F) {
+        if (this.distanceToSqr(target) > 22.5F) {
             speed = 2.5F;
         } else {
-            speed = (float) (this.distanceToSqr(p_82196_1_) / 9);
+            speed = (float) (this.distanceToSqr(target) / 9);
         }
 
         int rand = this.random.nextInt(4);
-        if (rand == 0) {
-            AbstractArrow projectile1 = this.getArrow(Items.BOW.getDefaultInstance(), p_82196_2_);
-            if (this.getMainHandItem().getItem() instanceof BowItem)
-                projectile1 = ((BowItem)this.getMainHandItem().getItem()).customArrow(projectile1);
-            projectile1.setBaseDamage(2.5D);
-            projectile1.setCritArrow(true);
+        switch (rand) {
+            case 1 -> {
+                Snowball projectile = EntityType.SNOWBALL.create(this.level);
+                assert projectile != null;
 
-            projectile1.setPierceLevel((byte) 50);
-            projectile1.setOwner(this);
-            projectile1.setCritArrow(true);
-            projectile1.setBaseDamage(3.0D);
+                projectile.setOwner(this);
+                projectile.shoot(d0, (d1 + d3 * (double)0.2F), d2, speed, inaccuracy);
 
-            projectile1.shoot(d0, (d1 + d3 * (double)0.2F), d2, speed, inaccuracy);
+                projectile.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
-            projectile1.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
+                this.level.addFreshEntity(projectile);
+                this.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, this.getVoicePitch());
+            }
+            case 2 -> {
+                ThrownTrident projectile = EntityType.TRIDENT.create(this.level);
+                assert projectile != null;
+                projectile.setCritArrow(true);
 
-            this.level.addFreshEntity(projectile1);
-            this.playSound(SoundEvents.ARROW_SHOOT, 2.0F, this.getVoicePitch());
-        } else if (rand == 1) {
-            Snowball projectile2 = EntityType.SNOWBALL.create(this.level);
-            assert projectile2 != null;
+                projectile.setOwner(this);
 
-            projectile2.setOwner(this);
-            projectile2.shoot(d0, (d1 + d3 * (double)0.2F), d2, speed, inaccuracy);
+                projectile.setPierceLevel((byte) 50);
+                projectile.setCritArrow(true);
+                projectile.setBaseDamage(3.0D);
 
-            projectile2.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
+                projectile.shoot(d0, (d1 + d3 * (double)0.2F), d2, speed, inaccuracy);
 
-            this.level.addFreshEntity(projectile2);
-            this.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, this.getVoicePitch());
-        } else if (rand == 2) {
-            ThrownTrident projectile3 = EntityType.TRIDENT.create(this.level);
-            assert projectile3 != null;
-            projectile3.setCritArrow(true);
+                projectile.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
-            projectile3.setOwner(this);
+                this.level.addFreshEntity(projectile);
+                this.playSound(SoundEvents.TRIDENT_THROW, 2.0F, this.getVoicePitch());
+            }
+            case 3 -> {
+                ThrownPotion projectile = new ThrownPotion(this.level, this);
 
-            projectile3.setPierceLevel((byte) 50);
-            projectile3.setCritArrow(true);
-            projectile3.setBaseDamage(3.0D);
+                projectile.setOwner(this);
 
-            projectile3.shoot(d0, (d1 + d3 * (double)0.2F), d2, speed, inaccuracy);
+                projectile.setItem(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), target.getMobType().equals(MobType.UNDEAD) ? Potions.STRONG_HEALING : Potions.STRONG_HARMING));
 
-            projectile3.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
+                projectile.shoot(d0, (d1 + d3 * (double)0.35F), d2, speed, inaccuracy);
 
-            this.level.addFreshEntity(projectile3);
-            this.playSound(SoundEvents.TRIDENT_THROW, 2.0F, this.getVoicePitch());
-        } else {
-            ThrownPotion projectile4 = new ThrownPotion(this.level, this);
+                projectile.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
-            projectile4.setOwner(this);
+                this.level.addFreshEntity(projectile);
+                this.playSound(SoundEvents.WITCH_THROW, 2.0F, this.getVoicePitch());
+            }
+            default -> {
+                AbstractArrow projectile = this.getArrow(enchantments);
+                if (this.getMainHandItem().getItem() instanceof BowItem)
+                    projectile = ((BowItem)this.getMainHandItem().getItem()).customArrow(projectile);
+                projectile.setBaseDamage(2.5D);
+                projectile.setCritArrow(true);
 
-            projectile4.setItem(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), Potions.STRONG_HARMING));
+                projectile.setPierceLevel((byte) 50);
+                projectile.setOwner(this);
+                projectile.setCritArrow(true);
+                projectile.setBaseDamage(3.0D);
 
-            projectile4.shoot(d0, (d1 + d3 * (double)0.35F), d2, speed, inaccuracy);
+                projectile.shoot(d0, (d1 + d3 * (double)0.2F), d2, speed, inaccuracy);
 
-            projectile4.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
+                projectile.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
-            this.level.addFreshEntity(projectile4);
-            this.playSound(SoundEvents.WITCH_THROW, 2.0F, this.getVoicePitch());
+                this.level.addFreshEntity(projectile);
+                this.playSound(SoundEvents.ARROW_SHOOT, 2.0F, this.getVoicePitch());
+            }
         }
     }
 
-    protected AbstractArrow getArrow(ItemStack p_213624_1_, float p_213624_2_) {
-        return ProjectileUtil.getMobArrow(this, p_213624_1_, p_213624_2_);
+    protected AbstractArrow getArrow(float enchantments) {
+        DefenderArrowEntity abstractarrow = new DefenderArrowEntity(this.level, this);
+        abstractarrow.setEnchantmentEffectsFromEntity(this, enchantments);
+
+        return abstractarrow;
     }
 
 
@@ -1262,7 +1274,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
             this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_PHASE_ENDED.get(), 3.0F, 1.0F);
             CameraShakeEntity.cameraShake(this.level, position(), 30, 0.3f, 0, 15);
             this.makePhaseEndParticles();
-            this.setAnimationState(13);
+            this.setAnimationState("excalibur");
             this.attackType = attack_excalibur;
         }
     }
@@ -1372,7 +1384,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         this.bossEvent.removePlayer(p_31488_);
     }
 
-    public void setAnimationState(int input) {
+    public void setAnimationState(String input) {
         this.entityData.set(ANIMATION_STATE, input);
     }
 
@@ -1487,6 +1499,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     public AnimationState getAnimationState(String input) {
         return switch (input) {
             case "jump" -> anim_jump;
+            case "jump2" -> anim_jump2;
             case "defeated" -> anim_defeated;
 
             case "saws" -> anim_saws;
@@ -1519,7 +1532,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         };
     }
 
-    public int getAnimationState() {
+    public String getAnimationState() {
         return this.entityData.get(ANIMATION_STATE);
     }
 
@@ -1528,110 +1541,117 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         if (ANIMATION_STATE.equals(p_21104_)) {
             if (this.level.isClientSide) {
                 switch (this.entityData.get(ANIMATION_STATE)) {
-                    case 0 :
+                    case "none" :
                         this.stopAllAnimationStates();
                         break;
-                    case 1 :
-                        this.stopAllAnimationStates();
-                        this.anim_saws.start(this.tickCount);
-                        break;
-                    case 2 :
+
+                    case "jump" :
                         this.stopAllAnimationStates();
                         this.anim_jump.start(this.tickCount);
                         break;
-                    case 3 :
+                    case "jump2" :
                         this.stopAllAnimationStates();
-                        this.anim_sword.start(this.tickCount);
+                        this.anim_jump2.start(this.tickCount);
                         break;
-                    case 4 :
-                        this.stopAllAnimationStates();
-                        this.anim_axes.start(this.tickCount);
-                        break;
-                    case 5 :
-                        this.stopAllAnimationStates();
-                        this.anim_boomerang.start(this.tickCount);
-                        break;
-                    case 6 :
-                        this.stopAllAnimationStates();
-                        this.anim_spikes.start(this.tickCount);
-                        break;
-                    case 7 :
-                        this.stopAllAnimationStates();
-                        this.anim_spikes_land.start(this.tickCount);
-                        break;
-                    case 8 :
-                        this.stopAllAnimationStates();
-                        this.anim_shurikens.start(this.tickCount);
-                        break;
-                    case 9 :
-                        this.stopAllAnimationStates();
-                        this.anim_chainsaw.start(this.tickCount);
-                        break;
-                    case 10 :
-                        this.stopAllAnimationStates();
-                        this.anim_claws_start.start(this.tickCount);
-                        break;
-                    case 11 :
-                        this.stopAllAnimationStates();
-                        this.anim_claws_continue.start(this.tickCount);
-                        break;
-                    case 12 :
-                        this.stopAllAnimationStates();
-                        this.anim_claws_end.start(this.tickCount);
-                        break;
-                    case 13 :
-                        this.stopAllAnimationStates();
-                        this.anim_excalibur.start(this.tickCount);
-                        break;
-                    case 14 :
+                    case "defeated" :
                         this.stopAllAnimationStates();
                         this.anim_defeated.start(this.tickCount);
                         break;
-                    case 15 :
+
+                    case "saws" :
                         this.stopAllAnimationStates();
-                        this.anim_claws_punch.start(this.tickCount);
+                        this.anim_saws.start(this.tickCount);
                         break;
-                    case 16 :
+                    case "sword" :
                         this.stopAllAnimationStates();
-                        this.anim_ratatatabow.start(this.tickCount);
+                        this.anim_sword.start(this.tickCount);
                         break;
-                    case 17 :
+                    case "axes" :
+                        this.stopAllAnimationStates();
+                        this.anim_axes.start(this.tickCount);
+                        break;
+                    case "boomerang" :
+                        this.stopAllAnimationStates();
+                        this.anim_boomerang.start(this.tickCount);
+                        break;
+                    case "spikes" :
+                        this.stopAllAnimationStates();
+                        this.anim_spikes.start(this.tickCount);
+                        break;
+                    case "spikes_land" :
+                        this.stopAllAnimationStates();
+                        this.anim_spikes_land.start(this.tickCount);
+                        break;
+                    case "spikes_slam" :
                         this.stopAllAnimationStates();
                         this.anim_spikes_slam.start(this.tickCount);
                         break;
-                    case 18 :
+                    case "shurikens" :
+                        this.stopAllAnimationStates();
+                        this.anim_shurikens.start(this.tickCount);
+                        break;
+                    case "chainsaw" :
+                        this.stopAllAnimationStates();
+                        this.anim_chainsaw.start(this.tickCount);
+                        break;
+                    case "claws_start" :
+                        this.stopAllAnimationStates();
+                        this.anim_claws_start.start(this.tickCount);
+                        break;
+                    case "claws_continue" :
+                        this.stopAllAnimationStates();
+                        this.anim_claws_continue.start(this.tickCount);
+                        break;
+                    case "claws_end" :
+                        this.stopAllAnimationStates();
+                        this.anim_claws_end.start(this.tickCount);
+                        break;
+                    case "claws_punch" :
+                        this.stopAllAnimationStates();
+                        this.anim_claws_punch.start(this.tickCount);
+                        break;
+                    case "excalibur" :
+                        this.stopAllAnimationStates();
+                        this.anim_excalibur.start(this.tickCount);
+                        break;
+
+                    case "ratatatabow" :
+                        this.stopAllAnimationStates();
+                        this.anim_ratatatabow.start(this.tickCount);
+                        break;
+                    case "ratatatabow2" :
                         this.stopAllAnimationStates();
                         this.anim_ratatatabow2.start(this.tickCount);
                         break;
-                    case 19 :
+                    case "poisondarts" :
                         this.stopAllAnimationStates();
                         this.anim_poisondarts.start(this.tickCount);
                         break;
-                    case 20 :
+                    case "forcegun" :
                         this.stopAllAnimationStates();
                         this.anim_forcegun.start(this.tickCount);
                         break;
-                    case 21 :
+                    case "snipe" :
                         this.stopAllAnimationStates();
                         this.anim_snipe.start(this.tickCount);
                         break;
-                    case 22 :
+                    case "sentryguns" :
                         this.stopAllAnimationStates();
                         this.anim_sentryguns.start(this.tickCount);
                         break;
-                    case 23 :
+                    case "icethrower" :
                         this.stopAllAnimationStates();
                         this.anim_icethrower.start(this.tickCount);
                         break;
-                    case 24 :
+                    case "witherbazooka" :
                         this.stopAllAnimationStates();
                         this.anim_witherbazooka.start(this.tickCount);
                         break;
-                    case 25 :
+                    case "creepergun" :
                         this.stopAllAnimationStates();
                         this.anim_creepergun.start(this.tickCount);
                         break;
-                    case 26 :
+                    case "flamethrower" :
                         this.stopAllAnimationStates();
                         this.anim_flamethrower.start(this.tickCount);
                         break;
@@ -1643,8 +1663,11 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     }
 
     public void stopAllAnimationStates() {
-        this.anim_saws.stop();
         this.anim_jump.stop();
+        this.anim_jump2.stop();
+        this.anim_defeated.stop();
+
+        this.anim_saws.stop();
         this.anim_sword.stop();
         this.anim_axes.stop();
         this.anim_boomerang.stop();
@@ -1656,9 +1679,9 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         this.anim_claws_start.stop();
         this.anim_claws_continue.stop();
         this.anim_claws_end.stop();
-        this.anim_excalibur.stop();
-        this.anim_defeated.stop();
         this.anim_claws_punch.stop();
+        this.anim_excalibur.stop();
+
         this.anim_ratatatabow.stop();
         this.anim_ratatatabow2.stop();
         this.anim_poisondarts.stop();
@@ -1753,7 +1776,10 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
         @Override
         public void start() {
-            setAnimationState(2);
+            if (getTarget() != null) {
+                if (howShouldDefenderApproachHisTarget() == 1 || distanceTo(getTarget()) < 6.0D) setAnimationState("jump");
+                else setAnimationState("jump2");
+            }
             attackType = attack_jump;
         }
 
@@ -1789,7 +1815,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
 
         @Override
         public void start() {
-            setAnimationState(14);
+            setAnimationState("defeated");
             playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_DEFEATED.get(), 2.0F, 1.0F);
             entityData.set(DATA_HEALTH_ID, 0.0F);
             if (lastHurtByPlayerTime > 0) {

@@ -7,6 +7,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.defender.ChainsawEn
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.SpikeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderArrowEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
@@ -135,6 +136,7 @@ public class ModEntityTypes {
 
     public static final RegistryObject<EntityType<SentryBulletEntity>> SentryBullet = ENTITY_TYPES.register("sentry_bullet", () -> EntityType.Builder.<SentryBulletEntity>of(SentryBulletEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sentry_bullet").toString()));
 
+    public static final RegistryObject<EntityType<DefenderArrowEntity>> DefenderArrow = ENTITY_TYPES.register("defender_arrow", () -> EntityType.Builder.<DefenderArrowEntity>of(DefenderArrowEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "defender_arrow").toString()));
 
 
     // Misc

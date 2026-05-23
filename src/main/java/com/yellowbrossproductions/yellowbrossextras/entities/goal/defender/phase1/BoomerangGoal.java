@@ -16,7 +16,7 @@ public class BoomerangGoal extends CustomAttackGoal {
 
     @Override
     public void start() {
-        getDefender().setAnimationState(5);
+        getDefender().setAnimationState("boomerang");
         getDefender().setWeaponToShow(3);
         getDefender().attackType = getDefender().attack_boomerang;
     }

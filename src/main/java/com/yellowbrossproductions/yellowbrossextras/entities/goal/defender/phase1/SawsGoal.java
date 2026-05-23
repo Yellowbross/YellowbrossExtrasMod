@@ -16,7 +16,7 @@ public class SawsGoal extends CustomAttackGoal {
 
     @Override
     public void start() {
-        getDefender().setAnimationState(1);
+        getDefender().setAnimationState("saws");
         getDefender().attackType = getDefender().attack_saws;
     }
 

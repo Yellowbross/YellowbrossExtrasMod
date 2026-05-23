@@ -1,46 +1,51 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.IsDefenderAligned;
-import com.yellowbrossproductions.yellowbrossextras.entities.projectile.CustomAbstractHurtingProjectile;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.RegistryHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.projectile.ItemSupplier;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
 
-public class SentryBulletEntity extends CustomAbstractHurtingProjectile implements ItemSupplier {
-
-    public SentryBulletEntity(EntityType<? extends CustomAbstractHurtingProjectile> p_36833_, Level p_36834_) {
-        super(p_36833_, p_36834_);
+public class DefenderArrowEntity extends AbstractArrow {
+    public DefenderArrowEntity(EntityType<? extends AbstractArrow> p_36858_, Level p_36859_) {
+        super(p_36858_, p_36859_);
     }
 
-    public SentryBulletEntity(EntityType<? extends CustomAbstractHurtingProjectile> p_36817_, double p_36818_, double p_36819_, double p_36820_, double p_36821_, double p_36822_, double p_36823_, Level p_36824_) {
-        super(ModEntityTypes.SentryBullet.get(), p_36818_, p_36819_, p_36820_, p_36821_, p_36822_, p_36823_, p_36824_);
+    public DefenderArrowEntity(Level p_36861_, double x, double y, double z) {
+        super(ModEntityTypes.DefenderArrow.get(), x, y, z, p_36861_);
+        this.setPos(x, y, z);
     }
 
-    public SentryBulletEntity(Level p_36831_, LivingEntity p_36827_, double p_36828_, double p_36829_, double p_36830_) {
-        super(ModEntityTypes.SentryBullet.get(), p_36827_, p_36828_, p_36829_, p_36830_, p_36831_);
+    public DefenderArrowEntity(Level p_36866_, LivingEntity p_36867_) {
+        super(ModEntityTypes.DefenderArrow.get(), p_36867_, p_36866_);
+        setOwner(p_36867_);
     }
 
     @Override
@@ -54,22 +59,21 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
     }
 
     @Override
-    protected boolean shouldBurn() {
-        return false;
-    }
-
-    protected void onHit(HitResult p_37406_) {
-        super.onHit(p_37406_);
-        if (!this.level.isClientSide) {
-            this.level.broadcastEntityEvent(this, (byte)3);
-            this.explode(2.0D);
-            this.discard();
-        }
+    protected ItemStack getPickupItem() {
+        return new ItemStack(Items.ARROW);
     }
 
     @Override
-    protected ParticleOptions getTrailParticle() {
-        return ParticleTypes.ELECTRIC_SPARK;
+    public Packet<?> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    protected void onHitEntity(EntityHitResult hitRes) {
+        this.setPierceLevel((byte) (this.getPierceLevel() + 2));
+        super.onHitEntity(hitRes);
+        this.explode(5.0F);
+        if (hitRes.getEntity().invulnerableTime < 1) this.playSound(SoundEvents.GENERIC_EXPLODE, 1.5F, 0.6F);
     }
 
     private void explode(double size) {
@@ -77,8 +81,6 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
 
         boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
         this.makeExplodeParticles();
-        this.stopShootingSound(this.level);
-        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_HIT.get(), 2.0F, 1.0F);
         for (Entity entity : list) {
             if (entity instanceof LivingEntity living) {
                 boolean team = true;
@@ -86,25 +88,8 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
                     team = EntityUtil.canHurtThisMob(living, (Mob) this.getOwner()) && entity != this.getOwner() && !(living instanceof IsDefenderAligned);
                 }
                 if (team && entity.isAlive() && !entity.isInvulnerable() && !entity.isSpectator()) {
-                    living.hurt(DamageSource.thrown(this, this.getOwner()), 5.0F);
-                    living.invulnerableTime -= 9;
+                    living.hurt(DamageSource.arrow(this, this.getOwner()), (float) this.getBaseDamage() * (((float) living.getArmorValue()) + 1));
                 }
-            }
-        }
-        if (!this.level.isClientSide) {
-            this.discard();
-        }
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (this.tickCount > 80) {
-            if (!this.level.isClientSide) {
-                this.level.broadcastEntityEvent(this, (byte)3);
-                this.explode(2.0D);
-                this.discard();
             }
         }
     }
@@ -121,50 +106,22 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
                         double d2 = (-0.5 + this.random.nextGaussian());
                         packet.queueParticle(ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
                     }
+                    for(int i = 0; i < 3; ++i) {
+                        double d0 = (-0.5 + this.random.nextGaussian());
+                        double d1 = (-0.5 + this.random.nextGaussian());
+                        double d2 = (-0.5 + this.random.nextGaussian());
+                        packet.queueParticle(ParticleTypes.SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+                    }
                     for(int i = 0; i < 1; ++i) {
                         double d0 = (-0.5 + this.random.nextGaussian());
                         double d1 = (-0.5 + this.random.nextGaussian());
                         double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.EXPLOSION, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+                        packet.queueParticle(ParticleTypes.EXPLOSION_EMITTER, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
                     }
 
                     PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
                 }
             }
         }
-    }
-
-    @Override
-    public ItemStack getItem() {
-        return RegistryHandler.CONVERSLIN_BULLET.get().getDefaultInstance();
-    }
-
-    public float getLightLevelDependentMagicValue() {
-        return 1.0F;
-    }
-
-    public void stopShootingSound(Level world) {
-        MinecraftServer server = world.getServer();
-        if (server == null) {
-            return;
-        }
-
-        ClientboundStopSoundPacket sstopsoundpacket = new ClientboundStopSoundPacket(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_HIT.get().getLocation(), SoundSource.NEUTRAL);
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            player.connection.send(sstopsoundpacket);
-        }
-    }
-
-    @Override
-    public boolean hurt(DamageSource p_36839_, float p_36840_) {
-        if (p_36839_ == DamageSource.OUT_OF_WORLD) {
-            return super.hurt(p_36839_, p_36840_);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean isPickable() {
-        return false;
     }
 }

@@ -17,7 +17,7 @@ public class SpikesGoal extends CustomAttackGoal {
 
     @Override
     public void start() {
-        getDefender().setAnimationState(6);
+        getDefender().setAnimationState("spikes");
         getDefender().setWeaponToShow(4);
         getDefender().attackType = getDefender().attack_spikes;
         getDefender().playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SPIN_SHORT.get(), 1.5F, 1.0F);

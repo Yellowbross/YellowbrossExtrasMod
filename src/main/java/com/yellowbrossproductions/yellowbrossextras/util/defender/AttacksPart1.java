@@ -116,8 +116,8 @@ public class AttacksPart1 {
             // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (defender.attackType == defender.attack_axes) {
                 if (ticks == (24 * defender.throwTimes)) {
-                    defender.setAnimationState(0);
-                    defender.setAnimationState(4);
+                    defender.stopAllAnimationStates();
+                    defender.setAnimationState("axes");
                     defender.throwTimes += 1;
                 }
                 if ((ticks == 6 + (24 * (defender.throwTimes - 1))) || (ticks == 18 + (24 * (defender.throwTimes - 1)))) {
@@ -214,7 +214,7 @@ public class AttacksPart1 {
                                 if (defender.slamTicks == 1) {
                                     defender.setDeltaMovement(0.0D, 0.4D, 0.0D);
                                     defender.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, 0.7F);
-                                    defender.setAnimationState(17);
+                                    defender.setAnimationState("spikes_slam");
                                 }
 
                                 defender.setDeltaMovement(0.0D, defender.getDeltaMovement().y, 0.0D);
@@ -355,7 +355,7 @@ public class AttacksPart1 {
                 }
                 if (defender.clawsTarget != null && defender.shouldContinueAttacking && defender.clawsTarget.isAlive()) {
                     if (ticks == 20) {
-                        defender.setAnimationState(11);
+                        defender.setAnimationState("claws_continue");
                     }
                     if (ticks == (5 + 22)) {
                         defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SWORD_WHOOSH.get(), 2.0F, 1.0F);
@@ -374,7 +374,7 @@ public class AttacksPart1 {
                         if (defender.distanceToSqr(defender.clawsTarget) < 4.5D && defender.getY() >= defender.clawsTarget.getY() - 0.2D && !defender.itsTimeToClawTarget) {
                             defender.itsTimeToClawTarget = true;
                             defender.jumpTicks = 21;
-                            defender.setAnimationState(12);
+                            defender.setAnimationState("claws_end");
 
                             defender.clawsTarget.setOldPosAndRot();
                             defender.setOldPosAndRot();
@@ -440,7 +440,7 @@ public class AttacksPart1 {
                         defender.setDiscardFriction(false);
                         defender.attackTicks2 = 1;
                         defender.setCustomRender(0);
-                        defender.setAnimationState(18);
+                        defender.setAnimationState("ratatatabow2");
                     }
                     if (!defender.isOnGround() && ticks % 3 == 0) {
                         defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH2.get(), 1.0F, 0.7f);

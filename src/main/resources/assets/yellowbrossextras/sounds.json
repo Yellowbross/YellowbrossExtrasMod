@@ -22,6 +22,13 @@
     ]
   },
 
+  "entity.defender.jump2": {
+    "subtitle": "subtitles.entity.defender.jump",
+    "sounds": [
+      "yellowbrossextras:defender/jump2"
+    ]
+  },
+
   "entity.defender.saw": {
     "subtitle": "subtitles.entity.defender.saw",
     "sounds": [

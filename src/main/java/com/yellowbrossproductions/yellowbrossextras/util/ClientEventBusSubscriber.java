@@ -79,6 +79,7 @@ public class ClientEventBusSubscriber {
         });
         event.registerEntityRenderer(ModEntityTypes.HyperSnowball.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.SentryBullet.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.DefenderArrow.get(), DefenderArrowRenderer::new);
 
         event.registerEntityRenderer(ModEntityTypes.CameraShake.get(), NothingRenderer::new);
 

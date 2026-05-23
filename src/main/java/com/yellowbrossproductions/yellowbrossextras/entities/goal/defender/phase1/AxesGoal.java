@@ -16,7 +16,7 @@ public class AxesGoal extends CustomAttackGoal {
 
     @Override
     public void start() {
-        getDefender().setAnimationState(4);
+        getDefender().setAnimationState("axes");
         getDefender().attackType = getDefender().attack_axes;
     }
 

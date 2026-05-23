@@ -54,7 +54,7 @@ public class CustomAttackGoal extends Goal {
     public void stop() {
         this.defender.attackTicks = 0;
         this.defender.attackType = 0;
-        this.defender.setAnimationState(0);
+        this.defender.setAnimationState("none");
         this.defender.setWeaponToShow(0);
         this.defender.meleeAttackType = 0;
         this.defender.setShakeMultiplier(0);

@@ -13,6 +13,7 @@ public class YellowbrossExtrasSoundEvents {
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_HURT = addSoundsToRegistry("entity.defender.hurt");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_STEP = addSoundsToRegistry("entity.defender.step");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_JUMP = addSoundsToRegistry("entity.defender.jump");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_JUMP2 = addSoundsToRegistry("entity.defender.jump2");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SAW = addSoundsToRegistry("entity.defender.saw");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SAW_START = addSoundsToRegistry("entity.defender.saw_start");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SWORD_WHOOSH = addSoundsToRegistry("entity.defender.sword_whoosh");
