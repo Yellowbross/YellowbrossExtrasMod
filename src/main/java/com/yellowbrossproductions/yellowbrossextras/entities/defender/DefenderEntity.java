@@ -90,7 +90,6 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     public AnimationState anim_saws = new AnimationState();
     public AnimationState anim_sword = new AnimationState();
     public AnimationState anim_axes = new AnimationState();
-    public AnimationState anim_axes2 = new AnimationState();
     public AnimationState anim_boomerang = new AnimationState();
     public AnimationState anim_spikes = new AnimationState();
     public AnimationState anim_spikes_land = new AnimationState();
@@ -1495,7 +1494,6 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         EntityUtil.animateWhen(this.anim_saws, this.getAnimationState().equals("saws"), this.tickCount);
         EntityUtil.animateWhen(this.anim_sword, this.getAnimationState().equals("sword"), this.tickCount);
         EntityUtil.animateWhen(this.anim_axes, this.getAnimationState().equals("axes"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_axes2, this.getAnimationState().equals("axes2"), this.tickCount);
         EntityUtil.animateWhen(this.anim_boomerang, this.getAnimationState().equals("boomerang"), this.tickCount);
         EntityUtil.animateWhen(this.anim_spikes, this.getAnimationState().equals("spikes"), this.tickCount);
         EntityUtil.animateWhen(this.anim_spikes_land, this.getAnimationState().equals("spikes_land"), this.tickCount);

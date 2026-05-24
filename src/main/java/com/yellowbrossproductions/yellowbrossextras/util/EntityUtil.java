@@ -488,7 +488,7 @@ public class EntityUtil {
 
     // Code lent by TheDarkPeasant since "animateWhen" does not exist in 1.19.2
     public static void animateWhen(AnimationState state, boolean condition, int tickCount) {
+        state.stop();
         if (condition) state.startIfStopped(tickCount);
-        else state.stop();
     }
 }

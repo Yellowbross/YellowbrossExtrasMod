@@ -51,7 +51,6 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
     private static final EntityDataAccessor<Boolean> ACTIVE = SynchedEntityData.defineId(SentryGunEntity.class, EntityDataSerializers.BOOLEAN);
 
     public AnimationState anim_shoot = new AnimationState();
-    public AnimationState anim_shoot2 = new AnimationState();
     public AnimationState anim_intro = new AnimationState();
     public AnimationState anim_flying = new AnimationState();
     public AnimationState anim_mitosis = new AnimationState();
@@ -101,7 +100,6 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
     @Override
     public void updateAnimations() {
         EntityUtil.animateWhen(this.anim_shoot, this.getAnimationState().equals("shoot"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_shoot2, this.getAnimationState().equals("shoot2"), this.tickCount);
         EntityUtil.animateWhen(this.anim_intro, this.getAnimationState().equals("intro"), this.tickCount);
         EntityUtil.animateWhen(this.anim_flying, this.getAnimationState().equals("flying"), this.tickCount);
         EntityUtil.animateWhen(this.anim_mitosis, this.getAnimationState().equals("mitosis"), this.tickCount);
@@ -145,7 +143,8 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
 
         if (this.isActive() && this.isAlive()) {
             if (this.getTarget() != null && !this.getTarget().isRemoved() && this.getTarget().isAlive() && this.tickCount % 5 == 0 && !this.mitosisInitiated) {
-                if (this.getAnimationState().equals("shoot2")) this.setAnimationState("shoot"); else this.setAnimationState("shoot2");
+                this.setAnimationState("none");
+                this.setAnimationState("shoot");
                 this.stopShootingSound(this.level);
                 this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get(), 3.0F, 1.0F);
                 this.performRangedAttack(this.getTarget());
