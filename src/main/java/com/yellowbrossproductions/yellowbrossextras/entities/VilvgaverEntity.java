@@ -25,6 +25,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
@@ -45,7 +46,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 
-public class VilvgaverEntity extends PathfinderMob implements IEntityAdditionalSpawnData, YextrasEntity {
+public class VilvgaverEntity extends YExtrasMob implements IEntityAdditionalSpawnData, Enemy {
     private static final EntityDataAccessor<Boolean> CHALLENGE = SynchedEntityData.defineId(VilvgaverEntity.class, EntityDataSerializers.BOOLEAN);
     int stuckTicks;
     int sayTicks;
@@ -59,7 +60,7 @@ public class VilvgaverEntity extends PathfinderMob implements IEntityAdditionalS
     double zMot;
     double speedBackUp = 1;
 
-    public VilvgaverEntity(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
+    public VilvgaverEntity(EntityType<? extends YExtrasMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
     }
 

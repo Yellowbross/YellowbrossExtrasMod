@@ -1,6 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.oryctolins;
 
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
+import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.BlockPos;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.GoalUtils;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -27,10 +29,9 @@ import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 
 import java.util.EnumSet;
 
-public abstract class AbstractOryctolin extends Monster implements ICanBeAnimated, IsOryctolinAligned, YextrasEntity {
+public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctolinAligned, Enemy {
     protected static final EntityDataAccessor<Boolean> IS_CELEBRATING = SynchedEntityData.defineId(AbstractOryctolin.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> SHAKE_MULTIPLIER = SynchedEntityData.defineId(AbstractOryctolin.class, EntityDataSerializers.INT);
-    protected static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(AbstractOryctolin.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> FACE_STATE = SynchedEntityData.defineId(AbstractOryctolin.class, EntityDataSerializers.INT);
     private int wave;
     private boolean canJoinRaid;
@@ -40,7 +41,7 @@ public abstract class AbstractOryctolin extends Monster implements ICanBeAnimate
 
     public AnimationState anim_celebrate = new AnimationState();
 
-    public AbstractOryctolin(EntityType<? extends Monster> p_33002_, Level p_33003_) {
+    public AbstractOryctolin(EntityType<? extends YExtrasMob> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
         ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
     }
@@ -63,7 +64,6 @@ public abstract class AbstractOryctolin extends Monster implements ICanBeAnimate
         super.defineSynchedData();
         this.entityData.define(IS_CELEBRATING, false);
         this.entityData.define(SHAKE_MULTIPLIER, 0);
-        this.entityData.define(ANIMATION_STATE, 0);
         this.entityData.define(FACE_STATE, 0);
     }
 
@@ -126,43 +126,8 @@ public abstract class AbstractOryctolin extends Monster implements ICanBeAnimate
 
     public abstract SoundEvent getCelebrateSound();
 
-    @Override
-    public AnimationState getAnimationState(String input) {
-        if (input == "celebrate") {
-            return anim_celebrate;
-        }
-        return new AnimationState();
-    }
-
-    public int getAnimationState() {
-        return this.entityData.get(ANIMATION_STATE);
-    }
-
-    @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> p_21104_) {
-        if (ANIMATION_STATE.equals(p_21104_)) {
-            if (this.level.isClientSide) {
-                switch (this.entityData.get(ANIMATION_STATE)) {
-                    case 0 :
-                        this.stopAllAnimationStates();
-                        break;
-                    case 1 :
-                        this.stopAllAnimationStates();
-                        this.anim_celebrate.start(this.tickCount);
-                        break;
-                }
-            }
-        }
-
-        super.onSyncedDataUpdated(p_21104_);
-    }
-
-    public void stopAllAnimationStates() {
-        this.anim_celebrate.stop();
-    }
-
-    public void setAnimationState(int input) {
-        this.entityData.set(ANIMATION_STATE, input);
+    public void updateAnimations() {
+        EntityUtil.animateWhen(this.anim_celebrate, this.getAnimationState().equals("celebrate"), this.tickCount);
     }
 
     protected PathNavigation createNavigation(Level p_33348_) {
@@ -217,7 +182,7 @@ public abstract class AbstractOryctolin extends Monster implements ICanBeAnimate
         public void stop() {
             attackTicks = 0;
             attackType = 0;
-            setAnimationState(0);
+            setAnimationState("none");
             setShakeMultiplier(0);
             setFace(0);
         }

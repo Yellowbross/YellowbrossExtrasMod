@@ -4,6 +4,7 @@ import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ConverslinBulletEntity;
@@ -46,11 +47,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
-public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, IsDefenderAligned, YextrasEntity {
-    private static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(SentryGunEntity.class, EntityDataSerializers.INT);
+public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
     private static final EntityDataAccessor<Boolean> ACTIVE = SynchedEntityData.defineId(SentryGunEntity.class, EntityDataSerializers.BOOLEAN);
 
     public AnimationState anim_shoot = new AnimationState();
+    public AnimationState anim_shoot2 = new AnimationState();
     public AnimationState anim_intro = new AnimationState();
     public AnimationState anim_flying = new AnimationState();
     public AnimationState anim_mitosis = new AnimationState();
@@ -60,7 +61,7 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
     int explodeTimer = YellowbrossExtrasConfig.defender_sentryGun_mitosisTimer.get() * 20;
     boolean mitosisInitiated = false;
 
-    public SentryGunEntity(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
+    public SentryGunEntity(EntityType<? extends YExtrasMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
     }
 
@@ -80,7 +81,6 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ANIMATION_STATE, 0);
         this.entityData.define(ACTIVE, false);
     }
 
@@ -93,66 +93,18 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
     }
 
-    public void setAnimationState(int input) {
-        this.entityData.set(ANIMATION_STATE, input);
-    }
-
     @Override
     public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
         return false;
     }
 
     @Override
-    public AnimationState getAnimationState(String input) {
-        return switch (input) {
-            case "shoot" -> anim_shoot;
-            case "intro" -> anim_intro;
-            case "flying" -> anim_flying;
-            case "mitosis" -> anim_mitosis;
-
-            default -> new AnimationState();
-        };
-    }
-
-    public int getAnimationState() {
-        return this.entityData.get(ANIMATION_STATE);
-    }
-
-    @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> p_21104_) {
-        if (ANIMATION_STATE.equals(p_21104_)) {
-            if (this.level.isClientSide) {
-                switch (this.entityData.get(ANIMATION_STATE)) {
-                    case 0 :
-                        this.stopAllAnimationStates();
-                        break;
-                    case 1 :
-                        this.stopAllAnimationStates();
-                        this.anim_shoot.start(this.tickCount);
-                        break;
-                    case 2 :
-                        this.stopAllAnimationStates();
-                        this.anim_intro.start(this.tickCount);
-                        break;
-                    case 3 :
-                        this.stopAllAnimationStates();
-                        this.anim_flying.start(this.tickCount);
-                        break;
-                    case 4 :
-                        this.stopAllAnimationStates();
-                        this.anim_mitosis.start(this.tickCount);
-                        break;
-                }
-            }
-        }
-
-        super.onSyncedDataUpdated(p_21104_);
-    }
-
-    public void stopAllAnimationStates() {
-        this.anim_shoot.stop();
-        this.anim_intro.stop();
-        this.anim_flying.stop();
+    public void updateAnimations() {
+        EntityUtil.animateWhen(this.anim_shoot, this.getAnimationState().equals("shoot"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_shoot2, this.getAnimationState().equals("shoot2"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_intro, this.getAnimationState().equals("intro"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_flying, this.getAnimationState().equals("flying"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_mitosis, this.getAnimationState().equals("mitosis"), this.tickCount);
     }
 
     @Override
@@ -182,10 +134,10 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
         super.tick();
 
         if (!this.isActive() && this.setupTicks == 60) {
-            if (!this.isOnGround()) this.setAnimationState(3);
+            if (!this.isOnGround()) this.setAnimationState("flying");
             else {
                 this.setupTicks = 59;
-                this.setAnimationState(2);
+                this.setAnimationState("intro");
             }
         }
         if (this.setupTicks < 60) this.setupTicks -= 1;
@@ -193,8 +145,7 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
 
         if (this.isActive() && this.isAlive()) {
             if (this.getTarget() != null && !this.getTarget().isRemoved() && this.getTarget().isAlive() && this.tickCount % 5 == 0 && !this.mitosisInitiated) {
-                this.setAnimationState(0);
-                this.setAnimationState(1);
+                if (this.getAnimationState().equals("shoot2")) this.setAnimationState("shoot"); else this.setAnimationState("shoot2");
                 this.stopShootingSound(this.level);
                 this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get(), 3.0F, 1.0F);
                 this.performRangedAttack(this.getTarget());
@@ -207,7 +158,7 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
                 if (list.size() < YellowbrossExtrasConfig.defender_sentryGun_mitosisCap.get() && !this.mitosisInitiated) {
                     if (!this.level.isClientSide) {
                         this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_MITOSIS.get(), 2.0F, 1.0F);
-                        this.setAnimationState(4);
+                        this.setAnimationState("mitosis");
                         this.mitosisInitiated = true;
                     }
                 } else {
@@ -317,7 +268,7 @@ public class SentryGunEntity extends PathfinderMob implements ICanBeAnimated, Is
 
     @Override
     public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor p_21434_, DifficultyInstance p_21435_, MobSpawnType p_21436_, @Nullable SpawnGroupData p_21437_, @Nullable CompoundTag p_21438_) {
-        if (!this.isActive() && !this.isOnGround()) this.setAnimationState(3);
+        if (!this.isActive() && !this.isOnGround()) this.setAnimationState("flying");
         return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
     }
 

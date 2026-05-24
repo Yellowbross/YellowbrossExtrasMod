@@ -1,6 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
@@ -29,7 +30,7 @@ import java.util.EnumSet;
 
 public class FreakerEntity extends AbstractCreeperEntity implements CreeperEnemy {
 
-    public FreakerEntity(EntityType<? extends Monster> p_33002_, Level p_33003_) {
+    public FreakerEntity(EntityType<? extends YExtrasMob> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
     }
 

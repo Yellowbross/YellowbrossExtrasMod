@@ -19,19 +19,20 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-public class AmoebicDevourerEntity extends Monster implements YextrasEntity, ICanBeAnimated {
+public class AmoebicDevourerEntity extends YExtrasMob implements Enemy {
     private static final EntityDataAccessor<Float> SIZE = SynchedEntityData.defineId(AmoebicDevourerEntity.class, EntityDataSerializers.FLOAT);
     public float targetSquish;
     public float squish;
     public float oSquish;
     private boolean wasOnGround;
 
-    public AmoebicDevourerEntity(EntityType<? extends Monster> p_33002_, Level p_33003_) {
+    public AmoebicDevourerEntity(EntityType<? extends YExtrasMob> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
     }
 
@@ -177,10 +178,5 @@ public class AmoebicDevourerEntity extends Monster implements YextrasEntity, ICa
                 .add(Attributes.ATTACK_DAMAGE, 5.0D)
                 .add(Attributes.FOLLOW_RANGE, 96.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
-    }
-
-    @Override
-    public AnimationState getAnimationState(String input) {
-        return null;
     }
 }

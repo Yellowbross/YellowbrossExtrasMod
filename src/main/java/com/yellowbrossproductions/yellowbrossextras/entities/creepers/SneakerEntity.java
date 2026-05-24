@@ -1,6 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
@@ -36,7 +37,7 @@ public class SneakerEntity extends AbstractCreeperEntity implements CreeperEnemy
     private static final EntityDataAccessor<Integer> CREEPER_TYPE = SynchedEntityData.defineId(SneakerEntity.class, EntityDataSerializers.INT);
     private int explosionPull;
 
-    public SneakerEntity(EntityType<? extends Monster> p_33002_, Level p_33003_) {
+    public SneakerEntity(EntityType<? extends YExtrasMob> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
     }
 

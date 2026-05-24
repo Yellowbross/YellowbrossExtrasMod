@@ -11,7 +11,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.level.Level;
 
-public class SkeletonSnapEntity extends AbstractSkeleton {
+public class SkeletonSnapEntity extends AbstractSkeleton implements YextrasEntity {
 
     public SkeletonSnapEntity(EntityType<? extends AbstractSkeleton> p_32133_, Level p_32134_) {
         super(p_32133_, p_32134_);

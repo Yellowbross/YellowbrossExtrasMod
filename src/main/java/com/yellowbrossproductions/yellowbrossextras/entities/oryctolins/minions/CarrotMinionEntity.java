@@ -1,5 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions;
 
+import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.AbstractOryctolin;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
@@ -20,9 +21,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 
-public class CarrotMinionEntity extends Monster implements IsOryctolinAligned, YextrasEntity {
+public class CarrotMinionEntity extends YExtrasMob implements IsOryctolinAligned {
 
-    public CarrotMinionEntity(EntityType<? extends Monster> p_33002_, Level p_33003_) {
+    public CarrotMinionEntity(EntityType<? extends YExtrasMob> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
     }
 

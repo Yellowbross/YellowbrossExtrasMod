@@ -1,11 +1,10 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 
-import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderArrowEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.StareAtDefenderGoal;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase1.*;
@@ -27,7 +26,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -65,12 +63,10 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
-public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, YextrasEntity, IsDefenderAligned {
+public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefenderAligned {
     int frame;
     private final ServerBossEvent bossEvent = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.NOTCHED_10));
     private static final EntityDataAccessor<Boolean> SHOULD_SHOW_BOSSBAR = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.BOOLEAN);
@@ -95,11 +91,12 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     public AnimationState anim_saws = new AnimationState();
     public AnimationState anim_sword = new AnimationState();
     public AnimationState anim_axes = new AnimationState();
+    public AnimationState anim_axes2 = new AnimationState();
     public AnimationState anim_boomerang = new AnimationState();
     public AnimationState anim_spikes = new AnimationState();
     public AnimationState anim_spikes_land = new AnimationState();
     public AnimationState anim_spikes_slam = new AnimationState();
-    public AnimationState anim_shurikens = new AnimationState();
+    public AnimationState anim_shuriken_launcher = new AnimationState();
     public AnimationState anim_chainsaw = new AnimationState();
     public AnimationState anim_claws_start = new AnimationState();
     public AnimationState anim_claws_continue = new AnimationState();
@@ -193,7 +190,7 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
     int gagTimer = 0;
     public int slamTicks;
 
-    public DefenderEntity(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
+    public DefenderEntity(EntityType<? extends YExtrasMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
     }
 
@@ -1384,10 +1381,6 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         this.bossEvent.removePlayer(p_31488_);
     }
 
-    public void setAnimationState(String input) {
-        this.entityData.set(ANIMATION_STATE, input);
-    }
-
     public void makeExplodeParticles() {
         if (!this.level.isClientSide) {
             for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
@@ -1495,203 +1488,37 @@ public class DefenderEntity extends PathfinderMob implements ICanBeAnimated, Yex
         return false;
     }
 
-    @Override
-    public AnimationState getAnimationState(String input) {
-        return switch (input) {
-            case "jump" -> anim_jump;
-            case "jump2" -> anim_jump2;
-            case "defeated" -> anim_defeated;
+    public void updateAnimations() {
+        EntityUtil.animateWhen(this.anim_jump, this.getAnimationState().equals("jump"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_jump2, this.getAnimationState().equals("jump2"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_defeated, this.getAnimationState().equals("defeated"), this.tickCount);
 
-            case "saws" -> anim_saws;
-            case "sword" -> anim_sword;
-            case "axes" -> anim_axes;
-            case "boomerang" -> anim_boomerang;
-            case "spikes" -> anim_spikes;
-            case "spikes_land" -> anim_spikes_land;
-            case "spikes_slam" -> anim_spikes_slam;
-            case "shuriken_launcher" -> anim_shurikens;
-            case "chainsaw" -> anim_chainsaw;
-            case "claws_start" -> anim_claws_start;
-            case "claws_continue" -> anim_claws_continue;
-            case "claws_end" -> anim_claws_end;
-            case "claws_punch" -> anim_claws_punch;
-            case "excalibur" -> anim_excalibur;
+        EntityUtil.animateWhen(this.anim_saws, this.getAnimationState().equals("saws"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_sword, this.getAnimationState().equals("sword"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_axes, this.getAnimationState().equals("axes"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_axes2, this.getAnimationState().equals("axes2"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_boomerang, this.getAnimationState().equals("boomerang"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_spikes, this.getAnimationState().equals("spikes"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_spikes_land, this.getAnimationState().equals("spikes_land"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_spikes_slam, this.getAnimationState().equals("spikes_slam"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_shuriken_launcher, this.getAnimationState().equals("shuriken_launcher"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_chainsaw, this.getAnimationState().equals("chainsaw"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_claws_start, this.getAnimationState().equals("claws_start"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_claws_continue, this.getAnimationState().equals("claws_continue"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_claws_end, this.getAnimationState().equals("claws_end"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_claws_punch, this.getAnimationState().equals("claws_punch"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_excalibur, this.getAnimationState().equals("excalibur"), this.tickCount);
 
-            case "ratatatabow" -> anim_ratatatabow;
-            case "ratatatabow2" -> anim_ratatatabow2;
-            case "poisondarts" -> anim_poisondarts;
-            case "forcegun" -> anim_forcegun;
-            case "snipe" -> anim_snipe;
-            case "sentryguns" -> anim_sentryguns;
-            case "icethrower" -> anim_icethrower;
-            case "witherbazooka" -> anim_witherbazooka;
-            case "creepergun" -> anim_creepergun;
-            case "flamethrower" -> anim_flamethrower;
-
-            default -> new AnimationState();
-        };
-    }
-
-    public String getAnimationState() {
-        return this.entityData.get(ANIMATION_STATE);
-    }
-
-    @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> p_21104_) {
-        if (ANIMATION_STATE.equals(p_21104_)) {
-            if (this.level.isClientSide) {
-                switch (this.entityData.get(ANIMATION_STATE)) {
-                    case "none" :
-                        this.stopAllAnimationStates();
-                        break;
-
-                    case "jump" :
-                        this.stopAllAnimationStates();
-                        this.anim_jump.start(this.tickCount);
-                        break;
-                    case "jump2" :
-                        this.stopAllAnimationStates();
-                        this.anim_jump2.start(this.tickCount);
-                        break;
-                    case "defeated" :
-                        this.stopAllAnimationStates();
-                        this.anim_defeated.start(this.tickCount);
-                        break;
-
-                    case "saws" :
-                        this.stopAllAnimationStates();
-                        this.anim_saws.start(this.tickCount);
-                        break;
-                    case "sword" :
-                        this.stopAllAnimationStates();
-                        this.anim_sword.start(this.tickCount);
-                        break;
-                    case "axes" :
-                        this.stopAllAnimationStates();
-                        this.anim_axes.start(this.tickCount);
-                        break;
-                    case "boomerang" :
-                        this.stopAllAnimationStates();
-                        this.anim_boomerang.start(this.tickCount);
-                        break;
-                    case "spikes" :
-                        this.stopAllAnimationStates();
-                        this.anim_spikes.start(this.tickCount);
-                        break;
-                    case "spikes_land" :
-                        this.stopAllAnimationStates();
-                        this.anim_spikes_land.start(this.tickCount);
-                        break;
-                    case "spikes_slam" :
-                        this.stopAllAnimationStates();
-                        this.anim_spikes_slam.start(this.tickCount);
-                        break;
-                    case "shurikens" :
-                        this.stopAllAnimationStates();
-                        this.anim_shurikens.start(this.tickCount);
-                        break;
-                    case "chainsaw" :
-                        this.stopAllAnimationStates();
-                        this.anim_chainsaw.start(this.tickCount);
-                        break;
-                    case "claws_start" :
-                        this.stopAllAnimationStates();
-                        this.anim_claws_start.start(this.tickCount);
-                        break;
-                    case "claws_continue" :
-                        this.stopAllAnimationStates();
-                        this.anim_claws_continue.start(this.tickCount);
-                        break;
-                    case "claws_end" :
-                        this.stopAllAnimationStates();
-                        this.anim_claws_end.start(this.tickCount);
-                        break;
-                    case "claws_punch" :
-                        this.stopAllAnimationStates();
-                        this.anim_claws_punch.start(this.tickCount);
-                        break;
-                    case "excalibur" :
-                        this.stopAllAnimationStates();
-                        this.anim_excalibur.start(this.tickCount);
-                        break;
-
-                    case "ratatatabow" :
-                        this.stopAllAnimationStates();
-                        this.anim_ratatatabow.start(this.tickCount);
-                        break;
-                    case "ratatatabow2" :
-                        this.stopAllAnimationStates();
-                        this.anim_ratatatabow2.start(this.tickCount);
-                        break;
-                    case "poisondarts" :
-                        this.stopAllAnimationStates();
-                        this.anim_poisondarts.start(this.tickCount);
-                        break;
-                    case "forcegun" :
-                        this.stopAllAnimationStates();
-                        this.anim_forcegun.start(this.tickCount);
-                        break;
-                    case "snipe" :
-                        this.stopAllAnimationStates();
-                        this.anim_snipe.start(this.tickCount);
-                        break;
-                    case "sentryguns" :
-                        this.stopAllAnimationStates();
-                        this.anim_sentryguns.start(this.tickCount);
-                        break;
-                    case "icethrower" :
-                        this.stopAllAnimationStates();
-                        this.anim_icethrower.start(this.tickCount);
-                        break;
-                    case "witherbazooka" :
-                        this.stopAllAnimationStates();
-                        this.anim_witherbazooka.start(this.tickCount);
-                        break;
-                    case "creepergun" :
-                        this.stopAllAnimationStates();
-                        this.anim_creepergun.start(this.tickCount);
-                        break;
-                    case "flamethrower" :
-                        this.stopAllAnimationStates();
-                        this.anim_flamethrower.start(this.tickCount);
-                        break;
-                }
-            }
-        }
-
-        super.onSyncedDataUpdated(p_21104_);
-    }
-
-    public void stopAllAnimationStates() {
-        this.anim_jump.stop();
-        this.anim_jump2.stop();
-        this.anim_defeated.stop();
-
-        this.anim_saws.stop();
-        this.anim_sword.stop();
-        this.anim_axes.stop();
-        this.anim_boomerang.stop();
-        this.anim_spikes.stop();
-        this.anim_spikes_land.stop();
-        this.anim_spikes_slam.stop();
-        this.anim_shurikens.stop();
-        this.anim_chainsaw.stop();
-        this.anim_claws_start.stop();
-        this.anim_claws_continue.stop();
-        this.anim_claws_end.stop();
-        this.anim_claws_punch.stop();
-        this.anim_excalibur.stop();
-
-        this.anim_ratatatabow.stop();
-        this.anim_ratatatabow2.stop();
-        this.anim_poisondarts.stop();
-        this.anim_forcegun.stop();
-        this.anim_snipe.stop();
-        this.anim_sentryguns.stop();
-        this.anim_icethrower.stop();
-        this.anim_witherbazooka.stop();
-        this.anim_creepergun.stop();
-        this.anim_flamethrower.stop();
+        EntityUtil.animateWhen(this.anim_ratatatabow, this.getAnimationState().equals("ratatatabow"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_ratatatabow2, this.getAnimationState().equals("ratatatabow2"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_poisondarts, this.getAnimationState().equals("poisondarts"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_forcegun, this.getAnimationState().equals("forcegun"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_snipe, this.getAnimationState().equals("snipe"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_sentryguns, this.getAnimationState().equals("sentryguns"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_icethrower, this.getAnimationState().equals("icethrower"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_witherbazooka, this.getAnimationState().equals("witherbazooka"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_creepergun, this.getAnimationState().equals("creepergun"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_flamethrower, this.getAnimationState().equals("flamethrower"), this.tickCount);
     }
 
     public boolean doesJumpMeetNormalRequirements() {

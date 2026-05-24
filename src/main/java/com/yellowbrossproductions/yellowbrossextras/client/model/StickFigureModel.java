@@ -409,7 +409,7 @@ public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> imp
         this.spine1.xRot += (headPitch * ((float)Math.PI / 180F)) * 0.5F;
 
         if (entity instanceof StickFigureEntity sticky) {
-            this.animate(sticky.getAnimationState("base"), StickFigureAnimation.base, ageInTicks, sticky.getAnimationSpeed());
+            this.animate(sticky.anim_base, StickFigureAnimation.base, ageInTicks, sticky.getAnimationSpeed());
         }
     }
 

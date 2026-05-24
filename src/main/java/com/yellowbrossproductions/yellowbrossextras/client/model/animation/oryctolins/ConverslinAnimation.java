@@ -13,7 +13,7 @@ public class ConverslinAnimation {
     public ConverslinAnimation() {
     }
 
-    public static final AnimationDefinition CELEBRATE = AnimationDefinition.Builder.withLength(2f).looping()
+    public static final AnimationDefinition celebrate = AnimationDefinition.Builder.withLength(2f).looping()
             .addAnimation("all",
                     new AnimationChannel(AnimationChannel.Targets.POSITION,
                             new Keyframe(0f, KeyframeAnimations.posVec(0f, 0f, 0f),
@@ -458,7 +458,7 @@ public class ConverslinAnimation {
                                     AnimationChannel.Interpolations.CATMULLROM),
                             new Keyframe(2f, KeyframeAnimations.degreeVec(15f, 0f, 0f),
                                     AnimationChannel.Interpolations.LINEAR))).build();
-    public static final AnimationDefinition ATTACK1 = AnimationDefinition.Builder.withLength(1.5f)
+    public static final AnimationDefinition attack1 = AnimationDefinition.Builder.withLength(1.5f)
             .addAnimation("all",
                     new AnimationChannel(AnimationChannel.Targets.POSITION,
                             new Keyframe(0f, KeyframeAnimations.posVec(0f, 0f, 0f),

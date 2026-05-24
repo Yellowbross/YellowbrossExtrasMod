@@ -93,10 +93,11 @@ public class SentryGunModel<T extends Entity> extends HierarchicalModel<T> {
         this.head.xRot += (headPitch * ((float)Math.PI / 180F));
 
         if (entity instanceof SentryGunEntity defender) {
-            this.animate(defender.getAnimationState("shoot"), SentryGunAnimation.shoot, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("intro"), SentryGunAnimation.intro, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("flying"), SentryGunAnimation.flying, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("mitosis"), SentryGunAnimation.mitosis, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_shoot, SentryGunAnimation.shoot, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_shoot2, SentryGunAnimation.shoot, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_intro, SentryGunAnimation.intro, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_flying, SentryGunAnimation.flying, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_mitosis, SentryGunAnimation.mitosis, ageInTicks, defender.getAnimationSpeed());
         }
     }
 

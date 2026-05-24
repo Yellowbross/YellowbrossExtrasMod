@@ -118,10 +118,10 @@ public class ConverslinModel<T extends Entity> extends HierarchicalModel<T> impl
         }
 
         if (entity instanceof ConverslinEntity oryctolin) {
-            this.animate(oryctolin.getAnimationState("celebrate"), ConverslinAnimation.CELEBRATE, ageInTicks, oryctolin.getAnimationSpeed());
-            this.animate(oryctolin.getAnimationState("attack1"), ConverslinAnimation.ATTACK1, ageInTicks, oryctolin.getAnimationSpeed());
+            this.animate(oryctolin.anim_celebrate, ConverslinAnimation.celebrate, ageInTicks, oryctolin.getAnimationSpeed());
+            this.animate(oryctolin.anim_attack1, ConverslinAnimation.attack1, ageInTicks, oryctolin.getAnimationSpeed());
 
-            if (oryctolin.getAnimationState() == 0) {
+            if (oryctolin.getAnimationState().equals("none")) {
                 float moveX = (float) (oryctolin.getX() - oryctolin.xo);
                 float moveZ = (float) (oryctolin.getZ() - oryctolin.zo);
                 float speed = Mth.sqrt(moveX * moveX + moveZ * moveZ);

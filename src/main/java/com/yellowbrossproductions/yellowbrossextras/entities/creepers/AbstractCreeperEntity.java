@@ -1,6 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
@@ -20,6 +21,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +40,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
 
-public class AbstractCreeperEntity extends Monster implements CreeperEnemy, YextrasEntity {
+public class AbstractCreeperEntity extends YExtrasMob implements CreeperEnemy, Enemy {
     private static final EntityDataAccessor<Integer> DATA_SWELL_DIR = SynchedEntityData.defineId(AbstractCreeperEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_IS_POWERED = SynchedEntityData.defineId(AbstractCreeperEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_IS_IGNITED = SynchedEntityData.defineId(AbstractCreeperEntity.class, EntityDataSerializers.BOOLEAN);
@@ -52,7 +54,7 @@ public class AbstractCreeperEntity extends Monster implements CreeperEnemy, Yext
 
     float f;
 
-    public AbstractCreeperEntity(EntityType<? extends Monster> p_33002_, Level p_33003_) {
+    public AbstractCreeperEntity(EntityType<? extends YExtrasMob> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
     }
 

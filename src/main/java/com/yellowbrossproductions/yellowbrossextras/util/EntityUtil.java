@@ -485,4 +485,10 @@ public class EntityUtil {
     public static List<Entity> getEntitiesFromAABB(Level level, double size, Entity attacker, Predicate<? super Entity> predicate) {
         return level.getEntities(attacker, new AABB(attacker.getX() - size, attacker.getY() - size, attacker.getZ() - size, attacker.getX() + size, attacker.getY() + size, attacker.getZ() + size), predicate);
     }
+
+    // Code lent by TheDarkPeasant since "animateWhen" does not exist in 1.19.2
+    public static void animateWhen(AnimationState state, boolean condition, int tickCount) {
+        if (condition) state.startIfStopped(tickCount);
+        else state.stop();
+    }
 }

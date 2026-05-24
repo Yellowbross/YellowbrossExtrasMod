@@ -1,6 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.TNTProjectileEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
@@ -33,7 +34,7 @@ import java.util.EnumSet;
 
 public class SprayerEntity extends AbstractCreeperEntity implements CreeperEnemy, RangedAttackMob {
 
-    public SprayerEntity(EntityType<? extends Monster> p_33002_, Level p_33003_) {
+    public SprayerEntity(EntityType<? extends YExtrasMob> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
     }
 

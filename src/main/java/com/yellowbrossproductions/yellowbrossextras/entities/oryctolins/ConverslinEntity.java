@@ -253,7 +253,7 @@ public class ConverslinEntity extends AbstractOryctolin {
         if (this.AHHHHHH && this.runAwayFrom != null && this.getFace() != 1 && this.getFace() != 2) {
             this.playSound(YellowbrossExtrasSoundEvents.ENTITY_CONVERSLIN_SHRIEK.get(), 1.5F, this.getVoicePitch());
             this.setFace(FACE_SCARE);
-            this.setAnimationState(0);
+            this.setAnimationState("none");
             double d1 = this.runAwayFrom.getX() - this.getX();
             double d3 = this.runAwayFrom.getZ() - this.getZ();
             double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
@@ -285,13 +285,13 @@ public class ConverslinEntity extends AbstractOryctolin {
                         if (raid.isVictory()) {
                             this.celebrating = raid.celebrationTicks < 580;
                             if (this.celebrating && this.getTarget() == null) {
-                                if (this.getAnimationState() == 0) {
+                                if (this.getAnimationState().equals("none")) {
                                     this.setFace(FACE_CELEBRATE);
-                                    this.setAnimationState(1);
+                                    this.setAnimationState("celebrate");
                                 }
                             } else {
-                                if (this.getAnimationState() == 1) {
-                                    this.setAnimationState(0);
+                                if (this.getAnimationState().equals("celebrate")) {
+                                    this.setAnimationState("none");
                                 }
                             }
                         }
@@ -304,33 +304,9 @@ public class ConverslinEntity extends AbstractOryctolin {
     }
 
     @Override
-    public AnimationState getAnimationState(String input) {
-        if (input == "attack1") {
-            return anim_attack1;
-        }
-        return super.getAnimationState(input);
-    }
-
-    @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> p_21104_) {
-        if (ANIMATION_STATE.equals(p_21104_)) {
-            if (this.level.isClientSide) {
-                switch (this.entityData.get(ANIMATION_STATE)) {
-                    case 2 :
-                        this.stopAllAnimationStates();
-                        this.anim_attack1.start(this.tickCount);
-                        break;
-                }
-            }
-        }
-
-        super.onSyncedDataUpdated(p_21104_);
-    }
-
-    @Override
-    public void stopAllAnimationStates() {
-        this.anim_attack1.stop();
-        super.stopAllAnimationStates();
+    public void updateAnimations() {
+        super.updateAnimations();
+        EntityUtil.animateWhen(this.anim_attack1, this.getAnimationState().equals("attack1"), this.tickCount);
     }
 
     @Override
@@ -433,7 +409,7 @@ public class ConverslinEntity extends AbstractOryctolin {
 
         @Override
         public void start() {
-            setAnimationState(2);
+            setAnimationState("attack1");
             attackType = ATTACK1;
         }
 

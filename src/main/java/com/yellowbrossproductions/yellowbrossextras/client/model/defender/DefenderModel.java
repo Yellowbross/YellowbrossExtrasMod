@@ -401,35 +401,36 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
         this.head.xRot += (headPitch * ((float)Math.PI / 180F));
 
         if (entity instanceof DefenderEntity defender) {
-            this.animate(defender.getAnimationState("jump"), DefenderAnimation.jump, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("jump2"), DefenderAnimation.jump2, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("defeated"), DefenderAnimation.defeated, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_jump, DefenderAnimation.jump, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_jump2, DefenderAnimation.jump2, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_defeated, DefenderAnimation.defeated, ageInTicks, defender.getAnimationSpeed());
 
-            this.animate(defender.getAnimationState("saws"), DefenderAnimation.saws, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("sword"), DefenderAnimation.sword, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("axes"), DefenderAnimation.axes, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("boomerang"), DefenderAnimation.boomerang, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("spikes"), DefenderAnimation.spikes, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("spikes_land"), DefenderAnimation.spikes_land, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("spikes_slam"), DefenderAnimation.spikes_slam, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("shuriken_launcher"), DefenderAnimation.shurikenlauncher, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("chainsaw"), DefenderAnimation.chainsaw, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("claws_start"), DefenderAnimation.claws_start, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("claws_continue"), DefenderAnimation.claws_continue, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("claws_end"), DefenderAnimation.claws_end, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("claws_punch"), DefenderAnimation.claws_punch, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("excalibur"), DefenderAnimation.excalibur, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_saws, DefenderAnimation.saws, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_sword, DefenderAnimation.sword, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_axes, DefenderAnimation.axes, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_axes2, DefenderAnimation.axes, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_boomerang, DefenderAnimation.boomerang, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_spikes, DefenderAnimation.spikes, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_spikes_land, DefenderAnimation.spikes_land, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_spikes_slam, DefenderAnimation.spikes_slam, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_shuriken_launcher, DefenderAnimation.shurikenlauncher, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_chainsaw, DefenderAnimation.chainsaw, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_claws_start, DefenderAnimation.claws_start, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_claws_continue, DefenderAnimation.claws_continue, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_claws_end, DefenderAnimation.claws_end, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_claws_punch, DefenderAnimation.claws_punch, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_excalibur, DefenderAnimation.excalibur, ageInTicks, defender.getAnimationSpeed());
 
-            this.animate(defender.getAnimationState("ratatatabow"), DefenderAnimation.ratatatabow, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("ratatatabow2"), DefenderAnimation.ratatatabow2, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("poisondarts"), DefenderAnimation.poisondarts, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("forcegun"), DefenderAnimation.forcegun, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("snipe"), DefenderAnimation.snipe, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("sentryguns"), DefenderAnimation.sentryguns, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("icethrower"), DefenderAnimation.icethrower, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("witherbazooka"), DefenderAnimation.witherbazooka, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("creepergun"), DefenderAnimation.creepergun, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.getAnimationState("flamethrower"), DefenderAnimation.flamethrower, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_ratatatabow, DefenderAnimation.ratatatabow, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_ratatatabow2, DefenderAnimation.ratatatabow2, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_poisondarts, DefenderAnimation.poisondarts, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_forcegun, DefenderAnimation.forcegun, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_snipe, DefenderAnimation.snipe, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_sentryguns, DefenderAnimation.sentryguns, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_icethrower, DefenderAnimation.icethrower, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_witherbazooka, DefenderAnimation.witherbazooka, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_creepergun, DefenderAnimation.creepergun, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_flamethrower, DefenderAnimation.flamethrower, ageInTicks, defender.getAnimationSpeed());
 
             this.hat1.visible = (defender.getPhase() == 1 || defender.getSecondHat() == 1) && !defender.shouldHideAllHats();
             this.hat2.visible = (defender.getPhase() == 2 || defender.getSecondHat() == 2) && !defender.shouldHideAllHats();

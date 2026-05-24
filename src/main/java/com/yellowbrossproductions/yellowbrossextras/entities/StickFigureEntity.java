@@ -1,30 +1,23 @@
 package com.yellowbrossproductions.yellowbrossextras.entities;
 
-import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
+import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-public class StickFigureEntity extends PathfinderMob implements YextrasEntity, ICanBeAnimated {
-    private static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(StickFigureEntity.class, EntityDataSerializers.INT);
+public class StickFigureEntity extends YExtrasMob {
+    public AnimationState anim_base = new AnimationState();
 
-    public AnimationState animationState_base = new AnimationState();
-
-    public StickFigureEntity(EntityType<? extends PathfinderMob> p_33002_, Level p_33003_) {
+    public StickFigureEntity(EntityType<? extends YExtrasMob> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
     }
 
@@ -49,42 +42,10 @@ public class StickFigureEntity extends PathfinderMob implements YextrasEntity, I
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ANIMATION_STATE, 0);
-    }
-
-    public void setAnimationState(int input) {
-        this.entityData.set(ANIMATION_STATE, input);
     }
 
     @Override
-    public AnimationState getAnimationState(String input) {
-        if (input == "base") {
-            return animationState_base;
-        }
-        return new AnimationState();
-    }
-
-    public int getAnimationState() {
-        return this.entityData.get(ANIMATION_STATE);
-    }
-
-    @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> p_21104_) {
-        if (ANIMATION_STATE.equals(p_21104_)) {
-            if (this.level.isClientSide) {
-                switch (this.entityData.get(ANIMATION_STATE)) {
-                    case 0:
-                        this.stopAllAnimationStates();
-                        this.animationState_base.start(this.tickCount);
-                        break;
-                }
-            }
-        }
-
-        super.onSyncedDataUpdated(p_21104_);
-    }
-
-    public void stopAllAnimationStates() {
-        this.animationState_base.stop();
+    public void updateAnimations() {
+        EntityUtil.animateWhen(this.anim_base, this.getAnimationState().equals("base"), this.tickCount);
     }
 }
