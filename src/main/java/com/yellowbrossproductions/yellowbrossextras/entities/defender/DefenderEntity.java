@@ -1,6 +1,5 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 
-import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
@@ -96,7 +95,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     public AnimationState anim_spikes = new AnimationState();
     public AnimationState anim_spikes_land = new AnimationState();
     public AnimationState anim_spikes_slam = new AnimationState();
-    public AnimationState anim_shuriken_launcher = new AnimationState();
+    public AnimationState anim_shurikens = new AnimationState();
     public AnimationState anim_chainsaw = new AnimationState();
     public AnimationState anim_claws_start = new AnimationState();
     public AnimationState anim_claws_continue = new AnimationState();
@@ -1501,7 +1500,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         EntityUtil.animateWhen(this.anim_spikes, this.getAnimationState().equals("spikes"), this.tickCount);
         EntityUtil.animateWhen(this.anim_spikes_land, this.getAnimationState().equals("spikes_land"), this.tickCount);
         EntityUtil.animateWhen(this.anim_spikes_slam, this.getAnimationState().equals("spikes_slam"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_shuriken_launcher, this.getAnimationState().equals("shuriken_launcher"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_shurikens, this.getAnimationState().equals("shurikens"), this.tickCount);
         EntityUtil.animateWhen(this.anim_chainsaw, this.getAnimationState().equals("chainsaw"), this.tickCount);
         EntityUtil.animateWhen(this.anim_claws_start, this.getAnimationState().equals("claws_start"), this.tickCount);
         EntityUtil.animateWhen(this.anim_claws_continue, this.getAnimationState().equals("claws_continue"), this.tickCount);

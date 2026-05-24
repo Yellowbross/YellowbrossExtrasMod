@@ -413,7 +413,7 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
             this.animate(defender.anim_spikes, DefenderAnimation.spikes, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.anim_spikes_land, DefenderAnimation.spikes_land, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.anim_spikes_slam, DefenderAnimation.spikes_slam, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_shuriken_launcher, DefenderAnimation.shurikenlauncher, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_shurikens, DefenderAnimation.shurikenlauncher, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.anim_chainsaw, DefenderAnimation.chainsaw, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.anim_claws_start, DefenderAnimation.claws_start, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.anim_claws_continue, DefenderAnimation.claws_continue, ageInTicks, defender.getAnimationSpeed());
