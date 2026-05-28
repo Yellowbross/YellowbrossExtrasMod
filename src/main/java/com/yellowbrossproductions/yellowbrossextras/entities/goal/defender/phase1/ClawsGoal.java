@@ -48,7 +48,7 @@ public class ClawsGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().cooldown_claws = 600;
+        getDefender().cooldown_claws = getTimeInSeconds(30);
         getDefender().clawsTarget = null;
         getDefender().itsTimeToClawTarget = false;
     }

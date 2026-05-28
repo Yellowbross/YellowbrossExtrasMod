@@ -29,6 +29,6 @@ public class ShurikensGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().cooldown_shurikens = 200;
+        getDefender().cooldown_shurikens = getTimeInSeconds(10);
     }
 }

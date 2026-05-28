@@ -31,6 +31,6 @@ public class SpikesGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().cooldown_spikes = 600;
+        getDefender().cooldown_spikes = getTimeInSeconds(30);
     }
 }

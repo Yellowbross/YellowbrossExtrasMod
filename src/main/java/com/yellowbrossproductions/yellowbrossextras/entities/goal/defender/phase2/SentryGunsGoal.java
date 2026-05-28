@@ -30,7 +30,7 @@ public class SentryGunsGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().cooldown_sentryguns = 600;
+        getDefender().cooldown_sentryguns = getTimeInSeconds(30);
         if (getDefender().getTarget() instanceof Player) getDefender().timeToWaitBeforeUsingAnyOtherAttack = 120;
     }
 }

@@ -482,6 +482,15 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
                 this.left_leg.xRot += Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.5F;
                 this.right_leg.xRot += Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount * 0.5F;
             }
+
+            if (Objects.equals(defender.getAnimationState(), "creepergun") && defender.isFreakingOutInModel()) {
+                float tick = (defender.getFrame() + this.partialTick);
+                if ((Mth.cos(tick * 4) >= 0)) {
+                    this.all.xRot -= (50.0F * ((float)Math.PI / 180F));
+                    this.head.xRot -= (30.0F * ((float)Math.PI / 180F));
+                    this.right_arm.xRot -= (60.0F * ((float)Math.PI / 180F));
+                }
+            }
         }
     }
 

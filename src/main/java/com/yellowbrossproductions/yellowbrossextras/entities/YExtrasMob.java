@@ -7,6 +7,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 public class YExtrasMob extends PathfinderMob implements ICanBeAnimated, YextrasEntity {
@@ -41,6 +42,11 @@ public class YExtrasMob extends PathfinderMob implements ICanBeAnimated, Yextras
         }
 
         super.onSyncedDataUpdated(p_21104_);
+    }
+
+    @Override
+    public boolean canBeLeashed(Player player) {
+        return false;
     }
 
     @Override

@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,7 +30,7 @@ public class DefenderRenderer extends MobRenderer<DefenderEntity, DefenderModel<
     private static final ResourceLocation SPINNY_P2 = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/phase2_spinny.png");
 
     private static final float TEXTURE_WIDTH = 64;
-    private static final float TEXTURE_HEIGHT = 16;
+    private static final float TEXTURE_HEIGHT = 32;
     private static final float START_RADIUS = -1f;
 
     public DefenderRenderer(EntityRendererProvider.Context renderManagerIn) {
@@ -46,8 +47,10 @@ public class DefenderRenderer extends MobRenderer<DefenderEntity, DefenderModel<
     }
 
     @Override
-    protected void scale(DefenderEntity p_115314_, PoseStack p_115315_, float p_115316_) {
-        p_115315_.scale(1.0F / (p_115314_.getStretch() + 1), (p_115314_.getStretch() + 1), 1.0F / (p_115314_.getStretch() + 1));
+    protected void scale(DefenderEntity defender, PoseStack poseStack, float partialTick) {
+        poseStack.scale(1.0F / (defender.getStretch() + 1),
+                (defender.getStretch() + 1),
+                1.0F / (defender.getStretch() + 1));
     }
 
     @Override
@@ -56,37 +59,50 @@ public class DefenderRenderer extends MobRenderer<DefenderEntity, DefenderModel<
     }
 
     @Override
-    public void render(DefenderEntity p_115455_, float p_115456_, float p_115457_, PoseStack p_115458_, MultiBufferSource p_115459_, int p_115460_) {
-        switch (p_115455_.getCustomRender()) {
-            case 0:
-            default:
-                super.render(p_115455_, p_115456_, p_115457_, p_115458_, p_115459_, p_115460_);
-                break;
+    public void render(DefenderEntity defender, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int blockLightIn) {
+        switch (defender.getCustomRender()) {
             case 1:
-                renderSprite1(p_115455_, p_115456_, p_115457_, p_115458_, p_115459_, p_115460_, 1.0F);
+                renderSprite1(defender, entityYaw, partialTick, poseStack, multiBufferSource, blockLightIn, 1.0F);
                 break;
+
+            default: super.render(defender, entityYaw, partialTick, poseStack, multiBufferSource, blockLightIn);
         }
     }
 
-    public void renderSprite1(Entity p_114485_, float p_114486_, float p_114487_, PoseStack poseStack, MultiBufferSource p_114489_, int light, float alpha) {
+    public void renderSprite1(DefenderEntity defender, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, float alpha) {
         poseStack.pushPose();
         poseStack.translate(0.0D, 1.35D, 0.0D);
-        VertexConsumer sprite = p_114489_.getBuffer(RenderType.entityTranslucent(SPINNY_P2));
-        renderSpin((int) (p_114485_.tickCount) % 4, poseStack, sprite, light, alpha);
+
+        float f = defender.getWobbling(partialTick);
+
+        f = Mth.clamp(f, 0.0F, 1.0F);
+        f *= f;
+
+        float f1 = 1.0F + Mth.sin(f * 10.0F) * f * 0.5F;
+
+        float f2 = (1.0F + f * 0.4F) * f1;
+        float f3 = (1.0F + f * 0.4F) / f1;
+
+        poseStack.scale(f2, f3, f2);
+
+        VertexConsumer sprite = multiBufferSource.getBuffer(RenderType.entityTranslucent(SPINNY_P2));
+        float ageInTicks = defender.tickCount + partialTick;
+        int loop = (int) (ageInTicks) % 4;
+        renderSpin(loop, poseStack, sprite, light, alpha, ageInTicks > 4);
         poseStack.popPose();
     }
 
-    private void renderSpin(int frame, PoseStack matrixStackIn, VertexConsumer builder, int packedLightIn, float alpha) {
+    private void renderSpin(int frame, PoseStack matrixStackIn, VertexConsumer builder, int packedLightIn, float alpha, boolean startOver) {
         matrixStackIn.pushPose();
         Quaternion quat = this.entityRenderDispatcher.cameraOrientation();
         matrixStackIn.mulPose(quat);
-        renderFlatQuad(frame, matrixStackIn, builder, packedLightIn, alpha);
+        renderFlatQuad(frame, matrixStackIn, builder, packedLightIn, alpha, startOver);
         matrixStackIn.popPose();
     }
 
-    private void renderFlatQuad(int frame, PoseStack matrixStackIn, VertexConsumer builder, int packedLightIn, float warning) {
+    private void renderFlatQuad(int frame, PoseStack matrixStackIn, VertexConsumer builder, int packedLightIn, float warning, boolean startOver) {
         float minU = 0 + 16F / TEXTURE_WIDTH * frame;
-        float minV = 0;
+        float minV = startOver ? -16F / TEXTURE_HEIGHT : 0;
         float maxU = minU + 16F / TEXTURE_WIDTH;
         float maxV = minV + 16F / TEXTURE_HEIGHT;
         PoseStack.Pose matrixstack$entry = matrixStackIn.last();

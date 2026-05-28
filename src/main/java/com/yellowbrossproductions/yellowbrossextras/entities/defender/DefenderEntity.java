@@ -81,6 +81,9 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     private static final EntityDataAccessor<Integer> SECOND_HAT = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> STRETCH = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> USING_CUSTOM_RENDER = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> MAX_WOBBLE = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> WOBBLE = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> FREAKING_OUT_IN_MODEL = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.BOOLEAN);
 
     public AnimationState anim_jump = new AnimationState();
     public AnimationState anim_jump2 = new AnimationState();
@@ -187,6 +190,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     int guysKilled = 0;
     int gagTimer = 0;
     public int slamTicks;
+    public int oldWobbleTicks;
 
     public DefenderEntity(EntityType<? extends YExtrasMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
@@ -194,8 +198,9 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(0, new CreeperGunGoal(this));
         // this.goalSelector.addGoal(0, new SentryGunsGoal(this));
-        this.goalSelector.addGoal(0, new RatatatabowGoal(this));
+        // this.goalSelector.addGoal(0, new RatatatabowGoal(this));
 
         this.goalSelector.addGoal(0, new ExcaliburGoal(this));
         this.goalSelector.addGoal(0, new ClawsGoal(this));
@@ -247,6 +252,9 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         this.entityData.define(SECOND_HAT, 0);
         this.entityData.define(STRETCH, 0.0F);
         this.entityData.define(USING_CUSTOM_RENDER, 0);
+        this.entityData.define(MAX_WOBBLE, 0);
+        this.entityData.define(WOBBLE, 0);
+        this.entityData.define(FREAKING_OUT_IN_MODEL, false);
     }
 
     @Override
@@ -368,7 +376,8 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     }
 
     public boolean isCarnageAttack() {
-        return this.attackType == attack_excalibur;
+        return this.attackType == attack_excalibur
+                || this.attackType == attack_saws;
     }
 
     @Nullable
@@ -387,8 +396,18 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         return t;
     }
 
+    public void setFreakOutInModel(boolean input) {
+        if (!this.level.isClientSide) this.entityData.set(FREAKING_OUT_IN_MODEL, input);
+    }
+
+    public boolean isFreakingOutInModel() {
+        return this.entityData.get(FREAKING_OUT_IN_MODEL);
+    }
+
     @Override
     public void tick() {
+        this.calculateWobble();
+
         if (this.getPhase() == 1) {
             this.cooldown_saws--;
             this.cooldown_axes--;
@@ -730,6 +749,25 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         }
     }
 
+    public void setMaxWobble(int input) {
+        this.entityData.set(MAX_WOBBLE, input);
+        this.entityData.set(WOBBLE, input);
+    }
+
+    public void calculateWobble() {
+        this.oldWobbleTicks = this.entityData.get(WOBBLE);
+
+        this.entityData.set(WOBBLE, this.entityData.get(WOBBLE) - 1);
+
+        if (this.entityData.get(WOBBLE) < 1) {
+            this.entityData.set(WOBBLE, 0);
+        }
+    }
+
+    public float getWobbling(float partialTick) {
+        return Mth.lerp(partialTick, (float)this.oldWobbleTicks, (float)this.entityData.get(WOBBLE)) / (float)(this.entityData.get(MAX_WOBBLE));
+    }
+
     public void fireProjectile(LivingEntity target, float enchantments, float inaccuracy) {
         double d0 = target.getX() - this.getX();
         double d1 = target.getY(0.3333333333333333D) - this.getY() - (target.getBbHeight() / 2.0D);
@@ -838,28 +876,23 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         }
     }
 
-    @Override
-    public boolean canBeLeashed(Player p_21418_) {
-        return false;
-    }
-
-    public void lookAtWhileDead(Entity p_21392_, float p_21393_, float p_21394_) {
-        double d0 = p_21392_.getX() - this.getX();
-        double d2 = p_21392_.getZ() - this.getZ();
+    public void lookAtWhileDead(Entity entity, float yaw, float pitch) {
+        double d0 = entity.getX() - this.getX();
+        double d2 = entity.getZ() - this.getZ();
         double d1;
-        if (p_21392_ instanceof LivingEntity) {
-            LivingEntity livingentity = (LivingEntity)p_21392_;
+        if (entity instanceof LivingEntity) {
+            LivingEntity livingentity = (LivingEntity)entity;
             d1 = livingentity.getEyeY() - this.getEyeY();
         } else {
-            d1 = (p_21392_.getBoundingBox().minY + p_21392_.getBoundingBox().maxY) / 2.0D - this.getEyeY();
+            d1 = (entity.getBoundingBox().minY + entity.getBoundingBox().maxY) / 2.0D - this.getEyeY();
         }
 
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
         float f = (float)(Mth.atan2(d2, d0) * 57.2957763671875D) - 90.0F;
         float f1 = (float)(-(Mth.atan2(d1, d3) * 57.2957763671875D));
-        this.setXRot(this.rotlerp(this.getXRot(), f1, p_21394_));
-        this.setYRot(this.rotlerp(this.getYRot(), f, p_21393_));
-        this.yHeadRot = this.rotlerp(this.getYRot(), f, p_21393_);
+        this.setXRot(this.rotlerp(this.getXRot(), f1, pitch));
+        this.setYRot(this.rotlerp(this.getYRot(), f, yaw));
+        this.yHeadRot = this.rotlerp(this.getYRot(), f, yaw);
     }
 
     private float rotlerp(float p_21377_, float p_21378_, float p_21379_) {
@@ -892,18 +925,18 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     }
 
     @Override
-    public void setHealth(float p_21154_) {
-        float healthValue = p_21154_ - this.getHealth();
+    public void setHealth(float amount) {
+        float healthValue = amount - this.getHealth();
         if (healthValue < 0) {
             if (Math.abs(healthValue) > 15.0F && Math.abs(healthValue) < 1000000000000.0F) {
-                p_21154_ = this.getHealth() - 15.0F;
+                amount = this.getHealth() - 15.0F;
             }
             if (this.setHealthIFrames < 1) {
-                super.setHealth(p_21154_);
+                super.setHealth(amount);
                 this.setHealthIFrames = 10;
             }
         } else {
-            super.setHealth(p_21154_);
+            super.setHealth(amount);
         }
     }
 
@@ -1125,10 +1158,9 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
             if (this.attackType == attack_claws && this.shouldContinueAttacking) {
                 return false;
             }
-            if (this.attackType == attack_saws) {
-                return false;
-            }
-            if (this.attackType == attack_shurikens) {
+            if (this.attackType == attack_saws ||
+                    this.attackType == attack_shurikens ||
+                    this.attackType == attack_creepergun) {
                 return false;
             }
             if (this.attackType == attack_chainsaw) {

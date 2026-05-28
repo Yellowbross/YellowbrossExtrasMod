@@ -470,11 +470,6 @@ public class VilvgaverEntity extends YExtrasMob implements IEntityAdditionalSpaw
     }
 
     @Override
-    public boolean canBeLeashed(Player p_21418_) {
-        return false;
-    }
-
-    @Override
     public boolean hurt(DamageSource p_21016_, float p_21017_) {
         if (p_21016_ == DamageSource.OUT_OF_WORLD) {
             p_21017_ = Float.MAX_VALUE;

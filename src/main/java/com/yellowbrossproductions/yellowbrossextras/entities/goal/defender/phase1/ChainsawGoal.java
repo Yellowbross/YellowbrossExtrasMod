@@ -49,7 +49,7 @@ public class ChainsawGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().cooldown_chainsaw = 200;
+        getDefender().cooldown_chainsaw = getTimeInSeconds(10);
         getDefender().setLaserPosition(0,0,0);
     }
 }

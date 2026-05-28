@@ -29,6 +29,6 @@ public class BoomerangGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().cooldown_boomerang = 600;
+        getDefender().cooldown_boomerang = getTimeInSeconds(30);
     }
 }

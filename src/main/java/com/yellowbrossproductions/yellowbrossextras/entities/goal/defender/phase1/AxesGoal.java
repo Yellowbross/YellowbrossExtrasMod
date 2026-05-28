@@ -28,7 +28,7 @@ public class AxesGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().cooldown_axes = 200;
+        getDefender().cooldown_axes = getTimeInSeconds(10);
         getDefender().throwTimes = 1;
     }
 

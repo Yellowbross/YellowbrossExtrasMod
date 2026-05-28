@@ -28,6 +28,6 @@ public class SawsGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().cooldown_saws = 200;
+        getDefender().cooldown_saws = getTimeInSeconds(10);
     }
 }

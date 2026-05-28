@@ -236,6 +236,20 @@
     ]
   },
 
+  "entity.defender.creepergun_shoot": {
+    "subtitle": "subtitles.entity.defender.creepergun_shoot",
+    "sounds": [
+      "yellowbrossextras:defender/creepergun_shoot"
+    ]
+  },
+
+  "entity.defender.creepergun_hit": {
+    "subtitle": "subtitles.entity.defender.creepergun_hit",
+    "sounds": [
+      "yellowbrossextras:defender/creepergun_hit"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [

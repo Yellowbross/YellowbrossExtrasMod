@@ -66,5 +66,10 @@ public class CustomAttackGoal extends Goal {
         this.defender.slamTicks = 0;
         this.defender.attackTicks2 = 0;
         this.defender.setCustomRender(0);
+        this.defender.setFreakOutInModel(false);
+    }
+
+    protected int getTimeInSeconds(float timer) {
+        return (int) timer * 20;
     }
 }

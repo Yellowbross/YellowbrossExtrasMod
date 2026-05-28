@@ -11,6 +11,7 @@ import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EffectRegisterer;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -432,8 +433,10 @@ public class AttacksPart1 {
                         defender.setDeltaMovement(((target.getX() - defender.getX()) * 2.0D) * mult,
                                 1.5D,
                                 ((target.getZ() - defender.getZ()) * 2.0D) * mult);
+                        defender.setMaxWobble(15);
                     }
                     defender.setCustomRender(1);
+                    EntityUtil.makeCircleParticles(defender.level, defender, ParticleTypes.POOF, 10, 0.3, 1.0f);
                 }
                 if (ticks > 30) {
                     if (defender.isOnGround() && ticks2 == 0) {
@@ -442,9 +445,11 @@ public class AttacksPart1 {
                         defender.setCustomRender(0);
                         defender.setAnimationState("ratatatabow2");
                     }
-                    if (!defender.isOnGround() && ticks % 3 == 0) {
-                        defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH2.get(), 1.0F, 0.7f);
-                        defender.setDeltaMovement(defender.getDeltaMovement().add(0, -0.1, 0));
+                    if (!defender.isOnGround()) {
+                        if (ticks % 3 == 0) {
+                            defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH2.get(), 1.0F, 0.7f);
+                            defender.setDeltaMovement(defender.getDeltaMovement().add(0, -0.1, 0));
+                        }
                     }
                 }
                 if (ticks2 > 0 && ticks2 <= 60) {
@@ -496,6 +501,15 @@ public class AttacksPart1 {
                     }
                 }
             }
+            // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            if (defender.attackType == defender.attack_creepergun) {
+                if (ticks > 60) {
+                    if (ticks == 61) defender.setFreakOutInModel(true);
+                    defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CREEPERGUN_SHOOT.get(), 2.5F, 1.0F);
+                }
+            }
+            // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         }
     }
 

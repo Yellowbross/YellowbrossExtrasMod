@@ -1,6 +1,5 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase2;
 
-import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
@@ -33,6 +32,6 @@ public class RatatatabowGoal extends CustomAttackGoal {
     @Override
     public void stop() {
         super.stop();
-        getDefender().cooldown_ratatatabow = 200;
+        getDefender().cooldown_ratatatabow = getTimeInSeconds(10);
     }
 }

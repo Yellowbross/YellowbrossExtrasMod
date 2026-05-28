@@ -279,6 +279,14 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
         this.entityData.set(ACTIVE, a);
     }
 
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (source.isProjectile() && source.getEntity() instanceof Player) {
+            amount = Float.MAX_VALUE;
+        }
+        return super.hurt(source, amount);
+    }
+
     class ShootGoal extends Goal {
         private final SentryGunEntity gun;
 
