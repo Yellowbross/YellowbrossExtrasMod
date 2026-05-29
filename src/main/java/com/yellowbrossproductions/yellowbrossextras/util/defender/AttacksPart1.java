@@ -1,6 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.util.defender;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.BoomerangEntity;
@@ -506,6 +507,26 @@ public class AttacksPart1 {
                 if (ticks > 60) {
                     if (ticks == 61) defender.setFreakOutInModel(true);
                     defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CREEPERGUN_SHOOT.get(), 2.5F, 1.0F);
+
+                    if (!defender.level.isClientSide) {
+                        CreeperBulletEntity iGaveBirth = ModEntityTypes.CreeperBullet.get().create(defender.level);
+                        assert iGaveBirth != null;
+                        iGaveBirth.setPos(defender.getX(), defender.getY() + 0.5D, defender.getZ());
+
+                        iGaveBirth.setTarget(defender.getTarget());
+                        iGaveBirth.setCollisionPos((int)target.getX(), (int)target.getEyeY(), (int)target.getZ());
+                        iGaveBirth.wasShotFromDefender = true;
+                        iGaveBirth.randomize(2.0F);
+                        iGaveBirth.setShooter(defender);
+
+                        if (defender.level instanceof ServerLevel serverLevel) iGaveBirth.finalizeSpawn(serverLevel, defender.level.getCurrentDifficultyAt(defender.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
+
+                        if (defender.getTeam() != null) {
+                            defender.level.getScoreboard().addPlayerToTeam(iGaveBirth.getStringUUID(),
+                                    defender.level.getScoreboard().getPlayerTeam(defender.getTeam().getName()));
+                        }
+                        defender.level.addFreshEntity(iGaveBirth);
+                    }
                 }
             }
             // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -18,13 +18,13 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
@@ -33,7 +33,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 
-public class SneakerEntity extends AbstractCreeperEntity implements CreeperEnemy {
+public class SneakerEntity extends AbstractCreeperEntity implements CreeperInfection, Enemy {
     private static final EntityDataAccessor<Integer> CREEPER_TYPE = SynchedEntityData.defineId(SneakerEntity.class, EntityDataSerializers.INT);
     private int explosionPull;
 
@@ -49,9 +49,9 @@ public class SneakerEntity extends AbstractCreeperEntity implements CreeperEnemy
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, CreeperEnemy.class));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, CreeperInfection.class));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Mob.class, 10, true, false, (p_29932_) -> {
-            return p_29932_ instanceof Mob && !(p_29932_ instanceof CreeperEnemy);
+            return p_29932_ instanceof Mob && !(p_29932_ instanceof CreeperInfection);
         }));
     }
 
@@ -104,7 +104,7 @@ public class SneakerEntity extends AbstractCreeperEntity implements CreeperEnemy
             }
 
             for (Entity caught : level.getEntities(this, getBoundingBox().inflate(15.0F))) {
-                if (EntityUtil.canHurtThisMob(caught, this) && caught.isAlive() && EntityUtil.isMobNotInCreativeMode(caught) && !(caught instanceof CreeperEnemy)) {
+                if (EntityUtil.canHurtThisMob(caught, this) && caught.isAlive() && EntityUtil.isMobNotInCreativeMode(caught) && !(caught instanceof CreeperInfection)) {
                     double x = getX() - caught.getX();
                     double y = getY() - caught.getY();
                     double z = getZ() - caught.getZ();

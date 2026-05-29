@@ -3,10 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.init;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.entities.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.*;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.ChainsawEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.SpikeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderArrowEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
@@ -67,6 +64,11 @@ public class ModEntityTypes {
             () -> EntityType.Builder.of(SentryGunEntity::new, MobCategory.MONSTER)
                     .sized(0.5f, 1.25f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sentry_gun").toString()));
+
+    public static final RegistryObject<EntityType<CreeperBulletEntity>> CreeperBullet = ENTITY_TYPES.register("creeper_bullet",
+            () -> EntityType.Builder.of(CreeperBulletEntity::new, MobCategory.MONSTER)
+                    .sized(0.3f, 0.75f)
+                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "creeper_bullet").toString()));
 
 
 
@@ -152,6 +154,7 @@ public class ModEntityTypes {
     public static void onAttribute(final EntityAttributeCreationEvent event) {
         event.put(Defender.get(), DefenderEntity.createAttributes().build());
         event.put(SentryGun.get(), SentryGunEntity.createAttributes().build());
+        event.put(CreeperBullet.get(), CreeperBulletEntity.createAttributes().build());
 
         event.put(Sneaker.get(), SneakerEntity.createAttributes().build());
         event.put(Paracreeper.get(), ParacreeperEntity.createAttributes().build());

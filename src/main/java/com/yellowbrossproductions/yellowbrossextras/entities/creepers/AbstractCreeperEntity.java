@@ -2,7 +2,6 @@ package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
-import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import net.minecraft.core.particles.ParticleTypes;
@@ -22,7 +21,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -38,9 +36,8 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Random;
 
-public class AbstractCreeperEntity extends YExtrasMob implements CreeperEnemy, Enemy {
+public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
     private static final EntityDataAccessor<Integer> DATA_SWELL_DIR = SynchedEntityData.defineId(AbstractCreeperEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_IS_POWERED = SynchedEntityData.defineId(AbstractCreeperEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_IS_IGNITED = SynchedEntityData.defineId(AbstractCreeperEntity.class, EntityDataSerializers.BOOLEAN);
@@ -81,16 +78,16 @@ public class AbstractCreeperEntity extends YExtrasMob implements CreeperEnemy, E
     }
 
     @Override
-    public boolean hurt(DamageSource p_21016_, float p_21017_) {
-        if (p_21016_.getEntity() instanceof CreeperEnemy) {
-            this.heal(p_21017_);
+    public boolean hurt(DamageSource source, float amount) {
+        if (source.getEntity() instanceof CreeperInfection) {
+            this.heal(amount);
             this.makeHealParticles();
             return false;
         }
-        if (p_21016_ == DamageSource.FALL) {
-            p_21017_ = 0.0F;
+        if (source == DamageSource.FALL) {
+            amount = 0.0F;
         }
-        return super.hurt(p_21016_, p_21017_);
+        return super.hurt(source, amount);
     }
 
     public void makeHealParticles() {
@@ -272,6 +269,10 @@ public class AbstractCreeperEntity extends YExtrasMob implements CreeperEnemy, E
 
     public void thunderHit(ServerLevel p_32286_, LightningBolt p_32287_) {
         super.thunderHit(p_32286_, p_32287_);
+        this.setPowered();
+    }
+
+    public void setPowered() {
         this.entityData.set(DATA_IS_POWERED, true);
     }
 
@@ -339,13 +340,13 @@ public class AbstractCreeperEntity extends YExtrasMob implements CreeperEnemy, E
         ++this.droppedSkulls;
     }
 
-    class CreeperExplodeGoal extends Goal {
+    public class CreeperExplodeGoal extends Goal {
         private final AbstractCreeperEntity creeper;
         @Nullable
         private LivingEntity target;
 
-        public CreeperExplodeGoal(AbstractCreeperEntity p_25919_) {
-            this.creeper = p_25919_;
+        public CreeperExplodeGoal(AbstractCreeperEntity creeper) {
+            this.creeper = creeper;
             this.setFlags(EnumSet.of(Goal.Flag.MOVE));
         }
 
@@ -382,7 +383,7 @@ public class AbstractCreeperEntity extends YExtrasMob implements CreeperEnemy, E
         }
     }
 
-    class MergeWithMyLoveGoal extends Goal {
+    public class MergeWithMyLoveGoal extends Goal {
         private final AbstractCreeperEntity creeper;
         private final Class<? extends AbstractCreeperEntity> lookingForType;
         private AbstractCreeperEntity myLove = null;

@@ -2,9 +2,9 @@ package com.yellowbrossproductions.yellowbrossextras.events;
 
 import com.google.common.collect.Sets;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
+import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperInfection;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.AbstractCreeperEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperEnemy;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.LoseAIGoal;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.AbstractOryctolin;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.ConverslinEntity;
@@ -78,7 +78,7 @@ public class ServerEventHandler {
         // creepers cheating
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
-        if (source.getEntity() instanceof CreeperEnemy && entity instanceof Mob mob) {
+        if (source.getEntity() instanceof AbstractCreeperEntity && entity instanceof Mob mob) {
             mob.invulnerableTime = 0;
         }
 
@@ -98,7 +98,7 @@ public class ServerEventHandler {
     public void creeperInfection(LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
-        if (source.getEntity() instanceof CreeperEnemy && source.getEntity() instanceof LivingEntity living && entity instanceof Mob mob) {
+        if (source.getEntity() instanceof CreeperInfection && source.getEntity() instanceof LivingEntity living && entity instanceof Mob mob) {
             if (entity.level.getGameRules().getBoolean(YellowbrossExtrasGameRules.ENABLE_CREEPER_INFECTION)) {
                 EntityUtil.convertMobToCreeper(mob, living, entity.getLevel());
             }

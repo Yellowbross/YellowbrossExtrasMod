@@ -18,6 +18,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
@@ -28,7 +29,7 @@ import net.minecraftforge.network.PacketDistributor;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class CrawlerEntity extends AbstractCreeperEntity implements CreeperEnemy {
+public class CrawlerEntity extends AbstractCreeperEntity implements CreeperInfection, Enemy {
 
     public CrawlerEntity(EntityType<? extends YExtrasMob> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
@@ -42,9 +43,9 @@ public class CrawlerEntity extends AbstractCreeperEntity implements CreeperEnemy
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.6D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, CreeperEnemy.class));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, CreeperInfection.class));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Mob.class, 10, true, false, (p_29932_) -> {
-            return p_29932_ instanceof Mob && !(p_29932_ instanceof CreeperEnemy);
+            return p_29932_ instanceof Mob && !(p_29932_ instanceof CreeperInfection);
         }));
     }
 

@@ -2,7 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.util;
 
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.AbstractCreeperEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperEnemy;
+import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperInfection;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.SneakerEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
@@ -74,7 +74,7 @@ public class EntityUtil {
 
 
         Random random = new Random();
-        if (!entity.isRemoved() && !(entity instanceof CreeperEnemy)) {
+        if (!entity.isRemoved() && !(entity instanceof CreeperInfection)) {
             if (!tryConvertCustomCreeper(entity, killer, level)) {
                 AbstractCreeperEntity creeper = null;
 

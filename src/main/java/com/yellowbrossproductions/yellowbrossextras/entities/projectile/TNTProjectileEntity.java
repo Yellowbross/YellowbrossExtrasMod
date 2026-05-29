@@ -1,7 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.projectile;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperEnemy;
+import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperInfection;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
@@ -11,16 +11,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.network.PacketDistributor;
@@ -48,7 +45,7 @@ public class TNTProjectileEntity extends ThrowableItemProjectile {
     }
 
     protected void onHitEntity(EntityHitResult p_37404_) {
-        if (!(p_37404_.getEntity() instanceof CreeperEnemy)) {
+        if (!(p_37404_.getEntity() instanceof CreeperInfection)) {
             super.onHitEntity(p_37404_);
             if (!this.level.isClientSide) {
                 this.explode(2.5D);

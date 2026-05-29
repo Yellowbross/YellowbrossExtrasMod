@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.ArrayList;
 import java.util.List;
 
-// Needed for Defender stare goal
+// Needed for Defender stare goal. Code written by Google's Gemini assistant
 @Mod.EventBusSubscriber
 public class DelayedActionHandler {
     private static final List<Runnable> QUEUED_ACTIONS = new ArrayList<>();

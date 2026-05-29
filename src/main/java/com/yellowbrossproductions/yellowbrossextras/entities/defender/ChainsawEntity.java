@@ -138,6 +138,9 @@ public class ChainsawEntity extends Entity {
             }
             Vec3 vecOffset1 = new Vec3(0, 0, 0.8).yRot((float) Math.toRadians(-caster.getYRot()));
             Vec3 vecOffset2 = new Vec3(0.8, 0, 0).yRot(-getYaw()).xRot(getPitch());
+            this.xOld = caster.xOld;
+            this.yOld = caster.yOld;
+            this.zOld = caster.zOld;
             this.setPos(caster.getX(), caster.getY() + 1.125, caster.getZ());
         }
     }

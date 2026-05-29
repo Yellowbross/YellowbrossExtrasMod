@@ -1,5 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.world;
 
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBulletEntity;
+import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundExplodePacket;
 import net.minecraft.server.level.ServerLevel;
@@ -63,7 +65,8 @@ public class CustomExplosion extends Explosion {
 
         for(int k2 = 0; k2 < list.size(); ++k2) {
             Entity entity = list.get(k2);
-            if (!entity.ignoreExplosion() && entity instanceof Enemy) {
+            if (!entity.ignoreExplosion() &&
+                    (entity instanceof CreeperBulletEntity || (!(this.getExploder() instanceof Mob mob) || EntityUtil.canHurtThisMob(entity, mob)))) {
                 double d12 = Math.sqrt(entity.distanceToSqr(vec3)) / (double)f2;
                 if (d12 <= 1.0D) {
                     double d5 = entity.getX() - this.x;
