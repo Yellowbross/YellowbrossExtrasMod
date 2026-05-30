@@ -71,8 +71,6 @@ public class EntityUtil {
     }
 
     public static void convertMobToCreeper(Mob entity, LivingEntity killer, Level level) {
-
-
         Random random = new Random();
         if (!entity.isRemoved() && !(entity instanceof CreeperInfection)) {
             if (!tryConvertCustomCreeper(entity, killer, level)) {
