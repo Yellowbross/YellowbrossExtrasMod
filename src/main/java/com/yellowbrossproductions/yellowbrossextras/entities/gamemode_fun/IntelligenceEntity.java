@@ -3,6 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun;
 import com.mojang.math.Vector3d;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.gamemode_fun.CapTheIntelGoal;
+import com.yellowbrossproductions.yellowbrossextras.util.DelayedActionHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.EffectRegisterer;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
@@ -110,9 +111,11 @@ public class IntelligenceEntity extends Entity {
 
             for (PathfinderMob mob : playing) {
                 if (!doesThisMobHaveCapGoal(mob)) {
-                    mob.goalSelector.addGoal(1, new CapTheIntelGoal(mob));
-                    mob.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(mob, PathfinderMob.class, 10, true, false, p -> {
-                        return EntityUtil.isEnemyCapping(p, mob);}));
+                    DelayedActionHandler.queueAction(() -> {
+                        mob.goalSelector.addGoal(1, new CapTheIntelGoal(mob));
+                        mob.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(mob, PathfinderMob.class, 10, true, false, p -> {
+                            return EntityUtil.isEnemyCapping(p, mob);}));
+                    });
                 }
             }
         }
