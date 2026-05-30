@@ -14,6 +14,7 @@ public class YellowbrossExtrasConfig {
     public static ForgeConfigSpec.BooleanValue defender_distractEnemies;
     public static ForgeConfigSpec.IntValue defender_sentryGun_mitosisTimer;
     public static ForgeConfigSpec.IntValue defender_sentryGun_mitosisCap;
+    public static ForgeConfigSpec.IntValue defender_sentryGun_lifetimeCap;
 
     public static ForgeConfigSpec.DoubleValue vilvgaverChallenge_defaultSpeed;
     public static ForgeConfigSpec.IntValue vilvgaverChallenge_glowTime;
@@ -88,6 +89,13 @@ public class YellowbrossExtrasConfig {
                 .comment("Determines how many Sentry Guns can be near each other before they stop multiplying. Don't get carried away.",
                         "Default = 25")
                 .defineInRange("defender_sentryGun_mitosisCap", 25, 1, Integer.MAX_VALUE);
+
+        defender_sentryGun_lifetimeCap = common
+                .comment(" ")
+                .comment("Determines how long Sentry Guns can live beyond their mitosis cap for before instantly killing themselves.",
+                        "Set to 0 to disable",
+                        "Default = 35")
+                .defineInRange("defender_sentryGun_lifetimeCap", 35, 0, Integer.MAX_VALUE);
 
         common.pop();
 

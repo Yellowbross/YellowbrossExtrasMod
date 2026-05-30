@@ -1158,9 +1158,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
             if (this.attackType == attack_claws && this.shouldContinueAttacking) {
                 return false;
             }
-            if (this.attackType == attack_saws ||
-                    this.attackType == attack_shurikens ||
-                    this.attackType == attack_creepergun) {
+            if (this.attackType == attack_saws) {
                 return false;
             }
             if (this.attackType == attack_chainsaw) {
@@ -1293,7 +1291,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     }
 
     private void processDeath() {
-        if (this.getPhase() == 1) {
+        if (this.getPhase() != 0) {
             if (!this.level.isClientSide) {
                 this.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
             }
@@ -1304,8 +1302,15 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
             this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_PHASE_ENDED.get(), 3.0F, 1.0F);
             CameraShakeEntity.cameraShake(this.level, position(), 30, 0.3f, 0, 15);
             this.makePhaseEndParticles();
+        }
+        if (this.getPhase() == 1) {
             this.setAnimationState("excalibur");
             this.attackType = attack_excalibur;
+        }
+        if (this.getPhase() == 2) {
+            this.setAnimationState("flamethrower");
+            this.attackType = attack_flamethrower;
+            this.setImmediateTurn(true);
         }
     }
 

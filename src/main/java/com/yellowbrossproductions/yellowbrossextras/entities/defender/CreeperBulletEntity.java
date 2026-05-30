@@ -287,10 +287,10 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
             }
         }
         this.setPos(this.getCollisionPos().getX(), this.getCollisionPos().getY(), this.getCollisionPos().getZ());
-        double mult = 0.75;
+        double mult = 1.5d;
         this.setDeltaMovement(
                 (this.random.nextDouble() - 0.5d) * mult,
-                        0.75d,
+                        0.75d + ((this.random.nextDouble() - 0.5d)),
                         (this.random.nextDouble() - 0.5d) * mult);
         this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CREEPERGUN_HIT.get(), 2.0F, this.getVoicePitch());
     }

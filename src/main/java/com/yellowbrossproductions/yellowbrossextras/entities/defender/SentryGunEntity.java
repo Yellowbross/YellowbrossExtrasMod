@@ -13,6 +13,7 @@ import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.world.CustomExplosion;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
@@ -58,6 +59,8 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
     int setupTicks = 60;
     int mitosisTicks = 11;
     int explodeTimer = YellowbrossExtrasConfig.defender_sentryGun_mitosisTimer.get() * 20;
+    int lifeTime;
+    int lifetimeLimit = YellowbrossExtrasConfig.defender_sentryGun_lifetimeCap.get() * 20;
     boolean mitosisInitiated = false;
 
     public SentryGunEntity(EntityType<? extends YExtrasMob> p_21683_, Level p_21684_) {
@@ -197,6 +200,14 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
                     this.discard();
                 }
             }
+            this.lifeTime += 1;
+            if (!this.mitosisInitiated && this.lifetimeLimit != 0 && this.lifeTime > this.lifetimeLimit && this.random.nextInt(16) == 0) {
+                List<SentryGunEntity> list = this.level.getEntitiesOfClass(SentryGunEntity.class, this.getBoundingBox().inflate(50.0D), p -> {
+                    return p != this;
+                });
+                for (SentryGunEntity sentryGun : list) sentryGun.explodeCreeper();
+                this.explodeCreeper();
+            }
         }
     }
 
@@ -232,6 +243,14 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
                     living.hurt(DamageSource.explosion(this), 24.0F);
                 }
             }
+        }
+    }
+
+    public void explodeCreeper() {
+        if (!this.level.isClientSide) {
+            this.dead = true;
+            CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), 4.0F, true);
+            this.discard();
         }
     }
 
