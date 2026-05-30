@@ -57,7 +57,7 @@ public class ServerEventHandler {
                 ((Mob) entity).goalSelector.addGoal(0, new LoseAIGoal((Mob) entity));
 
                 if (entity instanceof Raider || mob.getMobType() == MobType.ILLAGER) {
-                    ((Mob) entity).targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(((Mob) entity), AbstractCreeperEntity.class, true));
+                    ((Mob) entity).targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(((Mob) entity), AbstractCreeperEntity.class, true, p -> p instanceof CreeperInfection));
                     ((Mob) entity).targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(((Mob) entity), AbstractOryctolin.class, true));
                 }
                 if (entity instanceof Villager) {
