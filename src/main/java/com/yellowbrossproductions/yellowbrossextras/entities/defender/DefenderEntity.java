@@ -1170,7 +1170,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                 damage = 0;
             }
         }
-        if (source.getEntity() instanceof IsDefenderAligned && !EntityUtil.canHurtThisMob(source.getEntity(), this)) {
+        if (source.getEntity() instanceof IsDefenderAligned && EntityUtil.canHurtThisMob(source.getEntity(), this)) {
             return false;
         }
         if (source.getEntity() != null && source.getEntity() != this) {
