@@ -235,20 +235,11 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
     public void spawnHittingSomething(Level world, Vec3 from, Vec3 to) {
         this.wasShotFromDefender = true;
 
-        double x = (to.x) - this.getX();
-        double y = (to.y) - this.getY();
-        double z = (to.z) - this.getZ();
-        double d = Math.sqrt(x * x + z * z);
-        // this.setShootY(180.0F + (float)Math.toDegrees(Math.atan2(x, z)));
-        // if (this.getShootY() > 360.0F) this.setShootY(this.getShootY() - 360.0F);
-
-        // this.setShootX((float)Math.toDegrees((Math.atan2(y, d))));
-
         CreeperBulletHitResult hitResult = new CreeperBulletHitResult();
         hitResult.setBlockHit(world.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)));
         if (hitResult.blockHit != null) {
-            Vec3 hitVec = hitResult.blockHit.getLocation();
             this.setCollisionPos(hitResult.getBlockHit().getBlockPos());
+            this.hurt(DamageSource.FLY_INTO_WALL, Float.MAX_VALUE);
         } else {
             this.setCollisionPos((int)to.x, (int)to.y, (int)to.z);
         }
@@ -288,9 +279,11 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
         }
 
         if (closestDamaged != null && hitResult.blockHit == null) {
+            this.setCollisionPos(closestDamaged.getBlockX(), (int)(closestDamaged.getBlockY() + closestDamaged.getBbHeight() / 2), closestDamaged.getBlockZ());
             if (closestDamaged.hurt(new IndirectEntityDamageSource("arrow", this, this.shooter).setProjectile(), 0.5F)) {
-                this.setCollisionPos(closestDamaged.getBlockX(), (int)(closestDamaged.getBlockY() + closestDamaged.getBbHeight() / 2), closestDamaged.getBlockZ());
                 closestDamaged.invulnerableTime = 0;
+            } else {
+                this.hurt(DamageSource.FLY_INTO_WALL, Float.MAX_VALUE);
             }
         }
         this.setPos(this.getCollisionPos().getX(), this.getCollisionPos().getY(), this.getCollisionPos().getZ());

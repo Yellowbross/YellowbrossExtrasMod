@@ -517,7 +517,7 @@ public class AttacksPart1 {
                         iGaveBirth.setTarget(defender.getTarget());
                         iGaveBirth.setCollisionPos((int)target.getX(), (int)target.getEyeY(), (int)target.getZ());
                         iGaveBirth.wasShotFromDefender = true;
-                        iGaveBirth.randomize(2.0F);
+                        if (!(target instanceof Player)) iGaveBirth.randomize(2.0F);
                         iGaveBirth.setShooter(defender);
                         iGaveBirth.setAnimationState("fly");
                         iGaveBirth.setShootY(defender.getYRot());
