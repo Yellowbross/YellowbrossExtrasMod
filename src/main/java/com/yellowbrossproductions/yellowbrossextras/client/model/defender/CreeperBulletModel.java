@@ -1,14 +1,18 @@
-package com.yellowbrossproductions.yellowbrossextras.client.model;
+package com.yellowbrossproductions.yellowbrossextras.client.model.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
+import com.yellowbrossproductions.yellowbrossextras.client.model.animation.defender.CreeperBulletAnimation;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBulletEntity;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
 public class CreeperBulletModel<T extends Entity> extends HierarchicalModel<T> {
@@ -22,8 +26,9 @@ public class CreeperBulletModel<T extends Entity> extends HierarchicalModel<T> {
     private final ModelPart creepleg3;
     private final ModelPart creepleg4;
     private final ModelPart creephead;
+    private final boolean charged;
 
-    public CreeperBulletModel(ModelPart root) {
+    public CreeperBulletModel(ModelPart root, boolean charged) {
         this.root = root;
         this.aim = root.getChild("aim");
         this.creepbody1 = this.aim.getChild("creepbody1");
@@ -32,6 +37,7 @@ public class CreeperBulletModel<T extends Entity> extends HierarchicalModel<T> {
         this.creepleg3 = this.creepbody1.getChild("creepleg3");
         this.creepleg4 = this.creepbody1.getChild("creepleg4");
         this.creephead = this.creepbody1.getChild("creephead");
+        this.charged = charged;
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -62,7 +68,26 @@ public class CreeperBulletModel<T extends Entity> extends HierarchicalModel<T> {
         this.creephead.yRot += netHeadYaw * ((float)Math.PI / 180F);
         this.creephead.xRot += (headPitch * ((float)Math.PI / 180F));
 
+        this.creepleg1.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+        this.creepleg2.xRot = Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+        this.creepleg3.xRot = Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+        this.creepleg4.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 
+        if (entity instanceof CreeperBulletEntity creeper) {
+            if (creeper.getAnimationState().equals("fly")) {
+                this.aim.yRot += creeper.getShootY() * ((float)Math.PI / 180F);
+                this.aim.xRot += creeper.getShootX() * ((float)Math.PI / 180F);
+            }
+
+            this.animate(creeper.anim_fly, CreeperBulletAnimation.fly, ageInTicks, creeper.getAnimationSpeed());
+            this.animate(creeper.anim_getup, CreeperBulletAnimation.getup, ageInTicks, creeper.getAnimationSpeed());
+            this.animate(creeper.anim_falling, CreeperBulletAnimation.falling, ageInTicks, creeper.getAnimationSpeed());
+        }
+
+        if (this.charged) {
+            Vector3f scale = new Vector3f(0.1f, 0.1f, 0.1f);
+            this.aim.getAllParts().forEach(modelPart -> modelPart.offsetScale(scale));
+        }
     }
 
     @Override

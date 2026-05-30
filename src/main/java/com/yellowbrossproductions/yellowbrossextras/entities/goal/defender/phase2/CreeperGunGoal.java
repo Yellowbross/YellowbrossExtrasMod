@@ -11,7 +11,7 @@ public class CreeperGunGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && getRandom().nextInt(2) == 0 && getDefender().cooldown_creepergun < 1 && getDefender().getPhase() == 2;
+        return doesAttackMeetNormalRequirements() && getRandom().nextInt(12) == 0 && getDefender().cooldown_creepergun < 1 && getDefender().getPhase() == 2;
     }
 
     @Override

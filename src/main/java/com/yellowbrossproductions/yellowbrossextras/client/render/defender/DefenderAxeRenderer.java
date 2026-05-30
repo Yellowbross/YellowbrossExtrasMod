@@ -1,7 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.client.model.DefenderAxeModel;
+import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DefenderAxeModel;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.DefenderAxeEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;

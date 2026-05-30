@@ -1,4 +1,4 @@
-package com.yellowbrossproductions.yellowbrossextras.client.model;
+package com.yellowbrossproductions.yellowbrossextras.client.model.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

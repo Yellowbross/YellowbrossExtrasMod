@@ -29,6 +29,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
+import java.util.Random;
 
 public class AttacksPart1 {
     public static void tickPhase1Attacks(DefenderEntity defender) {
@@ -511,13 +512,16 @@ public class AttacksPart1 {
                     if (!defender.level.isClientSide) {
                         CreeperBulletEntity iGaveBirth = ModEntityTypes.CreeperBullet.get().create(defender.level);
                         assert iGaveBirth != null;
-                        iGaveBirth.setPos(defender.getX(), defender.getY() + 0.5D, defender.getZ());
+                        iGaveBirth.setPos(defender.getX(), defender.getY() + 1.25D, defender.getZ());
 
                         iGaveBirth.setTarget(defender.getTarget());
                         iGaveBirth.setCollisionPos((int)target.getX(), (int)target.getEyeY(), (int)target.getZ());
                         iGaveBirth.wasShotFromDefender = true;
                         iGaveBirth.randomize(2.0F);
                         iGaveBirth.setShooter(defender);
+                        iGaveBirth.setAnimationState("fly");
+                        iGaveBirth.setShootY(defender.getYRot());
+                        iGaveBirth.setShootX(defender.getXRot());
 
                         if (defender.level instanceof ServerLevel serverLevel) iGaveBirth.finalizeSpawn(serverLevel, defender.level.getCurrentDifficultyAt(defender.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
 
@@ -526,6 +530,17 @@ public class AttacksPart1 {
                                     defender.level.getScoreboard().getPlayerTeam(defender.getTeam().getName()));
                         }
                         defender.level.addFreshEntity(iGaveBirth);
+
+                        List<CreeperBulletEntity> bullets = defender.level.getEntitiesOfClass(CreeperBulletEntity.class, target.getBoundingBox().inflate(30.0d));
+                        if (bullets.size() > 200) {
+                            boolean shouldContinue = true;
+                            for (CreeperBulletEntity bullet : bullets) if (bullet.isPowered()) shouldContinue = false;
+
+                            if (shouldContinue) {
+                                CreeperBulletEntity chosenOne = bullets.get(new Random().nextInt(bullets.size()));
+                                chosenOne.beTheChosenOne();
+                            }
+                        }
                     }
                 }
             }

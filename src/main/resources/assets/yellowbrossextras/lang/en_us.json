@@ -25,6 +25,7 @@
 
   "entity.yellowbrossextras.defender": "Defender",
   "entity.yellowbrossextras.sentry_gun": "Sentry Gun",
+  "entity.yellowbrossextras.creeper_bullet": "Creeper Bullet",
 
   "entity.yellowbrossextras.sneaker": "Sneaker",
   "entity.yellowbrossextras.paracreeper": "Paracreeper",
@@ -73,6 +74,7 @@
   "subtitles.entity.defender.ratatatabow_warn": "Defender draws his Ratatatabow",
   "subtitles.entity.defender.creepergun_shoot": "Creeper Gun shoots",
   "subtitles.entity.defender.creepergun_hit": "Creeper Bullet hits",
+  "subtitles.entity.defender.creeperbullet_land": "Creeper Bullet lands",
 
   "subtitles.entity.vilvgaver.attack": "Vilvgaver attacks",
   "subtitles.entity.vilvgaver.loop": "Vilvgaver screams",

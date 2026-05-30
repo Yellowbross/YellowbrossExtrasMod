@@ -2,8 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.util;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.*;
-import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DefenderModel;
-import com.yellowbrossproductions.yellowbrossextras.client.model.defender.SentryGunModel;
+import com.yellowbrossproductions.yellowbrossextras.client.model.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.client.model.oryctolins.*;
 import com.yellowbrossproductions.yellowbrossextras.client.render.*;
 import com.yellowbrossproductions.yellowbrossextras.client.render.defender.*;

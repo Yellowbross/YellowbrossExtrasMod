@@ -1,16 +1,12 @@
 package com.yellowbrossproductions.yellowbrossextras.client.render.layer;
 
-import com.yellowbrossproductions.yellowbrossextras.client.model.CreeperBulletModel;
+import com.yellowbrossproductions.yellowbrossextras.client.model.defender.CreeperBulletModel;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBulletEntity;
-import net.minecraft.client.model.CreeperModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.entity.layers.CreeperPowerLayer;
 import net.minecraft.client.renderer.entity.layers.EnergySwirlLayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.monster.Creeper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -21,7 +17,7 @@ public class CreeperBulletChargeLayer extends EnergySwirlLayer<CreeperBulletEnti
 
     public CreeperBulletChargeLayer(RenderLayerParent<CreeperBulletEntity, CreeperBulletModel<CreeperBulletEntity>> p_116967_, EntityModelSet set) {
         super(p_116967_);
-        this.model = new CreeperBulletModel<>(set.bakeLayer(CreeperBulletModel.LAYER_LOCATION));
+        this.model = new CreeperBulletModel<>(set.bakeLayer(CreeperBulletModel.LAYER_LOCATION), true);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.client.model.CreeperBulletModel;
+import com.yellowbrossproductions.yellowbrossextras.client.model.defender.CreeperBulletModel;
 import com.yellowbrossproductions.yellowbrossextras.client.render.layer.CreeperBulletChargeLayer;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBulletEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -17,7 +17,7 @@ public class CreeperBulletRenderer extends MobRenderer<CreeperBulletEntity, Cree
     private static final ResourceLocation TEXTURE = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/defender.png");
 
     public CreeperBulletRenderer(EntityRendererProvider.Context renderManagerIn) {
-        super(renderManagerIn, new CreeperBulletModel<>(renderManagerIn.bakeLayer(CreeperBulletModel.LAYER_LOCATION)), 0.25F);
+        super(renderManagerIn, new CreeperBulletModel<>(renderManagerIn.bakeLayer(CreeperBulletModel.LAYER_LOCATION), false), 0.25F);
         this.addLayer(new CreeperBulletChargeLayer(this, renderManagerIn.getModelSet()));
     }
 

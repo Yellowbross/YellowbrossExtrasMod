@@ -3,12 +3,15 @@ package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.AbstractCreeperEntity;
+import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.world.CustomExplosion;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.*;
@@ -28,14 +31,22 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
 // A lot of the code here was adapted and mashed together from Mutant Monsters and Mowzie's Mobs
 public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefenderAligned {
     private static final EntityDataAccessor<BlockPos> COLLISION_POS = SynchedEntityData.defineId(CreeperBulletEntity.class, EntityDataSerializers.BLOCK_POS);
+    private static final EntityDataAccessor<Float> SHOOT_Y = SynchedEntityData.defineId(CreeperBulletEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> SHOOT_X = SynchedEntityData.defineId(CreeperBulletEntity.class, EntityDataSerializers.FLOAT);
     LivingEntity shooter = null;
     public boolean wasShotFromDefender;
+    int getUpTicks;
+
+    public AnimationState anim_fly = new AnimationState();
+    public AnimationState anim_getup = new AnimationState();
+    public AnimationState anim_falling = new AnimationState();
 
     public CreeperBulletEntity(EntityType<? extends YExtrasMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
@@ -43,8 +54,9 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(0, new DoNothingUntilGotUpGoal());
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new CreeperExplodeGoal(this));
+        this.goalSelector.addGoal(2, new DontExplodeUntilGotUpGoal(this));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -71,6 +83,8 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(COLLISION_POS, BlockPos.ZERO);
+        this.entityData.define(SHOOT_Y, 0.0F);
+        this.entityData.define(SHOOT_X, 0.0F);
     }
 
     @Override
@@ -99,6 +113,13 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
     }
 
     @Override
+    public void updateAnimations() {
+        EntityUtil.animateWhen(this.anim_fly, this.getAnimationState().equals("fly"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_getup, this.getAnimationState().equals("getup"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_falling, this.getAnimationState().equals("falling"), this.tickCount);
+    }
+
+    @Override
     public void explodeCreeper() {
         if (!this.level.isClientSide) {
             this.dead = true;
@@ -111,7 +132,10 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
 
     @Override
     public boolean causeFallDamage(float p_149687_, float p_149688_, DamageSource p_149689_) {
-        this.wasShotFromDefender = false;
+        if (this.wasShotFromDefender) {
+            this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CREEPERBULLET_LAND.get());
+            this.setAnimationState("getup");
+        }
         return super.causeFallDamage(p_149687_, p_149688_, p_149689_);
     }
 
@@ -136,9 +160,54 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
     public void tick() {
         super.tick();
 
-        if (this.tickCount == 1 && this.wasShotFromDefender) {
-            if (!this.level.isClientSide) this.spawnHittingSomething(this.level, this.getPosition(0.0F), new Vec3(this.getCollisionPos().getX(), this.getCollisionPos().getY(), this.getCollisionPos().getZ()));
+        if (this.isAlive()) {
+            if (this.wasShotFromDefender) {
+                if (this.tickCount == 1) {
+                    if (!this.level.isClientSide) this.spawnHittingSomething(this.level, this.getPosition(0.0F), new Vec3(this.getCollisionPos().getX(), this.getCollisionPos().getY(), this.getCollisionPos().getZ()));
+                }
+                if (this.tickCount == 5 && !this.getAnimationState().equals("getup")) {
+                    this.setAnimationState("falling");
+                }
+            }
+            if (this.tickCount > 200 && this.random.nextInt(16) == 0 && !this.level.isClientSide) this.ignite();
         }
+    }
+
+    public void beTheChosenOne() {
+        LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(this.level);
+        assert lightning != null;
+        lightning.setPos(this.getX(), this.getY(), this.getZ());
+        lightning.setVisualOnly(true);
+        this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 3.0F, 1.0F);
+        this.playSound(SoundEvents.LIGHTNING_BOLT_THUNDER, 10000.0F, 1.0F);
+        this.level.addFreshEntity(lightning);
+        this.setPowered();
+        this.ignite();
+    }
+
+    public float getShootY() {
+        return this.entityData.get(SHOOT_Y);
+    }
+
+    public void setShootY(float input) {
+        if (!Float.isFinite(input)) Util.logAndPauseIfInIde("Invalid entity rotation: " + input + ", discarding.");
+        else this.entityData.set(SHOOT_Y, input);
+    }
+
+    public float getShootX() {
+        return this.entityData.get(SHOOT_X);
+    }
+
+    public void setShootX(float input) {
+        if (!Float.isFinite(input)) Util.logAndPauseIfInIde("Invalid entity rotation: " + input + ", discarding.");
+        else this.entityData.set(SHOOT_X, input);
+    }
+
+    @Override
+    public void die(DamageSource p_21014_) {
+        super.die(p_21014_);
+        this.wasShotFromDefender = false;
+        this.setAnimationState("none");
     }
 
     public static class CreeperBulletHitResult {
@@ -167,10 +236,10 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
         double y = (to.y) - this.getY();
         double z = (to.z) - this.getZ();
         double d = Math.sqrt(x * x + z * z);
-        this.setYRot(180.0F + (float)Math.toDegrees(Math.atan2(x, z)));
-        if (this.getYRot() > 360.0F) this.setYRot(this.getYRot() - 360.0F);
+        // this.setShootY(180.0F + (float)Math.toDegrees(Math.atan2(x, z)));
+        // if (this.getShootY() > 360.0F) this.setShootY(this.getShootY() - 360.0F);
 
-        this.setXRot((float)Math.toDegrees((Math.atan2(y, d))));
+        // this.setShootX((float)Math.toDegrees((Math.atan2(y, d))));
 
         CreeperBulletHitResult hitResult = new CreeperBulletHitResult();
         hitResult.setBlockHit(world.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)));
@@ -228,5 +297,44 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
                         0.75d,
                         (this.random.nextDouble() - 0.5d) * mult);
         this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CREEPERGUN_HIT.get(), 2.0F, this.getVoicePitch());
+    }
+
+    class DontExplodeUntilGotUpGoal extends CreeperExplodeGoal {
+
+        public DontExplodeUntilGotUpGoal(AbstractCreeperEntity creeper) {
+            super(creeper);
+        }
+
+        @Override
+        public boolean canUse() {
+            return super.canUse() && !CreeperBulletEntity.this.wasShotFromDefender;
+        }
+    }
+
+    class DoNothingUntilGotUpGoal extends Goal {
+
+        protected DoNothingUntilGotUpGoal() {
+            this.setFlags(EnumSet.of(Flag.JUMP, Flag.MOVE, Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            return CreeperBulletEntity.this.wasShotFromDefender && CreeperBulletEntity.this.getAnimationState().equals("getup") && CreeperBulletEntity.this.getUpTicks <= 20;
+        }
+
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        @Override
+        public void tick() {
+            CreeperBulletEntity.this.getUpTicks++;
+        }
+
+        @Override
+        public void stop() {
+            CreeperBulletEntity.this.wasShotFromDefender = false;
+        }
     }
 }

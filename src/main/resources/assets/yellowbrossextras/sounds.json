@@ -250,6 +250,13 @@
     ]
   },
 
+  "entity.defender.creeperbullet_land": {
+    "subtitle": "subtitles.entity.defender.creeperbullet_land",
+    "sounds": [
+      "yellowbrossextras:defender/creeperbullet_land"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [
