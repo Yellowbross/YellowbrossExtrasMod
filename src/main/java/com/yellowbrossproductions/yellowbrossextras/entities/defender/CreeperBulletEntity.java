@@ -76,7 +76,7 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
         return Monster.createMonsterAttributes()
                 .add(Attributes.MOVEMENT_SPEED, (double)0.35F)
                 .add(Attributes.MAX_HEALTH, 1.0D)
-                .add(Attributes.FOLLOW_RANGE, 16.0D);
+                .add(Attributes.FOLLOW_RANGE, 35.0D);
     }
 
     @Override
