@@ -31,7 +31,7 @@ public class CreeperGunGoal extends CustomAttackGoal {
     public void tick() {
         super.tick();
 
-        if (getDefender().attackTicks > 60 && getDefender().tryToFindTarget() == null) this.stop();
+        if (getDefender().attackTicks > 60 && getDefender().tryToFindTarget() == null) this.getDefender().attackTicks = 10000;
     }
 
     @Override
