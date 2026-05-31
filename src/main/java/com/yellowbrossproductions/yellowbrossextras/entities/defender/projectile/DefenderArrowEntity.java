@@ -88,7 +88,7 @@ public class DefenderArrowEntity extends AbstractArrow {
                     team = EntityUtil.canHurtThisMob(living, (Mob) this.getOwner()) && entity != this.getOwner() && !(living instanceof IsDefenderAligned);
                 }
                 if (team && entity.isAlive() && !entity.isInvulnerable() && !entity.isSpectator()) {
-                    living.hurt(DamageSource.arrow(this, this.getOwner()), (float) this.getBaseDamage() * (((float) living.getArmorValue()) + 1));
+                    living.hurt(DamageSource.arrow(this, this.getOwner()), (float) this.getBaseDamage() * EntityUtil.multiplyToScrewArmor(living, 1.0f));
                 }
             }
         }

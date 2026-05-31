@@ -489,4 +489,11 @@ public class EntityUtil {
         state.stop();
         if (condition) state.startIfStopped(tickCount);
     }
+
+    public static float multiplyToScrewArmor(LivingEntity entity, float multiplier) {
+        if (!(entity instanceof Player)) {
+            return Math.max(entity.getArmorValue() * multiplier, 1.0f);
+        }
+        return 1.0f;
+    }
 }

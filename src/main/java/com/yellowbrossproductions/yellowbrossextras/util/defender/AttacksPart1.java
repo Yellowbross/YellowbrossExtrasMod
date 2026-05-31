@@ -102,7 +102,7 @@ public class AttacksPart1 {
                             double d = Math.sqrt(x * x + y * y + z * z);
                             if (defender.distanceTo(entity) < 3.0D) {
                                 defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, defender.getVoicePitch());
-                                entity.hurt(DamageSource.mobAttack(defender), ((float) defender.getAttribute(Attributes.ATTACK_DAMAGE).getValue()) * Math.max(((LivingEntity) entity).getArmorValue() * 0.5f, 1.0f));
+                                entity.hurt(DamageSource.mobAttack(defender), ((float) defender.getAttribute(Attributes.ATTACK_DAMAGE).getValue()) * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.5f));
                                 entity.hurtMarked = true;
                                 entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 2.5D, (-y / d * 0.4D) + 0.5D, -z / d * 2.5D));
                             }

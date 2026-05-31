@@ -319,7 +319,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                     double d = Math.sqrt(x * x + y * y + z * z);
                     if (this.distanceTo(entity) < 10.0D) {
                         this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, this.getVoicePitch());
-                        entity.hurt(DamageSource.mobAttack(this), 20.0f * Math.max(((LivingEntity) entity).getArmorValue() * 0.5f, 1.0f));
+                        entity.hurt(DamageSource.mobAttack(this), 20.0f * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.5f));
                         entity.hurtMarked = true;
                         entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 3.5D, (-y / d * 0.4D) + 0.75D, -z / d * 3.5D));
                     }
@@ -685,11 +685,8 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                                 double z = this.getZ() - entity.getZ();
                                 double d = Math.sqrt(x * x + y * y + z * z);
                                 if (this.distanceTo(entity) < 5.0D) {
-                                    if (entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * Math.max(((LivingEntity) entity).getArmorValue()  * 0.25f, 1.0f))) {
-                                        entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * Math.max(((LivingEntity) entity).getArmorValue()  * 0.25f, 1.0f));
-                                        entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * Math.max(((LivingEntity) entity).getArmorValue()  * 0.25f, 1.0f));
-                                        entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * Math.max(((LivingEntity) entity).getArmorValue()  * 0.25f, 1.0f));
-                                        entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * Math.max(((LivingEntity) entity).getArmorValue()  * 0.25f, 1.0f));
+                                    if (entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.25f))) {
+                                        for (int i = 0; i < 4; ++i) entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.25f));
                                         this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, this.getVoicePitch() - 0.2F);
                                         CameraShakeEntity.cameraShake(this.level, position(), 10, 0.2f, 0, 8);
                                         entity.hurtMarked = true;
