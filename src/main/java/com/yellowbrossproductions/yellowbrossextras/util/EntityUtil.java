@@ -56,8 +56,8 @@ public class EntityUtil {
     }
 
     public static boolean isMobNotInCreativeMode(Entity entity) {
-        if (entity instanceof Player) {
-            return !((Player) entity).isCreative() && !((Player)entity).isSpectator();
+        if (entity instanceof Player player) {
+            return !player.isCreative() && !player.isSpectator();
         }
         return true;
     }

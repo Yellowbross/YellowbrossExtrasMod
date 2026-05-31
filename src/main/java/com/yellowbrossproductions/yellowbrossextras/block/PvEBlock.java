@@ -1,5 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.block;
 
+import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.util.RegistryHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -28,11 +29,13 @@ public class PvEBlock extends Block {
 
     @Override
     public void tick(BlockState p_222945_, ServerLevel worldIn, BlockPos pos, RandomSource p_222957_) {
-        int size = 10;
-        List<Player> list = worldIn.getEntitiesOfClass(Player.class, new AABB(pos).inflate(size));
-        if (list.isEmpty()) {
-            worldIn.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-            worldIn.levelEvent(2001, pos, Block.getId(RegistryHandler.PVE_BLOCK.get().defaultBlockState()));
+        int size = YellowbrossExtrasConfig.pveBlocks_decayRadius.get();
+        if (size > 0) {
+            List<Player> list = worldIn.getEntitiesOfClass(Player.class, new AABB(pos).inflate(size));
+            if (list.isEmpty()) {
+                worldIn.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                worldIn.levelEvent(2001, pos, Block.getId(RegistryHandler.PVE_BLOCK.get().defaultBlockState()));
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.util;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.block.FrozenLavaBlock;
 import com.yellowbrossproductions.yellowbrossextras.block.PvEBlock;
+import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.item.ItemBase;
 import com.yellowbrossproductions.yellowbrossextras.item.MobRemoverItemBase;
@@ -59,7 +60,7 @@ public class RegistryHandler {
             () -> new FrozenLavaBlock(BlockBehaviour.Properties.of(Material.STONE).strength(1.0F, 10.0F).sound(SoundType.NETHERRACK).instabreak()));
 
     public static final RegistryObject<Block> PVE_BLOCK = BLOCKS.register("pve_block",
-            () -> new PvEBlock(BlockBehaviour.Properties.of(Material.STONE).strength(1.0F, 10.0F).sound(SoundType.STONE).instabreak()));
+            () -> new PvEBlock(BlockBehaviour.Properties.of(Material.STONE).strength(YellowbrossExtrasConfig.pveBlocks_breakSpeed.get().floatValue(), 10.0F).sound(SoundType.STONE)));
 
     // Block Items
     public static final RegistryObject<BlockItem> PVE_BLOCK_ITEM = ITEMS.register("pve_block",

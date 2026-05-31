@@ -29,6 +29,13 @@ public class SpikesGoal extends CustomAttackGoal {
     }
 
     @Override
+    public void tick() {
+        super.tick();
+
+        if (getDefender().attackTicks == 39 && getDefender().tryToFindTarget() == null) this.stop();
+    }
+
+    @Override
     public void stop() {
         super.stop();
         getDefender().cooldown_spikes = getTimeInSeconds(30);

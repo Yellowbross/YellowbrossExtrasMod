@@ -1,13 +1,9 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 
-import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
-import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ConverslinBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
@@ -25,7 +21,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -37,11 +32,10 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,6 +56,7 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
     int lifeTime;
     int lifetimeLimit = YellowbrossExtrasConfig.defender_sentryGun_lifetimeCap.get() * 20;
     boolean mitosisInitiated = false;
+    int killMyselfTicks;
 
     public SentryGunEntity(EntityType<? extends YExtrasMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
@@ -69,10 +64,9 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new ShootGoal(this));
-        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(1, new ShootGoal(this));
+        this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this, IsDefenderAligned.class).setAlertOthers());
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Mob.class, 10, true, false, (p_29932_) -> {
             return p_29932_ instanceof Enemy;
@@ -130,9 +124,21 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
     }
 
     @Override
+    public boolean isPushedByFluid(FluidType type) {
+        return false;
+    }
+
+    @Override
     public void tick() {
         if (this.isActive()) this.setDeltaMovement(0.0, this.getDeltaMovement().y, 0.0);
         super.tick();
+        this.setYRot(this.getYHeadRot());
+        this.yBodyRot = this.getYRot();
+
+        if (this.killMyselfTicks > 0) this.killMyselfTicks--;
+        if (this.killMyselfTicks > 100) this.explodeCreeper();
+
+        if (this.isInWater()) this.killMyselfTicks += 2;
 
         if (!this.isActive() && this.setupTicks == 60) {
             if (!this.isOnGround()) this.setAnimationState("flying");
@@ -145,12 +151,16 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
         if (this.setupTicks < 1) this.setActive(true);
 
         if (this.isActive() && this.isAlive()) {
-            if (this.getTarget() != null && !this.getTarget().isRemoved() && this.getTarget().isAlive() && this.tickCount % 5 == 0 && !this.mitosisInitiated) {
-                this.setAnimationState("none");
-                this.setAnimationState("shoot");
-                this.stopShootingSound(this.level);
-                this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get(), 3.0F, 1.0F);
-                this.performRangedAttack(this.getTarget());
+            if (this.getTarget() != null && !this.getTarget().isRemoved() && this.getTarget().isAlive() && EntityUtil.isMobNotInCreativeMode(this.getTarget())) {
+                if (this.hasLineOfSight(this.getTarget()) && this.tickCount % 5 == 0 && !this.mitosisInitiated) {
+                    this.setAnimationState("none");
+                    this.setAnimationState("shoot");
+                    this.stopShootingSound(this.level);
+                    this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get(), 3.0F, 1.0F);
+                    this.performRangedAttack(this.getTarget());
+                }
+
+                if (!this.hasLineOfSight(this.getTarget())) this.killMyselfTicks += 2;
             }
             explodeTimer--;
             if (explodeTimer < 1 && this.random.nextInt(4) == 0) {

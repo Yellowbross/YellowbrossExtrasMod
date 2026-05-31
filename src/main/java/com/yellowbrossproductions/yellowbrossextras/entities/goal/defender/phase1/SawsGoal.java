@@ -11,7 +11,7 @@ public class SawsGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return getDefender().doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_saws < 1 && getDefender().getPhase() == 1 && getDefender().getTarget() != null && getDefender().getTarget().getBlockStateOn() != Blocks.AIR.defaultBlockState();
+        return getDefender().doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_saws < 1 && getDefender().getPhase() == 1 && getDefender().getTarget() != null && getDefender().getTarget().getBlockStateOn() != Blocks.AIR.defaultBlockState() && getDefender().distanceTo(getDefender().getTarget()) > 8.0D;
     }
 
     @Override

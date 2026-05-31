@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class YellowbrossExtrasConfig {
-    public static ForgeConfigSpec.BooleanValue cameraShakesAllowed;
+    public static ForgeConfigSpec.DoubleValue cameraShakeMultiplier;
     public static ForgeConfigSpec.IntValue vilvgaverTotalFrames;
 
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> aiChangesNotAllowed;
@@ -42,12 +42,16 @@ public class YellowbrossExtrasConfig {
     public static ForgeConfigSpec.BooleanValue oryctolin_victoryDance;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> bunnyBlitz_raiders;
 
+    public static ForgeConfigSpec.DoubleValue pveBlocks_breakSpeed;
+    public static ForgeConfigSpec.IntValue pveBlocks_decayRadius;
+
     public static void init(ForgeConfigSpec.Builder common, ForgeConfigSpec.Builder client) {
         client.push("Client Settings");
 
-        cameraShakesAllowed = client
-                .comment("Setting this to false will disable camera shakes.")
-                .define("cameraShakesAllowed", true);
+        cameraShakeMultiplier = client
+                .comment(" ")
+                .comment("The multiplier in how intense camera shakes can be. Set to 0 to disable.")
+                .defineInRange("cameraShakeMultiplier", 1.0D, 0.0D, Double.POSITIVE_INFINITY);
 
         vilvgaverTotalFrames = client
                 .comment(" ")
@@ -118,7 +122,7 @@ public class YellowbrossExtrasConfig {
                 .comment(" ")
                 .comment("The modified movement speed multiplier that Vilvgavers in the Vilvgaver Challenge will move at",
                         "Default = 0.6")
-                .defineInRange("vilvgaverChallenge_defaultSpeed", 0.6, 0, Double.MAX_VALUE);
+                .defineInRange("vilvgaverChallenge_defaultSpeed", 0.6, 0, Double.POSITIVE_INFINITY);
 
         vilvgaverChallenge_glowTime = common
                 .comment(" ")
@@ -148,7 +152,7 @@ public class YellowbrossExtrasConfig {
                 .comment(" ")
                 .comment("The radius in which lava in the Nether will freeze when walked over by the player in the Vilvgaver Challenge",
                         "Default = 3.0")
-                .defineInRange("vilvgaverChallenge_lavaFreezeRadius", 3.0, 0, Double.MAX_VALUE);
+                .defineInRange("vilvgaverChallenge_lavaFreezeRadius", 3.0, 0, Double.POSITIVE_INFINITY);
 
         vilvgaverChallenge_restoreHunger = common
                 .comment(" ")
@@ -181,7 +185,7 @@ public class YellowbrossExtrasConfig {
                 .comment(" ")
                 .comment("The volume of Vilvgaver's ambient noise",
                         "Default = 2.5")
-                .defineInRange("vilvgaver_ambienceVolume", 2.5, 0.1, Double.MAX_VALUE);
+                .defineInRange("vilvgaver_ambienceVolume", 2.5, 0.1, Double.POSITIVE_INFINITY);
 
         vilvgaverChallenge_snowballPush = common
                 .comment(" ")
@@ -189,7 +193,7 @@ public class YellowbrossExtrasConfig {
                         "Be careful with how you set this factor; this can make the challenge impossible or way too easy if used poorly.",
                         "For reference, 1 means that Vilvgaver would have to take 2 seconds to recover",
                         "Default = 1")
-                .defineInRange("vilvgaverChallenge_snowballPush", 1, 0.0, Double.MAX_VALUE);
+                .defineInRange("vilvgaverChallenge_snowballPush", 1, 0.0, Double.POSITIVE_INFINITY);
 
         vilvgaverChallenge_pushLimit = common
                 .comment(" ")
@@ -197,7 +201,7 @@ public class YellowbrossExtrasConfig {
                         "Be careful with how you set this factor; this can make the challenge impossible or way too easy if used poorly.",
                         "For reference, 2 is already a pretty long limit; Vilvgaver would have to take 4 seconds to recover",
                         "Default = 2")
-                .defineInRange("vilvgaverChallenge_pushLimit", 2, 0.0, Double.MAX_VALUE);
+                .defineInRange("vilvgaverChallenge_pushLimit", 2, 0.0, Double.POSITIVE_INFINITY);
 
         vilvgaverChallenge_speedBuff = common
                 .comment(" ")
@@ -211,7 +215,7 @@ public class YellowbrossExtrasConfig {
                 .comment("If this value is over 0, Vilvgavers in the Vilvgaver Challenge will move at a different speed in the Nether.",
                         "An alternative to the idea of projectiles pushing Vilvgaver back, which might have been too specific of a weakness.",
                         "Default = 0")
-                .defineInRange("vilvgaverChallenge_netherSpeed", 0, 0, Double.MAX_VALUE);
+                .defineInRange("vilvgaverChallenge_netherSpeed", 0, 0, Double.POSITIVE_INFINITY);
 
         vilvgaverChallenge_randomSpawnChance = common
                 .comment(" ")
@@ -261,13 +265,13 @@ public class YellowbrossExtrasConfig {
                 .comment(" ")
                 .comment("Radius of the Vilvgaver Challenge's Mob Blacklist",
                         "Default = 30.0")
-                .defineInRange("vilvgaverChallenge_moblistRadius", 30.0, 1.0, Double.MAX_VALUE);
+                .defineInRange("vilvgaverChallenge_moblistRadius", 30.0, 1.0, Double.POSITIVE_INFINITY);
 
         vilvgaverChallenge_blocklistRadius = common
                 .comment(" ")
                 .comment("Radius of the Vilvgaver Challenge's Block Blacklist",
                         "Default = 10.0")
-                .defineInRange("vilvgaverChallenge_blocklistRadius", 10.0, 1.0, Double.MAX_VALUE);
+                .defineInRange("vilvgaverChallenge_blocklistRadius", 10.0, 1.0, Double.POSITIVE_INFINITY);
 
         vilvgaverChallenge_fallDamageAllowed = common
                 .comment(" ")
@@ -297,6 +301,21 @@ public class YellowbrossExtrasConfig {
                 .defineList("bunnyBlitz_raiders", Arrays.asList(
                         "yellowbrossextras:converslin,1,1,1,2,2,2,3,3,4,5"
                 ), String.class::isInstance);
+
+        common.pop();
+
+        common.push("Miscellaneous");
+
+        pveBlocks_breakSpeed = common
+                .comment(" ")
+                .comment("How fast should PvE Blocks be breakable? (Set to 0 for instabreak)")
+                .defineInRange("pveBlocks_breakSpeed", 0.0, 0.0, Double.POSITIVE_INFINITY);
+
+        pveBlocks_decayRadius = common
+                .comment(" ")
+                .comment("How far out of a radius should PvE Blocks look for players before automatically breaking?")
+                .comment("Set to 0 to disable entirely")
+                .defineInRange("pveBlocks_decayRadius", 10, 0, Integer.MAX_VALUE);
 
         common.pop();
 

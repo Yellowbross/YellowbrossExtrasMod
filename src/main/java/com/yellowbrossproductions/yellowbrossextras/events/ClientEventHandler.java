@@ -22,7 +22,7 @@ public enum ClientEventHandler {
         float ticksExistedDelta = player.tickCount + delta;
         Random random = new Random();
         if (player != null) {
-            if (YellowbrossExtrasConfig.cameraShakesAllowed.get()) {
+            if (YellowbrossExtrasConfig.cameraShakeMultiplier.get() > 0) {
                 float shakeAmplitude = 0;
                 for (CameraShakeEntity cameraShake : player.level.getEntitiesOfClass(CameraShakeEntity.class, player.getBoundingBox().inflate(100))) {
                     if (cameraShake.distanceTo(player) < cameraShake.getRadius()) {
@@ -35,9 +35,9 @@ public enum ClientEventHandler {
                 // event.setYaw((float) (event.getYaw() + shakeAmplitude * Math.cos(ticksExistedDelta * 5 + 1) * 25));
                 // event.setRoll((float) (event.getRoll() + shakeAmplitude * Math.cos(ticksExistedDelta * 4) * 25));
 
-                event.setPitch((float) (event.getPitch() + shakeAmplitude * ((random.nextFloat() - 0.5F) * 3) * 25));
-                event.setYaw((float) (event.getYaw() + shakeAmplitude * ((random.nextFloat() - 0.5F) * 3) * 25));
-                event.setRoll((float) (event.getRoll() + shakeAmplitude * ((random.nextFloat() - 0.5F) * 3) * 25));
+                event.setPitch((float) (event.getPitch() + shakeAmplitude * ((random.nextFloat() - 0.5F) * 3) * 25 * YellowbrossExtrasConfig.cameraShakeMultiplier.get()));
+                event.setYaw((float) (event.getYaw() + shakeAmplitude * ((random.nextFloat() - 0.5F) * 3) * 25 * YellowbrossExtrasConfig.cameraShakeMultiplier.get()));
+                event.setRoll((float) (event.getRoll() + shakeAmplitude * ((random.nextFloat() - 0.5F) * 3) * 25 * YellowbrossExtrasConfig.cameraShakeMultiplier.get()));
             }
         }
     }

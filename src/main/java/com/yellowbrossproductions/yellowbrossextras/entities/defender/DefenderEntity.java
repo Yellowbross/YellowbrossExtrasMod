@@ -383,15 +383,12 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     @Nullable
     public LivingEntity tryToFindTarget() {
         LivingEntity t = null;
-        if (this.getTarget() != null && this.getTarget().isAlive()) {
-            t = getTarget();
-        } else {
+        if (this.getTarget() != null && this.getTarget().isAlive()) t = getTarget();
+        else {
             List<Mob> list = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(40.0D), p -> {
                 return p instanceof Enemy && EntityUtil.canHurtThisMob(p, this) && this.isInAttackSight(p) && p.isAlive();
             });
-            if (!list.isEmpty()) {
-                t = list.get(0);
-            }
+            if (!list.isEmpty()) t = list.get(0);
         }
         return t;
     }
@@ -1630,7 +1627,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         public boolean canUse() {
             return doesJumpMeetNormalRequirements()
                     && getTarget() != null
-                    && ((distanceTo(getTarget()) < 10.0D && random.nextInt(howShouldDefenderApproachHisTarget() == 2 ? 4 : 16) == 0) || damageTaken >= 30.0F || (howShouldDefenderApproachHisTarget() == 2 && DefenderEntity.this.horizontalCollision))
+                    && ((distanceTo(getTarget()) < 10.0D && random.nextInt(howShouldDefenderApproachHisTarget() == 2 ? 4 : 16) == 0) || ((damageTaken >= 30.0F || (howShouldDefenderApproachHisTarget() == 2 && DefenderEntity.this.horizontalCollision))) && distanceTo(getTarget()) < 14.0D)
                     && isOnGround()
                     && shouldJumpAway(getTarget());
         }
@@ -1739,7 +1736,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                         this.circleTime += 1;
                     }
                     this.mob.getLookControl().setLookAt(target, 100.0F, 30.0F);
-                    this.defender.circleEnemy(target, 18, 1.2f, true, this.circleTime, Mth.cos((this.defender.tickCount / 15.0F)), 1);
+                    this.defender.circleEnemy(target, 18, 1.0f, true, this.circleTime, Mth.cos((this.defender.tickCount / 15.0F)), 1);
                     this.checkAndPerformAttack(target, d0);
                 }
             }

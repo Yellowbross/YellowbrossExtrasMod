@@ -213,6 +213,21 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
         this.setAnimationState("none");
     }
 
+    @Override
+    public boolean isPushable() {
+        return !this.wasShotFromDefender && this.isAlive() && super.isPushable();
+    }
+
+    @Override
+    public void push(double p_20286_, double p_20287_, double p_20288_) {
+        if (!this.wasShotFromDefender && this.isAlive()) super.push(p_20286_, p_20287_, p_20288_);
+    }
+
+    @Override
+    protected void doPush(Entity p_20971_) {
+        if (!this.wasShotFromDefender && this.isAlive()) super.doPush(p_20971_);
+    }
+
     public static class CreeperBulletHitResult {
         private BlockHitResult blockHit;
 
