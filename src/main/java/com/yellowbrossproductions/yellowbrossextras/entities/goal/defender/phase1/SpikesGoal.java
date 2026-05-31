@@ -32,7 +32,11 @@ public class SpikesGoal extends CustomAttackGoal {
     public void tick() {
         super.tick();
 
-        if (getDefender().attackTicks == 39 && getDefender().tryToFindTarget() == null) this.getDefender().attackTicks = 10000;
+        if (getDefender().attackTicks == 39 && getDefender().tryToFindTarget() == null) {
+            this.getDefender().attackTicks = 10000;
+            this.getDefender().jumpAttacking = false;
+            this.getDefender().jumpTicks = 0;
+        }
     }
 
     @Override

@@ -33,7 +33,10 @@ public class RatatatabowGoal extends CustomAttackGoal {
     public void tick() {
         super.tick();
 
-        if (getDefender().tryToFindTarget() == null && getDefender().isOnGround()) this.getDefender().attackTicks = 10000;
+        if (getDefender().tryToFindTarget() == null && getDefender().isOnGround()) {
+            this.getDefender().attackTicks = 10000;
+            this.getDefender().attackTicks2 = 10000;
+        }
     }
 
     @Override
