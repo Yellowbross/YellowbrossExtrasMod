@@ -203,14 +203,14 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         this.goalSelector.addGoal(0, new RatatatabowGoal(this));
 
         this.goalSelector.addGoal(0, new ExcaliburGoal(this));
-        // this.goalSelector.addGoal(0, new ClawsGoal(this));
-        // this.goalSelector.addGoal(0, new ChainsawGoal(this));
-        // this.goalSelector.addGoal(0, new ShurikensGoal(this));
-        // this.goalSelector.addGoal(0, new SpikesGoal(this));
-        // this.goalSelector.addGoal(0, new BoomerangGoal(this));
+        this.goalSelector.addGoal(0, new ClawsGoal(this));
+        this.goalSelector.addGoal(0, new ChainsawGoal(this));
+        this.goalSelector.addGoal(0, new ShurikensGoal(this));
+        this.goalSelector.addGoal(0, new SpikesGoal(this));
+        this.goalSelector.addGoal(0, new BoomerangGoal(this));
         this.goalSelector.addGoal(0, new AxesGoal(this));
-        // this.goalSelector.addGoal(0, new SwordGoal(this));
-        // this.goalSelector.addGoal(0, new SawsGoal(this));
+        this.goalSelector.addGoal(0, new SwordGoal(this));
+        this.goalSelector.addGoal(0, new SawsGoal(this));
 
         this.goalSelector.addGoal(0, new DefeatedGoal());
         this.goalSelector.addGoal(0, new JumpAwayGoal(this));
