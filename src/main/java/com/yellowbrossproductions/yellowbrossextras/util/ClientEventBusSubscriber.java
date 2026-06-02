@@ -38,7 +38,6 @@ public class ClientEventBusSubscriber {
         event.registerLayerDefinition(SkeletonSnapModel.LAYER_LOCATION, SkeletonSnapModel::createBodyLayer);
         event.registerLayerDefinition(StickFigureModel.LAYER_LOCATION, StickFigureModel::createBodyLayer);
 
-        event.registerLayerDefinition(DefenderAxeModel.LAYER_LOCATION, DefenderAxeModel::createBodyLayer);
         event.registerLayerDefinition(BoomerangModel.LAYER_LOCATION, BoomerangModel::createBodyLayer);
         event.registerLayerDefinition(SpikeModel.LAYER_LOCATION, SpikeModel::createBodyLayer);
 

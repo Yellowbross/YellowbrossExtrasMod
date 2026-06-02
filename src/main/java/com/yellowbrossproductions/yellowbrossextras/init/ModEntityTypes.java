@@ -5,6 +5,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderArrowEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderAxeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
@@ -114,10 +115,7 @@ public class ModEntityTypes {
 
 
     // Projectiles
-    public static final RegistryObject<EntityType<DefenderAxeEntity>> DefenderAxe = ENTITY_TYPES.register("defender_axe",
-            () -> EntityType.Builder.of(DefenderAxeEntity::new, MobCategory.MONSTER)
-                    .sized(0.2f, 0.2f)
-                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "defender_axe").toString()));
+    public static final RegistryObject<EntityType<DefenderAxeEntity>> DefenderAxe = ENTITY_TYPES.register("defender_axe", () -> EntityType.Builder.<DefenderAxeEntity>of(DefenderAxeEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "defender_axe").toString()));
 
     public static final RegistryObject<EntityType<BoomerangEntity>> Boomerang = ENTITY_TYPES.register("boomerang",
             () -> EntityType.Builder.of(BoomerangEntity::new, MobCategory.MONSTER)
@@ -172,7 +170,6 @@ public class ModEntityTypes {
         event.put(Converslin.get(), ConverslinEntity.createAttributes().build());
         event.put(CarrotMinion.get(), CarrotMinionEntity.createAttributes().build());
 
-        event.put(DefenderAxe.get(), DefenderAxeEntity.createAttributes().build());
         event.put(Boomerang.get(), BoomerangEntity.createAttributes().build());
     }
 }

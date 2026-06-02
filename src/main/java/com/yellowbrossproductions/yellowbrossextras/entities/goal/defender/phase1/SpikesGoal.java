@@ -25,18 +25,7 @@ public class SpikesGoal extends CustomAttackGoal {
 
     @Override
     public boolean canContinueToUse() {
-        return getDefender().attackTicks <= 50 || getDefender().jumpAttacking || getDefender().jumpTicks > 0;
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (getDefender().attackTicks == 39 && getDefender().tryToFindTarget() == null) {
-            this.getDefender().attackTicks = 10000;
-            this.getDefender().jumpAttacking = false;
-            this.getDefender().jumpTicks = 0;
-        }
+        return (getDefender().attackTicks <= 50 || getDefender().jumpAttacking || getDefender().jumpTicks > 0) && !(getDefender().tryToFindTarget() == null && getDefender().attackTicks < 39);
     }
 
     @Override

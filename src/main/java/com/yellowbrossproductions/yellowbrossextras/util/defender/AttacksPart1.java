@@ -6,7 +6,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEn
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.BoomerangEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.ChainsawEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.projectile.DefenderAxeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderAxeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ShurikenEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EffectRegisterer;
@@ -126,18 +126,9 @@ public class AttacksPart1 {
                 if ((ticks == 6 + (24 * (defender.throwTimes - 1))) || (ticks == 18 + (24 * (defender.throwTimes - 1)))) {
                     defender.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, 0.5F);
                     if (!defender.level.isClientSide) {
-                        DefenderAxeEntity projectile = ModEntityTypes.DefenderAxe.get().create(defender.level);
-                        assert projectile != null;
-                        projectile.setPos(defender.getX(), defender.getY() + 1, defender.getZ());
-
-                        projectile.setYHeadRot(defender.getYHeadRot());
-                        projectile.setYRot(defender.getYHeadRot());
-
-                        float power = (float) 6.0F;
-                        projectile.setAcceleration(target.position().add(0, (target.getBbHeight() / 2.0D), 0).subtract(defender.position()).normalize().scale(power).scale(0.2d));
-
-                        projectile.setShooter(defender);
-                        defender.level.addFreshEntity(projectile);
+                        DefenderAxeEntity axe = new DefenderAxeEntity(defender.level, defender, target.getBoundingBox().getCenter().subtract(defender.position().add(0, 1, 0)));
+                        axe.setPos(defender.getX(), defender.getY() + 1, defender.getZ());
+                        defender.level.addFreshEntity(axe);
                     }
                 }
             }
@@ -517,7 +508,6 @@ public class AttacksPart1 {
                         iGaveBirth.setTarget(defender.getTarget());
                         iGaveBirth.setCollisionPos((int)target.getX(), (int)target.getEyeY(), (int)target.getZ());
                         iGaveBirth.wasShotFromDefender = true;
-                        if (!(target instanceof Player)) iGaveBirth.randomize(2.0F);
                         iGaveBirth.setShooter(defender);
                         iGaveBirth.setAnimationState("fly");
                         iGaveBirth.setShootY(defender.getYRot());

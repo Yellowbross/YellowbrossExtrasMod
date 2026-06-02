@@ -28,23 +28,23 @@ public class CustomAbstractHurtingProjectile extends Projectile {
         super(p_36833_, p_36834_);
     }
 
-    public CustomAbstractHurtingProjectile(EntityType<? extends CustomAbstractHurtingProjectile> p_36817_, double p_36818_, double p_36819_, double p_36820_, double p_36821_, double p_36822_, double p_36823_, Level p_36824_) {
-        this(p_36817_, p_36824_);
-        this.moveTo(p_36818_, p_36819_, p_36820_, this.getYRot(), this.getXRot());
+    public CustomAbstractHurtingProjectile(EntityType<? extends CustomAbstractHurtingProjectile> extension, double ownerX, double ownerY, double ownerZ, double shootdirX, double shootdirY, double shootdirZ, Level level) {
+        this(extension, level);
+        this.moveTo(ownerX, ownerY, ownerZ, this.getYRot(), this.getXRot());
         this.reapplyPosition();
-        double d0 = Math.sqrt(p_36821_ * p_36821_ + p_36822_ * p_36822_ + p_36823_ * p_36823_);
+        double d0 = Math.sqrt(shootdirX * shootdirX + shootdirY * shootdirY + shootdirZ * shootdirZ);
         if (d0 != 0.0D) {
-            this.xPower = p_36821_ / d0 * 0.1D;
-            this.yPower = p_36822_ / d0 * 0.1D;
-            this.zPower = p_36823_ / d0 * 0.1D;
+            this.xPower = shootdirX / d0 * 0.1D;
+            this.yPower = shootdirY / d0 * 0.1D;
+            this.zPower = shootdirZ / d0 * 0.1D;
         }
 
     }
 
-    public CustomAbstractHurtingProjectile(EntityType<? extends CustomAbstractHurtingProjectile> p_36826_, LivingEntity p_36827_, double p_36828_, double p_36829_, double p_36830_, Level p_36831_) {
-        this(p_36826_, p_36827_.getX(), p_36827_.getY(), p_36827_.getZ(), p_36828_, p_36829_, p_36830_, p_36831_);
-        this.setOwner(p_36827_);
-        this.setRot(p_36827_.getYRot(), p_36827_.getXRot());
+    public CustomAbstractHurtingProjectile(EntityType<? extends CustomAbstractHurtingProjectile> extension, LivingEntity entity, double shootdirX, double shootdirY, double shootdirZ, Level level) {
+        this(extension, entity.getX(), entity.getY(), entity.getZ(), shootdirX, shootdirY, shootdirZ, level);
+        this.setOwner(entity);
+        this.setRot(entity.getYRot(), entity.getXRot());
     }
 
     protected void defineSynchedData() {
