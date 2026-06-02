@@ -284,7 +284,7 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
         double closestDistanceSq = Double.MAX_VALUE;
         LivingEntity closestDamaged = null;
         for (LivingEntity hit : hitResult.entities) {
-            if (hit != this && hit.isAlive() && !hit.isRemoved()) {
+            if (hit != this && hit.isAlive() && !hit.isRemoved() && hit.isPickable()) {
                 double distanceSq = hit.distanceToSqr(this);
                 if (distanceSq < closestDistanceSq) {
                     closestDistanceSq = distanceSq;
