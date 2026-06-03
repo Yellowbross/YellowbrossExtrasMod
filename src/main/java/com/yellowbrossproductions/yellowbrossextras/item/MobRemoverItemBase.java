@@ -34,6 +34,11 @@ public class MobRemoverItemBase extends Item {
     }
 
     @Override
+    public int getMaxStackSize(ItemStack stack) {
+        return 1;
+    }
+
+    @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof YextrasEntity) {
             if (!entity.level.isClientSide) {
