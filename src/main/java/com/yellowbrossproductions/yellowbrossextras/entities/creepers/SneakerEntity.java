@@ -199,8 +199,7 @@ public class SneakerEntity extends AbstractCreeperEntity implements CreeperInfec
             if (this.getAbsorbedCreepers() < this.getMaxAbsorbs()) {
                 if (this.getCreeperType() == 0) {
                     if (this.random.nextBoolean()) {
-                        ParacreeperEntity creeper = ModEntityTypes.Paracreeper.get().create(this.level);
-                        assert creeper != null;
+                        ParacreeperEntity creeper = new ParacreeperEntity(ModEntityTypes.Paracreeper.get(), this.level);
                         creeper.copyPosition(this);
                         creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
                         if (this.getTeam() != null) {
@@ -212,8 +211,7 @@ public class SneakerEntity extends AbstractCreeperEntity implements CreeperInfec
                     this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * f), explosion$blockinteraction);
                 } else if (this.getCreeperType() == 1) {
                     for (int i = 0; i < 5; ++i) {
-                        ParacreeperEntity creeper = ModEntityTypes.Paracreeper.get().create(this.level);
-                        assert creeper != null;
+                        ParacreeperEntity creeper = new ParacreeperEntity(ModEntityTypes.Paracreeper.get(), this.level);
                         creeper.copyPosition(this);
                         creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
                         creeper.setDeltaMovement(this.random.nextDouble() - 0.5D,
@@ -230,8 +228,7 @@ public class SneakerEntity extends AbstractCreeperEntity implements CreeperInfec
                     CameraShakeEntity.cameraShake(this.level, position(), 40, 0.2f, 0, 30);
                     this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 2.5F * f), explosion$blockinteraction);
                 } else if (this.getCreeperType() == 2) {
-                    SneakerEntity creeper = ModEntityTypes.Sneaker.get().create(this.level);
-                    assert creeper != null;
+                    SneakerEntity creeper = new SneakerEntity(ModEntityTypes.Sneaker.get(), this.level);
                     creeper.copyPosition(this);
                     if (this.getTeam() != null) {
                         level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
@@ -246,8 +243,7 @@ public class SneakerEntity extends AbstractCreeperEntity implements CreeperInfec
                     this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 2.5F * f), explosion$blockinteraction);
                 }
             } else {
-                CrawlerEntity creeper = ModEntityTypes.Crawler.get().create(this.level);
-                assert creeper != null;
+                CrawlerEntity creeper = new CrawlerEntity(ModEntityTypes.Crawler.get(), this.level);
                 creeper.copyPosition(this);
                 if (this.getTeam() != null) {
                     level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),

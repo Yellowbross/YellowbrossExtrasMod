@@ -186,9 +186,8 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
                     this.makePopParticles();
                     CameraShakeEntity.cameraShake(this.level, position(), 35, 0.2f, 0, 10);
                     for (int i = 0; i < 2; i++) {
-                        SentryGunEntity iGaveBirth = ModEntityTypes.SentryGun.get().create(this.level);
-                        assert iGaveBirth != null;
-                        iGaveBirth.setPos(this.getX(), this.getY() + 0.5D, this.getZ());
+                        SentryGunEntity iGaveBirth = new SentryGunEntity(ModEntityTypes.SentryGun.get(), this.level);
+                        iGaveBirth.moveTo(this.getPosition(0).add(0, 0.5, 0));
 
                         double mult = 1.0d;
                         iGaveBirth.setDeltaMovement(

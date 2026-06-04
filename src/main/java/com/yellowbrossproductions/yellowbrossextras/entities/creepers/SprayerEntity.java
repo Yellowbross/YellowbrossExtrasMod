@@ -97,8 +97,7 @@ public class SprayerEntity extends AbstractCreeperEntity implements CreeperInfec
         super.explodeCreeper();
         if (this.getAbsorbedCreepers() >= this.getMaxAbsorbs()) {
             if (!this.level.isClientSide) {
-                CrawlerEntity creeper = ModEntityTypes.Crawler.get().create(this.level);
-                assert creeper != null;
+                CrawlerEntity creeper = new CrawlerEntity(ModEntityTypes.Crawler.get(), this.level);
                 creeper.copyPosition(this);
                 if (this.getTeam() != null) {
                     level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),

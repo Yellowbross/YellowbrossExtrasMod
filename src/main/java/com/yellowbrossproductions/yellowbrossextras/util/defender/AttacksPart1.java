@@ -138,9 +138,8 @@ public class AttacksPart1 {
                     defender.playSound(SoundEvents.WITCH_THROW, 2.0F, 0.9F);
                     defender.setWeaponToShow(0);
                     if (!defender.level.isClientSide) {
-                        BoomerangEntity projectile = ModEntityTypes.Boomerang.get().create(defender.level);
-                        assert projectile != null;
-                        projectile.setPos(defender.getX(), defender.getY() + 1, defender.getZ());
+                        BoomerangEntity projectile = new BoomerangEntity(ModEntityTypes.Boomerang.get(), defender.level);
+                        projectile.moveTo(defender.getPosition(0).add(0, 1, 0));
 
                         projectile.setYHeadRot(defender.getYHeadRot());
                         projectile.setYRot(defender.getYHeadRot());
@@ -501,9 +500,8 @@ public class AttacksPart1 {
                     defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CREEPERGUN_SHOOT.get(), 2.5F, 1.0F);
 
                     if (!defender.level.isClientSide) {
-                        CreeperBulletEntity iGaveBirth = ModEntityTypes.CreeperBullet.get().create(defender.level);
-                        assert iGaveBirth != null;
-                        iGaveBirth.setPos(defender.getX(), defender.getY() + 1.25D, defender.getZ());
+                        CreeperBulletEntity iGaveBirth = new CreeperBulletEntity(ModEntityTypes.CreeperBullet.get(), defender.level);
+                        iGaveBirth.moveTo(defender.getPosition(0).add(0, 1.25D, 0));
 
                         iGaveBirth.setTarget(defender.getTarget());
                         iGaveBirth.setCollisionPos((int)target.getX(), (int)target.getEyeY(), (int)target.getZ());
@@ -541,9 +539,8 @@ public class AttacksPart1 {
 
     protected static void throwSentry(DefenderEntity defender, Vec3 whereTo) {
         if (!defender.level.isClientSide) {
-            SentryGunEntity iGaveBirth = ModEntityTypes.SentryGun.get().create(defender.level);
-            assert iGaveBirth != null;
-            iGaveBirth.setPos(defender.getX(), defender.getY() + 0.5D, defender.getZ());
+            SentryGunEntity iGaveBirth = new SentryGunEntity(ModEntityTypes.SentryGun.get(), defender.level);
+            iGaveBirth.moveTo(defender.getPosition(0).add(0, 0.5, 0));
 
             double mult = 1.0d;
             Vec3 motion = new Vec3(whereTo.x(), whereTo.y(), whereTo.z()).subtract(iGaveBirth.position());

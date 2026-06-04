@@ -1,9 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.util;
 
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
-import com.yellowbrossproductions.yellowbrossextras.entities.creepers.AbstractCreeperEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperInfection;
-import com.yellowbrossproductions.yellowbrossextras.entities.creepers.SneakerEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.creepers.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
@@ -74,7 +72,7 @@ public class EntityUtil {
         Random random = new Random();
         if (!entity.isRemoved() && !(entity instanceof CreeperInfection)) {
             if (!tryConvertCustomCreeper(entity, killer, level)) {
-                AbstractCreeperEntity creeper = null;
+                AbstractCreeperEntity creeper;
 
                 float paraCreeperWidth = 0.5F;
 
@@ -83,69 +81,67 @@ public class EntityUtil {
                 float ravagerCreeperWidth = 2.0F;
 
                 if (entity.getBbWidth() < paraCreeperWidth) {
-                    creeper = ModEntityTypes.Paracreeper.get().create(level);
+                    creeper = new ParacreeperEntity(ModEntityTypes.Paracreeper.get(), level);
                 } else if (entity.getBbWidth() >= paraCreeperWidth && entity.getBbWidth() <= normalCreeperWidth) {
-                    creeper = ModEntityTypes.Sneaker.get().create(level);
+                    creeper = new SneakerEntity(ModEntityTypes.Sneaker.get(), level);
                     if (entity instanceof RangedAttackMob) {
                         if (random.nextBoolean()) {
-                            creeper = ModEntityTypes.Sprayer.get().create(level);
+                            creeper = new SprayerEntity(ModEntityTypes.Sprayer.get(), level);
                         }
                     }
                 } else if (entity.getBbWidth() >= normalCreeperWidth && entity.getBbWidth() <= ravagerCreeperWidth) {
-                    creeper = ModEntityTypes.Crawler.get().create(level);
+                    creeper = new CrawlerEntity(ModEntityTypes.Crawler.get(), level);
                 } else {
-                    creeper = ModEntityTypes.Freaker.get().create(level);
+                    creeper = new FreakerEntity(ModEntityTypes.Freaker.get(), level);
                 }
 
-                if (creeper != null) {
-                    creeper.copyPosition(entity);
-                    creeper.setNoAi(entity.isNoAi());
-                    if (entity.hasCustomName()) {
-                        creeper.setCustomName(entity.getCustomName());
-                        creeper.setCustomNameVisible(entity.isCustomNameVisible());
-                    }
+                creeper.copyPosition(entity);
+                creeper.setNoAi(entity.isNoAi());
+                if (entity.hasCustomName()) {
+                    creeper.setCustomName(entity.getCustomName());
+                    creeper.setCustomNameVisible(entity.isCustomNameVisible());
+                }
 
-                    if (killer.getTeam() != null) {
-                        level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
-                                level.getScoreboard().getPlayerTeam(killer.getTeam().getName()));
-                    }
+                if (killer.getTeam() != null) {
+                    level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                            level.getScoreboard().getPlayerTeam(killer.getTeam().getName()));
+                }
 
-                    if (entity.isPassenger() && entity.getVehicle() != null) {
-                        Entity vehicle = entity.getVehicle();
-                        entity.stopRiding();
-                        creeper.startRiding(vehicle, true);
-                    }
+                if (entity.isPassenger() && entity.getVehicle() != null) {
+                    Entity vehicle = entity.getVehicle();
+                    entity.stopRiding();
+                    creeper.startRiding(vehicle, true);
+                }
 
-                    if (!entity.getPassengers().isEmpty()) {
-                        for (Entity entity1 : entity.getPassengers()) {
-                            if (!entity1.isRemoved()) {
-                                entity1.stopRiding();
-                                entity1.startRiding(creeper, true);
+                if (!entity.getPassengers().isEmpty()) {
+                    for (Entity entity1 : entity.getPassengers()) {
+                        if (!entity1.isRemoved()) {
+                            entity1.stopRiding();
+                            entity1.startRiding(creeper, true);
+                        }
+                    }
+                }
+
+                if (creeper instanceof SneakerEntity sneaker) {
+                    if (random.nextInt(4) == 0) {
+                        sneaker.setCreeperType(1);
+                        List<SneakerEntity> list = level.getEntitiesOfClass(SneakerEntity.class, sneaker.getBoundingBox().inflate(30.0F), predicate -> {
+                            return predicate.getCreeperType() == 2 && predicate != sneaker;
+                        });
+                        if (list.isEmpty()) {
+                            if (random.nextInt(3) == 0) {
+                                sneaker.setCreeperType(2);
                             }
                         }
                     }
-
-                    if (creeper instanceof SneakerEntity sneaker) {
-                        if (random.nextInt(4) == 0) {
-                            sneaker.setCreeperType(1);
-                            List<SneakerEntity> list = level.getEntitiesOfClass(SneakerEntity.class, sneaker.getBoundingBox().inflate(30.0F), predicate -> {
-                                return predicate.getCreeperType() == 2 && predicate != sneaker;
-                            });
-                            if (list.isEmpty()) {
-                                if (random.nextInt(3) == 0) {
-                                    sneaker.setCreeperType(2);
-                                }
-                            }
-                        }
-                    }
-
-                    if (!level.isClientSide) {
-                        level.addFreshEntity(creeper);
-                    }
-                    entity.discard();
-
-                    creeper.playSound(SoundEvents.ZOMBIE_CONVERTED_TO_DROWNED, 3.0F, creeper.getVoicePitch());
                 }
+
+                if (!level.isClientSide) {
+                    level.addFreshEntity(creeper);
+                }
+                entity.discard();
+
+                creeper.playSound(SoundEvents.ZOMBIE_CONVERTED_TO_DROWNED, 3.0F, creeper.getVoicePitch());
             }
         }
     }
@@ -210,43 +206,41 @@ public class EntityUtil {
         Random random = new Random();
         if (!entity.isRemoved()) {
             if (!(entity instanceof IsOryctolinAligned)) {
-                CarrotMinionEntity creeper = null;
+                CarrotMinionEntity creeper;
 
-                creeper = ModEntityTypes.CarrotMinion.get().create(level);
+                creeper = new CarrotMinionEntity(ModEntityTypes.CarrotMinion.get(), level);
 
-                if (creeper != null) {
-                    creeper.copyPosition(entity);
-                    creeper.setNoAi(entity.isNoAi());
-                    if (entity.hasCustomName()) {
-                        creeper.setCustomName(entity.getCustomName());
-                        creeper.setCustomNameVisible(entity.isCustomNameVisible());
-                    }
+                creeper.copyPosition(entity);
+                creeper.setNoAi(entity.isNoAi());
+                if (entity.hasCustomName()) {
+                    creeper.setCustomName(entity.getCustomName());
+                    creeper.setCustomNameVisible(entity.isCustomNameVisible());
+                }
 
-                    if (killer.getTeam() != null) {
-                        level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
-                                level.getScoreboard().getPlayerTeam(killer.getTeam().getName()));
-                    }
+                if (killer.getTeam() != null) {
+                    level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                            level.getScoreboard().getPlayerTeam(killer.getTeam().getName()));
+                }
 
-                    if (entity.isPassenger() && entity.getVehicle() != null) {
-                        Entity vehicle = entity.getVehicle();
-                        entity.stopRiding();
-                        creeper.startRiding(vehicle, true);
-                    }
+                if (entity.isPassenger() && entity.getVehicle() != null) {
+                    Entity vehicle = entity.getVehicle();
+                    entity.stopRiding();
+                    creeper.startRiding(vehicle, true);
+                }
 
-                    if (!entity.getPassengers().isEmpty()) {
-                        for (Entity entity1 : entity.getPassengers()) {
-                            if (!entity1.isRemoved()) {
-                                entity1.stopRiding();
-                                entity1.startRiding(creeper, true);
-                            }
+                if (!entity.getPassengers().isEmpty()) {
+                    for (Entity entity1 : entity.getPassengers()) {
+                        if (!entity1.isRemoved()) {
+                            entity1.stopRiding();
+                            entity1.startRiding(creeper, true);
                         }
                     }
-
-                    if (!level.isClientSide) level.addFreshEntity(creeper);
-                    entity.discard();
-
-                    creeper.playSound(SoundEvents.ZOMBIE_INFECT, 3.0F, creeper.getVoicePitch());
                 }
+
+                if (!level.isClientSide) level.addFreshEntity(creeper);
+                entity.discard();
+
+                creeper.playSound(SoundEvents.ZOMBIE_INFECT, 3.0F, creeper.getVoicePitch());
             }
         }
     }

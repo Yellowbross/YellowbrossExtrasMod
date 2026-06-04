@@ -84,8 +84,7 @@ public class CrawlerEntity extends AbstractCreeperEntity implements CreeperInfec
             this.dead = true;
             if (this.getAbsorbedCreepers() < this.getMaxAbsorbs()) {
                 for (int i = 0; i < 3; ++i) {
-                    SneakerEntity creeper = ModEntityTypes.Sneaker.get().create(this.level);
-                    assert creeper != null;
+                    SneakerEntity creeper = new SneakerEntity(ModEntityTypes.Sneaker.get(), this.level);
                     creeper.copyPosition(this);
                     creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
                     creeper.setDeltaMovement(this.random.nextDouble() - 0.5D,
@@ -101,8 +100,7 @@ public class CrawlerEntity extends AbstractCreeperEntity implements CreeperInfec
                     this.level.addFreshEntity(creeper);
                 }
             } else {
-                FreakerEntity creeper = ModEntityTypes.Freaker.get().create(this.level);
-                assert creeper != null;
+                FreakerEntity creeper = new FreakerEntity(ModEntityTypes.Freaker.get(), this.level);
                 creeper.copyPosition(this);
                 if (this.getTeam() != null) {
                     level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),

@@ -77,8 +77,7 @@ public class FreakerEntity extends AbstractCreeperEntity implements CreeperInfec
             Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
             this.dead = true;
             for (int i = 0; i < 3; ++i) {
-                CrawlerEntity creeper = ModEntityTypes.Crawler.get().create(this.level);
-                assert creeper != null;
+                CrawlerEntity creeper = new CrawlerEntity(ModEntityTypes.Crawler.get(), this.level);
                 creeper.copyPosition(this);
                 creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
                 creeper.setDeltaMovement(this.random.nextDouble() - 0.5D,
