@@ -1,5 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.util;
 
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
@@ -271,27 +273,27 @@ public class EntityUtil {
         }
     }
 
-    public static void makeCircleParticles(Level level, Entity spawner, ParticleOptions particleType, int amount, double y, float velocity) {
+    // Google's Gemini helped me figure out how the math for rotating and propelling the circle would work
+    public static void makeCircleParticles(Level level, Vec3 spawnVec, ParticleOptions particleType, int amount, float velocityExpanding, Vec3 rotationVec, float velocityShoot) {
         final Random random = new Random();
-        if (!level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)level).players()) {
-                if (serverPlayer.distanceToSqr(spawner) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
+        float TAU = (float) (2 * StrictMath.PI);
 
-                    // code adapted from Mowzie's Mobs
-                    for (int i = 0; i < amount; i++) {
-                        float TAU = (float) (2 * StrictMath.PI);
+        Quaternion rotation = Quaternion.ONE.copy();
+        rotation.mul(Vector3f.YP.rotationDegrees((float) rotationVec.y));
+        rotation.mul(Vector3f.XP.rotationDegrees((float) rotationVec.x));
+        rotation.mul(Vector3f.ZP.rotationDegrees((float) rotationVec.z));
 
-                        float yaw = i * (TAU / amount);
-                        float vy = random.nextFloat() * 0.1F - 0.05f;
-                        float vx = velocity * Mth.cos(yaw);
-                        float vz = velocity * Mth.sin(yaw);
-                        packet.queueParticle(particleType, false, new Vec3(spawner.getX(), spawner.getY() + y, spawner.getZ()), new Vec3(vx, vy, vz));
-                    }
+        // code adapted from Mowzie's Mobs
+        for (int i = 0; i < amount; i++) {
+            float yaw = i * (TAU / amount);
 
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+            float vx = velocityExpanding * Mth.cos(yaw);
+            float vy = (random.nextFloat() * 0.1F - 0.05f) + velocityShoot;
+            float vz = velocityExpanding * Mth.sin(yaw);
+
+            Vector3f velocityVec = new Vector3f(vx, vy, vz);
+            velocityVec.transform(rotation);
+            makeAParticle(level, particleType, false, spawnVec, new Vec3(velocityVec.x(), velocityVec.y(), velocityVec.z()));
         }
     }
 
@@ -489,5 +491,19 @@ public class EntityUtil {
             return Math.max(entity.getArmorValue() * multiplier, 1.0f);
         }
         return 1.0f;
+    }
+
+    public static void makeAParticle(Level level, ParticleOptions particleType, boolean b, Vec3 spawnPosition, Vec3 motion) {
+        if (!level.isClientSide) {
+            for (ServerPlayer serverPlayer : ((ServerLevel)level).players()) {
+                if (serverPlayer.distanceToSqr(spawnPosition) < 4096.0D) {
+                    ParticlePacket packet = new ParticlePacket();
+
+                    packet.queueParticle(particleType, b, spawnPosition, motion);
+
+                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
+                }
+            }
+        }
     }
 }

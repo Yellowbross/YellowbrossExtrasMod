@@ -1,20 +1,17 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.projectile;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.AmoebicDevourerEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public class HyperSnowballEntity extends ThrowableItemProjectile {

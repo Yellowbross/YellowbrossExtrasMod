@@ -1,8 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.oryctolins;
 
-import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
-import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -20,7 +18,6 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;

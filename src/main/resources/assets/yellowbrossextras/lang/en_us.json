@@ -75,6 +75,8 @@
   "subtitles.entity.defender.creepergun_shoot": "Creeper Gun shoots",
   "subtitles.entity.defender.creepergun_hit": "Creeper Bullet hits",
   "subtitles.entity.defender.creeperbullet_land": "Creeper Bullet lands",
+  "subtitles.entity.defender.forcegun": "Force Gun blasts",
+  "subtitles.entity.defender.forcegun_start": "Defender deploys his Force Gun",
 
   "subtitles.entity.vilvgaver.attack": "Vilvgaver attacks",
   "subtitles.entity.vilvgaver.loop": "Vilvgaver screams",

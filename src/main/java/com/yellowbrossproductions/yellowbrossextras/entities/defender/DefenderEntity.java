@@ -9,8 +9,6 @@ import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase1.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase2.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.*;
-import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
-import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.util.DelayedActionHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
@@ -26,7 +24,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerBossEvent;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -59,7 +56,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -170,9 +166,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     public int throwTimes = 1;
     public boolean jumpAttacking = false;
     public float damageTaken = 0;
-    public double laserX;
-    public double laserY;
-    public double laserZ;
+    public Vec3 specialLookLocation = Vec3.ZERO;
     public boolean shouldContinueAttacking = false;
     public int meleeAttackType = 0;
     public LivingEntity clawsTarget = null;
@@ -198,6 +192,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(0, new ForceGunGoal(this));
         this.goalSelector.addGoal(0, new CreeperGunGoal(this));
         this.goalSelector.addGoal(0, new SentryGunsGoal(this));
         this.goalSelector.addGoal(0, new RatatatabowGoal(this));
@@ -326,7 +321,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                 }
             }
             CameraShakeEntity.cameraShake(this.level, position(), 20, 0.1f, 0, 15);
-            EntityUtil.makeCircleParticles(this.level, this, ParticleTypes.LARGE_SMOKE, 30, 0.4D, 1.0F);
+            EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4d, 0), ParticleTypes.LARGE_SMOKE, 30, 1.0F, Vec3.ZERO, 0.0F);
             this.setDiscardFriction(false);
         }
         return false;
@@ -549,7 +544,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                         this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.5F);
                         this.playSound(SoundEvents.GENERIC_EXPLODE, 3.0F, 0.7F);
                         CameraShakeEntity.cameraShake(this.level, position(), 50, 0.4f, 0, 15);
-                        EntityUtil.makeCircleParticles(this.level, this, ParticleTypes.POOF, 50, 0.3D, 1.0F);
+                        EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.3, 0), ParticleTypes.POOF, 50, 1.0F, Vec3.ZERO, 0.0F);
 
                         for (Entity entity : level.getEntities(this, getBoundingBox().inflate(15.0F))) {
                             if (EntityUtil.canHurtThisMob(entity, this) && entity instanceof LivingEntity && entity.isAlive()) {
@@ -604,7 +599,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                         this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.0F);
                         this.playSound(SoundEvents.GENERIC_EXPLODE, 3.0F, 0.7F);
                         CameraShakeEntity.cameraShake(this.level, position(), 30, 0.4f, 0, 15);
-                        EntityUtil.makeCircleParticles(this.level, this, ParticleTypes.POOF, 50, 0.3D, 1.0F);
+                        EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.3, 0), ParticleTypes.POOF, 50, 1.0F, Vec3.ZERO, 0.0F);
                         this.makeRockExplodeParticles();
 
                         if (!this.level.isClientSide) {
@@ -934,10 +929,12 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         }
     }
 
-    public void setLaserPosition(double x, double y, double z) {
-        this.laserX = x;
-        this.laserY = y;
-        this.laserZ = z;
+    public void setSpecialLookLocation(Vec3 vec3) {
+        this.specialLookLocation = vec3;
+    }
+
+    public void setSpecialLookLocation(double x, double y, double z) {
+        this.specialLookLocation = new Vec3(x, y, z);
     }
 
     public void performSpellCasting(boolean circleOrNot) {
@@ -1066,21 +1063,11 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         } while(blockpos.getY() >= Mth.floor(p_190876_5_) - 1);
 
         if (flag) {
-            if (!this.level.isClientSide) {
-                for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                    if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                        ParticlePacket packet = new ParticlePacket();
-
-                        for(int i = 0; i < 2; ++i) {
-                            double d0 = (-0.5 + this.random.nextGaussian()) / 4;
-                            double d1 = (-0.5 + this.random.nextGaussian()) / 4;
-                            double d2 = (-0.5 + this.random.nextGaussian()) / 4;
-                            packet.queueParticle(ParticleTypes.ELECTRIC_SPARK, false, new Vec3(p_190876_1_ + 0.5F, (double)blockpos.getY() + dthing, p_190876_3_ + 0.5F), new Vec3(d0, d1, d2));
-                        }
-
-                        PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                    }
-                }
+            for(int i = 0; i < 2; ++i) {
+                double d0 = (-0.5 + this.random.nextGaussian()) / 4;
+                double d1 = (-0.5 + this.random.nextGaussian()) / 4;
+                double d2 = (-0.5 + this.random.nextGaussian()) / 4;
+                EntityUtil.makeAParticle(this.level, ParticleTypes.ELECTRIC_SPARK, false, new Vec3(p_190876_1_ + 0.5F, (double)blockpos.getY() + dthing, p_190876_3_ + 0.5F), new Vec3(d0, d1, d2));
             }
         }
 
@@ -1309,82 +1296,52 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     }
 
     public void makePhaseEndParticles() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    for(int i = 0; i < 10; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian()) / 4;
-                        double d1 = (-0.5 + this.random.nextGaussian()) / 4;
-                        double d2 = (-0.5 + this.random.nextGaussian()) / 4;
-                        packet.queueParticle(ParticleTypes.ANGRY_VILLAGER, false, new Vec3(
-                                this.getRandomX(1.0D) + ((-0.5D + this.random.nextDouble()) * 2.5D),
-                                this.getRandomY() + ((-0.5D + this.random.nextDouble()) * 1.5D),
-                                this.getRandomZ(1.0D) + ((-0.5D + this.random.nextDouble()) * 2.5D)), new Vec3(d0, d1, d2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        for(int i = 0; i < 10; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian()) / 4;
+            double d1 = (-0.5 + this.random.nextGaussian()) / 4;
+            double d2 = (-0.5 + this.random.nextGaussian()) / 4;
+            EntityUtil.makeAParticle(this.level, ParticleTypes.ANGRY_VILLAGER, false, new Vec3(
+                    this.getRandomX(1.0D) + ((-0.5D + this.random.nextDouble()) * 2.5D),
+                    this.getRandomY() + ((-0.5D + this.random.nextDouble()) * 1.5D),
+                    this.getRandomZ(1.0D) + ((-0.5D + this.random.nextDouble()) * 2.5D)), new Vec3(d0, d1, d2));
         }
     }
 
     public void makeExcaliburLandParticles() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    for(int i = 0; i < 5; ++i) {
-                        packet.queueParticle(ParticleTypes.TOTEM_OF_UNDYING, false, new Vec3(
-                                this.getRandomX(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D),
-                                this.getRandomY() + ((-0.5D + this.random.nextDouble()) * 1.5D) + 2.4D,
-                                this.getRandomZ(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D)), new Vec3(0.0D, 2.0D, 0.0D));
-                        packet.queueParticle(ParticleTypes.CRIT, false, new Vec3(
-                                this.getRandomX(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D),
-                                this.getRandomY() + ((-0.5D + this.random.nextDouble()) * 1.5D) + 2.4D,
-                                this.getRandomZ(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D)), new Vec3(0.0D, 2.0D, 0.0D));
-                        packet.queueParticle(ParticleTypes.ELECTRIC_SPARK, false, new Vec3(
-                                this.getRandomX(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D),
-                                this.getRandomY() + ((-0.5D + this.random.nextDouble()) * 1.5D) + 2.4D,
-                                this.getRandomZ(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D)), new Vec3(0.0D, 2.0D, 0.0D));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        for(int i = 0; i < 5; ++i) {
+            EntityUtil.makeAParticle(this.level, ParticleTypes.TOTEM_OF_UNDYING, false, new Vec3(
+                    this.getRandomX(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D),
+                    this.getRandomY() + ((-0.5D + this.random.nextDouble()) * 1.5D) + 2.4D,
+                    this.getRandomZ(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D)), new Vec3(0.0D, 2.0D, 0.0D));
+            EntityUtil.makeAParticle(this.level, ParticleTypes.CRIT, false, new Vec3(
+                    this.getRandomX(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D),
+                    this.getRandomY() + ((-0.5D + this.random.nextDouble()) * 1.5D) + 2.4D,
+                    this.getRandomZ(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D)), new Vec3(0.0D, 2.0D, 0.0D));
+            EntityUtil.makeAParticle(this.level, ParticleTypes.ELECTRIC_SPARK, false, new Vec3(
+                    this.getRandomX(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D),
+                    this.getRandomY() + ((-0.5D + this.random.nextDouble()) * 1.5D) + 2.4D,
+                    this.getRandomZ(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D)), new Vec3(0.0D, 2.0D, 0.0D));
         }
     }
 
     public void makeRockExplodeParticles() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    for(int i = 0; i < 250; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian()) / 2;
-                        double d1 = (-0.5 + this.random.nextGaussian()) / 2;
-                        double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-                        packet.queueParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-                    }
-                    for(int i = 0; i < 200; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian()) / 2;
-                        double d1 = (-0.5 + this.random.nextGaussian()) / 2;
-                        double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-                        packet.queueParticle(ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-                    }
-                    for(int i = 0; i < 150; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian()) / 2;
-                        double d1 = (-0.5 + this.random.nextGaussian()) / 2;
-                        double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-                        packet.queueParticle(ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        for(int i = 0; i < 250; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian()) / 2;
+            double d1 = (-0.5 + this.random.nextGaussian()) / 2;
+            double d2 = (-0.5 + this.random.nextGaussian()) / 2;
+            EntityUtil.makeAParticle(this.level, ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+        }
+        for(int i = 0; i < 200; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian()) / 2;
+            double d1 = (-0.5 + this.random.nextGaussian()) / 2;
+            double d2 = (-0.5 + this.random.nextGaussian()) / 2;
+            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+        }
+        for(int i = 0; i < 150; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian()) / 2;
+            double d1 = (-0.5 + this.random.nextGaussian()) / 2;
+            double d2 = (-0.5 + this.random.nextGaussian()) / 2;
+            EntityUtil.makeAParticle(this.level, ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
     }
 
@@ -1414,104 +1371,54 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     }
 
     public void makeExplodeParticles() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    for(int i = 0; i < 3; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (-0.5 + this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.EXPLOSION_EMITTER, false, new Vec3(this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        for(int i = 0; i < 3; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian());
+            double d1 = (-0.5 + this.random.nextGaussian());
+            double d2 = (-0.5 + this.random.nextGaussian());
+            EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION_EMITTER, false, new Vec3(this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
         }
     }
 
     public void makeSpikeParticles() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    EntityUtil.makeCircleParticles(this.level, this, ParticleTypes.LARGE_SMOKE, 50, 0.4D, 1.0F);
-                    for(int i = 0; i < 100; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(d0, d1, d2));
-                    }
-                    for(int i = 0; i < 100; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(d0, d1, d2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4, 0), ParticleTypes.LARGE_SMOKE, 50, 1.0F, Vec3.ZERO, 0.0F);
+        for(int i = 0; i < 100; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian());
+            double d1 = (this.random.nextGaussian());
+            double d2 = (-0.5 + this.random.nextGaussian());
+            EntityUtil.makeAParticle(this.level, ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(d0, d1, d2));
+        }
+        for(int i = 0; i < 100; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian());
+            double d1 = (this.random.nextGaussian());
+            double d2 = (-0.5 + this.random.nextGaussian());
+            EntityUtil.makeAParticle(this.level, ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(d0, d1, d2));
         }
     }
 
     public void makeSawParticles1() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    for(int i = 0; i < 3; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (-0.5 + this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.CRIT, false, new Vec3(this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        for(int i = 0; i < 3; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian());
+            double d1 = (-0.5 + this.random.nextGaussian());
+            double d2 = (-0.5 + this.random.nextGaussian());
+            EntityUtil.makeAParticle(this.level, ParticleTypes.CRIT, false, new Vec3(this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
         }
     }
 
     public void makeSawParticles2(Entity caught) {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    for(int i = 0; i < 12; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (-0.5 + this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.POOF, false, new Vec3(caught.getRandomX(0.5D), caught.getRandomY(), caught.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        for(int i = 0; i < 12; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian());
+            double d1 = (-0.5 + this.random.nextGaussian());
+            double d2 = (-0.5 + this.random.nextGaussian());
+            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(caught.getRandomX(0.5D), caught.getRandomY(), caught.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
         }
     }
 
     public void makeSpinParticles() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    for(int i = 0; i < 20; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (-0.5 + this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.POOF, false, new Vec3(this.getRandomX(0.5D), this.getY() + 1.0D, this.getRandomZ(0.5D)), new Vec3(d0, 0.0D, d2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        for(int i = 0; i < 20; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian());
+            double d1 = (-0.5 + this.random.nextGaussian());
+            double d2 = (-0.5 + this.random.nextGaussian());
+            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(0.5D), this.getY() + 1.0D, this.getRandomZ(0.5D)), new Vec3(d0, 0.0D, d2));
         }
     }
 

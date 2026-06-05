@@ -3,6 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phas
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 
 public class ChainsawGoal extends CustomAttackGoal {
 
@@ -33,13 +34,13 @@ public class ChainsawGoal extends CustomAttackGoal {
     public void tick() {
         getDefender().getNavigation().stop();
 
-        if (getDefender().laserX != 0 || getDefender().laserY != 0 || getDefender().laserZ != 0) {
+        if (getDefender().specialLookLocation != Vec3.ZERO) {
             if (getDefender().getTarget() instanceof Player) {
                 if (getDefender().attackTicks > 20) {
-                    getDefender().getLookControl().setLookAt(getDefender().laserX, getDefender().laserY, getDefender().laserZ, 0.6F, 100.0F);
+                    getDefender().getLookControl().setLookAt(getDefender().specialLookLocation.x, getDefender().specialLookLocation.y, getDefender().specialLookLocation.z, 0.6F, 100.0F);
                 }
             } else {
-                getDefender().getLookControl().setLookAt(getDefender().laserX, getDefender().laserY, getDefender().laserZ, 1.5F, 100.0F);
+                getDefender().getLookControl().setLookAt(getDefender().specialLookLocation.x, getDefender().specialLookLocation.y, getDefender().specialLookLocation.z, 10.0F, 100.0F);
             }
         }
 
@@ -50,6 +51,5 @@ public class ChainsawGoal extends CustomAttackGoal {
     public void stop() {
         super.stop();
         getDefender().cooldown_chainsaw = getTimeInSeconds(10);
-        getDefender().setLaserPosition(0,0,0);
     }
 }

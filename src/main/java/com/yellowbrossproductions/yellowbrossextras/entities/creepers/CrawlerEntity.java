@@ -3,12 +3,9 @@ package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
-import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
-import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
+import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,7 +21,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -120,33 +116,23 @@ public class CrawlerEntity extends AbstractCreeperEntity implements CreeperInfec
     }
 
     public void makeExplodeParticles() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    for(int i = 0; i < 250; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian()) / 2;
-                        double d1 = (-0.5 + this.random.nextGaussian()) / 2;
-                        double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-                        packet.queueParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-                    }
-                    for(int i = 0; i < 200; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian()) / 2;
-                        double d1 = (-0.5 + this.random.nextGaussian()) / 2;
-                        double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-                        packet.queueParticle(ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-                    }
-                    for(int i = 0; i < 150; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian()) / 2;
-                        double d1 = (-0.5 + this.random.nextGaussian()) / 2;
-                        double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-                        packet.queueParticle(ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        for(int i = 0; i < 250; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian()) / 2;
+            double d1 = (-0.5 + this.random.nextGaussian()) / 2;
+            double d2 = (-0.5 + this.random.nextGaussian()) / 2;
+            EntityUtil.makeAParticle(this.level, ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+        }
+        for(int i = 0; i < 200; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian()) / 2;
+            double d1 = (-0.5 + this.random.nextGaussian()) / 2;
+            double d2 = (-0.5 + this.random.nextGaussian()) / 2;
+            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+        }
+        for(int i = 0; i < 150; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian()) / 2;
+            double d1 = (-0.5 + this.random.nextGaussian()) / 2;
+            double d2 = (-0.5 + this.random.nextGaussian()) / 2;
+            EntityUtil.makeAParticle(this.level, ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
     }
 

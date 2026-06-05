@@ -289,7 +289,7 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
         PartDefinition forcegun = right_hand.addOrReplaceChild("forcegun", CubeListBuilder.create().texOffs(0, 104).addBox(-3.0F, -9.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
                 .texOffs(32, 120).addBox(-1.0F, -11.0F, -8.0F, 0.0F, 14.0F, 12.0F, new CubeDeformation(0.0F))
                 .texOffs(0, 120).addBox(-3.0F, -9.0F, -8.0F, 4.0F, 6.0F, 6.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 132).addBox(-6.0F, -11.0F, -14.0F, 10.0F, 10.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(1.0F, 2.0F, -4.0F));
+                .texOffs(0, 132).addBox(-6.0F, -11.0F, -14.0F, 10.0F, 10.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(1.0F, 2.0F, -3.5F));
 
         PartDefinition handle = forcegun.addOrReplaceChild("handle", CubeListBuilder.create().texOffs(18, 86).addBox(-1.0F, 0.0F, -0.5F, 2.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.0F, -4.0F, -5.5F, 0.7854F, 0.0F, 0.0F));
 

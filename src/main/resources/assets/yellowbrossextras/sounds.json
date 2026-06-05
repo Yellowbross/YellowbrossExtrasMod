@@ -257,6 +257,20 @@
     ]
   },
 
+  "entity.defender.forcegun": {
+    "subtitle": "subtitles.entity.defender.forcegun",
+    "sounds": [
+      "yellowbrossextras:defender/forcegun"
+    ]
+  },
+
+  "entity.defender.forcegun_start": {
+    "subtitle": "subtitles.entity.defender.forcegun_start",
+    "sounds": [
+      "yellowbrossextras:defender/forcegun_start"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [

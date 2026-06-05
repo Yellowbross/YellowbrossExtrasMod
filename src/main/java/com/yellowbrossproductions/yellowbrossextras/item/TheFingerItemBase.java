@@ -79,6 +79,7 @@ public class TheFingerItemBase extends Item {
             if (hitVec.length() > size) continue;
             if (viewVec.dot(hitVec) > -0.5D) {
                 attacker.playSound(YellowbrossExtrasSoundEvents.YEET.get(), 2.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                hit.hurtMarked = true;
                 hit.setDeltaMovement(hit.position().add(0, 0.5, 0).subtract(attacker.position()).normalize().scale(6.0));
                 if (hit.isOnGround()) hit.setDeltaMovement(hit.getDeltaMovement().x, Math.abs(hit.getDeltaMovement().y), hit.getDeltaMovement().z);
             }

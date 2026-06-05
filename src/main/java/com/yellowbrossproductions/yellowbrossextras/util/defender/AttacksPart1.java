@@ -7,7 +7,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunE
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.BoomerangEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.ChainsawEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderAxeEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ShurikenEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.ShurikenEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EffectRegisterer;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
@@ -276,7 +276,7 @@ public class AttacksPart1 {
             }
             // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (defender.attackType == defender.attack_chainsaw) {
-                defender.setLaserPosition(target.getX(), target.getY() + (target.getBbHeight() / 2), target.getZ());
+                defender.setSpecialLookLocation(target.getX(), target.getY() + (target.getBbHeight() / 2), target.getZ());
                 if (ticks == 3) {
                     defender.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, 0.5F);
                 }
@@ -310,7 +310,7 @@ public class AttacksPart1 {
                         beam.setYaw((float) (yaw * Math.PI / 180));
                         beam.setPitch((float) (pitch * Math.PI / 180));
                     }
-                    defender.lerpChainsawLookX(new Vec3(defender.laserX, defender.laserY, defender.laserZ), 100.0F, 4);
+                    defender.lerpChainsawLookX(defender.specialLookLocation, 100.0F, 4);
 
                     if (defender.lerpChainsawSteps > 0) {
                         defender.setChainsawLookX(defender.getChainsawLookX() + (float)(defender.lerpChainsawX - (double)defender.getChainsawLookX()) / (float)defender.lerpChainsawSteps);
@@ -428,7 +428,7 @@ public class AttacksPart1 {
                         defender.setMaxWobble(15);
                     }
                     defender.setCustomRender(1);
-                    EntityUtil.makeCircleParticles(defender.level, defender, ParticleTypes.POOF, 10, 0.3, 1.0f);
+                    EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 0.3, 0), ParticleTypes.POOF, 10, 1.0f, Vec3.ZERO, 0.0F);
                 }
                 if (ticks > 30) {
                     if (defender.isOnGround() && ticks2 == 0) {
@@ -528,6 +528,31 @@ public class AttacksPart1 {
                                 CreeperBulletEntity chosenOne = bullets.get(new Random().nextInt(bullets.size()));
                                 chosenOne.beTheChosenOne();
                             }
+                        }
+                    }
+                }
+            }
+            // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            if (defender.attackType == defender.attack_forcegun) {
+                if (ticks == 10) {
+                    defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_FORCEGUN.get(), 3.0F, 1.0F);
+                    EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, 35, 1.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 0.25F);
+                    EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, 20, 0.25f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 1.0F);
+                    EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, 15, 0.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 2.0F);
+                    EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, 10, 0.75f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 5.0F);
+                    CameraShakeEntity.cameraShake(defender.level, defender.position(), 30, 0.3f, 0, 20);
+
+                    float size = 8.0f;
+                    List<Entity> entities = EntityUtil.getEntitiesFromAABB(defender.level, size, defender, predicate -> (predicate != defender));
+                    Vec3 viewVec = defender.getLookAngle();
+                    for (Entity hit : entities) {
+                        Vec3 hitVec = hit.position().subtract(defender.position()).normalize();
+                        if (hitVec.length() > size) continue;
+                        if (viewVec.dot(hitVec) > 0.5D) {
+                            hit.hurtMarked = true;
+                            if (hit instanceof LivingEntity living) living.setLastHurtByMob(defender);
+                            hit.setDeltaMovement(hit.position().add(0, 0.5, 0).subtract(defender.position()).normalize().scale(4.0));
+                            if (hit.isOnGround()) hit.setDeltaMovement(hit.getDeltaMovement().x, Math.abs(hit.getDeltaMovement().y), hit.getDeltaMovement().z);
                         }
                     }
                 }

@@ -7,6 +7,7 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DefenderModel;
+import com.yellowbrossproductions.yellowbrossextras.client.render.layer.DefenderGlowLayer;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -35,6 +36,7 @@ public class DefenderRenderer extends MobRenderer<DefenderEntity, DefenderModel<
 
     public DefenderRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new DefenderModel<>(renderManagerIn.bakeLayer(DefenderModel.LAYER_LOCATION)), 0.6F);
+        this.addLayer(new DefenderGlowLayer<>(this));
     }
 
     @Override

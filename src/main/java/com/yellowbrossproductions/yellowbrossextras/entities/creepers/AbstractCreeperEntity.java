@@ -2,15 +2,13 @@ package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
-import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
-import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
+import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -20,7 +18,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -30,7 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -91,40 +87,20 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
     }
 
     public void makeHealParticles() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    for(int i = 0; i < 6; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (-0.5 + this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.HEART, false, new Vec3(this.getRandomX(0.5D), this.getY() + 1.0D, this.getRandomZ(0.5D)), new Vec3(d0, 0.0D, d2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        for(int i = 0; i < 6; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian());
+            double d1 = (-0.5 + this.random.nextGaussian());
+            double d2 = (-0.5 + this.random.nextGaussian());
+            EntityUtil.makeAParticle(this.level, ParticleTypes.HEART, false, new Vec3(this.getRandomX(0.5D), this.getY() + 1.0D, this.getRandomZ(0.5D)), new Vec3(d0, 0.0D, d2));
         }
     }
 
     public void makeMergeParticles() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    for(int i = 0; i < 20; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (-0.5 + this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.HAPPY_VILLAGER, false, new Vec3(this.getRandomX(1.5D), this.getRandomY(), this.getRandomZ(1.5D)), new Vec3(d0, 0.0D, d2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        for(int i = 0; i < 20; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian());
+            double d1 = (-0.5 + this.random.nextGaussian());
+            double d2 = (-0.5 + this.random.nextGaussian());
+            EntityUtil.makeAParticle(this.level, ParticleTypes.HAPPY_VILLAGER, false, new Vec3(this.getRandomX(1.5D), this.getRandomY(), this.getRandomZ(1.5D)), new Vec3(d0, 0.0D, d2));
         }
     }
 

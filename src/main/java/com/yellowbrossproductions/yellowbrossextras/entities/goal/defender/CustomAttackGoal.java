@@ -3,6 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -44,7 +45,7 @@ public class CustomAttackGoal extends Goal {
 
         LivingEntity entity = this.defender.tryToFindTarget();
         if (entity != null) {
-            this.defender.getLookControl().setLookAt(entity, 100.0F, 100.0F);
+            this.defender.getLookControl().setLookAt(entity, getMaxTurnSpeed(), 100.0F);
         }
 
         this.defender.getNavigation().stop();
@@ -67,9 +68,14 @@ public class CustomAttackGoal extends Goal {
         this.defender.attackTicks2 = 0;
         this.defender.setCustomRender(0);
         this.defender.setFreakOutInModel(false);
+        this.defender.setSpecialLookLocation(Vec3.ZERO);
     }
 
     protected int getTimeInSeconds(float timer) {
         return (int) timer * 20;
+    }
+
+    protected float getMaxTurnSpeed() {
+        return 100.0F;
     }
 }

@@ -5,8 +5,6 @@ import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
-import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
-import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.world.CustomExplosion;
@@ -36,7 +34,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
@@ -221,21 +218,11 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
     }
 
     public void makePopParticles() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    EntityUtil.makeCircleParticles(this.level, this, ParticleTypes.POOF, 30, 0.4D, 1.0F);
-                    for(int i = 0; i < 30; ++i) {
-                        packet.queueParticle(ParticleTypes.POOF, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(0, this.random.nextGaussian(), 0));
-                    }
-                    packet.queueParticle(ParticleTypes.EXPLOSION, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(0, 0, 0));
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4, 0), ParticleTypes.POOF, 30, 1.0F, Vec3.ZERO, 0.0F);
+        for(int i = 0; i < 30; ++i) {
+            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(0, this.random.nextGaussian(), 0));
         }
+        EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(0, 0, 0));
     }
 
     public int getExplodeTimer() {

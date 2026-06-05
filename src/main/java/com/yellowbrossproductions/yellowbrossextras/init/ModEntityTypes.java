@@ -7,6 +7,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderArrowEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderAxeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.ShurikenEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.*;
