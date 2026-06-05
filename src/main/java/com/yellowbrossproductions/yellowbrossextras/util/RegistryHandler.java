@@ -5,10 +5,7 @@ import com.yellowbrossproductions.yellowbrossextras.block.FrozenLavaBlock;
 import com.yellowbrossproductions.yellowbrossextras.block.PvEBlock;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
-import com.yellowbrossproductions.yellowbrossextras.item.ItemBase;
-import com.yellowbrossproductions.yellowbrossextras.item.MobRemoverItemBase;
-import com.yellowbrossproductions.yellowbrossextras.item.PvEBlockItem;
-import com.yellowbrossproductions.yellowbrossextras.item.TheFingerItemBase;
+import com.yellowbrossproductions.yellowbrossextras.item.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -49,6 +46,7 @@ public class RegistryHandler {
 
     public static final RegistryObject<Item> AMOEBIC_DEVOURER_SPAWN_EGG = ITEMS.register("amoebic_devourer_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.AmoebicDevourer, 6385441, 10266217, (new Item.Properties()).tab(YellowbrossExtras.YELLOWBROSSEXTRAS_GROUP)));
     public static final RegistryObject<Item> HYPER_SNOW_GOLEM_SPAWN_EGG = ITEMS.register("hyper_snow_golem_spawn_egg", () -> new ForgeSpawnEggItem(ModEntityTypes.HyperSnowGolem, 16777215, 16738816, (new Item.Properties()).tab(YellowbrossExtras.YELLOWBROSSEXTRAS_GROUP)));
+    public static final RegistryObject<Item> AIMBOT_SPAWN_EGG = ITEMS.register("aimbot_spawn_egg", () -> new DescriptionSpawnEggItemBase(ModEntityTypes.Aimbot, 12698049, 0xFFF05A, (new Item.Properties()).tab(YellowbrossExtras.YELLOWBROSSEXTRAS_GROUP)));
 
     // Others
     public static final RegistryObject<Item> ICON = ITEMS.register("icon", ItemBase::new);

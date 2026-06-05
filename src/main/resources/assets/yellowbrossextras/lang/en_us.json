@@ -14,6 +14,7 @@
 
   "item.yellowbrossextras.amoebic_devourer_spawn_egg": "Amoebic Devourer Spawn Egg",
   "item.yellowbrossextras.hyper_snow_golem_spawn_egg": "Hyper Snow Golem Spawn Egg",
+  "item.yellowbrossextras.aimbot_spawn_egg": "Aimbot Spawn Egg",
 
   "item.yellowbrossextras.mob_remover": "Mob Remover",
   "item.yellowbrossextras.the_finger": "The F I N G E R",
@@ -22,6 +23,8 @@
 
   "tooltip.yellowbrossextras.mob_remover": "§6Click on a YExtras mob to remove it",
   "tooltip.yellowbrossextras.the_finger": "§6YEET EM",
+
+  "tooltip.yellowbrossextras.aimbot_spawn_egg": "§6(u might wanna lower ur volume before spawning this)",
 
   "entity.yellowbrossextras.defender": "Defender",
   "entity.yellowbrossextras.sentry_gun": "Sentry Gun",
@@ -40,6 +43,7 @@
 
   "entity.yellowbrossextras.amoebic_devourer": "Amoebic Devourer",
   "entity.yellowbrossextras.hyper_snow_golem": "Hyper Snow Golem",
+  "entity.yellowbrossextras.aimbot": "Aimbot",
 
   "subtitles.entity.defender.hurt": "Defender hurts",
   "subtitles.entity.defender.step": "Defender steps",
@@ -96,6 +100,8 @@
 
   "subtitles.huge_explosion": "Huge explosion",
   "subtitles.yeet": "YEET",
+  "subtitles.entity.aimbot.shoot": "Aimbot ruins the game",
+  "subtitles.entity.aimbot.banned": "Justice is served",
 
   "gamerule.vilvgaverChallenge": "The Vilvgaver Challenge",
   "gamerule.vilvgaverChallenge.description": "If this gamerule is enabled, Vilvgavers will automatically spawn in to relentlessly chase the player. The idea is to beat the game whilst being on an endless, frantic run for survival.",
@@ -111,9 +117,21 @@
   "itemGroup.yellowbrossextrastab": "Yellowbross's Extras",
 
   "yellowbrossextras.defenderLeaveGame": "%s left the game",
+  "yellowbrossextras.aimbotBanned1": "%s found out it's not just chat you can get reported for",
+  "yellowbrossextras.aimbotBanned2": "%s went on VACation",
+  "yellowbrossextras.aimbotBanned3": "%s shared a nice cup of tea with the firing squad",
+  "yellowbrossextras.aimbotBanned4": "%s had a change of heart and decided to get a life",
+  "yellowbrossextras.aimbotBanned5": "%s was banished. To nowhere in particular, just banished.",
+  "yellowbrossextras.aimbotBanned6": "%s compared a certain streamer to a 1x1 brick piece",
+  "yellowbrossextras.aimbotBanned7": "%s was caught retweeting Freakager's memes on Twittager and was cancelled",
+  "yellowbrossextras.aimbotBanned8": "%s was relaxed and handled by the admins",
+  "yellowbrossextras.aimbotBanned9": "%s was sent to the shadow realm",
+  "yellowbrossextras.aimbotBanned10": "%s got carpal tunnel and was abducted into the hospital",
+  "yellowbrossextras.aimbotBanned11": "%s got socked so hard they fell into the Backrooms",
 
   "effect.yellowbrossextras.knocked_out": "Knocked Out",
   "effect.yellowbrossextras.hunted": "Hunted",
+  "effect.yellowbrossextras.super_duper_poison": "Super Duper Poison™",
 
   "event.yellowbrossextras.bunny_blitz": "Bunny Blitz",
   "event.yellowbrossextras.bunny_blitz.victory": "Victory",

@@ -107,6 +107,7 @@ public class YellowbrossExtras
         SpawnPlacements.register(ModEntityTypes.AmoebicDevourer.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
         SpawnPlacements.register(ModEntityTypes.HyperSnowGolem.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, PathfinderMob::checkMobSpawnRules);
         SpawnPlacements.register(ModEntityTypes.SkeletonSnap.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
+        SpawnPlacements.register(ModEntityTypes.Aimbot.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
         SpawnPlacements.register(ModEntityTypes.StickFigure.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, PathfinderMob::checkMobSpawnRules);
 
         PacketHandler.init();

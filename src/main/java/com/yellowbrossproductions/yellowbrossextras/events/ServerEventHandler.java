@@ -2,6 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.events;
 
 import com.google.common.collect.Sets;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
+import com.yellowbrossproductions.yellowbrossextras.entities.AimbotEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperInfection;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.AbstractCreeperEntity;
@@ -69,6 +70,8 @@ public class ServerEventHandler {
                 if (entity instanceof Wolf) {
                     ((Mob) entity).targetSelector.addGoal(5, new NonTameRandomTargetGoal<>((TamableAnimal) entity, AbstractOryctolin.class, false, (Predicate<LivingEntity>)null));
                 }
+
+                ((Mob) entity).targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(((Mob) entity), AimbotEntity.class, true));
             }
         }
     }

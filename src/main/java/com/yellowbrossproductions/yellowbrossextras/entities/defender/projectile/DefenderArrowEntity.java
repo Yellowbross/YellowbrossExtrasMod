@@ -1,5 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile;
 
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.IsDefenderAligned;
 import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
@@ -7,6 +8,9 @@ import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -28,6 +32,8 @@ import net.minecraftforge.network.PacketDistributor;
 import java.util.List;
 
 public class DefenderArrowEntity extends AbstractArrow {
+    private static final EntityDataAccessor<Integer> ARROW_TYPE = SynchedEntityData.defineId(DefenderArrowEntity.class, EntityDataSerializers.INT);
+
     public DefenderArrowEntity(EntityType<? extends AbstractArrow> p_36858_, Level p_36859_) {
         super(p_36858_, p_36859_);
     }
@@ -40,6 +46,20 @@ public class DefenderArrowEntity extends AbstractArrow {
     public DefenderArrowEntity(Level p_36866_, LivingEntity p_36867_) {
         super(ModEntityTypes.DefenderArrow.get(), p_36867_, p_36866_);
         setOwner(p_36867_);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ARROW_TYPE, 0);
+    }
+
+    public int getArrowType() {
+        return this.entityData.get(ARROW_TYPE);
+    }
+
+    public void setArrowType(int input) {
+        this.entityData.set(ARROW_TYPE, input);
     }
 
     @Override
@@ -66,8 +86,16 @@ public class DefenderArrowEntity extends AbstractArrow {
     protected void onHitEntity(EntityHitResult hitRes) {
         this.setPierceLevel((byte) (this.getPierceLevel() + 2));
         super.onHitEntity(hitRes);
-        this.explode(5.0F);
-        if (hitRes.getEntity().invulnerableTime < 1) this.playSound(SoundEvents.GENERIC_EXPLODE, 1.5F, 0.6F);
+        switch (this.getArrowType()) {
+            case 1 : {
+
+            }
+            default : {
+                this.explode(5.0F);
+                if (hitRes.getEntity().invulnerableTime < 1) this.playSound(SoundEvents.GENERIC_EXPLODE, 1.5F, 0.6F);
+                break;
+            }
+        }
     }
 
     private void explode(double size) {
@@ -89,33 +117,23 @@ public class DefenderArrowEntity extends AbstractArrow {
     }
 
     public void makeExplodeParticles() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    for(int i = 0; i < 3; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (-0.5 + this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-                    }
-                    for(int i = 0; i < 3; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (-0.5 + this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-                    }
-                    for(int i = 0; i < 1; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (-0.5 + this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.EXPLOSION_EMITTER, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        for(int i = 0; i < 3; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian());
+            double d1 = (-0.5 + this.random.nextGaussian());
+            double d2 = (-0.5 + this.random.nextGaussian());
+            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+        }
+        for(int i = 0; i < 3; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian());
+            double d1 = (-0.5 + this.random.nextGaussian());
+            double d2 = (-0.5 + this.random.nextGaussian());
+            EntityUtil.makeAParticle(this.level, ParticleTypes.SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+        }
+        for(int i = 0; i < 1; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian());
+            double d1 = (-0.5 + this.random.nextGaussian());
+            double d2 = (-0.5 + this.random.nextGaussian());
+            EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION_EMITTER, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
     }
 }

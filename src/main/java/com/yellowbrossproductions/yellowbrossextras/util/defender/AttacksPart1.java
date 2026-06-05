@@ -538,8 +538,8 @@ public class AttacksPart1 {
                     defender.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_FORCEGUN.get(), 3.0F, 1.0F);
                     EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, 35, 1.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 0.25F);
                     EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, 20, 0.25f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 1.0F);
-                    EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, 15, 0.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 2.0F);
-                    EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, 10, 0.75f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 5.0F);
+                    EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, 30, 0.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 2.0F);
+                    EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, 40, 0.75f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 5.0F);
                     CameraShakeEntity.cameraShake(defender.level, defender.position(), 30, 0.3f, 0, 20);
 
                     float size = 8.0f;

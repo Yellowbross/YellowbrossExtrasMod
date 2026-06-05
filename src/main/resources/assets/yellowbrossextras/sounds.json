@@ -405,6 +405,20 @@
     ]
   },
 
+  "entity.aimbot.shoot": {
+    "subtitle": "subtitles.entity.aimbot.shoot",
+    "sounds": [
+      "yellowbrossextras:aimbot_shoot"
+    ]
+  },
+
+  "entity.aimbot.banned": {
+    "subtitle": "subtitles.entity.aimbot.banned",
+    "sounds": [
+      "minecraft:random/pop"
+    ]
+  },
+
   "gamemode_fun.ctf.friendly_take": {
     "sounds": [
       "yellowbrossextras:gamemode_fun/ctf/friendly_take"

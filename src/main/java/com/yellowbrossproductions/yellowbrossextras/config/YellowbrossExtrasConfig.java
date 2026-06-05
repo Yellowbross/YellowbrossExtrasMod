@@ -42,6 +42,8 @@ public class YellowbrossExtrasConfig {
     public static ForgeConfigSpec.BooleanValue oryctolin_victoryDance;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> bunnyBlitz_raiders;
 
+    public static ForgeConfigSpec.IntValue aimbot_randomBanChance;
+
     public static ForgeConfigSpec.DoubleValue pveBlocks_breakSpeed;
     public static ForgeConfigSpec.IntValue pveBlocks_decayRadius;
 
@@ -305,6 +307,13 @@ public class YellowbrossExtrasConfig {
         common.pop();
 
         common.push("Miscellaneous");
+
+        aimbot_randomBanChance = common
+                .comment(" ")
+                .comment("The random chance that an Aimbot will be punished for its sins.")
+                .comment("The more mobs an Aimbot kills, the higher its 'karma' raises and thus the more likely it will be banned.")
+                .comment("If you don't want an Aimbot being banned, just /summon it with {Karma:-1}.")
+                .defineInRange("aimbot_randomBanChance", 5000, 1, Integer.MAX_VALUE);
 
         pveBlocks_breakSpeed = common
                 .comment(" ")
