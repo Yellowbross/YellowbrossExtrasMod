@@ -148,7 +148,7 @@ public class AimbotEntity extends YExtrasMob implements Enemy {
         if (this.getKarma() > 0 && this.random.nextInt(Math.max(YellowbrossExtrasConfig.aimbot_randomBanChance.get() - this.getKarma(), 1)) == 0 && !this.level.isClientSide) {
             this.stopShootingSound(this.level);
             this.playSound(YellowbrossExtrasSoundEvents.AIMBOT_BANNED.get(), 10.0F, 1.6F);
-            EntityUtil.broadcastMessage(this.level, Component.translatable("yellowbrossextras.aimbotBanned" + (this.random.nextInt(7) + 1), this.getDisplayName()).withStyle(ChatFormatting.YELLOW));
+            EntityUtil.broadcastMessage(this.level, Component.translatable("yellowbrossextras.aimbotBanned" + (this.random.nextInt(11) + 1), this.getDisplayName()).withStyle(ChatFormatting.YELLOW));
             this.dead = true;
             this.discard();
         }
