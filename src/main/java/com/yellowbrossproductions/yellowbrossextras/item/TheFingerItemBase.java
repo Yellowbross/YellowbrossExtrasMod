@@ -1,12 +1,10 @@
 package com.yellowbrossproductions.yellowbrossextras.item;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.entities.YextrasEntity;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -18,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -78,7 +75,7 @@ public class TheFingerItemBase extends Item {
             Vec3 hitVec = hit.position().subtract(attacker.position()).normalize();
             if (hitVec.length() > size) continue;
             if (viewVec.dot(hitVec) > -0.5D) {
-                attacker.playSound(YellowbrossExtrasSoundEvents.YEET.get(), 2.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                attacker.playSound(YESoundEvents.YEET.get(), 2.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 hit.hurtMarked = true;
                 hit.setDeltaMovement(hit.position().add(0, 0.5, 0).subtract(attacker.position()).normalize().scale(6.0));
                 if (hit.isOnGround()) hit.setDeltaMovement(hit.getDeltaMovement().x, Math.abs(hit.getDeltaMovement().y), hit.getDeltaMovement().z);

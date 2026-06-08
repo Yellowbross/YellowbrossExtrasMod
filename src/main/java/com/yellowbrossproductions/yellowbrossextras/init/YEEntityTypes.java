@@ -22,7 +22,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class ModEntityTypes {
+public class YEEntityTypes {
 
     public static DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, YellowbrossExtras.MOD_ID);
 
@@ -154,29 +154,4 @@ public class ModEntityTypes {
     public static final RegistryObject<EntityType<PathGuideEntity>> PathGuide = ENTITY_TYPES.register("path_guide", () -> EntityType.Builder.<PathGuideEntity>of(PathGuideEntity::new, MobCategory.MISC).sized(1.0F,2.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "path_guide").toString()));
 
     public static final RegistryObject<EntityType<IntelligenceEntity>> Intelligence = ENTITY_TYPES.register("intelligence", () -> EntityType.Builder.<IntelligenceEntity>of(IntelligenceEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "intelligence").toString()));
-
-    public static void onAttribute(final EntityAttributeCreationEvent event) {
-        event.put(Defender.get(), DefenderEntity.createAttributes().build());
-        event.put(SentryGun.get(), SentryGunEntity.createAttributes().build());
-        event.put(CreeperBullet.get(), CreeperBulletEntity.createAttributes().build());
-
-        event.put(Sneaker.get(), SneakerEntity.createAttributes().build());
-        event.put(Paracreeper.get(), ParacreeperEntity.createAttributes().build());
-        event.put(Crawler.get(), CrawlerEntity.createAttributes().build());
-        event.put(Freaker.get(), FreakerEntity.createAttributes().build());
-        event.put(Sprayer.get(), SprayerEntity.createAttributes().build());
-
-        event.put(Vilvgaver.get(), VilvgaverEntity.createAttributes().build());
-
-        event.put(AmoebicDevourer.get(), AmoebicDevourerEntity.createAttributes().build());
-        event.put(HyperSnowGolem.get(), HyperSnowGolemEntity.createAttributes().build());
-        event.put(SkeletonSnap.get(), SkeletonSnapEntity.createAttributes().build());
-        event.put(Aimbot.get(), AimbotEntity.createAttributes().build());
-        event.put(StickFigure.get(), StickFigureEntity.createAttributes().build());
-
-        event.put(Converslin.get(), ConverslinEntity.createAttributes().build());
-        event.put(CarrotMinion.get(), CarrotMinionEntity.createAttributes().build());
-
-        event.put(Boomerang.get(), BoomerangEntity.createAttributes().build());
-    }
 }

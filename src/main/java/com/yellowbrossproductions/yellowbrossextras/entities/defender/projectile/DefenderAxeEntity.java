@@ -1,7 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.CustomAbstractHurtingProjectile;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
@@ -26,7 +26,7 @@ public class DefenderAxeEntity extends CustomAbstractHurtingProjectile {
     }
 
     public DefenderAxeEntity(Level level, LivingEntity shooter, Vec3 shootDir) {
-        super(ModEntityTypes.DefenderAxe.get(), shooter, shootDir.x, shootDir.y, shootDir.z, level);
+        super(YEEntityTypes.DefenderAxe.get(), shooter, shootDir.x, shootDir.y, shootDir.z, level);
     }
 
     @Override

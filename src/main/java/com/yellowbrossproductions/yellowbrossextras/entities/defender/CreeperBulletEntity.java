@@ -4,7 +4,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.AbstractCreeperEntity;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.world.CustomExplosion;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -133,7 +133,7 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
     @Override
     public boolean causeFallDamage(float p_149687_, float p_149688_, DamageSource p_149689_) {
         if (this.wasShotFromDefender) {
-            this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CREEPERBULLET_LAND.get());
+            this.playSound(YESoundEvents.ENTITY_DEFENDER_CREEPERBULLET_LAND.get());
             this.setAnimationState("getup");
         }
         return super.causeFallDamage(p_149687_, p_149688_, p_149689_);
@@ -307,7 +307,7 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
                 (this.random.nextDouble() - 0.5d) * mult,
                         0.75d + ((this.random.nextDouble() - 0.5d)),
                         (this.random.nextDouble() - 0.5d) * mult);
-        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CREEPERGUN_HIT.get(), 2.0F, this.getVoicePitch());
+        this.playSound(YESoundEvents.ENTITY_DEFENDER_CREEPERGUN_HIT.get(), 2.0F, this.getVoicePitch());
     }
 
     class DontExplodeUntilGotUpGoal extends CreeperExplodeGoal {

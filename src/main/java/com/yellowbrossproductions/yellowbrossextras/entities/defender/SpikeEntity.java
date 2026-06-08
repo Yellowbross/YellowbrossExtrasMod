@@ -2,8 +2,8 @@ package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.MobAttack;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -36,7 +36,7 @@ public class SpikeEntity extends Entity implements MobAttack {
     }
 
     public SpikeEntity(Level p_36926_, double p_36927_, double p_36928_, double p_36929_, float p_36930_, int p_36931_, LivingEntity p_36932_) {
-        this(ModEntityTypes.Spike.get(), p_36926_);
+        this(YEEntityTypes.Spike.get(), p_36926_);
         this.warmupDelayTicks = p_36931_;
         this.setOwner(p_36932_);
         this.setYRot(p_36930_ * (180F / (float)Math.PI));
@@ -143,7 +143,7 @@ public class SpikeEntity extends Entity implements MobAttack {
         if (p_36935_ == 4) {
             this.clientSideAttackStarted = true;
             if (!this.isSilent()) {
-                this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SPIKE.get(), this.getSoundSource(), 2.0F, this.random.nextFloat() * 0.2F + 0.85F, false);
+                this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), YESoundEvents.ENTITY_DEFENDER_SPIKE.get(), this.getSoundSource(), 2.0F, this.random.nextFloat() * 0.2F + 0.85F, false);
             }
         }
 

@@ -1,19 +1,25 @@
 package com.yellowbrossproductions.yellowbrossextras.events;
 
 import com.google.common.collect.Sets;
+import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
-import com.yellowbrossproductions.yellowbrossextras.entities.AimbotEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperInfection;
+import com.yellowbrossproductions.yellowbrossextras.entities.*;
+import com.yellowbrossproductions.yellowbrossextras.entities.creepers.*;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.creepers.AbstractCreeperEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.LoseAIGoal;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.AbstractOryctolin;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.ConverslinEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
-import com.yellowbrossproductions.yellowbrossextras.init.YellowbrossExtrasGameRules;
-import com.yellowbrossproductions.yellowbrossextras.util.EffectRegisterer;
+import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.CarrotMinionEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.projectile.BoomerangEntity;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEGameRules;
+import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.RegistryHandler;
+import com.yellowbrossproductions.yellowbrossextras.init.YEItemsAndBlocks;
 import com.yellowbrossproductions.yellowbrossextras.util.VilvgaverSpawner;
 import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.BlitzManager;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -29,6 +35,7 @@ import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
 import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
@@ -37,21 +44,86 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 import java.util.function.Predicate;
 
-public class ServerEventHandler {
+@Mod.EventBusSubscriber(modid = YellowbrossExtras.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+public class YECommonEventHandler {
+
+    @Mod.EventBusSubscriber(modid = YellowbrossExtras.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static class CommonModEvents {
+        @SubscribeEvent
+        public static void onCommonSetup(FMLCommonSetupEvent event) {
+            PacketHandler.init();
+        }
+
+        @SubscribeEvent
+        public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
+            SpawnPlacements.register(YEEntityTypes.Defender.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, PathfinderMob::checkMobSpawnRules);
+            SpawnPlacements.register(YEEntityTypes.SentryGun.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, PathfinderMob::checkMobSpawnRules);
+            SpawnPlacements.register(YEEntityTypes.CreeperBullet.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, PathfinderMob::checkMobSpawnRules);
+
+            SpawnPlacements.register(YEEntityTypes.Sneaker.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
+            SpawnPlacements.register(YEEntityTypes.Paracreeper.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
+            SpawnPlacements.register(YEEntityTypes.Crawler.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
+            SpawnPlacements.register(YEEntityTypes.Freaker.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
+            SpawnPlacements.register(YEEntityTypes.Sprayer.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
+
+            SpawnPlacements.register(YEEntityTypes.Vilvgaver.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, PathfinderMob::checkMobSpawnRules);
+
+            SpawnPlacements.register(YEEntityTypes.Converslin.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
+            SpawnPlacements.register(YEEntityTypes.CarrotMinion.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
+
+            SpawnPlacements.register(YEEntityTypes.AmoebicDevourer.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
+            SpawnPlacements.register(YEEntityTypes.HyperSnowGolem.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, PathfinderMob::checkMobSpawnRules);
+            SpawnPlacements.register(YEEntityTypes.SkeletonSnap.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
+            SpawnPlacements.register(YEEntityTypes.Aimbot.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
+            SpawnPlacements.register(YEEntityTypes.StickFigure.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, PathfinderMob::checkMobSpawnRules);
+        }
+
+        @SubscribeEvent
+        public static void createAttributes(EntityAttributeCreationEvent event) {
+            event.put(YEEntityTypes.Defender.get(), DefenderEntity.createAttributes().build());
+            event.put(YEEntityTypes.SentryGun.get(), SentryGunEntity.createAttributes().build());
+            event.put(YEEntityTypes.CreeperBullet.get(), CreeperBulletEntity.createAttributes().build());
+
+            event.put(YEEntityTypes.Sneaker.get(), SneakerEntity.createAttributes().build());
+            event.put(YEEntityTypes.Paracreeper.get(), ParacreeperEntity.createAttributes().build());
+            event.put(YEEntityTypes.Crawler.get(), CrawlerEntity.createAttributes().build());
+            event.put(YEEntityTypes.Freaker.get(), FreakerEntity.createAttributes().build());
+            event.put(YEEntityTypes.Sprayer.get(), SprayerEntity.createAttributes().build());
+
+            event.put(YEEntityTypes.Vilvgaver.get(), VilvgaverEntity.createAttributes().build());
+
+            event.put(YEEntityTypes.AmoebicDevourer.get(), AmoebicDevourerEntity.createAttributes().build());
+            event.put(YEEntityTypes.HyperSnowGolem.get(), HyperSnowGolemEntity.createAttributes().build());
+            event.put(YEEntityTypes.SkeletonSnap.get(), SkeletonSnapEntity.createAttributes().build());
+            event.put(YEEntityTypes.Aimbot.get(), AimbotEntity.createAttributes().build());
+            event.put(YEEntityTypes.StickFigure.get(), StickFigureEntity.createAttributes().build());
+
+            event.put(YEEntityTypes.Converslin.get(), ConverslinEntity.createAttributes().build());
+            event.put(YEEntityTypes.CarrotMinion.get(), CarrotMinionEntity.createAttributes().build());
+
+            event.put(YEEntityTypes.Boomerang.get(), BoomerangEntity.createAttributes().build());
+        }
+    }
+
     @SubscribeEvent
-    public void handleAIGoals(EntityJoinLevelEvent event) {
+    public static void handleAIGoals(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
         if (!(YellowbrossExtrasConfig.aiChangesNotAllowed.get().contains(entity.getEncodeId()) || YellowbrossExtrasConfig.aiChangesNotAllowed.get().contains(entity.getType().getKey(entity.getType()).getNamespace()))) {
             if (entity instanceof Mob mob) {
@@ -77,7 +149,7 @@ public class ServerEventHandler {
     }
 
     @SubscribeEvent
-    public void hurtFunctions(LivingHurtEvent event) {
+    public static void hurtFunctions(LivingHurtEvent event) {
         // creepers cheating
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
@@ -98,43 +170,50 @@ public class ServerEventHandler {
     }
 
     @SubscribeEvent
-    public void creeperInfection(LivingDeathEvent event) {
+    public static void creeperInfection(LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
         if (source.getEntity() instanceof CreeperInfection && source.getEntity() instanceof LivingEntity living && entity instanceof Mob mob) {
-            if (entity.level.getGameRules().getBoolean(YellowbrossExtrasGameRules.ENABLE_CREEPER_INFECTION)) {
+            if (entity.level.getGameRules().getBoolean(YEGameRules.ENABLE_CREEPER_INFECTION)) {
                 EntityUtil.convertMobToCreeper(mob, living, entity.getLevel());
             }
         }
     }
 
     @SubscribeEvent
-    public void effectParticles(LivingEvent.LivingTickEvent event) {
+    public static void doEffectVFX(LivingEvent.LivingTickEvent event) {
         LivingEntity mob = event.getEntity();
         Random random = new Random();
-        if (mob.hasEffect(EffectRegisterer.KNOCKED_OUT.get())) {
+        if (mob.hasEffect(YEEffects.KNOCKED_OUT.get())) {
             EntityUtil.makeStunnedParticles(mob.level, mob);
+        }
+        if (!mob.level.isClientSide) {
+            if (mob.hasEffect(YEEffects.SUPER_DUPER_POISON.get())) {
+                if (!EntityUtil.isSuperDuperPoison(mob)) EntityUtil.setSuperDuperPoison(mob, true);
+            } else {
+                if (EntityUtil.isSuperDuperPoison(mob)) EntityUtil.setSuperDuperPoison(mob, false);
+            }
         }
     }
 
     private static final Map<ServerLevel, VilvgaverSpawner> VILVGAVER_SPAWN_MAP = new HashMap<>();
 
     @SubscribeEvent
-    public void loadCustomSpawners(LevelEvent.Load event) {
+    public static void loadCustomSpawners(LevelEvent.Load event) {
         if (!event.getLevel().isClientSide() && event.getLevel() instanceof ServerLevel serverWorld) {
             VILVGAVER_SPAWN_MAP.put(serverWorld, new VilvgaverSpawner());
         }
     }
 
     @SubscribeEvent
-    public void unloadCustomSpawners(LevelEvent.Unload event) {
+    public static void unloadCustomSpawners(LevelEvent.Unload event) {
         if (!event.getLevel().isClientSide() && event.getLevel() instanceof ServerLevel serverWorld) {
             VILVGAVER_SPAWN_MAP.remove(serverWorld);
         }
     }
 
     @SubscribeEvent
-    public void tickCustomStuff(TickEvent.LevelTickEvent event) {
+    public static void tickCustomStuff(TickEvent.LevelTickEvent event) {
         if (!event.level.isClientSide && event.level instanceof ServerLevel server) {
             VilvgaverSpawner vilvgaverSpawner = VILVGAVER_SPAWN_MAP.get(server);
             if (vilvgaverSpawner != null) {
@@ -147,9 +226,9 @@ public class ServerEventHandler {
     }
 
     @SubscribeEvent
-    public void huntedEffects1(LivingFallEvent event) {
+    public static void huntedEffects1(LivingFallEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity.hasEffect(EffectRegisterer.HUNTED.get()) && YellowbrossExtrasConfig.vilvgaverChallenge_fallDamageAllowed.get()) {
+        if (entity.hasEffect(YEEffects.HUNTED.get()) && YellowbrossExtrasConfig.vilvgaverChallenge_fallDamageAllowed.get()) {
             event.setDamageMultiplier(0.0000000000001F);
             if (event.getDistance() >= 4) {
                 entity.heal(1.0F);
@@ -158,17 +237,17 @@ public class ServerEventHandler {
     }
 
     @SubscribeEvent
-    public void huntedEffects2(TickEvent.PlayerTickEvent event) {
+    public static void huntedEffects2(TickEvent.PlayerTickEvent event) {
         Player mob = event.player;
         if (!mob.getLevel().isClientSide) {
-            if (mob.getLevel().getGameRules().getBoolean(YellowbrossExtrasGameRules.VILVGAVERCHALLENGE)) {
-                mob.addEffect(new MobEffectInstance(EffectRegisterer.HUNTED.get(), 1200, 0, false, false, true));
+            if (mob.getLevel().getGameRules().getBoolean(YEGameRules.VILVGAVERCHALLENGE)) {
+                mob.addEffect(new MobEffectInstance(YEEffects.HUNTED.get(), 1200, 0, false, false, true));
 
                 if (YellowbrossExtrasConfig.vilvgaverChallenge_speedBuff.get() > -1) {
                     mob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 1200, YellowbrossExtrasConfig.vilvgaverChallenge_speedBuff.get(), false, false, true));
                 }
             }
-            if (mob.hasEffect(EffectRegisterer.HUNTED.get())) {
+            if (mob.hasEffect(YEEffects.HUNTED.get())) {
                 if (YellowbrossExtrasConfig.vilvgaverChallenge_restoreHunger.get()) {
                     mob.getFoodData().setFoodLevel(20);
                 }
@@ -225,7 +304,7 @@ public class ServerEventHandler {
                             BlockPos blockpos1 = blockpos.immutable();
                             mob.level.getProfiler().push("explosion_blocks");
 
-                            mob.level.setBlockAndUpdate(blockpos1, RegistryHandler.FROZEN_LAVA.get().defaultBlockState());
+                            mob.level.setBlockAndUpdate(blockpos1, YEItemsAndBlocks.FROZEN_LAVA.get().defaultBlockState());
                             mob.level.getProfiler().pop();
                         }
                     }
@@ -235,12 +314,12 @@ public class ServerEventHandler {
     }
 
     @SubscribeEvent
-    public void huntedEffects3(PlayerEvent.BreakSpeed event) {
+    public static void huntedEffects3(PlayerEvent.BreakSpeed event) {
         Player mob = event.getEntity();
         if (!mob.getLevel().isClientSide) {
             ResourceLocation name = ForgeRegistries.BLOCKS.getKey(event.getState().getBlock());
             if (name != null) {
-                if (mob.hasEffect(EffectRegisterer.HUNTED.get()) &&
+                if (mob.hasEffect(YEEffects.HUNTED.get()) &&
                         YellowbrossExtrasConfig.vilvgaverChallenge_blockInstabreaks.get().contains(name.toString())) {
                     event.setNewSpeed(50.0F);
                     if (event.getPosition().isPresent()) {
@@ -253,11 +332,11 @@ public class ServerEventHandler {
     }
 
     @SubscribeEvent
-    public void converslinHelper(LivingDeathEvent event) {
+    public static void converslinHelper(LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
         if (source.getEntity() instanceof IsOryctolinAligned && source.getEntity() instanceof LivingEntity living && entity instanceof Mob mob) {
-            if (entity.level.getGameRules().getBoolean(YellowbrossExtrasGameRules.CONVERSLIN_CONVERSION)) {
+            if (entity.level.getGameRules().getBoolean(YEGameRules.CONVERSLIN_CONVERSION)) {
                 if (source.getEntity() instanceof ConverslinEntity) {
                     EntityUtil.convertMobToCarrot(mob, living, entity.getLevel());
                 }
@@ -266,7 +345,7 @@ public class ServerEventHandler {
     }
 
     @SubscribeEvent
-    public void defenderCarnage(LivingDeathEvent event) {
+    public static void defenderCarnage(LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
         if (source.getEntity() instanceof DefenderEntity defender) {
@@ -277,9 +356,9 @@ public class ServerEventHandler {
     }
 
     @SubscribeEvent
-    public void cancelHealing(LivingHealEvent event) {
+    public static void cancelHealing(LivingHealEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity.hasEffect(EffectRegisterer.KNOCKED_OUT.get())) {
+        if (entity.hasEffect(YEEffects.KNOCKED_OUT.get())) {
             event.setCanceled(true);
         }
     }

@@ -1,6 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.projectile;
 
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,7 +20,7 @@ public class HyperSnowballEntity extends ThrowableItemProjectile {
     }
 
     public HyperSnowballEntity(Level p_37399_, LivingEntity p_37400_) {
-        super(ModEntityTypes.HyperSnowball.get(), p_37400_, p_37399_);
+        super(YEEntityTypes.HyperSnowball.get(), p_37400_, p_37399_);
     }
 
     protected Item getDefaultItem() {

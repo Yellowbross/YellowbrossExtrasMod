@@ -9,9 +9,10 @@ import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase1.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase2.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.*;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.util.DelayedActionHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.util.defender.AttacksPart1;
 import com.yellowbrossproductions.yellowbrossextras.world.CustomExplosion;
 import net.minecraft.ChatFormatting;
@@ -31,6 +32,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -257,8 +259,8 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         if (this.jumpAttacking) {
             if (this.attackType == attack_spikes) {
                 this.setAnimationState("spikes_land");
-                this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
-                this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 3.0F, 1.0F);
+                this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
+                this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 3.0F, 1.0F);
                 if (!this.level.isClientSide) {
                     CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), 6.0F, true);
                     CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), 3.0F, true);
@@ -287,9 +289,9 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                             double d = Math.sqrt(x * x + y * y + z * z);
 
                             this.setAnimationState("claws_punch");
-                            this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, 0.8F);
+                            this.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, 0.8F);
                             CameraShakeEntity.cameraShake(this.level, position(), 30, 0.1f, 0, 15);
-                            this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SMACK.get(), 2.0F, this.getVoicePitch());
+                            this.playSound(YESoundEvents.ENTITY_DEFENDER_SMACK.get(), 2.0F, this.getVoicePitch());
                             this.clawsTarget.invulnerableTime = 0;
                             this.clawsTarget.hurtMarked = true;
                             double mult = 3.5d;
@@ -305,7 +307,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
             this.jumpAttacking = false;
         }
         if (this.shouldDiscardFriction()) {
-            this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 2.0F, 1.0F);
+            this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 2.0F, 1.0F);
             for (Entity entity : this.level.getEntities(this, this.getBoundingBox().inflate(15.0F))) {
                 if (EntityUtil.canHurtThisMob(entity, this) && entity instanceof LivingEntity && entity.isAlive()) {
                     double x = this.getX() - entity.getX();
@@ -313,7 +315,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                     double z = this.getZ() - entity.getZ();
                     double d = Math.sqrt(x * x + y * y + z * z);
                     if (this.distanceTo(entity) < 10.0D) {
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, this.getVoicePitch());
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, this.getVoicePitch());
                         entity.hurt(DamageSource.mobAttack(this), 20.0f * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.5f));
                         entity.hurtMarked = true;
                         entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 3.5D, (-y / d * 0.4D) + 0.75D, -z / d * 3.5D));
@@ -329,7 +331,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
 
     @Override
     protected void playStepSound(BlockPos p_20135_, BlockState p_20136_) {
-        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_STEP.get(), 0.5F, 1.0F);
+        this.playSound(YESoundEvents.ENTITY_DEFENDER_STEP.get(), 0.5F, 1.0F);
     }
 
     public int getFrame() {
@@ -397,6 +399,11 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     }
 
     @Override
+    public boolean canBeAffected(MobEffectInstance effect) {
+        return effect.getEffect() != YEEffects.KNOCKED_OUT.get() && super.canBeAffected(effect);
+    }
+
+    @Override
     public void tick() {
         this.calculateWobble();
 
@@ -438,16 +445,16 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
             int randomGag = this.random.nextInt(3);
             this.guysKilled = 0;
             if (randomGag == 0) {
-                this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_GAG1.get(), 3.0F, 1.0F);
+                this.playSound(YESoundEvents.ENTITY_DEFENDER_GAG1.get(), 3.0F, 1.0F);
             } else if (randomGag == 1) {
-                this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_GAG2.get(), 3.0F, 1.0F);
+                this.playSound(YESoundEvents.ENTITY_DEFENDER_GAG2.get(), 3.0F, 1.0F);
             } else {
-                this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_GAG3.get(), 3.0F, 1.0F);
+                this.playSound(YESoundEvents.ENTITY_DEFENDER_GAG3.get(), 3.0F, 1.0F);
             }
         }
         if (this.gagTimer > 8 && this.guysKilled >= 7) {
             if (this.random.nextInt(4) == 0) {
-                this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CARNAGE.get(), 2.0F, 1.0F);
+                this.playSound(YESoundEvents.ENTITY_DEFENDER_CARNAGE.get(), 2.0F, 1.0F);
             }
         }
 
@@ -490,12 +497,12 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                         double motionY = (y / d * (double) power * 0.2D);
                         double motionZ = (z / d * (double) power * 0.2D) * bonusMovement;
 
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_JUMP.get(), 2.0F, 1.0F);
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_JUMP.get(), 2.0F, 1.0F);
                         this.setDeltaMovement(motionX, 0.5D, motionZ);
                     } else if (this.howShouldDefenderApproachHisTarget() == 2) {
                         double mult = 0.04d;
 
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_JUMP2.get(), 2.0F, 1.0F);
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_JUMP2.get(), 2.0F, 1.0F);
                         this.setDiscardFriction(true);
                         this.setDeltaMovement(((this.getTarget().getX() - this.getX()) * 2.5D) * mult,
                                 1.2D,
@@ -540,8 +547,8 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
 
                     if (this.deathAttackTicks == 20 + 1) {
                         this.stareYOffsetter = 4.1;
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.8F);
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.5F);
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.8F);
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.5F);
                         this.playSound(SoundEvents.GENERIC_EXPLODE, 3.0F, 0.7F);
                         CameraShakeEntity.cameraShake(this.level, position(), 50, 0.4f, 0, 15);
                         EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.3, 0), ParticleTypes.POOF, 50, 1.0F, Vec3.ZERO, 0.0F);
@@ -553,7 +560,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                                 double z = this.getZ() - entity.getZ();
                                 double d = Math.sqrt(x * x + y * y + z * z);
                                 if (this.distanceTo(entity) < 3.0D) {
-                                    this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_BOOMERANG_HIT.get(), 2.0F, this.getVoicePitch());
+                                    this.playSound(YESoundEvents.ENTITY_DEFENDER_BOOMERANG_HIT.get(), 2.0F, this.getVoicePitch());
                                     entity.hurt(DamageSource.mobAttack(this), 30.0F);
                                     entity.hurtMarked = true;
                                     entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 2.5D, (-y / d * 0.4D) + 0.8D, -z / d * 2.5D));
@@ -562,9 +569,9 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                         }
                     }
                     if (this.deathAttackTicks == 35 + 1) {
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 1.2F);
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SPIKE.get(), 3.0F, 0.7F);
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 1.2F);
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_SPIKE.get(), 3.0F, 0.7F);
                         CameraShakeEntity.cameraShake(this.level, position(), 50, 0.2f, 0, 15);
 
                         LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(this.level);
@@ -581,22 +588,22 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
 
                     if (this.deathAttackTicks >= 59 + 1 && this.deathAttackTicks < 81 + 1) {
                         this.stareYOffsetter += 0.05D;
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_EARTH_RUMBLE.get(), 3.0F, this.getVoicePitch());
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_EARTH_RUMBLE.get(), 3.0F, this.getVoicePitch());
                         CameraShakeEntity.cameraShake(this.level, position(), 50, 0.02f, 0, 15);
                     }
 
                     if (this.deathAttackTicks == 81 + 1) {
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 1.2F);
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SPIKE.get(), 3.0F, 0.5F);
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 1.2F);
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_SPIKE.get(), 3.0F, 0.5F);
                         CameraShakeEntity.cameraShake(this.level, position(), 50, 0.3f, 0, 15);
                     }
 
                     if (this.deathAttackTicks == 102 + 1) {
                         this.stareYOffsetter = -0.4;
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.8F);
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.5F);
-                        this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.0F);
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.8F);
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.5F);
+                        this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.0F);
                         this.playSound(SoundEvents.GENERIC_EXPLODE, 3.0F, 0.7F);
                         CameraShakeEntity.cameraShake(this.level, position(), 30, 0.4f, 0, 15);
                         EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.3, 0), ParticleTypes.POOF, 50, 1.0F, Vec3.ZERO, 0.0F);
@@ -620,7 +627,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
 
                     if (this.deathAttackTicks >= 125 + 1 && this.deathAttackTicks < 288 + 1) {
                         if ((this.deathAttackTicks - (125 + 1)) % 4 == 0) {
-                            this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH.get(), 3.0F, 1.0F);
+                            this.playSound(YESoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH.get(), 3.0F, 1.0F);
                             CameraShakeEntity.cameraShake(this.level, position(), 30, 0.2f, 0, 8);
                         }
 
@@ -679,7 +686,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                                 if (this.distanceTo(entity) < 5.0D) {
                                     if (entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.25f))) {
                                         for (int i = 0; i < 4; ++i) entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.25f));
-                                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, this.getVoicePitch() - 0.2F);
+                                        this.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, this.getVoicePitch() - 0.2F);
                                         CameraShakeEntity.cameraShake(this.level, position(), 10, 0.2f, 0, 8);
                                         entity.hurtMarked = true;
                                         if (this.distanceTo(entity) < 2.0D) {
@@ -1122,7 +1129,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     }
 
     protected SoundEvent getHurtSound(DamageSource p_21239_) {
-        return YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_HURT.get();
+        return YESoundEvents.ENTITY_DEFENDER_HURT.get();
     }
 
     @Override
@@ -1280,7 +1287,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                 this.lastHurtByPlayerTime = 10000;
             }
             this.deathAttackTicks = 1;
-            this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_PHASE_ENDED.get(), 3.0F, 1.0F);
+            this.playSound(YESoundEvents.ENTITY_DEFENDER_PHASE_ENDED.get(), 3.0F, 1.0F);
             CameraShakeEntity.cameraShake(this.level, position(), 30, 0.3f, 0, 15);
             this.makePhaseEndParticles();
         }
@@ -1581,7 +1588,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         @Override
         public void start() {
             setAnimationState("defeated");
-            playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_DEFEATED.get(), 2.0F, 1.0F);
+            playSound(YESoundEvents.ENTITY_DEFENDER_DEFEATED.get(), 2.0F, 1.0F);
             entityData.set(DATA_HEALTH_ID, 0.0F);
             if (lastHurtByPlayerTime > 0) {
                 lastHurtByPlayerTime = 10000;

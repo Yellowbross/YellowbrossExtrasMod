@@ -3,9 +3,9 @@ package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.TNTProjectileEntity;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -93,7 +93,7 @@ public class SprayerEntity extends AbstractCreeperEntity implements CreeperInfec
         super.explodeCreeper();
         if (this.getAbsorbedCreepers() >= this.getMaxAbsorbs()) {
             if (!this.level.isClientSide) {
-                CrawlerEntity creeper = new CrawlerEntity(ModEntityTypes.Crawler.get(), this.level);
+                CrawlerEntity creeper = new CrawlerEntity(YEEntityTypes.Crawler.get(), this.level);
                 creeper.copyPosition(this);
                 if (this.getTeam() != null) {
                     level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
@@ -102,7 +102,7 @@ public class SprayerEntity extends AbstractCreeperEntity implements CreeperInfec
                 this.level.addFreshEntity(creeper);
 
                 this.makeExplodeParticles();
-                this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.2F);
+                this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.2F);
                 CameraShakeEntity.cameraShake(this.level, position(), 40, 0.2f, 0, 30);
             }
         }

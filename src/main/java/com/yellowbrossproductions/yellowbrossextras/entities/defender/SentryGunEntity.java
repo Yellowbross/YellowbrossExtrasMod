@@ -4,9 +4,9 @@ import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConf
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.world.CustomExplosion;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -117,7 +117,7 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource p_21239_) {
-        return YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_HURT.get();
+        return YESoundEvents.ENTITY_DEFENDER_HURT.get();
     }
 
     @Override
@@ -153,7 +153,7 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
                     this.setAnimationState("none");
                     this.setAnimationState("shoot");
                     this.stopShootingSound(this.level);
-                    this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get(), 3.0F, 1.0F);
+                    this.playSound(YESoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get(), 3.0F, 1.0F);
                     this.performRangedAttack(this.getTarget());
                 }
 
@@ -166,7 +166,7 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
                 });
                 if (list.size() < YellowbrossExtrasConfig.defender_sentryGun_mitosisCap.get() && !this.mitosisInitiated) {
                     if (!this.level.isClientSide) {
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_MITOSIS.get(), 2.0F, 1.0F);
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_SENTRY_MITOSIS.get(), 2.0F, 1.0F);
                         this.setAnimationState("mitosis");
                         this.mitosisInitiated = true;
                     }
@@ -178,12 +178,12 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
                 this.mitosisTicks -= 1;
                 if (this.mitosisTicks < 1 && !this.level.isClientSide) {
                     this.dead = true;
-                    this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_POP.get(), 2.0F, 1.0F);
+                    this.playSound(YESoundEvents.ENTITY_DEFENDER_SENTRY_POP.get(), 2.0F, 1.0F);
                     this.explode(5.0d);
                     this.makePopParticles();
                     CameraShakeEntity.cameraShake(this.level, position(), 35, 0.2f, 0, 10);
                     for (int i = 0; i < 2; i++) {
-                        SentryGunEntity iGaveBirth = new SentryGunEntity(ModEntityTypes.SentryGun.get(), this.level);
+                        SentryGunEntity iGaveBirth = new SentryGunEntity(YEEntityTypes.SentryGun.get(), this.level);
                         iGaveBirth.moveTo(this.getPosition(0).add(0, 0.5, 0));
 
                         double mult = 1.0d;
@@ -274,7 +274,7 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
             return;
         }
 
-        ClientboundStopSoundPacket sstopsoundpacket = new ClientboundStopSoundPacket(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get().getLocation(), SoundSource.NEUTRAL);
+        ClientboundStopSoundPacket sstopsoundpacket = new ClientboundStopSoundPacket(YESoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get().getLocation(), SoundSource.NEUTRAL);
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             player.connection.send(sstopsoundpacket);
         }

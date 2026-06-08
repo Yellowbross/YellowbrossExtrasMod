@@ -2,7 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.projectile;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperInfection;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -27,11 +27,11 @@ public class TNTProjectileEntity extends ThrowableItemProjectile {
     }
 
     public TNTProjectileEntity(double p_37433_, double p_37434_, double p_37435_, Level p_37436_) {
-        super(ModEntityTypes.TNTProjectile.get(), p_37433_, p_37434_, p_37435_, p_37436_);
+        super(YEEntityTypes.TNTProjectile.get(), p_37433_, p_37434_, p_37435_, p_37436_);
     }
 
     public TNTProjectileEntity(Level p_37440_, LivingEntity p_37439_) {
-        super(ModEntityTypes.TNTProjectile.get(), p_37439_, p_37440_);
+        super(YEEntityTypes.TNTProjectile.get(), p_37439_, p_37440_);
     }
 
     @Override

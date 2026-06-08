@@ -1,6 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.entities;
 
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -27,7 +27,7 @@ public class CameraShakeEntity extends Entity {
     }
 
     public CameraShakeEntity(Level world, Vec3 position, float radius, float magnitude, int duration, int fadeDuration) {
-        super(ModEntityTypes.CameraShake.get(), world);
+        super(YEEntityTypes.CameraShake.get(), world);
         setRadius(radius);
         setMagnitude(magnitude);
         setDuration(duration);

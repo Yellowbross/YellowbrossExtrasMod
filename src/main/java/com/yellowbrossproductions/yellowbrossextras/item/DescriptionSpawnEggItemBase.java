@@ -1,7 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.item;
 
-import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.util.RegistryHandler;
+import com.yellowbrossproductions.yellowbrossextras.init.YEItemsAndBlocks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -26,6 +25,6 @@ public class DescriptionSpawnEggItemBase extends ForgeSpawnEggItem {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (stack.getItem() == RegistryHandler.AIMBOT_SPAWN_EGG.get().asItem()) tooltip.add(Component.translatable("tooltip.yellowbrossextras.aimbot_spawn_egg"));
+        if (stack.getItem() == YEItemsAndBlocks.AIMBOT_SPAWN_EGG.get().asItem()) tooltip.add(Component.translatable("tooltip.yellowbrossextras.aimbot_spawn_egg"));
     }
 }

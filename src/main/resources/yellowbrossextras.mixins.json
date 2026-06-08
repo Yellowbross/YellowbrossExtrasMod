@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.yellowbrossproductions.yellowbrossextras.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "yellowbrossextras.mixins.refmap.json",
+  "mixins": [
+    "common.LivingEntityMixin"
+  ],
+  "client": [
+    "client.LivingEntityRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

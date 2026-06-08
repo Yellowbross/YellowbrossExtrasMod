@@ -1,31 +1,24 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun;
 
-import com.mojang.math.Vector3d;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.gamemode_fun.CapTheIntelGoal;
 import com.yellowbrossproductions.yellowbrossextras.util.DelayedActionHandler;
-import com.yellowbrossproductions.yellowbrossextras.util.EffectRegisterer;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
@@ -34,7 +27,6 @@ import net.minecraftforge.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class IntelligenceEntity extends Entity {
     private static final EntityDataAccessor<Integer> CAPTURES = SynchedEntityData.defineId(IntelligenceEntity.class, EntityDataSerializers.INT);
@@ -145,7 +137,7 @@ public class IntelligenceEntity extends Entity {
             if (!cappers.isEmpty() && !this.isPassenger() && !this.captured) {
                 Mob cap = this.getNearestCapper(cappers);
                 this.startRiding(cap);
-                this.playSound(YellowbrossExtrasSoundEvents.CTF_FRIENDLY_TAKE.get(), 10000.0F, 1.0F);
+                this.playSound(YESoundEvents.CTF_FRIENDLY_TAKE.get(), 10000.0F, 1.0F);
             }
 
             if (this.getVehicle() instanceof LivingEntity vehicle) {
@@ -225,7 +217,7 @@ public class IntelligenceEntity extends Entity {
     public void capture(@Nullable Team team) {
         this.captured = true;
         this.setCaptures(this.getCaptures() + 1);
-        this.playSound(YellowbrossExtrasSoundEvents.CTF_FRIENDLY_CAP.get(), 10000.0F, 1.0F);
+        this.playSound(YESoundEvents.CTF_FRIENDLY_CAP.get(), 10000.0F, 1.0F);
 
         List<Mob> cappers = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(150.0D), p -> {
             return !p.isRemoved() && p.isAlive() && p.getTeam() == team;
@@ -243,7 +235,7 @@ public class IntelligenceEntity extends Entity {
             this.setPos(this.getHomeX() + 0.5D, this.getHomeY(), this.getHomeZ() + 0.5D);
         }
         this.resetTimeUntilReturn();
-        if (!this.captured) this.playSound(YellowbrossExtrasSoundEvents.CTF_ENEMY_RETURN.get(), 10000.0F, 1.0F);
+        if (!this.captured) this.playSound(YESoundEvents.CTF_ENEMY_RETURN.get(), 10000.0F, 1.0F);
         this.captured = false;
     }
 

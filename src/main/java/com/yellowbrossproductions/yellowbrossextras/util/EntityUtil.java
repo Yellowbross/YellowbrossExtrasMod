@@ -8,7 +8,9 @@ import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.Intell
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.CarrotMinionEntity;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.mixin.access.LivingEntityAccess;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.BlitzManager;
@@ -83,18 +85,18 @@ public class EntityUtil {
                 float ravagerCreeperWidth = 2.0F;
 
                 if (entity.getBbWidth() < paraCreeperWidth) {
-                    creeper = new ParacreeperEntity(ModEntityTypes.Paracreeper.get(), level);
+                    creeper = new ParacreeperEntity(YEEntityTypes.Paracreeper.get(), level);
                 } else if (entity.getBbWidth() >= paraCreeperWidth && entity.getBbWidth() <= normalCreeperWidth) {
-                    creeper = new SneakerEntity(ModEntityTypes.Sneaker.get(), level);
+                    creeper = new SneakerEntity(YEEntityTypes.Sneaker.get(), level);
                     if (entity instanceof RangedAttackMob) {
                         if (random.nextBoolean()) {
-                            creeper = new SprayerEntity(ModEntityTypes.Sprayer.get(), level);
+                            creeper = new SprayerEntity(YEEntityTypes.Sprayer.get(), level);
                         }
                     }
                 } else if (entity.getBbWidth() >= normalCreeperWidth && entity.getBbWidth() <= ravagerCreeperWidth) {
-                    creeper = new CrawlerEntity(ModEntityTypes.Crawler.get(), level);
+                    creeper = new CrawlerEntity(YEEntityTypes.Crawler.get(), level);
                 } else {
-                    creeper = new FreakerEntity(ModEntityTypes.Freaker.get(), level);
+                    creeper = new FreakerEntity(YEEntityTypes.Freaker.get(), level);
                 }
 
                 creeper.copyPosition(entity);
@@ -210,7 +212,7 @@ public class EntityUtil {
             if (!(entity instanceof IsOryctolinAligned)) {
                 CarrotMinionEntity creeper;
 
-                creeper = new CarrotMinionEntity(ModEntityTypes.CarrotMinion.get(), level);
+                creeper = new CarrotMinionEntity(YEEntityTypes.CarrotMinion.get(), level);
 
                 creeper.copyPosition(entity);
                 creeper.setNoAi(entity.isNoAi());
@@ -249,27 +251,17 @@ public class EntityUtil {
 
     public static void makeStunnedParticles(Level level, Entity caught) {
         final Random random = new Random();
-        if (!level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)level).players()) {
-                if (serverPlayer.distanceToSqr(caught) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    for(int i = 0; i < 2; ++i) {
-                        double d0 = (-0.5 + random.nextGaussian()) / 10;
-                        double d1 = (-0.5 + random.nextGaussian()) / 10;
-                        double d2 = (-0.5 + random.nextGaussian()) / 10;
-                        packet.queueParticle(ParticleTypes.SPLASH, false, new Vec3(caught.getRandomX(0.5D), caught.getRandomY(), caught.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
-                    }
-                    for(int i = 0; i < 2; ++i) {
-                        double d0 = (-0.5 + random.nextGaussian()) / 10;
-                        double d1 = (-0.5 + random.nextGaussian()) / 10;
-                        double d2 = (-0.5 + random.nextGaussian()) / 10;
-                        packet.queueParticle(ParticleTypes.CRIT, false, new Vec3(caught.getRandomX(0.5D), caught.getY() + caught.getBbHeight() + 0.2D, caught.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        for(int i = 0; i < 2; ++i) {
+            double d0 = (-0.5 + random.nextGaussian()) / 10;
+            double d1 = (-0.5 + random.nextGaussian()) / 10;
+            double d2 = (-0.5 + random.nextGaussian()) / 10;
+            EntityUtil.makeAParticle(level, ParticleTypes.SPLASH, false, new Vec3(caught.getRandomX(0.5D), caught.getRandomY(), caught.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
+        }
+        for(int i = 0; i < 2; ++i) {
+            double d0 = (-0.5 + random.nextGaussian()) / 10;
+            double d1 = (-0.5 + random.nextGaussian()) / 10;
+            double d2 = (-0.5 + random.nextGaussian()) / 10;
+            EntityUtil.makeAParticle(level, ParticleTypes.CRIT, false, new Vec3(caught.getRandomX(0.5D), caught.getY() + caught.getBbHeight() + 0.2D, caught.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
         }
     }
 
@@ -505,5 +497,14 @@ public class EntityUtil {
                 }
             }
         }
+    }
+
+    public static boolean isSuperDuperPoison(LivingEntity entity) {
+        return entity instanceof LivingEntityAccess && ((LivingEntityAccess) entity).ye$isSuperDuperPoison();
+    }
+
+    public static void setSuperDuperPoison(LivingEntity entity, boolean input) {
+        if (entity instanceof LivingEntityAccess)
+            ((LivingEntityAccess) entity).ye$setSuperDuperPoison(input);
     }
 }

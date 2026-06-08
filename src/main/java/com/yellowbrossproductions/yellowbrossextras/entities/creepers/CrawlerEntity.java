@@ -2,9 +2,9 @@ package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -80,7 +80,7 @@ public class CrawlerEntity extends AbstractCreeperEntity implements CreeperInfec
             this.dead = true;
             if (this.getAbsorbedCreepers() < this.getMaxAbsorbs()) {
                 for (int i = 0; i < 3; ++i) {
-                    SneakerEntity creeper = new SneakerEntity(ModEntityTypes.Sneaker.get(), this.level);
+                    SneakerEntity creeper = new SneakerEntity(YEEntityTypes.Sneaker.get(), this.level);
                     creeper.copyPosition(this);
                     creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
                     creeper.setDeltaMovement(this.random.nextDouble() - 0.5D,
@@ -96,7 +96,7 @@ public class CrawlerEntity extends AbstractCreeperEntity implements CreeperInfec
                     this.level.addFreshEntity(creeper);
                 }
             } else {
-                FreakerEntity creeper = new FreakerEntity(ModEntityTypes.Freaker.get(), this.level);
+                FreakerEntity creeper = new FreakerEntity(YEEntityTypes.Freaker.get(), this.level);
                 creeper.copyPosition(this);
                 if (this.getTeam() != null) {
                     level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
@@ -105,8 +105,8 @@ public class CrawlerEntity extends AbstractCreeperEntity implements CreeperInfec
                 this.level.addFreshEntity(creeper);
             }
             this.makeExplodeParticles();
-            this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.5F);
-            this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.0F);
+            this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.5F);
+            this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.0F);
             CameraShakeEntity.cameraShake(this.level, position(), 40, 0.3f, 0, 40);
             this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 3.5F * f), explosion$blockinteraction);
             this.discard();

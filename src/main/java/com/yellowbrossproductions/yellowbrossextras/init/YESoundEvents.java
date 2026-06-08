@@ -1,4 +1,4 @@
-package com.yellowbrossproductions.yellowbrossextras.util;
+package com.yellowbrossproductions.yellowbrossextras.init;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import net.minecraft.resources.ResourceLocation;
@@ -7,7 +7,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class YellowbrossExtrasSoundEvents {
+public class YESoundEvents {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, YellowbrossExtras.MOD_ID);
 
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_HURT = addSoundsToRegistry("entity.defender.hurt");

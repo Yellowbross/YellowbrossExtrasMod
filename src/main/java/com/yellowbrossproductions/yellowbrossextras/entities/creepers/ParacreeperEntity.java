@@ -2,7 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -72,7 +72,7 @@ public class ParacreeperEntity extends AbstractCreeperEntity implements CreeperI
             this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 0.75F * f), explosion$blockinteraction);
 
             if (this.getAbsorbedCreepers() >= this.getMaxAbsorbs()) {
-                SneakerEntity creeper = new SneakerEntity(ModEntityTypes.Sneaker.get(), this.level);
+                SneakerEntity creeper = new SneakerEntity(YEEntityTypes.Sneaker.get(), this.level);
                 creeper.copyPosition(this);
                 if (this.getTeam() != null) {
                     level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),

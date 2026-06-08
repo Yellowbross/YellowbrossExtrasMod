@@ -1,9 +1,8 @@
 package com.yellowbrossproductions.yellowbrossextras.entities;
 
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
-import com.yellowbrossproductions.yellowbrossextras.entities.creepers.CreeperInfection;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,21 +19,16 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -147,7 +141,7 @@ public class AimbotEntity extends YExtrasMob implements Enemy {
 
         if (this.getKarma() > 0 && this.random.nextInt(Math.max(YellowbrossExtrasConfig.aimbot_randomBanChance.get() - this.getKarma(), 1)) == 0 && !this.level.isClientSide) {
             this.stopShootingSound(this.level);
-            this.playSound(YellowbrossExtrasSoundEvents.AIMBOT_BANNED.get(), 10.0F, 1.6F);
+            this.playSound(YESoundEvents.AIMBOT_BANNED.get(), 10.0F, 1.6F);
             EntityUtil.broadcastMessage(this.level, Component.translatable("yellowbrossextras.aimbotBanned" + (this.random.nextInt(11) + 1), this.getDisplayName()).withStyle(ChatFormatting.YELLOW));
             this.dead = true;
             this.discard();
@@ -186,7 +180,7 @@ public class AimbotEntity extends YExtrasMob implements Enemy {
             return;
         }
 
-        ClientboundStopSoundPacket sstopsoundpacket = new ClientboundStopSoundPacket(YellowbrossExtrasSoundEvents.AIMBOT_SHOOT.get().getLocation(), SoundSource.HOSTILE);
+        ClientboundStopSoundPacket sstopsoundpacket = new ClientboundStopSoundPacket(YESoundEvents.AIMBOT_SHOOT.get().getLocation(), SoundSource.HOSTILE);
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             player.connection.send(sstopsoundpacket);
         }
@@ -258,7 +252,7 @@ public class AimbotEntity extends YExtrasMob implements Enemy {
             LivingEntity target = this.aimbot.getTarget();
             if (target != null) {
                 this.aimbot.stopShootingSound(this.aimbot.level);
-                this.aimbot.playSound(YellowbrossExtrasSoundEvents.AIMBOT_SHOOT.get(), 4.0F, 1.0F);
+                this.aimbot.playSound(YESoundEvents.AIMBOT_SHOOT.get(), 4.0F, 1.0F);
                 this.aimbot.stareAt = target.getPosition(0).add(0, target.getEyeHeight(), 0);
                 this.aimbot.getLookControl().setLookAt(this.aimbot.stareAt.x, this.aimbot.stareAt.y, this.aimbot.stareAt.z, 999.0F, 100.0F);
                 this.aimbot.setOldPosAndRot();

@@ -2,9 +2,9 @@ package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -73,7 +73,7 @@ public class FreakerEntity extends AbstractCreeperEntity implements CreeperInfec
             Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
             this.dead = true;
             for (int i = 0; i < 3; ++i) {
-                CrawlerEntity creeper = new CrawlerEntity(ModEntityTypes.Crawler.get(), this.level);
+                CrawlerEntity creeper = new CrawlerEntity(YEEntityTypes.Crawler.get(), this.level);
                 creeper.copyPosition(this);
                 creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
                 creeper.setDeltaMovement(this.random.nextDouble() - 0.5D,
@@ -86,10 +86,10 @@ public class FreakerEntity extends AbstractCreeperEntity implements CreeperInfec
                 this.level.addFreshEntity(creeper);
             }
             this.makeExplodeParticles();
-            this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 4.0F, 2.0F);
-            this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.5F);
-            this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.0F);
-            this.playSound(YellowbrossExtrasSoundEvents.HUGE_EXPLOSION.get(), 4.0F, 0.6F);
+            this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 2.0F);
+            this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.5F);
+            this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.0F);
+            this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 0.6F);
             CameraShakeEntity.cameraShake(this.level, position(), 50, 0.4f, 0, 40);
             this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 5.0F * f), explosion$blockinteraction);
             int rad = 6;

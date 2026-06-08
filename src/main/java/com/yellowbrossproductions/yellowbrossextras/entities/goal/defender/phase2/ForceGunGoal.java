@@ -2,7 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phas
 
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.world.phys.Vec3;
 
 public class ForceGunGoal extends CustomAttackGoal {
@@ -22,7 +22,7 @@ public class ForceGunGoal extends CustomAttackGoal {
         getDefender().setWeaponToShow(11);
         getDefender().attackType = getDefender().attack_forcegun;
         getDefender().setImmediateTurn(true);
-        getDefender().playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_FORCEGUN_START.get(), 1.0F, 1.0F);
+        getDefender().playSound(YESoundEvents.ENTITY_DEFENDER_FORCEGUN_START.get(), 1.0F, 1.0F);
 
         if (getDefender().tryToFindTarget() != null) getDefender().setSpecialLookLocation(getDefender().tryToFindTarget().getPosition(0).add(0, getDefender().tryToFindTarget().getEyeHeight(), 0));
     }

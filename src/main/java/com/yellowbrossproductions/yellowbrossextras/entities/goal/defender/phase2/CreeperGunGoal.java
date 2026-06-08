@@ -2,6 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phas
 
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
+import net.minecraft.world.entity.player.Player;
 
 public class CreeperGunGoal extends CustomAttackGoal {
 
@@ -24,7 +25,7 @@ public class CreeperGunGoal extends CustomAttackGoal {
 
     @Override
     public boolean canContinueToUse() {
-        return getDefender().attackTicks <= 160 && !(getDefender().attackTicks > 60 && getDefender().tryToFindTarget() == null);
+        return getDefender().attackTicks <= (160 - (getDefender().getTarget() instanceof Player player && !getDefender().isInAttackSight(player) ? 40 : 0)) && !(getDefender().attackTicks > 60 && getDefender().tryToFindTarget() == null);
     }
 
     @Override

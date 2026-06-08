@@ -3,7 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.oryctolins;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ConverslinBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -181,7 +181,7 @@ public class ConverslinEntity extends AbstractOryctolin {
                                     0.8D,
                                     ((d3 * d4) * mult) / distance);
                         }
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_CONVERSLIN_JUMP.get(), 1.0F, this.getVoicePitch());
+                        this.playSound(YESoundEvents.ENTITY_CONVERSLIN_JUMP.get(), 1.0F, this.getVoicePitch());
                     }
                     if (this.attackTicks == 16) {
                         float radius2 = 1.1f;
@@ -227,7 +227,7 @@ public class ConverslinEntity extends AbstractOryctolin {
         float speed = Mth.sqrt(moveX * moveX + moveZ * moveZ);
         if (speed > 0.1) {
             if (this.tickCount % 4 == 0 && this.isOnGround()) {
-                this.playSound(YellowbrossExtrasSoundEvents.ENTITY_CONVERSLIN_STEP.get(), 0.25F, 1.0F);
+                this.playSound(YESoundEvents.ENTITY_CONVERSLIN_STEP.get(), 0.25F, 1.0F);
             }
         }
 
@@ -250,7 +250,7 @@ public class ConverslinEntity extends AbstractOryctolin {
         }
 
         if (this.AHHHHHH && this.runAwayFrom != null && this.getFace() != 1 && this.getFace() != 2) {
-            this.playSound(YellowbrossExtrasSoundEvents.ENTITY_CONVERSLIN_SHRIEK.get(), 1.5F, this.getVoicePitch());
+            this.playSound(YESoundEvents.ENTITY_CONVERSLIN_SHRIEK.get(), 1.5F, this.getVoicePitch());
             this.setFace(FACE_SCARE);
             this.setAnimationState("none");
             double d1 = this.runAwayFrom.getX() - this.getX();

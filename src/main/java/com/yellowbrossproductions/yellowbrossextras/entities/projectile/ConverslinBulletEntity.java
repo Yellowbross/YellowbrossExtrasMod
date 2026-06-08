@@ -2,9 +2,9 @@ package com.yellowbrossproductions.yellowbrossextras.entities.projectile;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.AbstractOryctolin;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.RegistryHandler;
+import com.yellowbrossproductions.yellowbrossextras.init.YEItemsAndBlocks;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -27,11 +27,11 @@ public class ConverslinBulletEntity extends CustomAbstractHurtingProjectile impl
     }
 
     public ConverslinBulletEntity(EntityType<? extends CustomAbstractHurtingProjectile> p_36817_, double p_36818_, double p_36819_, double p_36820_, double p_36821_, double p_36822_, double p_36823_, Level p_36824_) {
-        super(ModEntityTypes.ConverslinBullet.get(), p_36818_, p_36819_, p_36820_, p_36821_, p_36822_, p_36823_, p_36824_);
+        super(YEEntityTypes.ConverslinBullet.get(), p_36818_, p_36819_, p_36820_, p_36821_, p_36822_, p_36823_, p_36824_);
     }
 
     public ConverslinBulletEntity(Level p_36831_, LivingEntity p_36827_, double p_36828_, double p_36829_, double p_36830_) {
-        super(ModEntityTypes.ConverslinBullet.get(), p_36827_, p_36828_, p_36829_, p_36830_, p_36831_);
+        super(YEEntityTypes.ConverslinBullet.get(), p_36827_, p_36828_, p_36829_, p_36830_, p_36831_);
     }
 
     protected void onHitEntity(EntityHitResult p_37404_) {
@@ -125,7 +125,7 @@ public class ConverslinBulletEntity extends CustomAbstractHurtingProjectile impl
 
     @Override
     public ItemStack getItem() {
-        return RegistryHandler.CONVERSLIN_BULLET.get().getDefaultInstance();
+        return YEItemsAndBlocks.CONVERSLIN_BULLET.get().getDefaultInstance();
     }
 
     public float getLightLevelDependentMagicValue() {

@@ -1,7 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.block;
 
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
-import com.yellowbrossproductions.yellowbrossextras.util.RegistryHandler;
+import com.yellowbrossproductions.yellowbrossextras.init.YEItemsAndBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -34,7 +34,7 @@ public class PvEBlock extends Block {
             List<Player> list = worldIn.getEntitiesOfClass(Player.class, new AABB(pos).inflate(size));
             if (list.isEmpty()) {
                 worldIn.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                worldIn.levelEvent(2001, pos, Block.getId(RegistryHandler.PVE_BLOCK.get().defaultBlockState()));
+                worldIn.levelEvent(2001, pos, Block.getId(YEItemsAndBlocks.PVE_BLOCK.get().defaultBlockState()));
             }
         }
     }

@@ -1,9 +1,9 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.projectile;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.MobAttack;
-import com.yellowbrossproductions.yellowbrossextras.util.EffectRegisterer;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -81,8 +81,8 @@ public class BoomerangEntity extends PathfinderMob implements MobAttack {
                     }.setProjectile();
                     boolean flag = living.hurt(damageSource, 4.0F);
                     if (flag) {
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_BOOMERANG_HIT.get(), 2.0F, this.getVoicePitch());
-                        living.addEffect(new MobEffectInstance(EffectRegisterer.KNOCKED_OUT.get(), 200, 0, true, true, true));
+                        this.playSound(YESoundEvents.ENTITY_DEFENDER_BOOMERANG_HIT.get(), 2.0F, this.getVoicePitch());
+                        living.addEffect(new MobEffectInstance(YEEffects.KNOCKED_OUT.get(), 200, 0, true, true, true));
                         this.makeExplodeParticles();
                     }
                 }
@@ -125,7 +125,7 @@ public class BoomerangEntity extends PathfinderMob implements MobAttack {
         }
 
         if (!this.shouldReturn) {
-            if (this.goFor != null && !this.goFor.hasEffect(EffectRegisterer.KNOCKED_OUT.get()) && this.goFor.isAlive() && !this.goFor.isRemoved()) {
+            if (this.goFor != null && !this.goFor.hasEffect(YEEffects.KNOCKED_OUT.get()) && this.goFor.isAlive() && !this.goFor.isRemoved()) {
                 if (!(this.goFor instanceof Player)) {
                     LivingEntity entity = this.goFor;
 
@@ -142,7 +142,7 @@ public class BoomerangEntity extends PathfinderMob implements MobAttack {
             } else {
                 LivingEntity t = null;
                 List<Mob> attacklist = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(40.0D), p -> {
-                    return p instanceof Enemy && EntityUtil.canHurtThisMob(p, this) && !p.hasEffect(EffectRegisterer.KNOCKED_OUT.get()) && p.isAlive() && !p.isRemoved();
+                    return p instanceof Enemy && EntityUtil.canHurtThisMob(p, this) && !p.hasEffect(YEEffects.KNOCKED_OUT.get()) && p.isAlive() && !p.isRemoved();
                 });
                 if (!attacklist.isEmpty()) {
                     t = attacklist.get(0);

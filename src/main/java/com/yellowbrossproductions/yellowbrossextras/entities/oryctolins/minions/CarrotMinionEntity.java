@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -20,7 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 
-public class CarrotMinionEntity extends YExtrasMob implements IsOryctolinAligned {
+public class CarrotMinionEntity extends YExtrasMob implements IsOryctolinAligned, Enemy {
 
     public CarrotMinionEntity(EntityType<? extends YExtrasMob> p_33002_, Level p_33003_) {
         super(p_33002_, p_33003_);
@@ -61,5 +62,10 @@ public class CarrotMinionEntity extends YExtrasMob implements IsOryctolinAligned
         entityIn.setDeltaMovement(entityIn.getDeltaMovement().add(x * 1.5, y * 0.5, z * 1.5));
         this.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK);
         return super.doHurtTarget(entityIn);
+    }
+
+    @Override
+    protected boolean shouldDespawnInPeaceful() {
+        return true;
     }
 }

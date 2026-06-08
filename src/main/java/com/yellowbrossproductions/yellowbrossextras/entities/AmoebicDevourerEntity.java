@@ -1,7 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -145,7 +145,7 @@ public class AmoebicDevourerEntity extends YExtrasMob implements Enemy {
     @Override
     public boolean hurt(DamageSource source, float amount) {
         if (source.isProjectile()) {
-            this.playSound(YellowbrossExtrasSoundEvents.ENTITY_AMOEBIC_DEVOURER_GULP.get(), this.getSoundVolume(), this.getVoicePitch());
+            this.playSound(YESoundEvents.ENTITY_AMOEBIC_DEVOURER_GULP.get(), this.getSoundVolume(), this.getVoicePitch());
             this.wasOnGround = false;
             if (!this.level.isClientSide) {
                 this.setSize(this.getSize() + 0.3f, false);

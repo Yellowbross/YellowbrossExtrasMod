@@ -1,18 +1,13 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.IsDefenderAligned;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
-import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
-import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -27,7 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
 
@@ -39,12 +33,12 @@ public class DefenderArrowEntity extends AbstractArrow {
     }
 
     public DefenderArrowEntity(Level p_36861_, double x, double y, double z) {
-        super(ModEntityTypes.DefenderArrow.get(), x, y, z, p_36861_);
+        super(YEEntityTypes.DefenderArrow.get(), x, y, z, p_36861_);
         this.setPos(x, y, z);
     }
 
     public DefenderArrowEntity(Level p_36866_, LivingEntity p_36867_) {
-        super(ModEntityTypes.DefenderArrow.get(), p_36867_, p_36866_);
+        super(YEEntityTypes.DefenderArrow.get(), p_36867_, p_36866_);
         setOwner(p_36867_);
     }
 

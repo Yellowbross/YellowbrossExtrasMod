@@ -3,9 +3,9 @@ package com.yellowbrossproductions.yellowbrossextras.entities;
 import com.google.common.collect.Sets;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.RegistryHandler;
+import com.yellowbrossproductions.yellowbrossextras.init.YEItemsAndBlocks;
 import com.yellowbrossproductions.yellowbrossextras.util.LoopingSound;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.client.Minecraft;
@@ -207,10 +207,10 @@ public class VilvgaverEntity extends YExtrasMob implements IEntityAdditionalSpaw
                 double d = Math.sqrt(x * x + y * y + z * z);
                 if (this.tickCount > delay || !this.isChallenge()) {
                     if (this.distanceToSqr(entity) < 4.5D) {
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_VILVGAVER_ATTACK.get(), 0.6F, 1.0F);
+                        this.playSound(YESoundEvents.ENTITY_VILVGAVER_ATTACK.get(), 0.6F, 1.0F);
 
                         if (this.sayTicks < 1) {
-                            this.playSound(YellowbrossExtrasSoundEvents.ENTITY_VILVGAVER_SAY.get(), 2.0F, 1.0F);
+                            this.playSound(YESoundEvents.ENTITY_VILVGAVER_SAY.get(), 2.0F, 1.0F);
                         }
                         this.sayTicks = 60;
 
@@ -238,14 +238,14 @@ public class VilvgaverEntity extends YExtrasMob implements IEntityAdditionalSpaw
                     }
                     if (YellowbrossExtrasConfig.vilvgaverChallenge_jumpDelay.get() * 20 > 0 && this.isChallenge() && this.jumpWaitTime < 1) {
                         this.jumpWaitTime = 1;
-                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_VILVGAVER_WARN.get(), 6.0F, 1.0F);
+                        this.playSound(YESoundEvents.ENTITY_VILVGAVER_WARN.get(), 6.0F, 1.0F);
                     }
                 }
             }
         }
         if (this.targetedJump != null && (this.jumpWaitTime > YellowbrossExtrasConfig.vilvgaverChallenge_jumpDelay.get() * 20 || !this.isChallenge())) {
             if (!this.canDestroyBlocks) {
-                this.playSound(YellowbrossExtrasSoundEvents.ENTITY_VILVGAVER_JUMP.get(), 6.0F, 1.0F);
+                this.playSound(YESoundEvents.ENTITY_VILVGAVER_JUMP.get(), 6.0F, 1.0F);
                 this.canDestroyBlocks = true;
 
                 double x = getX() - this.targetedJump.x;
@@ -366,7 +366,7 @@ public class VilvgaverEntity extends YExtrasMob implements IEntityAdditionalSpaw
                         BlockPos blockpos1 = blockpos.immutable();
                         this.level.getProfiler().push("explosion_blocks");
 
-                        this.level.setBlockAndUpdate(blockpos1, RegistryHandler.FROZEN_LAVA.get().defaultBlockState());
+                        this.level.setBlockAndUpdate(blockpos1, YEItemsAndBlocks.FROZEN_LAVA.get().defaultBlockState());
                         this.level.getProfiler().pop();
                     }
                 }
@@ -439,9 +439,9 @@ public class VilvgaverEntity extends YExtrasMob implements IEntityAdditionalSpaw
                             if (this.isChallenge()) {
                                 if (this.getTarget() != null) {
                                     if (this.random.nextInt(3) == 0 && !this.isInAttackSight(getTarget())) {
-                                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_VILVGAVER_CRASH_CLOSE.get(), 3.2F, this.getVoicePitch());
-                                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_VILVGAVER_CRASH_MEDIUM.get(), 4.0F, this.getVoicePitch());
-                                        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_VILVGAVER_CRASH_DISTANT.get(), 10.0F, this.getVoicePitch());
+                                        this.playSound(YESoundEvents.ENTITY_VILVGAVER_CRASH_CLOSE.get(), 3.2F, this.getVoicePitch());
+                                        this.playSound(YESoundEvents.ENTITY_VILVGAVER_CRASH_MEDIUM.get(), 4.0F, this.getVoicePitch());
+                                        this.playSound(YESoundEvents.ENTITY_VILVGAVER_CRASH_DISTANT.get(), 10.0F, this.getVoicePitch());
                                         CameraShakeEntity.cameraShake(this.level, position(), 60, 0.1f, 0, 20);
                                     }
                                 }
@@ -532,6 +532,6 @@ public class VilvgaverEntity extends YExtrasMob implements IEntityAdditionalSpaw
     @Override
     @OnlyIn(Dist.CLIENT)
     public void readSpawnData(FriendlyByteBuf additionalData) {
-        Minecraft.getInstance().getSoundManager().play(new LoopingSound(this, YellowbrossExtrasSoundEvents.ENTITY_VILVGAVER_LOOP.get(), (float) (YellowbrossExtrasConfig.vilvgaver_ambienceVolume.get() * 1.0D)));
+        Minecraft.getInstance().getSoundManager().play(new LoopingSound(this, YESoundEvents.ENTITY_VILVGAVER_LOOP.get(), (float) (YellowbrossExtrasConfig.vilvgaver_ambienceVolume.get() * 1.0D)));
     }
 }

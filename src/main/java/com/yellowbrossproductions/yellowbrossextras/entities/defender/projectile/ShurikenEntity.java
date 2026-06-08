@@ -1,7 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile;
 
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
-import com.yellowbrossproductions.yellowbrossextras.util.RegistryHandler;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEItemsAndBlocks;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -20,16 +20,16 @@ public class ShurikenEntity extends ThrowableItemProjectile {
     }
 
     public ShurikenEntity(double p_37433_, double p_37434_, double p_37435_, Level p_37436_) {
-        super(ModEntityTypes.Shuriken.get(), p_37433_, p_37434_, p_37435_, p_37436_);
+        super(YEEntityTypes.Shuriken.get(), p_37433_, p_37434_, p_37435_, p_37436_);
     }
 
     public ShurikenEntity(Level p_37440_, LivingEntity p_37439_) {
-        super(ModEntityTypes.Shuriken.get(), p_37439_, p_37440_);
+        super(YEEntityTypes.Shuriken.get(), p_37439_, p_37440_);
     }
 
     @Override
     protected Item getDefaultItem() {
-        return RegistryHandler.SHURIKEN.get();
+        return YEItemsAndBlocks.SHURIKEN.get();
     }
 
     @Override

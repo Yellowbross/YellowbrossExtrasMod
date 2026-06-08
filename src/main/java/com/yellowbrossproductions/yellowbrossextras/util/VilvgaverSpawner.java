@@ -1,10 +1,10 @@
 package com.yellowbrossproductions.yellowbrossextras.util;
 
-import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.VilvgaverEntity;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
-import com.yellowbrossproductions.yellowbrossextras.init.YellowbrossExtrasGameRules;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEGameRules;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -23,7 +23,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 
@@ -42,7 +41,7 @@ public class VilvgaverSpawner implements CustomSpawner {
         if (this.breathTimeDelay > 0 && this.playerWithoutAVilvgaver(p_45839_)) {
             this.breathTimeDelay -= 1;
         }
-        if (!p_45839_.getGameRules().getBoolean(YellowbrossExtrasGameRules.VILVGAVERCHALLENGE)) {
+        if (!p_45839_.getGameRules().getBoolean(YEGameRules.VILVGAVERCHALLENGE)) {
             return 0;
         } else if (p_45839_.getDifficulty() == Difficulty.PEACEFUL) {
             return 0;
@@ -74,9 +73,9 @@ public class VilvgaverSpawner implements CustomSpawner {
                             this.hasEnoughSpace(p_35916_, blockpos2) &&
                             randomTest(player.getRandom()) == 0)
                     {
-                        VilvgaverEntity vilvgaver = ModEntityTypes.Vilvgaver.get().spawn(p_35916_, (CompoundTag)null, (Component)null, (Player)null, blockpos2, MobSpawnType.EVENT, false, false);
+                        VilvgaverEntity vilvgaver = YEEntityTypes.Vilvgaver.get().spawn(p_35916_, (CompoundTag)null, (Component)null, (Player)null, blockpos2, MobSpawnType.EVENT, false, false);
                         if (vilvgaver != null) {
-                            vilvgaver.playSound(YellowbrossExtrasSoundEvents.ENTITY_VILVGAVER_RESPAWN.get(), 10.0F, 1.0F);
+                            vilvgaver.playSound(YESoundEvents.ENTITY_VILVGAVER_RESPAWN.get(), 10.0F, 1.0F);
                             AttributeInstance speed = vilvgaver.getAttributes().getInstance(Attributes.MOVEMENT_SPEED);
                             if (speed != null) {
                                 speed.setBaseValue(YellowbrossExtrasConfig.vilvgaverChallenge_defaultSpeed.get());
@@ -112,7 +111,7 @@ public class VilvgaverSpawner implements CustomSpawner {
             int k = p_35930_.getZ() + this.random.nextInt(p_35931_ * 2) - p_35931_;
             int l = p_35929_.getHeight(Heightmap.Types.WORLD_SURFACE, j, k);
             BlockPos blockpos1 = new BlockPos(j, l, k);
-            if (NaturalSpawner.isSpawnPositionOk(SpawnPlacements.Type.NO_RESTRICTIONS, p_35929_, blockpos1, ModEntityTypes.Vilvgaver.get())) {
+            if (NaturalSpawner.isSpawnPositionOk(SpawnPlacements.Type.NO_RESTRICTIONS, p_35929_, blockpos1, YEEntityTypes.Vilvgaver.get())) {
                 blockpos = blockpos1;
                 break;
             }

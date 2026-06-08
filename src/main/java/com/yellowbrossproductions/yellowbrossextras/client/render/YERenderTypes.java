@@ -34,4 +34,16 @@ public abstract class YERenderTypes extends RenderType {
     public static RenderType stickFigure(ResourceLocation p_110455_, boolean p_110456_) {
         return STICK_FIGURE.apply(p_110455_, p_110456_);
     }
+
+    public static RenderType getMask(ResourceLocation location) {
+        RenderType.CompositeState rendertype = RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENTITY_GLINT_DIRECT_SHADER).setTextureState(new RenderStateShard.TextureStateShard(location, true, false)).setWriteMaskState(COLOR_WRITE).setCullState(NO_CULL).setDepthTestState(EQUAL_DEPTH_TEST).setTransparencyState(GLINT_TRANSPARENCY).setTexturingState(ENTITY_GLINT_TEXTURING).createCompositeState(false);
+
+        return create("mask",
+                DefaultVertexFormat.POSITION_TEX,
+                VertexFormat.Mode.QUADS,
+                256,
+                true,
+                true,
+                rendertype);
+    }
 }

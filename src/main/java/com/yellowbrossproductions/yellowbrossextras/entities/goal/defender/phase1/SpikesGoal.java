@@ -2,7 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phas
 
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 
 public class SpikesGoal extends CustomAttackGoal {
 
@@ -20,7 +20,7 @@ public class SpikesGoal extends CustomAttackGoal {
         getDefender().setAnimationState("spikes");
         getDefender().setWeaponToShow(4);
         getDefender().attackType = getDefender().attack_spikes;
-        getDefender().playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SPIN_SHORT.get(), 1.5F, 1.0F);
+        getDefender().playSound(YESoundEvents.ENTITY_DEFENDER_SPIN_SHORT.get(), 1.5F, 1.0F);
     }
 
     @Override

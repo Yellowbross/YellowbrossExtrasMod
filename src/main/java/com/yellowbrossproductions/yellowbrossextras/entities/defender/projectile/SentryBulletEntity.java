@@ -2,12 +2,12 @@ package com.yellowbrossproductions.yellowbrossextras.entities.defender.projectil
 
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.IsDefenderAligned;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.CustomAbstractHurtingProjectile;
-import com.yellowbrossproductions.yellowbrossextras.init.ModEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.util.RegistryHandler;
-import com.yellowbrossproductions.yellowbrossextras.util.YellowbrossExtrasSoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.init.YEItemsAndBlocks;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
@@ -36,11 +36,11 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
     }
 
     public SentryBulletEntity(EntityType<? extends CustomAbstractHurtingProjectile> p_36817_, double p_36818_, double p_36819_, double p_36820_, double p_36821_, double p_36822_, double p_36823_, Level p_36824_) {
-        super(ModEntityTypes.SentryBullet.get(), p_36818_, p_36819_, p_36820_, p_36821_, p_36822_, p_36823_, p_36824_);
+        super(YEEntityTypes.SentryBullet.get(), p_36818_, p_36819_, p_36820_, p_36821_, p_36822_, p_36823_, p_36824_);
     }
 
     public SentryBulletEntity(Level p_36831_, LivingEntity p_36827_, double p_36828_, double p_36829_, double p_36830_) {
-        super(ModEntityTypes.SentryBullet.get(), p_36827_, p_36828_, p_36829_, p_36830_, p_36831_);
+        super(YEEntityTypes.SentryBullet.get(), p_36827_, p_36828_, p_36829_, p_36830_, p_36831_);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
         boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
         this.makeExplodeParticles();
         this.stopShootingSound(this.level);
-        this.playSound(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_HIT.get(), 2.0F, 1.0F);
+        this.playSound(YESoundEvents.ENTITY_DEFENDER_SENTRY_HIT.get(), 2.0F, 1.0F);
         for (Entity entity : list) {
             if (entity instanceof LivingEntity living) {
                 boolean team = true;
@@ -136,7 +136,7 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
 
     @Override
     public ItemStack getItem() {
-        return RegistryHandler.CONVERSLIN_BULLET.get().getDefaultInstance();
+        return YEItemsAndBlocks.CONVERSLIN_BULLET.get().getDefaultInstance();
     }
 
     public float getLightLevelDependentMagicValue() {
@@ -149,7 +149,7 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
             return;
         }
 
-        ClientboundStopSoundPacket sstopsoundpacket = new ClientboundStopSoundPacket(YellowbrossExtrasSoundEvents.ENTITY_DEFENDER_SENTRY_HIT.get().getLocation(), SoundSource.NEUTRAL);
+        ClientboundStopSoundPacket sstopsoundpacket = new ClientboundStopSoundPacket(YESoundEvents.ENTITY_DEFENDER_SENTRY_HIT.get().getLocation(), SoundSource.NEUTRAL);
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             player.connection.send(sstopsoundpacket);
         }
