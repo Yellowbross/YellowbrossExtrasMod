@@ -8,9 +8,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.Intell
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.CarrotMinionEntity;
-import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
-import com.yellowbrossproductions.yellowbrossextras.mixin.access.LivingEntityAccess;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.BlitzManager;
@@ -497,14 +495,5 @@ public class EntityUtil {
                 }
             }
         }
-    }
-
-    public static boolean isSuperDuperPoison(LivingEntity entity) {
-        return entity instanceof LivingEntityAccess && ((LivingEntityAccess) entity).ye$isSuperDuperPoison();
-    }
-
-    public static void setSuperDuperPoison(LivingEntity entity, boolean input) {
-        if (entity instanceof LivingEntityAccess)
-            ((LivingEntityAccess) entity).ye$setSuperDuperPoison(input);
     }
 }

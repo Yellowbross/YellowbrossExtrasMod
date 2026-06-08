@@ -32,7 +32,7 @@ public class YEClientEventHandler {
         public static void addLayers(EntityRenderersEvent.AddLayers event) {
             Minecraft.getInstance().getEntityRenderDispatcher().renderers.values().forEach(renderer -> {
                 if (renderer instanceof LivingEntityRenderer) {
-                    ((LivingEntityRenderer<?, ?>) renderer).addLayer(new SuperDuperPoisonLayer<>((LivingEntityRenderer<?, ?>) renderer));
+                    ((LivingEntityRenderer<?, ?>) renderer).addLayer(new SuperDuperPoisonLayer((LivingEntityRenderer<?, ?>) renderer));
                 }
             });
         }

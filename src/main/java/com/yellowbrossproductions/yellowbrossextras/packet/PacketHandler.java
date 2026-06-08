@@ -2,6 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.packet;
 
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
+import com.yellowbrossproductions.yellowbrossextras.message.MessageSuperDuperPoison;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
@@ -19,5 +20,6 @@ public class PacketHandler {
     public static void init() {
         int id = 0;
         CHANNEL.registerMessage(id++, ParticlePacket.class, ParticlePacket::encode, ParticlePacket::new, ParticlePacket.Handler::onMessage);
+        CHANNEL.registerMessage(id++, MessageSuperDuperPoison.class, MessageSuperDuperPoison::serialize, MessageSuperDuperPoison::deserialize, MessageSuperDuperPoison::handle);
     }
 }
