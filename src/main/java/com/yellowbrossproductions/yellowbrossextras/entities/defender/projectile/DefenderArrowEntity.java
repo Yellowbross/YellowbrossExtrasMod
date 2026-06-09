@@ -1,6 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.IsDefenderAligned;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.particles.ParticleTypes;
@@ -9,7 +10,9 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -78,18 +81,31 @@ public class DefenderArrowEntity extends AbstractArrow {
 
     @Override
     protected void onHitEntity(EntityHitResult hitRes) {
-        this.setPierceLevel((byte) (this.getPierceLevel() + 2));
-        super.onHitEntity(hitRes);
         switch (this.getArrowType()) {
-            case 1 : {
-
-            }
-            default : {
+            case 0 : {
+                this.setPierceLevel((byte) (this.getPierceLevel() + 2));
                 this.explode(5.0F);
                 if (hitRes.getEntity().invulnerableTime < 1) this.playSound(SoundEvents.GENERIC_EXPLODE, 1.5F, 0.6F);
                 break;
             }
+            case 1 : {
+                if (hitRes.getEntity() instanceof LivingEntity living) {
+                    MobEffectInstance effect = living.getEffect(YEEffects.SUPER_DUPER_POISON.get());
+                    int i = 1;
+                    if (effect != null) {
+                        i += effect.getAmplifier();
+                        living.removeEffectNoUpdate(YEEffects.SUPER_DUPER_POISON.get());
+                    } else {
+                        --i;
+                    }
+
+                    i = Mth.clamp(i, 0, 4);
+                    living.addEffect(new MobEffectInstance(YEEffects.SUPER_DUPER_POISON.get(), 15 * 20, i));
+                }
+                break;
+            }
         }
+        super.onHitEntity(hitRes);
     }
 
     private void explode(double size) {

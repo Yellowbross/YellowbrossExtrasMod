@@ -8,7 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 
 public class CustomMobEffect extends MobEffect {
-
     public CustomMobEffect(MobEffectCategory type, int liquidColor) {
         super(type, liquidColor);
     }
