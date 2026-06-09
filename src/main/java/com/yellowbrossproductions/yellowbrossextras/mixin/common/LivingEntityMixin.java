@@ -30,6 +30,7 @@ public abstract class LivingEntityMixin extends Entity {
     private void ye$injectOnEffectAdded(MobEffectInstance pEffectInstance, Entity pEntity, CallbackInfo ci) {
         if (this.level.isClientSide) return;
 
+        // Creating an explosion to test if the mixin even works. Currently, it does not.
         CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), 6.0F, true);
         if (pEffectInstance.getEffect() == YEEffects.SUPER_DUPER_POISON.get()) {
             for (ServerPlayer player : ((ServerLevel) this.level).players()) {
