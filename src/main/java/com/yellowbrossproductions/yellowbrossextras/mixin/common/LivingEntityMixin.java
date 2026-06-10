@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+// Huge, huge, HUGE thanks to TheDarkPeasant for helping me get mixin code to work!
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 
@@ -30,12 +31,14 @@ public abstract class LivingEntityMixin extends Entity {
     private void ye$injectOnEffectAdded(MobEffectInstance pEffectInstance, Entity pEntity, CallbackInfo ci) {
         if (this.level.isClientSide) return;
 
-        // Creating an explosion to test if the mixin even works. Currently, it does not.
-        CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), 6.0F, true);
-        if (pEffectInstance.getEffect() == YEEffects.SUPER_DUPER_POISON.get()) {
-            for (ServerPlayer player : ((ServerLevel) this.level).players()) {
-                if (player.getId() == this.getId()) continue;
-                player.connection.send(new ClientboundUpdateMobEffectPacket(this.getId(), pEffectInstance));
+        if (pEffectInstance.getEffect() instanceof CustomMobEffect effect) {
+            effect.onAdded(pEffectInstance, (LivingEntity) (Object) this, pEntity);
+
+            if (effect.syncToClients) {
+                for (ServerPlayer player : ((ServerLevel) this.level).players()) {
+                    if (player.getId() == this.getId()) continue;
+                    player.connection.send(new ClientboundUpdateMobEffectPacket(this.getId(), pEffectInstance));
+                }
             }
         }
     }
@@ -44,7 +47,7 @@ public abstract class LivingEntityMixin extends Entity {
     private void ye$injectOnEffectUpdated(MobEffectInstance pEffectInstance, boolean pForced, Entity pEntity, CallbackInfo ci) {
         if (this.level.isClientSide) return;
 
-        if (pEffectInstance.getEffect() == YEEffects.SUPER_DUPER_POISON.get())
+        if (pEffectInstance.getEffect() instanceof CustomMobEffect effect && effect.syncToClients)
             for (ServerPlayer player : ((ServerLevel) this.level).players()) {
                 if (player.getId() == this.getId()) continue;
                 player.connection.send(new ClientboundUpdateMobEffectPacket(this.getId(), pEffectInstance));
@@ -55,10 +58,14 @@ public abstract class LivingEntityMixin extends Entity {
     private void ye$injectOnEffectRemoved(MobEffectInstance pEffectInstance, CallbackInfo ci) {
         if (this.level.isClientSide) return;
 
-        if (pEffectInstance.getEffect() == YEEffects.SUPER_DUPER_POISON.get()) {
-            for (ServerPlayer player : ((ServerLevel) this.level).players()) {
-                if (player.getId() == this.getId()) continue;
-                player.connection.send(new ClientboundRemoveMobEffectPacket(this.getId(), pEffectInstance.getEffect()));
+        if (pEffectInstance.getEffect() instanceof CustomMobEffect effect) {
+            effect.onRemoved(pEffectInstance, (LivingEntity) (Object) this, pEffectInstance.getDuration() > 1);
+
+            if (effect.syncToClients) {
+                for (ServerPlayer player : ((ServerLevel) this.level).players()) {
+                    if (player.getId() == this.getId()) continue;
+                    player.connection.send(new ClientboundRemoveMobEffectPacket(this.getId(), pEffectInstance.getEffect()));
+                }
             }
         }
     }

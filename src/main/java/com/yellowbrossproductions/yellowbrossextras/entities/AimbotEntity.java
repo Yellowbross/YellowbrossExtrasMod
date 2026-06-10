@@ -79,6 +79,11 @@ public class AimbotEntity extends YExtrasMob implements Enemy {
     }
 
     @Override
+    public MobType getMobType() {
+        return MobType.UNDEAD;
+    }
+
+    @Override
     protected boolean shouldDespawnInPeaceful() {
         return true;
     }

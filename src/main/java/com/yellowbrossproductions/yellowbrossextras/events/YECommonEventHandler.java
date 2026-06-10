@@ -2,7 +2,6 @@ package com.yellowbrossproductions.yellowbrossextras.events;
 
 import com.google.common.collect.Sets;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.capability.SuperDuperPoisonCapability;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.*;
@@ -16,7 +15,6 @@ import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOrycto
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.CarrotMinionEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.BoomerangEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.*;
-import com.yellowbrossproductions.yellowbrossextras.message.MessageSuperDuperPoison;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.VilvgaverSpawner;
@@ -56,7 +54,6 @@ import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
@@ -70,7 +67,6 @@ public class YECommonEventHandler {
         @SubscribeEvent
         public static void onCommonSetup(FMLCommonSetupEvent event) {
             PacketHandler.init();
-            YellowbrossExtras.PROXY.initNetwork();
         }
 
         @SubscribeEvent
@@ -183,47 +179,11 @@ public class YECommonEventHandler {
     }
 
     @SubscribeEvent
-    public static void attachCapability(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof LivingEntity) {
-            event.addCapability(SuperDuperPoisonCapability.ID, new SuperDuperPoisonCapability.SuperDuperPoisonProvider());
-        }
-    }
-
-    @SubscribeEvent
     public static void doEffectVFX(LivingEvent.LivingTickEvent event) {
         LivingEntity mob = event.getEntity();
         Random random = new Random();
         if (mob.hasEffect(YEEffects.KNOCKED_OUT.get())) {
             EntityUtil.makeStunnedParticles(mob.level, mob);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onAddPotionEffect(MobEffectEvent.Added event) {
-        if (event.getEffectInstance() == null) return;
-
-        if (event.getEffectInstance().getEffect() == YEEffects.SUPER_DUPER_POISON.get()) {
-            if (!event.getEntity().level.isClientSide) {
-                YellowbrossExtras.NETWORK.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event::getEntity), new MessageSuperDuperPoison(event.getEntity(), true));
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void onRemovePotionEffect(MobEffectEvent.Remove event) {
-        if (event.getEffectInstance() == null) return;
-
-        if (!event.getEntity().level.isClientSide && event.getEffectInstance().getEffect() == YEEffects.SUPER_DUPER_POISON.get()) {
-            YellowbrossExtras.NETWORK.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event::getEntity), new MessageSuperDuperPoison(event.getEntity(), false));
-        }
-    }
-
-    @SubscribeEvent
-    public static void onPotionEffectExpire(MobEffectEvent.Expired event) {
-        if (event.getEffectInstance() == null) return;
-
-        if (!event.getEntity().level.isClientSide && event.getEffectInstance().getEffect() == YEEffects.SUPER_DUPER_POISON.get()) {
-            YellowbrossExtras.NETWORK.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event::getEntity), new MessageSuperDuperPoison(event.getEntity(), false));
         }
     }
 

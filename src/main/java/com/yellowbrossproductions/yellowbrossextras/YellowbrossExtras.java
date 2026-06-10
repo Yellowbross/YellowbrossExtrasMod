@@ -5,7 +5,6 @@ import com.mojang.logging.LogUtils;
 import com.yellowbrossproductions.yellowbrossextras.config.Config;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.init.*;
-import com.yellowbrossproductions.yellowbrossextras.message.MessageSuperDuperPoison;
 import com.yellowbrossproductions.yellowbrossextras.util.*;
 import com.yellowbrossproductions.yellowbrossextras.world.commands.BunnyBlitzCommand;
 import net.minecraft.commands.CommandSourceStack;
@@ -13,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -45,13 +43,9 @@ public class YellowbrossExtras
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final CreativeModeTab YELLOWBROSSEXTRAS_GROUP = new YellowbrossExtrasGroup("yellowbrossextrastab");
-    public static ServerProxy PROXY;
-
-    public static SimpleChannel NETWORK;
 
     public YellowbrossExtras()
     {
-        PROXY = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         YEItemsAndBlocks.itemInit();
@@ -65,9 +59,7 @@ public class YellowbrossExtras
 
         IEventBus forgeBus = MinecraftForge.EVENT_BUS;
         forgeBus.addListener(EventPriority.NORMAL, YellowbrossExtras::registerCommands);
-        modEventBus.addListener(YECapabilities::registerCaps);
-
-        PROXY.init(modEventBus);
+        // modEventBus.addListener(YECapabilities::registerCaps);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
