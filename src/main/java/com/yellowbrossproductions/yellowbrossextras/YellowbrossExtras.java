@@ -50,9 +50,10 @@ public class YellowbrossExtras
 
         YEItemsAndBlocks.itemInit();
         YEItemsAndBlocks.blockInit();
-        YEEntityTypes.ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        YEEffects.EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        YESoundEvents.SOUND_EVENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        YEEntityTypes.ENTITY_TYPES.register(modEventBus);
+        YEEffects.EFFECTS.register(modEventBus);
+        YEParticleTypes.PARTICLE_TYPES.register(modEventBus);
+        YESoundEvents.SOUND_EVENTS.register(modEventBus);
 
         Config.loadConfig(Config.client_config, FMLPaths.CONFIGDIR.get().resolve("yellowbrossextras-client.toml").toString());
         Config.loadConfig(Config.common_config, FMLPaths.CONFIGDIR.get().resolve("yellowbrossextras-common.toml").toString());

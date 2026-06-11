@@ -11,12 +11,17 @@ import com.yellowbrossproductions.yellowbrossextras.client.render.oryctolins.*;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEParticleTypes;
+import com.yellowbrossproductions.yellowbrossextras.particles.SuperDuperPoisonDripParticle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterEntitySpectatorShadersEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -107,6 +112,20 @@ public class YEClientEventHandler {
 
             event.registerEntityRenderer(YEEntityTypes.PathGuide.get(), PathGuideRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.Intelligence.get(), IntelligenceRenderer::new);
+        }
+
+        @SubscribeEvent
+        public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
+            event.register(YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), SuperDuperPoisonDripParticle.Provider::new);
+        }
+
+        @SubscribeEvent
+        public static void registerEntitySpectatorShaders(RegisterEntitySpectatorShadersEvent event) {
+            event.register(YEEntityTypes.Sneaker.get(), new ResourceLocation("shaders/post/creeper.json"));
+            event.register(YEEntityTypes.Paracreeper.get(), new ResourceLocation("shaders/post/creeper.json"));
+            event.register(YEEntityTypes.Crawler.get(), new ResourceLocation("shaders/post/creeper.json"));
+            event.register(YEEntityTypes.Freaker.get(), new ResourceLocation("shaders/post/creeper.json"));
+            event.register(YEEntityTypes.Sprayer.get(), new ResourceLocation("shaders/post/creeper.json"));
         }
     }
 
