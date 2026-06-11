@@ -13,6 +13,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YEParticleTypes;
 import com.yellowbrossproductions.yellowbrossextras.particles.SuperDuperPoisonDripParticle;
+import com.yellowbrossproductions.yellowbrossextras.particles.SuperDuperPoisonExplosionParticle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -117,6 +118,7 @@ public class YEClientEventHandler {
         @SubscribeEvent
         public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
             event.register(YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), SuperDuperPoisonDripParticle.Provider::new);
+            event.register(YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), SuperDuperPoisonExplosionParticle.Provider::new);
         }
 
         @SubscribeEvent

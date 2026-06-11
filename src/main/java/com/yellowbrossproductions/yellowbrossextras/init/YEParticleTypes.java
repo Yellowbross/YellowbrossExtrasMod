@@ -15,6 +15,7 @@ public final class YEParticleTypes {
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, YellowbrossExtras.MOD_ID);
 
     public static final RegistryObject<SimpleParticleType> SUPERDUPERPOISON_DRIP = PARTICLE_TYPES.register("superduperpoison_drip", () -> new SimpleParticleType(false));
+    public static final RegistryObject<SimpleParticleType> SUPERDUPERPOISON_EXPLOSION = PARTICLE_TYPES.register("superduperpoison_explosion", () -> new SimpleParticleType(true));
 
     private static <T extends ParticleOptions> RegistryObject<ParticleType<T>> register(String pKey, boolean pOverrideLimiter, ParticleOptions.Deserializer<T> pDeserializer, final Function<ParticleType<T>, Codec<T>> pCodecFactory) {
         return PARTICLE_TYPES.register(pKey, () -> new ParticleType<>(pOverrideLimiter, pDeserializer) {

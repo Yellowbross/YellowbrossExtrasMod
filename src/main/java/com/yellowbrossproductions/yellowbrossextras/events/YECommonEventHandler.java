@@ -43,7 +43,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -168,13 +168,49 @@ public class YECommonEventHandler {
     }
 
     @SubscribeEvent
-    public static void creeperInfection(LivingDeathEvent event) {
+    public static void makeThisMurderSpecial(LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
         if (source.getEntity() instanceof CreeperInfection && source.getEntity() instanceof LivingEntity living && entity instanceof Mob mob) {
             if (entity.level.getGameRules().getBoolean(YEGameRules.ENABLE_CREEPER_INFECTION)) {
                 EntityUtil.convertMobToCreeper(mob, living, entity.getLevel());
             }
+        }
+
+        if (source.getEntity() instanceof IsOryctolinAligned && source.getEntity() instanceof LivingEntity living && entity instanceof Mob mob) {
+            if (entity.level.getGameRules().getBoolean(YEGameRules.CONVERSLIN_CONVERSION)) {
+                if (source.getEntity() instanceof ConverslinEntity) {
+                    EntityUtil.convertMobToCarrot(mob, living, entity.getLevel());
+                }
+            }
+        }
+
+        if (source.getEntity() instanceof DefenderEntity defender) {
+            if (source.isExplosion() || defender.isCarnageAttack()) {
+                defender.increaseDefendersCarnage();
+            }
+        }
+
+        if (entity.hasEffect(YEEffects.SUPER_DUPER_POISON.get()) && entity instanceof Mob) {
+            EntityUtil.makeAParticle(entity.level, YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, entity.getBoundingBox().getCenter(), Vec3.ZERO);
+            for (int i = 0; i < 100; ++i) {
+                Random random = new Random();
+                EntityUtil.makeAParticle(entity.level, YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), false, entity.getBoundingBox().getCenter(), new Vec3(
+                        -0.5f + random.nextFloat(),
+                        (-0.5f + random.nextFloat()) + (entity.isOnGround() ? 0.5f : 0.0f),
+                        -0.5f + random.nextFloat()
+                ));
+            }
+            List<Entity> list = entity.level.getEntities(entity, entity.getBoundingBox().inflate(4.0f));
+            for (Entity hit : list) {
+                hit.hurtMarked = true;
+                hit.setDeltaMovement(hit.getDeltaMovement()
+                        .add(hit.position().subtract(entity.position()).normalize().scale(2.5f))
+                        .add(0, hit.isOnGround() ? 0.4d : 0, 0));
+            }
+            CameraShakeEntity.cameraShake(entity.level, entity.position(), 50, 0.4f, 2, 3);
+            entity.playSound(YESoundEvents.SUPERDUPERPOISON_EXPLOSION.get(), 3.0F, 1.0F);
+            entity.discard();
         }
     }
 
@@ -318,30 +354,6 @@ public class YECommonEventHandler {
                         mob.getLevel().setBlockAndUpdate(event.getPosition().get(), Blocks.AIR.defaultBlockState());
                     }
                 }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void converslinHelper(LivingDeathEvent event) {
-        LivingEntity entity = event.getEntity();
-        DamageSource source = event.getSource();
-        if (source.getEntity() instanceof IsOryctolinAligned && source.getEntity() instanceof LivingEntity living && entity instanceof Mob mob) {
-            if (entity.level.getGameRules().getBoolean(YEGameRules.CONVERSLIN_CONVERSION)) {
-                if (source.getEntity() instanceof ConverslinEntity) {
-                    EntityUtil.convertMobToCarrot(mob, living, entity.getLevel());
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void defenderCarnage(LivingDeathEvent event) {
-        LivingEntity entity = event.getEntity();
-        DamageSource source = event.getSource();
-        if (source.getEntity() instanceof DefenderEntity defender) {
-            if (source.isExplosion() || defender.isCarnageAttack()) {
-                defender.increaseDefendersCarnage();
             }
         }
     }

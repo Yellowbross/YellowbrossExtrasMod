@@ -419,6 +419,13 @@
     ]
   },
 
+  "superduperpoison_explosion": {
+    "subtitle": "subtitles.superduperpoison_explosion",
+    "sounds": [
+      "yellowbrossextras:superduperpoison_explosion"
+    ]
+  },
+
   "gamemode_fun.ctf.friendly_take": {
     "sounds": [
       "yellowbrossextras:gamemode_fun/ctf/friendly_take"

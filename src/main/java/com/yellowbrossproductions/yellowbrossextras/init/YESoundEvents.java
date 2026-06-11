@@ -66,6 +66,7 @@ public class YESoundEvents {
     public static final RegistryObject<SoundEvent> YEET = addSoundsToRegistry("yeet");
     public static final RegistryObject<SoundEvent> AIMBOT_SHOOT = addSoundsToRegistry("entity.aimbot.shoot");
     public static final RegistryObject<SoundEvent> AIMBOT_BANNED = addSoundsToRegistry("entity.aimbot.banned");
+    public static final RegistryObject<SoundEvent> SUPERDUPERPOISON_EXPLOSION = addSoundsToRegistry("superduperpoison_explosion");
 
     public static final RegistryObject<SoundEvent> ENTITY_AMOEBIC_DEVOURER_GULP = addSoundsToRegistry("entity.amoebic_devourer.gulp");
     public static final RegistryObject<SoundEvent> ENTITY_AMOEBIC_DEVOURER_BIG_GULP = addSoundsToRegistry("entity.amoebic_devourer.big_gulp");

@@ -20,7 +20,10 @@ public class SuperDuperPoisonDripParticle extends TextureSheetParticle {
         this.setSize(0.01F, 0.01F);
         this.gravity = 0.06F;
         this.quadSize *= pScale;
-        this.lifetime = 40;
+        this.lifetime = 100;
+        this.xd += pXSpeed;
+        this.yd += pYSpeed;
+        this.zd += pZSpeed;
         this.pickSprite(spriteSet);
     }
 
@@ -48,7 +51,7 @@ public class SuperDuperPoisonDripParticle extends TextureSheetParticle {
                     this.hasTouchedGround = true;
                 }
 
-                if (Math.random() < 0.5D) {
+                if (Math.random() < 0.01) {
                     this.remove();
                 }
 

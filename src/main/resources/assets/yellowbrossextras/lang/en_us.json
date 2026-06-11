@@ -102,6 +102,7 @@
   "subtitles.yeet": "YEET",
   "subtitles.entity.aimbot.shoot": "Aimbot ruins the game",
   "subtitles.entity.aimbot.banned": "Justice is served",
+  "subtitles.superduperpoison_explosion": "Somebody is now this thing called \"dead\"",
 
   "gamerule.vilvgaverChallenge": "The Vilvgaver Challenge",
   "gamerule.vilvgaverChallenge.description": "If this gamerule is enabled, Vilvgavers will automatically spawn in to relentlessly chase the player. The idea is to beat the game whilst being on an endless, frantic run for survival.",
