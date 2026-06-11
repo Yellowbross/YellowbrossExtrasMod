@@ -191,7 +191,7 @@ public class ConverslinEntity extends AbstractOryctolin {
                         for (int i = 0; i < 5; ++i) {
                             double y1 = this.getY() + 0.75D;
 
-                            float $$4 = target.yBodyRot * 0.017453292F;
+                            float $$4 = this.yBodyRot * 0.017453292F;
                             float $$5 = Mth.cos($$4) * (i - 2);
                             float $$6 = Mth.sin($$4) * (i - 2);
 

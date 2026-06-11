@@ -194,10 +194,11 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(0, new PoisonDartsGoal(this));
         this.goalSelector.addGoal(0, new ForceGunGoal(this));
-        this.goalSelector.addGoal(0, new CreeperGunGoal(this));
-        this.goalSelector.addGoal(0, new SentryGunsGoal(this));
-        this.goalSelector.addGoal(0, new RatatatabowGoal(this));
+        // this.goalSelector.addGoal(0, new CreeperGunGoal(this));
+        // this.goalSelector.addGoal(0, new SentryGunsGoal(this));
+        // this.goalSelector.addGoal(0, new RatatatabowGoal(this));
 
         this.goalSelector.addGoal(0, new ExcaliburGoal(this));
         this.goalSelector.addGoal(0, new ClawsGoal(this));
@@ -844,7 +845,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         }
     }
 
-    protected AbstractArrow getArrow(float enchantments) {
+    public DefenderArrowEntity getArrow(float enchantments) {
         DefenderArrowEntity abstractarrow = new DefenderArrowEntity(this.level, this);
         abstractarrow.setEnchantmentEffectsFromEntity(this, enchantments);
 

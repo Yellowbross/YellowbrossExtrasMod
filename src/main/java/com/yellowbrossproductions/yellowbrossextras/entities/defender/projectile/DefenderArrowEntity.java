@@ -5,6 +5,7 @@ import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -31,18 +32,18 @@ import java.util.List;
 public class DefenderArrowEntity extends AbstractArrow {
     private static final EntityDataAccessor<Integer> ARROW_TYPE = SynchedEntityData.defineId(DefenderArrowEntity.class, EntityDataSerializers.INT);
 
-    public DefenderArrowEntity(EntityType<? extends AbstractArrow> p_36858_, Level p_36859_) {
-        super(p_36858_, p_36859_);
+    public DefenderArrowEntity(EntityType<? extends AbstractArrow> arrow, Level level) {
+        super(arrow, level);
     }
 
-    public DefenderArrowEntity(Level p_36861_, double x, double y, double z) {
-        super(YEEntityTypes.DefenderArrow.get(), x, y, z, p_36861_);
+    public DefenderArrowEntity(Level level, double x, double y, double z) {
+        super(YEEntityTypes.DefenderArrow.get(), x, y, z, level);
         this.setPos(x, y, z);
     }
 
-    public DefenderArrowEntity(Level p_36866_, LivingEntity p_36867_) {
-        super(YEEntityTypes.DefenderArrow.get(), p_36867_, p_36866_);
-        setOwner(p_36867_);
+    public DefenderArrowEntity(Level level, LivingEntity entity) {
+        super(YEEntityTypes.DefenderArrow.get(), entity, level);
+        setOwner(entity);
     }
 
     @Override
@@ -60,13 +61,13 @@ public class DefenderArrowEntity extends AbstractArrow {
     }
 
     @Override
-    protected boolean canHitEntity(Entity p_36842_) {
+    protected boolean canHitEntity(Entity entity) {
         boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
         boolean team = true;
         if (shouldCareAboutTeams) {
-            team = EntityUtil.canHurtThisMob(p_36842_, (Mob) this.getOwner()) && !(p_36842_ instanceof IsDefenderAligned);
+            team = EntityUtil.canHurtThisMob(entity, (Mob) this.getOwner()) && !(entity instanceof IsDefenderAligned);
         }
-        return team && p_36842_ != this.getOwner() && !(p_36842_ instanceof Projectile) && super.canHitEntity(p_36842_);
+        return team && entity != this.getOwner() && !(entity instanceof Projectile) && super.canHitEntity(entity);
     }
 
     @Override
@@ -77,6 +78,18 @@ public class DefenderArrowEntity extends AbstractArrow {
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putInt("ArrowType", this.getArrowType());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        this.setArrowType(pCompound.getInt("ArrowType"));
     }
 
     @Override

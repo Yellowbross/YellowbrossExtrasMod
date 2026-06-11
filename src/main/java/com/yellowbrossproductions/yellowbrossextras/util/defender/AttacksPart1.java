@@ -4,10 +4,12 @@ import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderArrowEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.BoomerangEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.ChainsawEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderAxeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.ShurikenEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ConverslinBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
@@ -23,6 +25,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
@@ -553,6 +556,39 @@ public class AttacksPart1 {
                             if (hit instanceof LivingEntity living) living.setLastHurtByMob(defender);
                             hit.setDeltaMovement(hit.position().add(0, 0.5, 0).subtract(defender.position()).normalize().scale(4.0));
                             if (hit.isOnGround()) hit.setDeltaMovement(hit.getDeltaMovement().x, Math.abs(hit.getDeltaMovement().y), hit.getDeltaMovement().z);
+                        }
+                    }
+                }
+            }
+            // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            if (defender.attackType == defender.attack_poisondarts) {
+                if (ticks == 7 || ticks == 18) {
+                    float radius2 = 1.1f;
+                    double x = defender.getX() + 0.8F * Math.sin(-defender.getYRot() * Math.PI / 180) + radius2 * Math.sin(-defender.yHeadRot * Math.PI / 180) * Math.cos(-defender.getXRot() * Math.PI / 180);
+                    double z = defender.getZ() + 0.8F * Math.cos(-defender.getYRot() * Math.PI / 180) + radius2 * Math.cos(-defender.yHeadRot * Math.PI / 180) * Math.cos(-defender.getXRot() * Math.PI / 180);
+                    for (int i = 0; i < 5; ++i) {
+                        double y1 = defender.getY() + 1.3D;
+                        float mult = 5.0f;
+
+                        float $$4 = defender.yBodyRot * 0.017453292F;
+                        float $$5 = Mth.cos($$4) * ((i - 2) * mult);
+                        float $$6 = Mth.sin($$4) * ((i - 2) * mult);
+
+                        double d0 = target.getEyeY();
+                        double d1 = target.getX() + (double)$$5 - x;
+                        double d2 = d0 - y1;
+                        double d3 = target.getZ() + (double)$$6 - z;
+
+                        DefenderArrowEntity arrow = defender.getArrow(1.0F);
+                        arrow.setPos(x, y1, z);
+                        arrow.setArrowType(1);
+                        arrow.shoot(d1, d2, d3, 2.0F, 0.0F);
+
+                        if (ticks == 7 && i != 2) {
+                            defender.level.addFreshEntity(arrow);
+                        }
+                        if (ticks == 18 && i != 1  && i != 3) {
+                            defender.level.addFreshEntity(arrow);
                         }
                     }
                 }
