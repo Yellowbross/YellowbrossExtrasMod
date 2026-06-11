@@ -14,16 +14,14 @@ import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YEParticleTypes;
 import com.yellowbrossproductions.yellowbrossextras.particles.SuperDuperPoisonDripParticle;
 import com.yellowbrossproductions.yellowbrossextras.particles.SuperDuperPoisonExplosionParticle;
+import com.yellowbrossproductions.yellowbrossextras.util.DynamicAnimationManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterEntitySpectatorShadersEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -128,6 +126,11 @@ public class YEClientEventHandler {
             event.register(YEEntityTypes.Crawler.get(), new ResourceLocation("shaders/post/creeper.json"));
             event.register(YEEntityTypes.Freaker.get(), new ResourceLocation("shaders/post/creeper.json"));
             event.register(YEEntityTypes.Sprayer.get(), new ResourceLocation("shaders/post/creeper.json"));
+        }
+
+        @SubscribeEvent
+        public static void registerReloadListeners(RegisterClientReloadListenersEvent event) {
+            event.registerReloadListener(DynamicAnimationManager.INSTANCE);
         }
     }
 

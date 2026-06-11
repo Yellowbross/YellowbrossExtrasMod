@@ -7,7 +7,6 @@ import java.util.List;
 
 public class YellowbrossExtrasConfig {
     public static ForgeConfigSpec.DoubleValue cameraShakeMultiplier;
-    public static ForgeConfigSpec.IntValue vilvgaverTotalFrames;
 
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> aiChangesNotAllowed;
 
@@ -54,12 +53,6 @@ public class YellowbrossExtrasConfig {
                 .comment(" ")
                 .comment("The multiplier in how intense camera shakes can be. Set to 0 to disable.")
                 .defineInRange("cameraShakeMultiplier", 1.0D, 0.0D, Double.POSITIVE_INFINITY);
-
-        vilvgaverTotalFrames = client
-                .comment(" ")
-                .comment("Currently, while Vilvgaver can be animated, you must manually set the total frames of his animation yourself if you wish to use a resource pack.",
-                        "Default = 1")
-                .defineInRange("vilvgaverTotalFrames", 1, 1, Integer.MAX_VALUE);
 
         client.pop();
 

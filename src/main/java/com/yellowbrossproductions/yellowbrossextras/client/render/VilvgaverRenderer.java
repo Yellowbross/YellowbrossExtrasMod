@@ -8,6 +8,7 @@ import com.mojang.math.Quaternion;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.VilvgaverEntity;
+import com.yellowbrossproductions.yellowbrossextras.util.DynamicAnimationManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -40,30 +41,25 @@ public class VilvgaverRenderer extends EntityRenderer<Entity> {
     }
 
     @Override
-    public void render(Entity p_114485_, float p_114486_, float p_114487_, PoseStack poseStack, MultiBufferSource bufferSource, int light) {
+    public void render(Entity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
         int delay = YellowbrossExtrasConfig.vilvgaverChallenge_delayTime.get() * 20;
 
-        float f = p_114485_.tickCount / (float)delay;
+        float f = pEntity.tickCount / (float)delay;
         float f1 = Math.min(f, 1.0F);
-        if (p_114485_ instanceof VilvgaverEntity vilvgaver) {
+        if (pEntity instanceof VilvgaverEntity vilvgaver) {
             if (!vilvgaver.isChallenge()) {
                 f1 = 1.0F;
             }
         }
 
-        poseStack.pushPose();
-        poseStack.translate(0.0D, 1.35D, 0.0D);
+        pPoseStack.pushPose();
+        pPoseStack.translate(0.0D, 1.35D, 0.0D);
 
-        // File minecraftDir = FMLPaths.GAMEDIR.get().toFile();
-        // File folder = new File(minecraftDir.getAbsolutePath() + "/textures/entity/vilvgaver/");
-        // int frameAmount = countFiles(folder.getPath()) + 1;
-        // YellowbrossExtras.LOGGER.debug("Number of files in the folder: " + frameAmount);
-
-        int frameAmount = YellowbrossExtrasConfig.vilvgaverTotalFrames.get();
-        int frame = (p_114485_.tickCount % frameAmount) + 1;
-        VertexConsumer sprite = bufferSource.getBuffer(RenderType.entityTranslucent(new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/vilvgaver/vilvgaver" + (frame) + ".png")));
-        renderMonster(poseStack, sprite, light, f1);
-        poseStack.popPose();
+        int totalFrames = DynamicAnimationManager.INSTANCE.getFrameCount("textures/entity/vilvgaver");
+        int frame = pEntity.tickCount % Math.max(1, totalFrames);
+        VertexConsumer sprite = pBuffer.getBuffer(RenderType.entityTranslucent(new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/vilvgaver/vilvgaver_" + (frame) + ".png")));
+        renderMonster(pPoseStack, sprite, pPackedLight, f1);
+        pPoseStack.popPose();
     }
 
     public int countFiles(String folderPath) {
