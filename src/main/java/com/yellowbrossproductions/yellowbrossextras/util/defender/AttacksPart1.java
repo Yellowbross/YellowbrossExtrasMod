@@ -582,7 +582,7 @@ public class AttacksPart1 {
                         DefenderArrowEntity arrow = defender.getArrow(1.0F);
                         arrow.setPos(x, y1, z);
                         arrow.setArrowType(1);
-                        arrow.shoot(d1, d2, d3, 2.0F, 0.0F);
+                        arrow.shoot(d1, d2, d3, 3.0F, 0.0F);
 
                         if (ticks == 7 && i != 2) {
                             defender.level.addFreshEntity(arrow);

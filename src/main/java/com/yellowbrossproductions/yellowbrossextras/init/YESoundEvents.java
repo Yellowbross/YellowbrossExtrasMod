@@ -47,6 +47,7 @@ public class YESoundEvents {
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_CREEPERBULLET_LAND = addSoundsToRegistry("entity.defender.creeperbullet_land");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_FORCEGUN = addSoundsToRegistry("entity.defender.forcegun");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_FORCEGUN_START = addSoundsToRegistry("entity.defender.forcegun_start");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_POISONDARTS = addSoundsToRegistry("entity.defender.poisondarts");
 
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_ATTACK = addSoundsToRegistry("entity.vilvgaver.attack");
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_LOOP = addSoundsToRegistry("entity.vilvgaver.loop");
@@ -67,6 +68,7 @@ public class YESoundEvents {
     public static final RegistryObject<SoundEvent> AIMBOT_SHOOT = addSoundsToRegistry("entity.aimbot.shoot");
     public static final RegistryObject<SoundEvent> AIMBOT_BANNED = addSoundsToRegistry("entity.aimbot.banned");
     public static final RegistryObject<SoundEvent> SUPERDUPERPOISON_EXPLOSION = addSoundsToRegistry("superduperpoison_explosion");
+    public static final RegistryObject<SoundEvent> SUPERDUPERPOISON_NOSCREAM = addSoundsToRegistry("superduperpoison_noscream");
 
     public static final RegistryObject<SoundEvent> ENTITY_AMOEBIC_DEVOURER_GULP = addSoundsToRegistry("entity.amoebic_devourer.gulp");
     public static final RegistryObject<SoundEvent> ENTITY_AMOEBIC_DEVOURER_BIG_GULP = addSoundsToRegistry("entity.amoebic_devourer.big_gulp");

@@ -196,9 +196,9 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new PoisonDartsGoal(this));
         this.goalSelector.addGoal(0, new ForceGunGoal(this));
-        // this.goalSelector.addGoal(0, new CreeperGunGoal(this));
-        // this.goalSelector.addGoal(0, new SentryGunsGoal(this));
-        // this.goalSelector.addGoal(0, new RatatatabowGoal(this));
+        this.goalSelector.addGoal(0, new CreeperGunGoal(this));
+        this.goalSelector.addGoal(0, new SentryGunsGoal(this));
+        this.goalSelector.addGoal(0, new RatatatabowGoal(this));
 
         this.goalSelector.addGoal(0, new ExcaliburGoal(this));
         this.goalSelector.addGoal(0, new ClawsGoal(this));
@@ -401,7 +401,9 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
 
     @Override
     public boolean canBeAffected(MobEffectInstance effect) {
-        return effect.getEffect() != YEEffects.KNOCKED_OUT.get() && super.canBeAffected(effect);
+        return effect.getEffect() != YEEffects.KNOCKED_OUT.get() &&
+                effect.getEffect() != YEEffects.SUPER_DUPER_POISON.get() &&
+                super.canBeAffected(effect);
     }
 
     @Override

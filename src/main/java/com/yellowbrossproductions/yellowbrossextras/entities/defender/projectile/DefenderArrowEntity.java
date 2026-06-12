@@ -102,7 +102,7 @@ public class DefenderArrowEntity extends AbstractArrow {
                 break;
             }
             case 1 : {
-                if (hitRes.getEntity() instanceof LivingEntity living) {
+                if (hitRes.getEntity() instanceof LivingEntity living && !living.isBlocking()) {
                     MobEffectInstance effect = living.getEffect(YEEffects.SUPER_DUPER_POISON.get());
                     int i = 1;
                     if (effect != null) {
@@ -113,7 +113,7 @@ public class DefenderArrowEntity extends AbstractArrow {
                     }
 
                     i = Mth.clamp(i, 0, 4);
-                    living.addEffect(new MobEffectInstance(YEEffects.SUPER_DUPER_POISON.get(), 15 * 20, i));
+                    living.addEffect(new MobEffectInstance(YEEffects.SUPER_DUPER_POISON.get(), 25 * 20, i));
                 }
                 break;
             }

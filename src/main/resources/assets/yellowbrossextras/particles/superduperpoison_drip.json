@@ -1,5 +1,12 @@
 {
   "textures": [
-    "yellowbrossextras:superduperpoison_drip"
+    "yellowbrossextras:superduperpoison_drip/superduperpoison_drip_0",
+    "yellowbrossextras:superduperpoison_drip/superduperpoison_drip_1",
+    "yellowbrossextras:superduperpoison_drip/superduperpoison_drip_2",
+    "yellowbrossextras:superduperpoison_drip/superduperpoison_drip_3",
+    "yellowbrossextras:superduperpoison_drip/superduperpoison_drip_4",
+    "yellowbrossextras:superduperpoison_drip/superduperpoison_drip_5",
+    "yellowbrossextras:superduperpoison_drip/superduperpoison_drip_6",
+    "yellowbrossextras:superduperpoison_drip/superduperpoison_drip_7"
   ]
 }

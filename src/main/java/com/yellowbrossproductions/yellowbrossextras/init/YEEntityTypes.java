@@ -4,10 +4,7 @@ import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.entities.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.*;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderArrowEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderAxeEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.ShurikenEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.*;
@@ -143,6 +140,8 @@ public class YEEntityTypes {
     public static final RegistryObject<EntityType<SentryBulletEntity>> SentryBullet = ENTITY_TYPES.register("sentry_bullet", () -> EntityType.Builder.<SentryBulletEntity>of(SentryBulletEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sentry_bullet").toString()));
 
     public static final RegistryObject<EntityType<DefenderArrowEntity>> DefenderArrow = ENTITY_TYPES.register("defender_arrow", () -> EntityType.Builder.<DefenderArrowEntity>of(DefenderArrowEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "defender_arrow").toString()));
+
+    public static final RegistryObject<EntityType<SuperDuperPoisonBallEntity>> SuperDuperPoisonBall = ENTITY_TYPES.register("superduperpoison_ball", () -> EntityType.Builder.<SuperDuperPoisonBallEntity>of(SuperDuperPoisonBallEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "superduperpoison_ball").toString()));
 
 
     // Misc

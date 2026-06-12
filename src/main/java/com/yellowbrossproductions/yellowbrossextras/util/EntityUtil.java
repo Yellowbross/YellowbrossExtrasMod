@@ -4,11 +4,15 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.*;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SuperDuperPoisonBallEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.CarrotMinionEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ConverslinBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.BlitzManager;
@@ -17,16 +21,19 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -493,6 +500,28 @@ public class EntityUtil {
 
                     PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
                 }
+            }
+        }
+    }
+
+    public static void fireCircleOfPoisonBalls(Level level, Mob spawner, int amount, double y, float velocity, boolean shouldCheckForDefenders) {
+        final Random random = new Random();
+        if (!level.isClientSide) {
+            // code adapted from Mowzie's Mobs
+            for (int i = 0; i < amount; i++) {
+                float TAU = (float) (2 * StrictMath.PI);
+
+                float yaw = i * (TAU / amount);
+                float vy = random.nextFloat() * 0.1F - 0.05f;
+                float vx = velocity * Mth.cos(yaw);
+                float vz = velocity * Mth.sin(yaw);
+                SuperDuperPoisonBallEntity bullet = new SuperDuperPoisonBallEntity(spawner.level, spawner, vx, vy, vz);
+
+                bullet.setPos(spawner.getX(), spawner.getY() + y, spawner.getZ());
+                List<DefenderEntity> defender = level.getEntitiesOfClass(DefenderEntity.class, spawner.getBoundingBox().inflate(40.0d),
+                        p -> p.isAlive() && !p.isRemoved() && isMobOnOtherTeam2(p, spawner));
+                bullet.setOwner((shouldCheckForDefenders && !defender.isEmpty()) ? defender.get(0) : spawner);
+                level.addFreshEntity(bullet);
             }
         }
     }

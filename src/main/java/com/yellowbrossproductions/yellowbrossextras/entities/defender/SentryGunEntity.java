@@ -4,6 +4,7 @@ import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConf
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBulletEntity;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
@@ -21,6 +22,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -89,6 +91,13 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
     @Override
     public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
         return false;
+    }
+
+    @Override
+    public boolean canBeAffected(MobEffectInstance effect) {
+        return effect.getEffect() != YEEffects.KNOCKED_OUT.get() &&
+                effect.getEffect() != YEEffects.SUPER_DUPER_POISON.get() &&
+                super.canBeAffected(effect);
     }
 
     @Override

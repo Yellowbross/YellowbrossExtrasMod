@@ -14,6 +14,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class SuperDuperPoisonDripParticle extends TextureSheetParticle {
     protected boolean hasTouchedGround = false;
+    private final SpriteSet sprites;
+    private int frame;
+    private final int maxFrames = 7;
 
     protected SuperDuperPoisonDripParticle(ClientLevel pLevel, SpriteSet spriteSet, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, float pScale) {
         super(pLevel, pX, pY, pZ);
@@ -24,7 +27,9 @@ public class SuperDuperPoisonDripParticle extends TextureSheetParticle {
         this.xd += pXSpeed;
         this.yd += pYSpeed;
         this.zd += pZSpeed;
-        this.pickSprite(spriteSet);
+        this.frame = this.random.nextInt(7);
+        this.sprites = spriteSet;
+        this.pickSprite(sprites);
     }
 
     @Override
@@ -45,18 +50,22 @@ public class SuperDuperPoisonDripParticle extends TextureSheetParticle {
             this.xd *= (double)0.98F;
             this.yd *= (double)0.98F;
             this.zd *= (double)0.98F;
+
             if (this.onGround) {
                 if (!this.hasTouchedGround) {
                     this.level.playLocalSound(this.x, this.y, this.z, SoundEvents.POINTED_DRIPSTONE_DRIP_WATER, SoundSource.BLOCKS, Mth.randomBetween(this.random, 0.3F, 1), 1, false);
                     this.hasTouchedGround = true;
                 }
 
-                if (Math.random() < 0.01) {
+                if (Math.random() < 0.05) {
                     this.remove();
                 }
 
                 this.xd *= (double)0.7F;
                 this.zd *= (double)0.7F;
+            } else {
+                if (this.frame++ >= 7) this.frame = 0;
+                if (!this.removed) this.setSprite(this.sprites.get(this.frame, this.maxFrames));
             }
 
             BlockPos blockpos = new BlockPos(this.x, this.y, this.z);

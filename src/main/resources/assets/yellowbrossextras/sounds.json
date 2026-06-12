@@ -271,6 +271,13 @@
     ]
   },
 
+  "entity.defender.poisondarts": {
+    "subtitle": "subtitles.entity.defender.poisondarts",
+    "sounds": [
+      "yellowbrossextras:defender/poisondarts"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [
@@ -423,6 +430,13 @@
     "subtitle": "subtitles.superduperpoison_explosion",
     "sounds": [
       "yellowbrossextras:superduperpoison_explosion"
+    ]
+  },
+
+  "superduperpoison_noscream": {
+    "subtitle": "subtitles.superduperpoison_noscream",
+    "sounds": [
+      "yellowbrossextras:superduperpoison_noscream"
     ]
   },
 

@@ -2,6 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phas
 
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.world.entity.player.Player;
 
 public class PoisonDartsGoal extends CustomAttackGoal {
@@ -12,7 +13,7 @@ public class PoisonDartsGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_poisondarts < 1 && getDefender().getPhase() == 2;
+        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_poisondarts < 1 && (getDefender().distanceTo(getDefender().getTarget()) > 15.0D) && getDefender().getPhase() == 2;
     }
 
     @Override
@@ -21,6 +22,7 @@ public class PoisonDartsGoal extends CustomAttackGoal {
         getDefender().setImmediateTurn(true);
         getDefender().setWeaponToShow(10);
         getDefender().attackType = getDefender().attack_poisondarts;
+        getDefender().playSound(YESoundEvents.ENTITY_DEFENDER_POISONDARTS.get(), 2.5F, 1.0F);
     }
 
     @Override

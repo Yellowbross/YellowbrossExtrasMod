@@ -106,6 +106,9 @@ public class YEClientEventHandler {
             event.registerEntityRenderer(YEEntityTypes.HyperSnowball.get(), ThrownItemRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.SentryBullet.get(), ThrownItemRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.DefenderArrow.get(), DefenderArrowRenderer::new);
+            event.registerEntityRenderer(YEEntityTypes.SuperDuperPoisonBall.get(), (p_174064_) -> {
+                return new ThrownItemRenderer<>(p_174064_, 1.5F, false);
+            });
 
             event.registerEntityRenderer(YEEntityTypes.CameraShake.get(), NothingRenderer::new);
 

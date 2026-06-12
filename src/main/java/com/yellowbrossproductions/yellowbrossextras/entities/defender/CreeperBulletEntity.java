@@ -3,6 +3,8 @@ package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.AbstractCreeperEntity;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
+import com.yellowbrossproductions.yellowbrossextras.init.YEParticleTypes;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.world.CustomExplosion;
@@ -14,6 +16,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -30,10 +33,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 // A lot of the code here was adapted and mashed together from Mutant Monsters and Mowzie's Mobs
 public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefenderAligned {
@@ -124,7 +124,21 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
         if (!this.level.isClientSide) {
             this.dead = true;
             CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), (float)this.explosionRadius * (this.isPowered() ? 2 : 1), true);
-            CameraShakeEntity.cameraShake(this.level, position(), 30, 0.1f, 0, 15);
+            if (this.hasEffect(YEEffects.SUPER_DUPER_POISON.get())) {
+                EntityUtil.makeAParticle(this.level, YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, this.getBoundingBox().getCenter(), Vec3.ZERO);
+                for (int i = 0; i < 100; ++i) {
+                    Random random = new Random();
+                    EntityUtil.makeAParticle(this.level, YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), false, this.getBoundingBox().getCenter(), new Vec3(
+                            -0.5f + random.nextFloat(),
+                            (-0.5f + random.nextFloat()) + (this.isOnGround() ? 0.5f : 0.0f),
+                            -0.5f + random.nextFloat()
+                    ));
+                }
+                CameraShakeEntity.cameraShake(this.level, this.position(), 20, 0.4f, 2, 3);
+                this.playSound(YESoundEvents.SUPERDUPERPOISON_NOSCREAM.get(), 4.0F, 1.0F);
+                EntityUtil.fireCircleOfPoisonBalls(this.level, this, 10, 0.25d, 1.0f, false);
+            }
+            CameraShakeEntity.cameraShake(this.level, position(), 30, 0.1f, 0, 5);
             this.discard();
             this.spawnLingeringCloud();
         }
@@ -297,6 +311,7 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
             this.setCollisionPos(closestDamaged.getBlockX(), (int)(closestDamaged.getBlockY() + closestDamaged.getBbHeight() / 2), closestDamaged.getBlockZ());
             if (closestDamaged.hurt(new IndirectEntityDamageSource("arrow", this, this.shooter).setProjectile(), 0.5F)) {
                 closestDamaged.invulnerableTime = 0;
+                if (closestDamaged.hasEffect(YEEffects.SUPER_DUPER_POISON.get())) this.addEffect(new MobEffectInstance(YEEffects.SUPER_DUPER_POISON.get(), 15 * 20, 0));
             } else {
                 this.hurt(DamageSource.FLY_INTO_WALL, Float.MAX_VALUE);
             }

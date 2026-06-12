@@ -81,6 +81,7 @@
   "subtitles.entity.defender.creeperbullet_land": "Creeper Bullet lands",
   "subtitles.entity.defender.forcegun": "Force Gun blasts",
   "subtitles.entity.defender.forcegun_start": "Defender deploys his Force Gun",
+  "subtitles.entity.defender.poisondarts": "Defender shoots Poison Darts",
 
   "subtitles.entity.vilvgaver.attack": "Vilvgaver attacks",
   "subtitles.entity.vilvgaver.loop": "Vilvgaver screams",
@@ -103,6 +104,7 @@
   "subtitles.entity.aimbot.shoot": "Aimbot ruins the game",
   "subtitles.entity.aimbot.banned": "Justice is served",
   "subtitles.superduperpoison_explosion": "Somebody is now this thing called \"dead\"",
+  "subtitles.superduperpoison_noscream": "Super Duper Poison™ comes to all.",
 
   "gamerule.vilvgaverChallenge": "The Vilvgaver Challenge",
   "gamerule.vilvgaverChallenge.description": "If this gamerule is enabled, Vilvgavers will automatically spawn in to relentlessly chase the player. The idea is to beat the game whilst being on an endless, frantic run for survival.",

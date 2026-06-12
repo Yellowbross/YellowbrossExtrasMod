@@ -2,12 +2,10 @@ package com.yellowbrossproductions.yellowbrossextras.entities.defender.projectil
 
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.IsDefenderAligned;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.CustomAbstractHurtingProjectile;
-import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.*;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import com.yellowbrossproductions.yellowbrossextras.init.YEItemsAndBlocks;
-import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
@@ -15,7 +13,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,23 +24,24 @@ import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
 
-public class SentryBulletEntity extends CustomAbstractHurtingProjectile implements ItemSupplier {
+public class SuperDuperPoisonBallEntity extends CustomAbstractHurtingProjectile implements ItemSupplier {
 
-    public SentryBulletEntity(EntityType<? extends CustomAbstractHurtingProjectile> p_36833_, Level p_36834_) {
+    public SuperDuperPoisonBallEntity(EntityType<? extends CustomAbstractHurtingProjectile> p_36833_, Level p_36834_) {
         super(p_36833_, p_36834_);
     }
 
-    public SentryBulletEntity(EntityType<? extends CustomAbstractHurtingProjectile> p_36817_, double p_36818_, double p_36819_, double p_36820_, double p_36821_, double p_36822_, double p_36823_, Level p_36824_) {
-        super(YEEntityTypes.SentryBullet.get(), p_36818_, p_36819_, p_36820_, p_36821_, p_36822_, p_36823_, p_36824_);
+    public SuperDuperPoisonBallEntity(EntityType<? extends CustomAbstractHurtingProjectile> p_36817_, double p_36818_, double p_36819_, double p_36820_, double p_36821_, double p_36822_, double p_36823_, Level p_36824_) {
+        super(YEEntityTypes.SuperDuperPoisonBall.get(), p_36818_, p_36819_, p_36820_, p_36821_, p_36822_, p_36823_, p_36824_);
     }
 
-    public SentryBulletEntity(Level p_36831_, LivingEntity p_36827_, double p_36828_, double p_36829_, double p_36830_) {
-        super(YEEntityTypes.SentryBullet.get(), p_36827_, p_36828_, p_36829_, p_36830_, p_36831_);
+    public SuperDuperPoisonBallEntity(Level p_36831_, LivingEntity p_36827_, double p_36828_, double p_36829_, double p_36830_) {
+        super(YEEntityTypes.SuperDuperPoisonBall.get(), p_36827_, p_36828_, p_36829_, p_36830_, p_36831_);
     }
 
     @Override
@@ -69,16 +70,15 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
 
     @Override
     protected ParticleOptions getTrailParticle() {
-        return ParticleTypes.ELECTRIC_SPARK;
+        return YEParticleTypes.SUPERDUPERPOISON_DRIP.get();
     }
 
     private void explode(double size) {
         List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level, size, this, Entity::isAlive);
 
         boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
-        this.makeExplodeParticles();
-        this.stopShootingSound(this.level);
-        this.playSound(YESoundEvents.ENTITY_DEFENDER_SENTRY_HIT.get(), 2.0F, 1.0F);
+        this.playSound(YESoundEvents.SUPERDUPERPOISON_NOSCREAM.get(), 4.0F, 1.0F);
+        EntityUtil.makeAParticle(this.level, YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, this.position(), Vec3.ZERO);
         for (Entity entity : list) {
             if (entity instanceof LivingEntity living) {
                 boolean team = true;
@@ -86,8 +86,7 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
                     team = EntityUtil.canHurtThisMob(living, (Mob) this.getOwner()) && entity != this.getOwner() && !(living instanceof IsDefenderAligned);
                 }
                 if (team && entity.isAlive() && !entity.isInvulnerable() && !entity.isSpectator()) {
-                    living.hurt(DamageSource.thrown(this, this.getOwner()), 5.0F);
-                    living.invulnerableTime -= 9;
+                    living.addEffect(new MobEffectInstance(YEEffects.SUPER_DUPER_POISON.get(), 25 * 20, 0));
                 }
             }
         }
@@ -109,40 +108,14 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
         }
     }
 
-    public void makeExplodeParticles() {
-        for(int i = 0; i < 3; ++i) {
-            double d0 = (-0.5 + this.random.nextGaussian());
-            double d1 = (-0.5 + this.random.nextGaussian());
-            double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-        }
-        for(int i = 0; i < 1; ++i) {
-            double d0 = (-0.5 + this.random.nextGaussian());
-            double d1 = (-0.5 + this.random.nextGaussian());
-            double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-        }
+    @Override
+    public boolean shouldDoParticles() {
+        return true;
     }
 
     @Override
     public ItemStack getItem() {
-        return YEItemsAndBlocks.CONVERSLIN_BULLET.get().getDefaultInstance();
-    }
-
-    public float getLightLevelDependentMagicValue() {
-        return 1.0F;
-    }
-
-    public void stopShootingSound(Level world) {
-        MinecraftServer server = world.getServer();
-        if (server == null) {
-            return;
-        }
-
-        ClientboundStopSoundPacket sstopsoundpacket = new ClientboundStopSoundPacket(YESoundEvents.ENTITY_DEFENDER_SENTRY_HIT.get().getLocation(), SoundSource.NEUTRAL);
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            player.connection.send(sstopsoundpacket);
-        }
+        return YEItemsAndBlocks.SUPERDUPERPOISON_BALL.get().getDefaultInstance();
     }
 
     @Override

@@ -191,7 +191,7 @@ public class YECommonEventHandler {
             }
         }
 
-        if (entity.hasEffect(YEEffects.SUPER_DUPER_POISON.get()) && entity instanceof Mob) {
+        if (entity.hasEffect(YEEffects.SUPER_DUPER_POISON.get()) && entity instanceof Mob mob && !entity.level.isClientSide) {
             EntityUtil.makeAParticle(entity.level, YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, entity.getBoundingBox().getCenter(), Vec3.ZERO);
             for (int i = 0; i < 100; ++i) {
                 Random random = new Random();
@@ -208,8 +208,9 @@ public class YECommonEventHandler {
                         .add(hit.position().subtract(entity.position()).normalize().scale(2.5f))
                         .add(0, hit.isOnGround() ? 0.4d : 0, 0));
             }
-            CameraShakeEntity.cameraShake(entity.level, entity.position(), 50, 0.4f, 2, 3);
-            entity.playSound(YESoundEvents.SUPERDUPERPOISON_EXPLOSION.get(), 3.0F, 1.0F);
+            CameraShakeEntity.cameraShake(entity.level, entity.position(), 20, 0.4f, 2, 3);
+            entity.playSound(YESoundEvents.SUPERDUPERPOISON_EXPLOSION.get(), 4.0F, 1.0F);
+            EntityUtil.fireCircleOfPoisonBalls(entity.level, mob, 10, mob.getBbHeight() / 2, 1.0f, true);
             entity.discard();
         }
     }

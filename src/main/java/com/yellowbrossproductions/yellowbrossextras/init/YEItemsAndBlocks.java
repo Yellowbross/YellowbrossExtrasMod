@@ -51,6 +51,7 @@ public class YEItemsAndBlocks {
     public static final RegistryObject<Item> ICON = ITEMS.register("icon", ItemBase::new);
     public static final RegistryObject<Item> SHURIKEN = ITEMS.register("shuriken", ItemBase::new);
     public static final RegistryObject<Item> CONVERSLIN_BULLET = ITEMS.register("converslin_bullet", ItemBase::new);
+    public static final RegistryObject<Item> SUPERDUPERPOISON_BALL = ITEMS.register("superduperpoison_ball", ItemBase::new);
 
     // Blocks
     public static final RegistryObject<Block> FROZEN_LAVA = BLOCKS.register("frozen_lava",
