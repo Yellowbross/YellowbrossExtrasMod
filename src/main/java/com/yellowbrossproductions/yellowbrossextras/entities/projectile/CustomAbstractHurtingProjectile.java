@@ -23,8 +23,8 @@ public class CustomAbstractHurtingProjectile extends Projectile {
     public double zPower;
     private boolean shouldDoParticles = false;
 
-    protected CustomAbstractHurtingProjectile(EntityType<? extends CustomAbstractHurtingProjectile> p_36833_, Level p_36834_) {
-        super(p_36833_, p_36834_);
+    protected CustomAbstractHurtingProjectile(EntityType<? extends CustomAbstractHurtingProjectile> entityType, Level level) {
+        super(entityType, level);
     }
 
     public CustomAbstractHurtingProjectile(EntityType<? extends CustomAbstractHurtingProjectile> extension, double ownerX, double ownerY, double ownerZ, double shootdirX, double shootdirY, double shootdirZ, Level level) {

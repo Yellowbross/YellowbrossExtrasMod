@@ -13,8 +13,8 @@ public class DefenderArrowRenderer extends ArrowRenderer<DefenderArrowEntity> {
     public static final ResourceLocation NORMAL_ARROW_LOCATION = new ResourceLocation("textures/entity/projectiles/arrow.png");
     public static final ResourceLocation POISON_DART_LOCATION = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/poison_dart.png");
 
-    public DefenderArrowRenderer(EntityRendererProvider.Context p_173917_) {
-        super(p_173917_);
+    public DefenderArrowRenderer(EntityRendererProvider.Context context) {
+        super(context);
     }
 
     @Override

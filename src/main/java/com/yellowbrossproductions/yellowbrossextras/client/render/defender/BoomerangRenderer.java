@@ -18,7 +18,7 @@ public class BoomerangRenderer extends MobRenderer<BoomerangEntity, BoomerangMod
     }
 
     @Override
-    public ResourceLocation getTextureLocation(BoomerangEntity p_110775_1_) {
+    public ResourceLocation getTextureLocation(BoomerangEntity pEntity) {
         return TEXTURE;
     }
 }

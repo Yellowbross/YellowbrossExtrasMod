@@ -40,7 +40,7 @@ public class DefenderAxeRenderer<T extends DefenderAxeEntity> extends EntityRend
     }
 
     @Override
-    public ResourceLocation getTextureLocation(DefenderAxeEntity p_110775_1_) {
+    public ResourceLocation getTextureLocation(DefenderAxeEntity pEntity) {
         return null;
     }
 }

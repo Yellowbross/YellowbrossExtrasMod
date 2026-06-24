@@ -49,10 +49,10 @@ public class ChainsawEntity extends Entity {
     @OnlyIn(Dist.CLIENT)
     private Vec3[] attractorPos;
 
-    public ChainsawEntity(EntityType<? extends ChainsawEntity> p_19870_, Level p_19871_) {
-        super(p_19870_, p_19871_);
+    public ChainsawEntity(EntityType<? extends ChainsawEntity> entityType, Level level) {
+        super(entityType, level);
         noCulling = true;
-        if (p_19871_.isClientSide) {
+        if (level.isClientSide) {
             attractorPos = new Vec3[] {new Vec3(0,0,0)};
         }
     }
@@ -276,18 +276,19 @@ public class ChainsawEntity extends Entity {
         List<LivingEntity> hit = raytraceEntities(level, new Vec3(getX(), getY(), getZ()), new Vec3(endPosX, endPosY, endPosZ), false, true, true).entities;
         if (!level.isClientSide && this.caster != null) {
             float healing = 0.0f;
+            boolean canHeal = false;
 
             for (LivingEntity target : hit) {
-                if (this.tickCount % 6 == 0) {
-                    target.hurt(DamageSource.indirectMagic(this, this.caster), 3.0F);
-                    target.invulnerableTime = 0;
+                if (target.hurt(DamageSource.indirectMagic(this, this.caster), 3.0F)) {
                     healing += 0.5f;
+                    canHeal = true;
                 }
+                if (this.tickCount % 2 == 0) target.invulnerableTime -= 2;
                 target.hurtMarked = true;
                 target.setDeltaMovement(0.0D, 0.0D, 0.0D);
             }
 
-            if (this.tickCount % 6 == 0) this.caster.heal(Math.min(healing, 15.0f));
+            if (canHeal) this.caster.heal(Math.min(healing, 15.0f));
         }
         if (tickCount > getDuration()) {
             on = false;

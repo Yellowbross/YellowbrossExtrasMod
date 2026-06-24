@@ -143,6 +143,8 @@ public class YEEntityTypes {
 
     public static final RegistryObject<EntityType<SuperDuperPoisonBallEntity>> SuperDuperPoisonBall = ENTITY_TYPES.register("superduperpoison_ball", () -> EntityType.Builder.<SuperDuperPoisonBallEntity>of(SuperDuperPoisonBallEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "superduperpoison_ball").toString()));
 
+    public static final RegistryObject<EntityType<SniperRifleEntity>> SniperRifle = ENTITY_TYPES.register("sniper_rifle", () -> EntityType.Builder.<SniperRifleEntity>of(SniperRifleEntity::new, MobCategory.MISC).sized(0.0F, 0.0F).setCustomClientFactory(SniperRifleEntity::new).setShouldReceiveVelocityUpdates(false).noSave().build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sniper_rifle").toString()));
+
 
     // Misc
     public static final RegistryObject<EntityType<CameraShakeEntity>> CameraShake = ENTITY_TYPES.register("camera_shake", () -> EntityType.Builder.<CameraShakeEntity>of(CameraShakeEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "camera_shake").toString()));

@@ -65,6 +65,7 @@ public class YEClientEventHandler {
 
             event.registerLayerDefinition(BoomerangModel.LAYER_LOCATION, BoomerangModel::createBodyLayer);
             event.registerLayerDefinition(SpikeModel.LAYER_LOCATION, SpikeModel::createBodyLayer);
+            event.registerLayerDefinition(SniperRifleModel.LAYER_LOCATION, SniperRifleModel::createBodyLayer);
 
             event.registerLayerDefinition(PathGuideModel.LAYER_LOCATION, PathGuideModel::createBodyLayer);
             event.registerLayerDefinition(IntelligenceModel.LAYER_LOCATION, IntelligenceModel::createBodyLayer);
@@ -109,6 +110,7 @@ public class YEClientEventHandler {
             event.registerEntityRenderer(YEEntityTypes.SuperDuperPoisonBall.get(), (p_174064_) -> {
                 return new ThrownItemRenderer<>(p_174064_, 1.5F, false);
             });
+            event.registerEntityRenderer(YEEntityTypes.SniperRifle.get(), SniperRifleRenderer::new);
 
             event.registerEntityRenderer(YEEntityTypes.CameraShake.get(), NothingRenderer::new);
 

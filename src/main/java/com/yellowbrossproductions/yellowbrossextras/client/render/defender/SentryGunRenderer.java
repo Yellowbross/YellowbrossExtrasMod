@@ -29,7 +29,7 @@ public class SentryGunRenderer extends MobRenderer<SentryGunEntity, SentryGunMod
     }
 
     @Override
-    public ResourceLocation getTextureLocation(SentryGunEntity p_110775_1_) {
+    public ResourceLocation getTextureLocation(SentryGunEntity pEntity) {
         return TEXTURE;
     }
 }

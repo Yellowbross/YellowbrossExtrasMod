@@ -32,13 +32,13 @@ public class CreeperBulletRenderer extends MobRenderer<CreeperBulletEntity, Cree
         poseStack.scale(f2 * 0.6f, f3 * 0.6f, f2 * 0.6f);
     }
 
-    protected float getWhiteOverlayProgress(CreeperBulletEntity p_114043_, float p_114044_) {
-        float f = p_114043_.getSwelling(p_114044_);
+    protected float getWhiteOverlayProgress(CreeperBulletEntity pLivingEntity, float pPartialTicks) {
+        float f = pLivingEntity.getSwelling(pPartialTicks);
         return (int)(f * 10.0F) % 2 == 0 ? 0.0F : Mth.clamp(f, 0.5F, 1.0F);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(CreeperBulletEntity p_110775_1_) {
+    public ResourceLocation getTextureLocation(CreeperBulletEntity pEntity) {
         return TEXTURE;
     }
 }

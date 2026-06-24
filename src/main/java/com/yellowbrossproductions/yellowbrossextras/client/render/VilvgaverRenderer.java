@@ -62,27 +62,6 @@ public class VilvgaverRenderer extends EntityRenderer<Entity> {
         pPoseStack.popPose();
     }
 
-    public int countFiles(String folderPath) {
-        File folder = new File(folderPath);
-        int count = 0;
-        if (!folder.isDirectory()) {
-            YellowbrossExtras.LOGGER.error(folderPath + " is not a directory, must look further into this.");
-            return 0;
-        } else {
-            File[] files = folder.listFiles();
-            if (files == null) {
-                return 0;
-            }
-            for (File file : files) {
-                if (file.isFile()) {
-                    count++;
-                }
-            }
-        }
-
-        return count;
-    }
-
     @Override
     protected int getBlockLightLevel(Entity p_114496_, BlockPos p_114497_) {
         return 15;

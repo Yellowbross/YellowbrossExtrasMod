@@ -51,20 +51,20 @@ public class IntelligenceEntity extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag p_20052_) {
-        if (p_20052_.contains("Team", 8)) {
-            String s = p_20052_.getString("Team");
+    protected void readAdditionalSaveData(CompoundTag pCompound) {
+        if (pCompound.contains("Team", 8)) {
+            String s = pCompound.getString("Team");
             PlayerTeam playerteam = this.level.getScoreboard().getPlayerTeam(s);
             boolean flag = playerteam != null && this.level.getScoreboard().addPlayerToTeam(this.getStringUUID(), playerteam);
             if (!flag) {
                 YellowbrossExtras.LOGGER.warn("Unable to add the Intelligence to team \"{}\" (that team probably doesn't exist)", (Object)s);
             }
         }
-        this.setCaptures(p_20052_.getInt("Captures"));
-        this.setTimeUntilReturn(p_20052_.getInt("TimeUntilReturn"));
-        this.entityData.set(RESET_TIME, p_20052_.getInt("ResetTime"));
-        if (p_20052_.contains("HomeCoords", 9)) {
-            ListTag listtag = p_20052_.getList("HomeCoords", 6);
+        this.setCaptures(pCompound.getInt("Captures"));
+        this.setTimeUntilReturn(pCompound.getInt("TimeUntilReturn"));
+        this.entityData.set(RESET_TIME, pCompound.getInt("ResetTime"));
+        if (pCompound.contains("HomeCoords", 9)) {
+            ListTag listtag = pCompound.getList("HomeCoords", 6);
             if (listtag.size() == 3) {
                 this.setHomeCoords(listtag.getDouble(0), listtag.getDouble(1), listtag.getDouble(2));
             }
@@ -72,14 +72,14 @@ public class IntelligenceEntity extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag p_20139_) {
+    protected void addAdditionalSaveData(CompoundTag pCompound) {
         if (this.getTeam() != null) {
-            p_20139_.putString("Team", this.getTeam().getName());
+            pCompound.putString("Team", this.getTeam().getName());
         }
-        p_20139_.putInt("Captures", this.getCaptures());
-        p_20139_.putInt("TimeUntilReturn", this.getTimeUntilReturn());
-        p_20139_.putInt("ResetTime", this.entityData.get(RESET_TIME));
-        p_20139_.put("HomeCoords", this.newDoubleList(this.getHomeX(), this.getHomeY(), this.getHomeZ()));
+        pCompound.putInt("Captures", this.getCaptures());
+        pCompound.putInt("TimeUntilReturn", this.getTimeUntilReturn());
+        pCompound.putInt("ResetTime", this.entityData.get(RESET_TIME));
+        pCompound.put("HomeCoords", this.newDoubleList(this.getHomeX(), this.getHomeY(), this.getHomeZ()));
     }
 
     @Override

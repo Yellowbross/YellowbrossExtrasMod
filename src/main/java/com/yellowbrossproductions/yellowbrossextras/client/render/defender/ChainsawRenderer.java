@@ -30,17 +30,17 @@ public class ChainsawRenderer extends EntityRenderer<ChainsawEntity> {
     private static final float BEAM_RADIUS = 0.5f;
     private final Random random = new Random();
 
-    public ChainsawRenderer(EntityRendererProvider.Context p_174008_) {
-        super(p_174008_);
+    public ChainsawRenderer(EntityRendererProvider.Context context) {
+        super(context);
     }
 
     @Override
-    public Vec3 getRenderOffset(ChainsawEntity p_114483_, float p_114484_) {
+    public Vec3 getRenderOffset(ChainsawEntity pEntity, float pPartialTicks) {
         return new Vec3(this.random.nextGaussian() * 0.02D, 0.0D, this.random.nextGaussian() * 0.02D);
     }
 
     @Override
-    public void render(ChainsawEntity beam, float entityYaw, float delta, PoseStack poseStack, MultiBufferSource p_114489_, int light) {
+    public void render(ChainsawEntity beam, float entityYaw, float delta, PoseStack poseStack, MultiBufferSource pBuffer, int light) {
         double collidePosX = beam.prevCollidePosX + (beam.collidePosX - beam.prevCollidePosX) * delta;
         double collidePosY = beam.prevCollidePosY + (beam.collidePosY - beam.prevCollidePosY) * delta;
         double collidePosZ = beam.prevCollidePosZ + (beam.collidePosZ - beam.prevCollidePosZ) * delta;
@@ -51,13 +51,13 @@ public class ChainsawRenderer extends EntityRenderer<ChainsawEntity> {
         float pitch = beam.prevPitch + (beam.renderPitch - beam.prevPitch) * delta;
 
         double end = Math.sqrt(Math.pow(collidePosX - posX, 2) + Math.pow(collidePosY - posY, 2) + Math.pow(collidePosZ - posZ, 2));
-        float length = Math.min(beam.tickCount * 3, ((float) end));
+        float length = Math.min(((beam.tickCount + delta) - 1) * 3, ((float) end));
         int frame = Mth.floor((2 + delta) * 2);
         if (frame < 0) {
             frame = 6;
         }
 
-        VertexConsumer ivertexbuilder = p_114489_.getBuffer(RenderType.entityTranslucent(getTextureLocation(beam)));
+        VertexConsumer ivertexbuilder = pBuffer.getBuffer(RenderType.entityTranslucent(getTextureLocation(beam)));
 
         if (beam.tickCount > 1) {
             renderBeam(frame, length, 180f / (float) Math.PI * yaw, 180f / (float) Math.PI * pitch, poseStack, ivertexbuilder, light);
@@ -72,7 +72,7 @@ public class ChainsawRenderer extends EntityRenderer<ChainsawEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ChainsawEntity p_114482_) {
+    public ResourceLocation getTextureLocation(ChainsawEntity pEntity) {
         return TEXTURE;
     }
 
