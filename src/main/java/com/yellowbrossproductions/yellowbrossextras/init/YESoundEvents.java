@@ -78,6 +78,11 @@ public class YESoundEvents {
 
     public static final RegistryObject<SoundEvent> CTF_ENEMY_RETURN = addSoundsToRegistry("gamemode_fun.ctf.enemy_return");
 
+    public static final RegistryObject<SoundEvent> MUSIC_DEFENDER_PHASE1_INTRO = addSoundsToRegistry("music.defender.phase1_intro");
+    public static final RegistryObject<SoundEvent> MUSIC_DEFENDER_PHASE1 = addSoundsToRegistry("music.defender.phase1");
+    public static final RegistryObject<SoundEvent> MUSIC_DEFENDER_PHASE1_TRANS = addSoundsToRegistry("music.defender.phase1_trans");
+    public static final RegistryObject<SoundEvent> MUSIC_DEFENDER_PHASE2_INTRO = addSoundsToRegistry("music.defender.phase2_intro");
+
     private static RegistryObject<SoundEvent> addSoundsToRegistry(String soundId) {
         ResourceLocation name = new ResourceLocation(YellowbrossExtras.MOD_ID, soundId);
         return SOUND_EVENTS.register(soundId, () -> new SoundEvent(name));

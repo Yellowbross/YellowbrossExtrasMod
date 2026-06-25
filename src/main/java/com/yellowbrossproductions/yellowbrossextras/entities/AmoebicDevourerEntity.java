@@ -117,12 +117,12 @@ public class AmoebicDevourerEntity extends YExtrasMob implements Enemy {
         this.setPos(d0, d1, d2);
     }
 
-    public void onSyncedDataUpdated(EntityDataAccessor<?> p_33609_) {
-        if (SIZE.equals(p_33609_)) {
+    public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
+        if (SIZE.equals(pKey)) {
             this.refreshDimensions();
         }
 
-        super.onSyncedDataUpdated(p_33609_);
+        super.onSyncedDataUpdated(pKey);
     }
 
     protected float getStandingEyeHeight(Pose p_33614_, EntityDimensions p_33615_) {

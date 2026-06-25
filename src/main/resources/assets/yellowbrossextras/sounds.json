@@ -456,5 +456,47 @@
     "sounds": [
       "yellowbrossextras:gamemode_fun/ctf/enemy_return"
     ]
+  },
+
+  "music.defender.phase1_intro": {
+    "stream": true,
+    "sounds": [
+      "yellowbrossextras:music/defender/phase1_intro"
+    ]
+  },
+
+  "music.defender.phase1": {
+    "stream": true,
+    "sounds": [
+      "yellowbrossextras:music/defender/phase1"
+    ]
+  },
+
+  "music.defender.phase1_trans": {
+    "stream": true,
+    "sounds": [
+      "yellowbrossextras:music/defender/phase1_trans"
+    ]
+  },
+
+  "music.defender.phase2_intro": {
+    "stream": true,
+    "sounds": [
+      "yellowbrossextras:music/defender/phase2_intro"
+    ]
+  },
+
+  "music.defender.phase2": {
+    "stream": true,
+    "sounds": [
+      "yellowbrossextras:music/defender/phase2"
+    ]
+  },
+
+  "music.defender.phase2_trans": {
+    "stream": true,
+    "sounds": [
+      "yellowbrossextras:music/defender/phase2_trans"
+    ]
   }
 }

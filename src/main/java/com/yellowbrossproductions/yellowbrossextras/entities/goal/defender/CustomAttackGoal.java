@@ -47,8 +47,6 @@ public class CustomAttackGoal extends Goal {
         if (entity != null) {
             this.defender.getLookControl().setLookAt(entity, getMaxTurnSpeed(), 100.0F);
         }
-
-        this.defender.getNavigation().stop();
     }
 
     @Override

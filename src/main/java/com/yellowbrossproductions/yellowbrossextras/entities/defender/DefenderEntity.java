@@ -188,6 +188,8 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     public int slamTicks;
     public int oldWobbleTicks;
 
+    int musicTransTicks;
+
     public DefenderEntity(EntityType<? extends YExtrasMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
     }
@@ -204,12 +206,12 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         this.goalSelector.addGoal(0, new ExcaliburGoal(this));
         this.goalSelector.addGoal(0, new ClawsGoal(this));
         this.goalSelector.addGoal(0, new ChainsawGoal(this));
-        // this.goalSelector.addGoal(0, new ShurikensGoal(this));
-        // this.goalSelector.addGoal(0, new SpikesGoal(this));
-        // this.goalSelector.addGoal(0, new BoomerangGoal(this));
-        // this.goalSelector.addGoal(0, new AxesGoal(this));
+        this.goalSelector.addGoal(0, new ShurikensGoal(this));
+        this.goalSelector.addGoal(0, new SpikesGoal(this));
+        this.goalSelector.addGoal(0, new BoomerangGoal(this));
+        this.goalSelector.addGoal(0, new AxesGoal(this));
         this.goalSelector.addGoal(0, new SwordGoal(this));
-        // this.goalSelector.addGoal(0, new SawsGoal(this));
+        this.goalSelector.addGoal(0, new SawsGoal(this));
 
         this.goalSelector.addGoal(0, new DefeatedGoal());
         this.goalSelector.addGoal(0, new JumpAwayGoal(this));
@@ -257,7 +259,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     }
 
     @Override
-    public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
         if (this.jumpAttacking) {
             if (this.attackType == attack_spikes) {
                 this.setAnimationState("spikes_land");
@@ -332,7 +334,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     }
 
     @Override
-    protected void playStepSound(BlockPos p_20135_, BlockState p_20136_) {
+    protected void playStepSound(BlockPos pPos, BlockState pState) {
         this.playSound(YESoundEvents.ENTITY_DEFENDER_STEP.get(), 0.5F, 1.0F);
     }
 
@@ -341,12 +343,12 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     }
 
     @Override
-    public boolean hasLineOfSight(Entity p_147185_) {
-        if (p_147185_.level != this.level) {
+    public boolean hasLineOfSight(Entity pEntity) {
+        if (pEntity.level != this.level) {
             return false;
         } else {
             Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
-            Vec3 vec31 = new Vec3(p_147185_.getX(), p_147185_.getEyeY(), p_147185_.getZ());
+            Vec3 vec31 = new Vec3(pEntity.getX(), pEntity.getEyeY(), pEntity.getZ());
             if (vec31.distanceTo(vec3) > 128.0D) {
                 return false;
             } else {
@@ -355,12 +357,12 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         }
     }
 
-    public boolean isInAttackSight(Entity p_147185_) {
-        if (p_147185_.level != this.level) {
+    public boolean isInAttackSight(Entity pEntity) {
+        if (pEntity.level != this.level) {
             return false;
         } else {
             Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
-            Vec3 vec31 = new Vec3(p_147185_.getX(), p_147185_.getEyeY(), p_147185_.getZ());
+            Vec3 vec31 = new Vec3(pEntity.getX(), pEntity.getEyeY(), pEntity.getZ());
             if (vec31.distanceTo(vec3) > 128.0D) {
                 return false;
             } else {
@@ -439,6 +441,19 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
             this.attackTicks2 += 1;
         }
 
+        if (!this.level.isClientSide) {
+            if (this.getTarget() instanceof Player player && player.isAlive()) {
+                if (this.isAlive() && this.deathAttackTicks < 1) {
+                    this.musicTransTicks += 1;
+                    if (this.musicTransTicks >= this.getRequiredTransTicksEachPhase() - 1) this.setMusicToPlay(2);
+                    else this.setMusicToPlay(1);
+                }
+            } else {
+                this.musicTransTicks = 0;
+                this.setMusicToPlay(0);
+            }
+        }
+
         this.jumpTicks--;
         this.setHealthIFrames--;
         this.clawsPunchTimer--;
@@ -515,7 +530,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                 }
             }
 
-            if (this.doesAttackMeetNormalRequirements() && this.getTarget() != null && this.distanceTo(getTarget()) < 3.0D && this.meleeAttackType == 0) {
+            if (this.doesAttackMeetNormalRequirements() && this.getTarget() != null && this.getTarget().isAlive() && this.distanceTo(getTarget()) < 3.0D && this.meleeAttackType == 0) {
                 this.meleeAttackType = 1;
                 if ((this.random.nextInt(5) == 0 || this.cooldown_saws >= 140) && this.getPhase() == 1 && this.cooldown_claws < 1) {
                     if (this.getTarget() != null && (this.getTarget().getMaxHealth() >= 40.0F || this.getTarget() instanceof Player)) {
@@ -855,6 +870,39 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         return abstractarrow;
     }
 
+    public int getRequiredTransTicksEachPhase() {
+        switch (this.getPhase()) {
+            case 1, 2: return 288;
+            default : return 0;
+        }
+    }
+
+    @Override
+    public SoundEvent getBossMusic() {
+        switch (this.getMusicType()) {
+            case 1: switch (this.getPhase()) {
+                case 1: return YESoundEvents.MUSIC_DEFENDER_PHASE1_INTRO.get();
+                case 2: return YESoundEvents.MUSIC_DEFENDER_PHASE2_INTRO.get();
+            }
+            case 2: switch (this.getPhase()) {
+                case 1: return YESoundEvents.MUSIC_DEFENDER_PHASE1.get();
+            }
+            case 3: switch (this.getPhase()) {
+                case 1: return YESoundEvents.MUSIC_DEFENDER_PHASE1_TRANS.get();
+            }
+            default: return null;
+        }
+    }
+
+    @Override
+    public float getMusicVolume() {
+        return 0.35f;
+    }
+
+    @Override
+    public boolean canPlayMusic() {
+        return !this.isRemoved() && this.getMusicType() > 0;
+    }
 
     public boolean shouldImmediatelyTurn() {
         return this.entityData.get(SHOULD_IMMEDIATELY_TURN);
@@ -1118,7 +1166,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     }
 
     @Override
-    public boolean doHurtTarget(Entity p_21372_) {
+    public boolean doHurtTarget(Entity pEntity) {
         return false;
     }
 
@@ -1132,7 +1180,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
         this.setCharge(vec.x, vec.y, vec.z);
     }
 
-    protected SoundEvent getHurtSound(DamageSource p_21239_) {
+    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
         return YESoundEvents.ENTITY_DEFENDER_HURT.get();
     }
 
@@ -1265,7 +1313,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     }
 
     @Override
-    public void die(DamageSource p_21014_) {
+    public void die(DamageSource pDamageSource) {
         if (!this.wasKilledByVoid()) {
             List<Mob> list = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(50.0D), p -> {
                 return p instanceof Enemy && EntityUtil.canHurtThisMob(p, this);
@@ -1276,9 +1324,13 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                     entity.goalSelector.addGoal(0, new StareAtDefenderGoal(entity, this));
                 }
             });
+            if (this.getMusicType() > 0) {
+                this.musicTransTicks = 0;
+                this.setMusicToPlay(3);
+            }
             this.processDeath();
         } else {
-            super.die(p_21014_);
+            super.die(pDamageSource);
         }
     }
 

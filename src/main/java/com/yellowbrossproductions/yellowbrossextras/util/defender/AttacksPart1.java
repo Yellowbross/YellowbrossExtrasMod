@@ -93,12 +93,12 @@ public class AttacksPart1 {
             if (ticks == 11) {
                 defender.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_WHOOSH.get(), 2.0F, 1.0F);
             }
-            if (ticks == 12) {
+            if (ticks == 12 && !defender.level.isClientSide) {
                 float healing = 0.0F;
 
                 defender.makeSpinParticles();
                 for (LivingEntity entity : defender.level.getEntitiesOfClass(LivingEntity.class, defender.getBoundingBox().inflate(15.0F))) {
-                    if (EntityUtil.canHurtThisMob(entity, defender) && entity.isAlive()) {
+                    if (EntityUtil.canHurtThisMob(entity, defender) && entity.isAlive() && entity != defender) {
                         double x = defender.getX() - entity.getX();
                         double y = defender.getY() - entity.getY();
                         double z = defender.getZ() - entity.getZ();
@@ -114,9 +114,7 @@ public class AttacksPart1 {
                     }
                 }
 
-                if (!defender.level.isClientSide) {
-                    defender.heal(Math.min(healing, 20.0F));
-                }
+                defender.heal(Math.min(healing, 20.0F));
             }
         }
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

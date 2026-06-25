@@ -43,8 +43,6 @@ public class ChainsawGoal extends CustomAttackGoal {
                 getDefender().getLookControl().setLookAt(getDefender().specialLookLocation.x, getDefender().specialLookLocation.y, getDefender().specialLookLocation.z, 10.0F, 100.0F);
             }
         }
-
-        getDefender().getNavigation().stop();
     }
 
     @Override
