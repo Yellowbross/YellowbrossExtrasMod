@@ -2,7 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.BoomerangModel;
-import com.yellowbrossproductions.yellowbrossextras.entities.projectile.BoomerangEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.BoomerangEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;

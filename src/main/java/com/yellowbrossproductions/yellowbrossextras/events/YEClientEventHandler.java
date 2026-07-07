@@ -12,6 +12,7 @@ import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConf
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YEParticleTypes;
+import com.yellowbrossproductions.yellowbrossextras.particles.RifleExplosionOnomatopoeiaParticle;
 import com.yellowbrossproductions.yellowbrossextras.particles.SuperDuperPoisonDripParticle;
 import com.yellowbrossproductions.yellowbrossextras.particles.SuperDuperPoisonExplosionParticle;
 import com.yellowbrossproductions.yellowbrossextras.util.DynamicAnimationManager;
@@ -66,6 +67,7 @@ public class YEClientEventHandler {
             event.registerLayerDefinition(BoomerangModel.LAYER_LOCATION, BoomerangModel::createBodyLayer);
             event.registerLayerDefinition(SpikeModel.LAYER_LOCATION, SpikeModel::createBodyLayer);
             event.registerLayerDefinition(SniperRifleModel.LAYER_LOCATION, SniperRifleModel::createBodyLayer);
+            event.registerLayerDefinition(DeadlyArrowModel.LAYER_LOCATION, DeadlyArrowModel::createBodyLayer);
 
             event.registerLayerDefinition(PathGuideModel.LAYER_LOCATION, PathGuideModel::createBodyLayer);
             event.registerLayerDefinition(IntelligenceModel.LAYER_LOCATION, IntelligenceModel::createBodyLayer);
@@ -111,6 +113,7 @@ public class YEClientEventHandler {
                 return new ThrownItemRenderer<>(p_174064_, 1.5F, false);
             });
             event.registerEntityRenderer(YEEntityTypes.SniperRifle.get(), SniperRifleRenderer::new);
+            event.registerEntityRenderer(YEEntityTypes.DeadlyArrow.get(), DeadlyArrowRenderer::new);
 
             event.registerEntityRenderer(YEEntityTypes.CameraShake.get(), NothingRenderer::new);
 
@@ -122,6 +125,7 @@ public class YEClientEventHandler {
         public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
             event.register(YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), SuperDuperPoisonDripParticle.Provider::new);
             event.register(YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), SuperDuperPoisonExplosionParticle.Provider::new);
+            event.register(YEParticleTypes.RIFLE_EXPLOSION_ONOMATOPOEIA.get(), RifleExplosionOnomatopoeiaParticle.Provider::new);
         }
 
         @SubscribeEvent

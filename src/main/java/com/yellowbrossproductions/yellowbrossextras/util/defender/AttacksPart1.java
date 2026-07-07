@@ -4,13 +4,8 @@ import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderArrowEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SniperRifleEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.projectile.BoomerangEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.ChainsawEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderAxeEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.ShurikenEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ConverslinBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
@@ -26,7 +21,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
@@ -66,7 +60,7 @@ public class AttacksPart1 {
                     float power = (float) 5.5F;
                     defender.setCharge(t.position().subtract(defender.position()).normalize().scale(power).scale(0.2d));
                 }
-                defender.setDeltaMovement(defender.chargeX, defender.getDeltaMovement().y, defender.chargeZ);
+                if (defender.chargeX != 0 || defender.chargeZ != 0) defender.setDeltaMovement(defender.chargeX, defender.getDeltaMovement().y, defender.chargeZ);
                 if (defender.horizontalCollision) {
                     defender.setDeltaMovement(defender.getDeltaMovement().add(0.0D, 0.15D, 0.0D));
                 }
@@ -174,23 +168,20 @@ public class AttacksPart1 {
                     if (target instanceof Player) {
                         defender.setDeltaMovement((target.getX() - defender.getX()) * 0.2D, 1.6D, (target.getZ() - defender.getZ()) * 0.2D);
                     } else {
-                        int howManyEntities = 0;
+                        List<Mob> targets = defender.level.getEntitiesOfClass(Mob.class, target.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy);
+                        Vec3 strikeZone = EntityUtil.findDensestMobCluster(targets, 6.0d);
 
-                        for (Entity entity : defender.level.getEntities(target, target.getBoundingBox().inflate(20.0F))) {
-                            if (EntityUtil.canHurtThisMob(entity, defender) && entity instanceof LivingEntity && entity.isAlive()) {
-                                defender.averageXCord += entity.getX();
-                                defender.averageZCord += entity.getZ();
-                                howManyEntities += 1;
-                            }
+                        if (strikeZone != null) {
+                            defender.averageXCord = strikeZone.x;
+                            defender.averageZCord = strikeZone.z;
+                        } else {
+                            defender.averageXCord = target.getX();
                         }
 
-                        defender.averageXCord /= howManyEntities;
-                        defender.averageZCord /= howManyEntities;
-
-                        if (howManyEntities < 10) {
-                            defender.setDeltaMovement((target.getX() - defender.getX()) * 0.2D, 1.6D, (target.getZ() - defender.getZ()) * 0.2D);
-                        } else {
+                        if (strikeZone != null) {
                             defender.setDeltaMovement((defender.averageXCord - defender.getX()) * 0.2D, 3.0D, (defender.averageZCord - defender.getZ()) * 0.2D);
+                        } else {
+                            defender.setDeltaMovement((target.getX() - defender.getX()) * 0.2D, 1.6D, (target.getZ() - defender.getZ()) * 0.2D);
                         }
                     }
                     defender.jumpAttacking = true;
@@ -224,7 +215,7 @@ public class AttacksPart1 {
                                     defender.stretchHelper = defender.getY();
                                 }
                                 float stretcher = (float) (defender.stretchHelper - defender.getY());
-                                if (worldHeight > defender.level.getMinBuildHeight() + 1 && stretcher != 0) {
+                                if (worldHeight > defender.level.getMinBuildHeight() + 65 && stretcher != 0) {
                                     defender.setStretch(worldHeight * stretcher / 1000);
                                 }
                             }
@@ -609,6 +600,22 @@ public class AttacksPart1 {
         }
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         if (defender.attackType == defender.attack_snipe) {
+            if (ticks == 6) defender.playSound(YESoundEvents.ENTITY_DEFENDER_SNIPE_START.get(), 2.0F, 1.0F);
+            if (ticks == 27) defender.level.playSound(null, defender, YESoundEvents.ENTITY_DEFENDER_SNIPE_SPIN.get(), defender.getSoundSource(), 2.0F, 1.0F);
+            if (ticks > 30 && ticks < 60) {
+                float spinSpeed = 3.0f;
+                for (int i = 0; i < 2; ++i) {
+                    double otherSide = i == 1 ? -1 : 1;
+                    Vec3 shoot = defender.position().add(
+                            Math.sin(defender.tickCount / spinSpeed) * 50 * otherSide,
+                            0,
+                            Math.cos(defender.tickCount / spinSpeed) * 50 * otherSide);
+                    if (!defender.level.isClientSide) {
+                        DeadlyArrowEntity deadlyArrow = new DeadlyArrowEntity(defender.level, defender, shoot);
+                        defender.level.addFreshEntity(deadlyArrow);
+                    }
+                }
+            }
             if (ticks == 36) {
                 if (!defender.level.isClientSide) {
                     defender.setMaxWobble(20);
@@ -622,11 +629,18 @@ public class AttacksPart1 {
                 defender.setDeltaMovement(0, 1.0, 0);
                 defender.playSound(YESoundEvents.ENTITY_DEFENDER_JUMP.get(), 2.0F, 1.0F);
             }
-            if (ticks == 102) {
-                Vec3 throwTo = defender.getLookAngle().scale(10.0d);
-                if (target != null) {
-                    throwTo = target.position().add(0, target.getEyeHeight(), 0);
+            Vec3 throwTo = defender.getLookAngle().scale(10.0d);
+            if (ticks >= 91 && target != null) {
+                List<Mob> targets = defender.level.getEntitiesOfClass(Mob.class, defender.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy);
+                Vec3 strikeZone = EntityUtil.findDensestMobCluster(targets, 9.0d);
+
+                throwTo = target.getBoundingBox().getCenter();
+                if (strikeZone != null && !(target instanceof Player)) {
+                    throwTo = strikeZone;
                 }
+                defender.setSpecialLookLocation(throwTo);
+            }
+            if (ticks == 102) {
                 defender.playSound(SoundEvents.TRIDENT_THROW, 2.0F, 1.0F);
                 if (!defender.level.isClientSide) {
                     SniperRifleEntity sniperRifle = new SniperRifleEntity(defender.level, defender, throwTo);

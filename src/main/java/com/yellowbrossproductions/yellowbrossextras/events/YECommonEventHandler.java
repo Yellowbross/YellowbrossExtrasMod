@@ -13,7 +13,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.Abstract
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.ConverslinEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.CarrotMinionEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.projectile.BoomerangEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.BoomerangEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.*;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
@@ -125,23 +125,23 @@ public class YECommonEventHandler {
         Entity entity = event.getEntity();
         if (!(YellowbrossExtrasConfig.aiChangesNotAllowed.get().contains(entity.getEncodeId()) || YellowbrossExtrasConfig.aiChangesNotAllowed.get().contains(entity.getType().getKey(entity.getType()).getNamespace()))) {
             if (entity instanceof Mob mob) {
-                ((Mob) entity).goalSelector.addGoal(0, new LoseAIGoal((Mob) entity));
+                mob.goalSelector.addGoal(0, new LoseAIGoal(mob));
 
                 if (entity instanceof Raider || mob.getMobType() == MobType.ILLAGER) {
-                    ((Mob) entity).targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(((Mob) entity), AbstractCreeperEntity.class, true, p -> p instanceof CreeperInfection));
-                    ((Mob) entity).targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(((Mob) entity), AbstractOryctolin.class, true));
+                    mob.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mob, AbstractCreeperEntity.class, true, p -> p instanceof CreeperInfection));
+                    mob.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mob, AbstractOryctolin.class, true));
                 }
                 if (entity instanceof Villager) {
-                    ((PathfinderMob) entity).goalSelector.addGoal(1, new AvoidEntityGoal<>(((PathfinderMob) entity), AbstractOryctolin.class, 8.0F, 0.8D, 0.8D));
+                    mob.goalSelector.addGoal(1, new AvoidEntityGoal<>(((PathfinderMob) entity), AbstractOryctolin.class, 8.0F, 0.8D, 0.8D));
                 } else if (entity instanceof WanderingTrader) {
-                    ((PathfinderMob) entity).goalSelector.addGoal(1, new AvoidEntityGoal<>(((PathfinderMob) entity), AbstractOryctolin.class, 8.0F, 0.5D, 0.5D));
+                    mob.goalSelector.addGoal(1, new AvoidEntityGoal<>(((PathfinderMob) entity), AbstractOryctolin.class, 8.0F, 0.5D, 0.5D));
                 }
 
                 if (entity instanceof Wolf) {
-                    ((Mob) entity).targetSelector.addGoal(5, new NonTameRandomTargetGoal<>((TamableAnimal) entity, AbstractOryctolin.class, false, (Predicate<LivingEntity>)null));
+                    mob.targetSelector.addGoal(5, new NonTameRandomTargetGoal<>((TamableAnimal) entity, AbstractOryctolin.class, false, (Predicate<LivingEntity>)null));
                 }
 
-                ((Mob) entity).targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(((Mob) entity), AimbotEntity.class, true));
+                mob.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mob, AimbotEntity.class, true));
             }
         }
     }
@@ -201,7 +201,7 @@ public class YECommonEventHandler {
                         -0.5f + random.nextFloat()
                 ));
             }
-            List<Entity> list = entity.level.getEntities(entity, entity.getBoundingBox().inflate(4.0f));
+            List<Entity> list = entity.level.getEntities(entity, entity.getBoundingBox().inflate(4.0f), p -> !(p instanceof DefenderEntity) && EntityUtil.isMobNotInCreativeMode(p));
             for (Entity hit : list) {
                 hit.hurtMarked = true;
                 hit.setDeltaMovement(hit.getDeltaMovement()

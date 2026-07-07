@@ -83,37 +83,37 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     private static final EntityDataAccessor<Integer> WOBBLE = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> FREAKING_OUT_IN_MODEL = SynchedEntityData.defineId(DefenderEntity.class, EntityDataSerializers.BOOLEAN);
 
-    public AnimationState anim_jump = new AnimationState();
-    public AnimationState anim_jump2 = new AnimationState();
-    public AnimationState anim_defeated = new AnimationState();
+    public final AnimationState anim_jump = new AnimationState();
+    public final AnimationState anim_jump2 = new AnimationState();
+    public final AnimationState anim_defeated = new AnimationState();
 
     // Phase 1
-    public AnimationState anim_saws = new AnimationState();
-    public AnimationState anim_sword = new AnimationState();
-    public AnimationState anim_axes = new AnimationState();
-    public AnimationState anim_boomerang = new AnimationState();
-    public AnimationState anim_spikes = new AnimationState();
-    public AnimationState anim_spikes_land = new AnimationState();
-    public AnimationState anim_spikes_slam = new AnimationState();
-    public AnimationState anim_shurikens = new AnimationState();
-    public AnimationState anim_chainsaw = new AnimationState();
-    public AnimationState anim_claws_start = new AnimationState();
-    public AnimationState anim_claws_continue = new AnimationState();
-    public AnimationState anim_claws_end = new AnimationState();
-    public AnimationState anim_excalibur = new AnimationState();
-    public AnimationState anim_claws_punch = new AnimationState();
+    public final AnimationState anim_saws = new AnimationState();
+    public final AnimationState anim_sword = new AnimationState();
+    public final AnimationState anim_axes = new AnimationState();
+    public final AnimationState anim_boomerang = new AnimationState();
+    public final AnimationState anim_spikes = new AnimationState();
+    public final AnimationState anim_spikes_land = new AnimationState();
+    public final AnimationState anim_spikes_slam = new AnimationState();
+    public final AnimationState anim_shurikens = new AnimationState();
+    public final AnimationState anim_chainsaw = new AnimationState();
+    public final AnimationState anim_claws_start = new AnimationState();
+    public final AnimationState anim_claws_continue = new AnimationState();
+    public final AnimationState anim_claws_end = new AnimationState();
+    public final AnimationState anim_excalibur = new AnimationState();
+    public final AnimationState anim_claws_punch = new AnimationState();
 
     // Phase 2
-    public AnimationState anim_ratatatabow = new AnimationState();
-    public AnimationState anim_ratatatabow2 = new AnimationState();
-    public AnimationState anim_poisondarts = new AnimationState();
-    public AnimationState anim_forcegun = new AnimationState();
-    public AnimationState anim_snipe = new AnimationState();
-    public AnimationState anim_sentryguns = new AnimationState();
-    public AnimationState anim_icethrower = new AnimationState();
-    public AnimationState anim_witherbazooka = new AnimationState();
-    public AnimationState anim_creepergun = new AnimationState();
-    public AnimationState anim_flamethrower = new AnimationState();
+    public final AnimationState anim_ratatatabow = new AnimationState();
+    public final AnimationState anim_ratatatabow2 = new AnimationState();
+    public final AnimationState anim_poisondarts = new AnimationState();
+    public final AnimationState anim_forcegun = new AnimationState();
+    public final AnimationState anim_snipe = new AnimationState();
+    public final AnimationState anim_sentryguns = new AnimationState();
+    public final AnimationState anim_icethrower = new AnimationState();
+    public final AnimationState anim_witherbazooka = new AnimationState();
+    public final AnimationState anim_creepergun = new AnimationState();
+    public final AnimationState anim_flamethrower = new AnimationState();
 
     public int cooldown_saws;
     public int cooldown_axes;
@@ -139,26 +139,26 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     public int jumpTicks;
     private int inWaterJumpTicks;
 
-    public int attack_saws = 1;
-    public int attack_jump = 2;
-    public int attack_sword = 3;
-    public int attack_axes = 4;
-    public int attack_boomerang = 5;
-    public int attack_spikes = 6;
-    public int attack_shurikens = 7;
-    public int attack_chainsaw = 8;
-    public int attack_claws = 9;
-    public int attack_excalibur = 10;
+    public final int attack_saws = 1;
+    public final int attack_jump = 2;
+    public final int attack_sword = 3;
+    public final int attack_axes = 4;
+    public final int attack_boomerang = 5;
+    public final int attack_spikes = 6;
+    public final int attack_shurikens = 7;
+    public final int attack_chainsaw = 8;
+    public final int attack_claws = 9;
+    public final int attack_excalibur = 10;
 
-    public int attack_ratatatabow = 11;
-    public int attack_poisondarts = 12;
-    public int attack_forcegun = 13;
-    public int attack_snipe = 14;
-    public int attack_sentryguns = 15;
-    public int attack_icethrower = 16;
-    public int attack_witherbazooka = 17;
-    public int attack_creepergun = 18;
-    public int attack_flamethrower = 19;
+    public final int attack_ratatatabow = 11;
+    public final int attack_poisondarts = 12;
+    public final int attack_forcegun = 13;
+    public final int attack_snipe = 14;
+    public final int attack_sentryguns = 15;
+    public final int attack_icethrower = 16;
+    public final int attack_witherbazooka = 17;
+    public final int attack_creepergun = 18;
+    public final int attack_flamethrower = 19;
 
     public int timeToWaitBeforeUsingAnyOtherAttack = 0;
 
@@ -197,11 +197,11 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SnipeGoal(this));
-        // this.goalSelector.addGoal(0, new PoisonDartsGoal(this));
-        // this.goalSelector.addGoal(0, new ForceGunGoal(this));
-        // this.goalSelector.addGoal(0, new CreeperGunGoal(this));
-        // this.goalSelector.addGoal(0, new SentryGunsGoal(this));
-        // this.goalSelector.addGoal(0, new RatatatabowGoal(this));
+        this.goalSelector.addGoal(0, new PoisonDartsGoal(this));
+        this.goalSelector.addGoal(0, new ForceGunGoal(this));
+        this.goalSelector.addGoal(0, new CreeperGunGoal(this));
+        this.goalSelector.addGoal(0, new SentryGunsGoal(this));
+        this.goalSelector.addGoal(0, new RatatatabowGoal(this));
 
         this.goalSelector.addGoal(0, new ExcaliburGoal(this));
         this.goalSelector.addGoal(0, new ClawsGoal(this));
@@ -895,11 +895,6 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
     }
 
     @Override
-    public float getMusicVolume() {
-        return 0.35f;
-    }
-
-    @Override
     public boolean canPlayMusic() {
         return !this.isRemoved() && this.getMusicType() > 0;
     }
@@ -1195,17 +1190,13 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
             this.setKilledByVoid(true);
         }
         if (!this.killedByCommand(source, damage)) {
-            if (this.attackType == attack_claws && this.shouldContinueAttacking) {
-                return false;
-            }
-            if (this.attackType == attack_saws) {
-                return false;
-            }
-            if (this.attackType == attack_chainsaw) {
-                damage /= 2;
-            }
-            if (this.attackType == attack_ratatatabow && this.attackTicks2 > 0) {
-                damage = 0;
+            switch (this.attackType) {
+                case attack_claws: return !this.shouldContinueAttacking;
+                case attack_saws: return false;
+                case attack_chainsaw: damage /= 2; break;
+                case attack_creepergun: damage /= 3; break;
+                case attack_ratatatabow: if (this.attackTicks2 > 0) damage = 0; break;
+                case attack_snipe: return this.getCustomRender() != 2;
             }
         }
         if (source.getEntity() instanceof IsDefenderAligned && EntityUtil.canHurtThisMob(source.getEntity(), this)) {

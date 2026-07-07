@@ -426,7 +426,7 @@ public class EntityUtil {
     }
 
     // code borrowed from Twilight Forest
-    public static void makeSimpleTrail(Entity entity, SimpleParticleType type, int amount, double srcX, double srcY, double srcZ, double destX, double destY, double destZ) {
+    public static void makeSimpleTrail(Entity entity, ParticleOptions type, int amount, double srcX, double srcY, double srcZ, double destX, double destY, double destZ) {
         Random random = new Random();
 
         if (!entity.level.isClientSide) {
@@ -524,5 +524,32 @@ public class EntityUtil {
                 level.addFreshEntity(bullet);
             }
         }
+    }
+
+    public static Vec3 findDensestMobCluster(List<Mob> targets, double attackRadius) {
+        if (targets.isEmpty()) {
+            return null;
+        }
+
+        Vec3 bestTargetPosition = null;
+        int maxCount = 0;
+
+        for (Mob potentialCenter : targets) {
+            Vec3 centerPos = potentialCenter.getBoundingBox().getCenter();
+            int currentClusterCount = 0;
+
+            for (Mob otherMob : targets) {
+                if (centerPos.closerThan(otherMob.getBoundingBox().getCenter(), attackRadius)) {
+                    currentClusterCount++;
+                }
+            }
+
+            if (currentClusterCount > maxCount) {
+                maxCount = currentClusterCount;
+                bestTargetPosition = centerPos;
+            }
+        }
+
+        return bestTargetPosition;
     }
 }

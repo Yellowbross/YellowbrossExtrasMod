@@ -7,6 +7,7 @@ import java.util.List;
 
 public class YellowbrossExtrasConfig {
     public static ForgeConfigSpec.DoubleValue cameraShakeMultiplier;
+    public static ForgeConfigSpec.DoubleValue bossMusicVolume;
 
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> aiChangesNotAllowed;
 
@@ -53,6 +54,11 @@ public class YellowbrossExtrasConfig {
                 .comment(" ")
                 .comment("The multiplier in how intense camera shakes can be. Set to 0 to disable.")
                 .defineInRange("cameraShakeMultiplier", 1.0D, 0.0D, Double.POSITIVE_INFINITY);
+
+        bossMusicVolume = client
+                .comment(" ")
+                .comment("The volume of music that plays during boss fights. Set to 0 to disable.")
+                .defineInRange("bossMusicVolume", 0.35D, 0.0D, 1.0D);
 
         client.pop();
 

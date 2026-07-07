@@ -1,42 +1,30 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBulletEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.projectile.AbstractSnipingProjectile;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
+import com.yellowbrossproductions.yellowbrossextras.init.YEParticleTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class SniperRifleEntity extends Entity {
-    private static final EntityDataAccessor<BlockPos> COLLISION_POS = SynchedEntityData.defineId(SniperRifleEntity.class, EntityDataSerializers.BLOCK_POS);
-    private static final EntityDataAccessor<Integer> MAX_TIME = SynchedEntityData.defineId(SniperRifleEntity.class, EntityDataSerializers.INT);
-    LivingEntity shooter = null;
+public class SniperRifleEntity extends AbstractSnipingProjectile {
 
     public SniperRifleEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -45,7 +33,7 @@ public class SniperRifleEntity extends Entity {
 
     public SniperRifleEntity(Level level, LivingEntity shooter, Vec3 shootTo) {
         super(YEEntityTypes.SniperRifle.get(), level);
-        this.shooter = shooter;
+        this.setOwner(shooter);
         if (!level.isClientSide) {
             this.setCollisionPos(new BlockPos(shootTo));
         }
@@ -63,7 +51,7 @@ public class SniperRifleEntity extends Entity {
 
         this.setXRot((float)Math.toDegrees(Math.atan2(y, d)));
 
-        SniperHitResult hitResult = new SniperHitResult();
+        SnipingProjectileHitResult hitResult = new SnipingProjectileHitResult();
         Vec3 from = this.position();
         Vec3 to = Vec3.atCenterOf(this.getCollisionPos());
         hitResult.setBlockHit(this.level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)));
@@ -82,7 +70,7 @@ public class SniperRifleEntity extends Entity {
                 Math.max(getY(), this.getCollisionPos().getY()),
                 Math.max(getZ(), this.getCollisionPos().getZ())).inflate(1, 1, 1));
         for (LivingEntity entity : entities) {
-            if (entity == this.shooter) {
+            if (entity == this.getOwner()) {
                 continue;
             }
             float pad = entity.getPickRadius() + 0.5f;
@@ -117,44 +105,12 @@ public class SniperRifleEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(COLLISION_POS, BlockPos.ZERO);
-        this.entityData.define(MAX_TIME, 2);
-    }
-
-    @Override
-    protected void readAdditionalSaveData(CompoundTag pCompound) {
-
-    }
-
-    @Override
-    protected void addAdditionalSaveData(CompoundTag pCompound) {
-
-    }
-
-    @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    public BlockPos getCollisionPos() {
-        return this.entityData.get(COLLISION_POS);
-    }
-
-    public void setCollisionPos(BlockPos pos) {
-        this.entityData.set(COLLISION_POS, pos);
-    }
-
-    public void setCollisionPos(int x, int y, int z) {
-        this.entityData.set(COLLISION_POS, new BlockPos(x, y, z));
-    }
-
-    @Override
     public void tick() {
         super.tick();
         if (tickCount == this.getMaxTime()) {
             this.setPos(Vec3.atCenterOf(this.getCollisionPos()));
             EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION_EMITTER, false, this.position(), Vec3.ZERO);
+            EntityUtil.makeAParticle(this.level, YEParticleTypes.RIFLE_EXPLOSION_ONOMATOPOEIA.get(), false, this.position(), Vec3.ZERO);
             for (int i = 0; i < 30; ++i) {
                 EntityUtil.makeAParticle(this.level, ParticleTypes.CAMPFIRE_COSY_SMOKE, false, this.position(), new Vec3(-0.5 + this.random.nextDouble(), -0.5 + this.random.nextDouble(), -0.5 + this.random.nextDouble()));
             }
@@ -166,43 +122,6 @@ public class SniperRifleEntity extends Entity {
         }
     }
 
-    public int getMaxTime() {
-        return this.entityData.get(MAX_TIME);
-    }
-
-    public void setMaxTime(int input) {
-        this.entityData.set(MAX_TIME, input);
-    }
-
-    @Nullable
-    public LivingEntity getOwner() {
-        return this.shooter;
-    }
-
-    @Override
-    public boolean isPickable() {
-        return false;
-    }
-
-    public static class SniperHitResult {
-        private BlockHitResult blockHit;
-
-        private final List<LivingEntity> entities = new ArrayList<>();
-
-        public BlockHitResult getBlockHit() {
-            return blockHit;
-        }
-
-        public void setBlockHit(HitResult rayTraceResult) {
-            if (rayTraceResult.getType() == HitResult.Type.BLOCK)
-                this.blockHit = (BlockHitResult) rayTraceResult;
-        }
-
-        public void addEntityHit(LivingEntity entity) {
-            entities.add(entity);
-        }
-    }
-
     private void explode(@Nullable LivingEntity hitEntity, double size) {
         if (this.level.isClientSide) return;
 
@@ -210,11 +129,14 @@ public class SniperRifleEntity extends Entity {
         if (hitEntity != null) list.add(hitEntity);
 
         for (LivingEntity entity : list) {
-            boolean canHurt = !(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(entity, owner);
+            boolean canHurt = (!(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(entity, owner)) && (!(entity instanceof Player) || entity.hasLineOfSight(this));
             if (canHurt) {
                 DamageSource damageSource = new IndirectEntityDamageSource("thrown", this, this.getOwner()).setProjectile();
                 entity.invulnerableTime = 0;
                 entity.hurt(damageSource, Math.max(15, entity.getMaxHealth() * 0.25F) * EntityUtil.multiplyToScrewArmor(entity, 0.3f));
+                double mult = 8.0d;
+                entity.hurtMarked = true;
+                entity.setDeltaMovement((this.random.nextDouble() - 0.5d) * mult, (this.random.nextDouble() - 0.15d) * 2.0d, (this.random.nextDouble() - 0.5d) * mult);
             }
         }
     }

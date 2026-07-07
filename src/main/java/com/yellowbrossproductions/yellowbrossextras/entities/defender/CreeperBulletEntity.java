@@ -135,7 +135,7 @@ public class CreeperBulletEntity extends AbstractCreeperEntity implements IsDefe
                     ));
                 }
                 CameraShakeEntity.cameraShake(this.level, this.position(), 20, 0.4f, 2, 3);
-                this.playSound(YESoundEvents.SUPERDUPERPOISON_NOSCREAM.get(), 4.0F, 1.0F);
+                this.playSound(YESoundEvents.SUPERDUPERPOISON_NOSCREAM.get(), 1.0F, 1.0F);
                 EntityUtil.fireCircleOfPoisonBalls(this.level, this, 10, 0.25d, 1.0f, false);
             }
             CameraShakeEntity.cameraShake(this.level, position(), 30, 0.1f, 0, 5);

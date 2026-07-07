@@ -14,7 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -144,6 +143,8 @@ public class YEEntityTypes {
     public static final RegistryObject<EntityType<SuperDuperPoisonBallEntity>> SuperDuperPoisonBall = ENTITY_TYPES.register("superduperpoison_ball", () -> EntityType.Builder.<SuperDuperPoisonBallEntity>of(SuperDuperPoisonBallEntity::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "superduperpoison_ball").toString()));
 
     public static final RegistryObject<EntityType<SniperRifleEntity>> SniperRifle = ENTITY_TYPES.register("sniper_rifle", () -> EntityType.Builder.<SniperRifleEntity>of(SniperRifleEntity::new, MobCategory.MISC).sized(0.0F, 0.0F).setCustomClientFactory(SniperRifleEntity::new).setShouldReceiveVelocityUpdates(false).noSave().build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sniper_rifle").toString()));
+
+    public static final RegistryObject<EntityType<DeadlyArrowEntity>> DeadlyArrow = ENTITY_TYPES.register("deadly_arrow", () -> EntityType.Builder.<DeadlyArrowEntity>of(DeadlyArrowEntity::new, MobCategory.MISC).sized(0.0F, 0.0F).setCustomClientFactory(DeadlyArrowEntity::new).setShouldReceiveVelocityUpdates(false).noSave().build(new ResourceLocation(YellowbrossExtras.MOD_ID, "deadly_arrow").toString()));
 
 
     // Misc

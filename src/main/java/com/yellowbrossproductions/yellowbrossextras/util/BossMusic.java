@@ -49,7 +49,7 @@ public class BossMusic extends AbstractTickableSoundInstance {
             z = boss.getZ();
         } else {
             volume -= 0.01f;
-            if (musicType < 3 && boss.getMusicType() == 3) volume -= 0.05f;
+            if (boss.getMusicType() > 0) volume -= 0.05f;
         }
 
         if (volume < 0.025) stop();

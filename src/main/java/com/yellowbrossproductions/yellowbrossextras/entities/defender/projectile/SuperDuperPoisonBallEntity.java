@@ -77,7 +77,7 @@ public class SuperDuperPoisonBallEntity extends CustomAbstractHurtingProjectile 
         List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level, size, this, Entity::isAlive);
 
         boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
-        this.playSound(YESoundEvents.SUPERDUPERPOISON_NOSCREAM.get(), 4.0F, 1.0F);
+        this.playSound(YESoundEvents.SUPERDUPERPOISON_NOSCREAM.get(), 1.0F, 1.0F);
         EntityUtil.makeAParticle(this.level, YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, this.position(), Vec3.ZERO);
         for (Entity entity : list) {
             if (entity instanceof LivingEntity living) {
@@ -106,11 +106,6 @@ public class SuperDuperPoisonBallEntity extends CustomAbstractHurtingProjectile 
                 this.discard();
             }
         }
-    }
-
-    @Override
-    public boolean shouldDoParticles() {
-        return true;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.yellowbrossproductions.yellowbrossextras.entities.projectile;
+package com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile;
 
 import com.yellowbrossproductions.yellowbrossextras.entities.MobAttack;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;

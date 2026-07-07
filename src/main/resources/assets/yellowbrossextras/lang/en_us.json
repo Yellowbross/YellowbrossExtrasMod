@@ -82,6 +82,10 @@
   "subtitles.entity.defender.forcegun": "Force Gun blasts",
   "subtitles.entity.defender.forcegun_start": "Defender deploys his Force Gun",
   "subtitles.entity.defender.poisondarts": "Defender shoots Poison Darts",
+  "subtitles.entity.defender.snipe_start": "Defender fetches his Sniper Rifle",
+  "subtitles.entity.defender.snipe_spin": "Defender tries for a kill streak",
+  "subtitles.entity.defender.snipe_shoot": "Deadly Arrow flies",
+  "subtitles.entity.defender.snipe_hit": "Looks like he's getting his kill streak",
 
   "subtitles.entity.vilvgaver.attack": "Vilvgaver attacks",
   "subtitles.entity.vilvgaver.loop": "Vilvgaver screams",

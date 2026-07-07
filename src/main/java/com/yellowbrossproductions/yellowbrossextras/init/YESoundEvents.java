@@ -48,6 +48,10 @@ public class YESoundEvents {
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_FORCEGUN = addSoundsToRegistry("entity.defender.forcegun");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_FORCEGUN_START = addSoundsToRegistry("entity.defender.forcegun_start");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_POISONDARTS = addSoundsToRegistry("entity.defender.poisondarts");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SNIPE_START = addSoundsToRegistry("entity.defender.snipe_start");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SNIPE_SPIN = addSoundsToRegistry("entity.defender.snipe_spin");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SNIPE_SHOOT = addSoundsToRegistry("entity.defender.snipe_shoot");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_SNIPE_HIT = addSoundsToRegistry("entity.defender.snipe_hit");
 
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_ATTACK = addSoundsToRegistry("entity.vilvgaver.attack");
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_LOOP = addSoundsToRegistry("entity.vilvgaver.loop");

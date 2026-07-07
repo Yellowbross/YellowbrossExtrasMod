@@ -278,6 +278,34 @@
     ]
   },
 
+  "entity.defender.snipe_start": {
+    "subtitle": "subtitles.entity.defender.snipe_start",
+    "sounds": [
+      "yellowbrossextras:defender/snipe_start"
+    ]
+  },
+
+  "entity.defender.snipe_spin": {
+    "subtitle": "subtitles.entity.defender.snipe_spin",
+    "sounds": [
+      "yellowbrossextras:defender/snipe_spin"
+    ]
+  },
+
+  "entity.defender.snipe_shoot": {
+    "subtitle": "subtitles.entity.defender.snipe_shoot",
+    "sounds": [
+      "yellowbrossextras:defender/snipe_shoot"
+    ]
+  },
+
+  "entity.defender.snipe_hit": {
+    "subtitle": "subtitles.entity.defender.snipe_hit",
+    "sounds": [
+      "yellowbrossextras:defender/snipe_hit"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [

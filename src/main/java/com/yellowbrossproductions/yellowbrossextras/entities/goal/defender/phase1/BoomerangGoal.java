@@ -2,6 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phas
 
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
+import net.minecraft.world.entity.player.Player;
 
 public class BoomerangGoal extends CustomAttackGoal {
 
@@ -11,7 +12,7 @@ public class BoomerangGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_boomerang < 1 && getDefender().getPhase() == 1;
+        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_boomerang < 1 && getDefender().getPhase() == 1 && (!(getDefender().getTarget() instanceof Player) || getDefender().distanceTo(getDefender().getTarget()) > 12.0D);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities;
 
 import com.yellowbrossproductions.yellowbrossextras.client.ClientAudioHandler;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.ICanBeAnimated;
+import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -80,7 +81,7 @@ public class YExtrasMob extends PathfinderMob implements ICanBeAnimated, Yextras
     }
 
     public float getMusicVolume() {
-        return 0;
+        return YellowbrossExtrasConfig.bossMusicVolume.get().floatValue();
     }
 
     public boolean canPlayMusic() {

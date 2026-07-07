@@ -3,6 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phas
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 
 public class SnipeGoal extends CustomAttackGoal {
 
@@ -26,6 +27,18 @@ public class SnipeGoal extends CustomAttackGoal {
     @Override
     public boolean canContinueToUse() {
         return getDefender().attackTicks <= 120;
+    }
+
+    @Override
+    public void tick() {
+        if (getDefender().attackTicks < 91) super.tick();
+        else {
+            getDefender().getNavigation().stop();
+
+            if (getDefender().specialLookLocation != Vec3.ZERO) {
+                getDefender().getLookControl().setLookAt(getDefender().specialLookLocation.x, getDefender().specialLookLocation.y, getDefender().specialLookLocation.z, 100.0F, 100.0F);
+            }
+        }
     }
 
     @Override
