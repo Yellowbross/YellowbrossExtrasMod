@@ -31,6 +31,8 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Team;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -67,6 +69,7 @@ public class BunnyBlitz {
     public int celebrationTicks;
     public static float raidRange = 120.0F;
     public boolean absurdity = false;
+    protected PlayerTeam team = null;
 
     protected BlockPos center;
 
@@ -109,6 +112,15 @@ public class BunnyBlitz {
                 }
             }
         }
+        if (nbt.contains("Team", 8)) {
+            String s = nbt.getString("Team");
+            PlayerTeam playerteam = this.level.getScoreboard().getPlayerTeam(s);
+            if (playerteam != null) {
+                this.setTeam(playerteam);
+            } else {
+                YellowbrossExtras.LOGGER.warn("Unable to add this Bunny Blitz to team \"{}\" (that team probably doesn't exist)", (Object)s);
+            }
+        }
     }
 
     public void save(CompoundTag nbt) {
@@ -141,6 +153,17 @@ public class BunnyBlitz {
             }
             nbt.put("heroes", list);
         }
+        if (this.getTeam() != null) nbt.putString("Team", this.getTeam().getName());
+    }
+
+    @Nullable
+    public PlayerTeam getTeam() {
+        if (this.team == null) return null;
+        return this.level.getScoreboard().getPlayerTeam(this.team.getName());
+    }
+
+    public void setTeam(PlayerTeam team) {
+        this.team = team;
     }
 
     public boolean isOver() {
@@ -194,6 +217,8 @@ public class BunnyBlitz {
                 if (flag != this.active) {
                     this.raidEvent.setVisible(this.active);
                 }
+
+                if (this.getTeam() != null && this.getTeam().getColor() != this.raidEvent.getColor().getFormatting()) this.raidEvent.setColor(BossEvent.BossBarColor.byName(this.getTeam().getColor().getName()));
 
                 if (!this.active) {
                     return;
@@ -397,24 +422,20 @@ public class BunnyBlitz {
         if (entityType == null) return false;
 
         Entity entity = entityType.create(this.level);
-        if (!(entity instanceof Mob)) return false;
+        if (!(entity instanceof Mob mob)) return false;
 
-        Mob mobEntity = (Mob) entity;
         DifficultyInstance difficultyForLocation = this.level.getCurrentDifficultyAt(blockPos.above());
-        mobEntity.moveTo(blockPos.above(), 0.0F, 0.0F);
+        mob.moveTo(blockPos.above(), 0.0F, 0.0F);
         if (!this.level.isClientSide) {
-            mobEntity.finalizeSpawn((ServerLevelAccessor)this.level, difficultyForLocation, MobSpawnType.EVENT, (SpawnGroupData) null, (CompoundTag) null);
+            mob.finalizeSpawn((ServerLevelAccessor)this.level, difficultyForLocation, MobSpawnType.EVENT, (SpawnGroupData) null, (CompoundTag) null);
         }
-        if (mobEntity instanceof Raider) {
-            ((Raider) mobEntity).setCanJoinRaid(false);
-        }
-        this.joinRaid(0, mobEntity, blockPos, false);
-        if (mobEntity instanceof PathfinderMob mob) {
-            mob.goalSelector.addGoal(3, new RunTowardBlitzGoal(mob));
-        }
-        this.totalHealth += mobEntity.getHealth();
-        mobEntity.setPersistenceRequired();
-        return this.level.addFreshEntity(mobEntity);
+        if (mob instanceof Raider raider) raider.setCanJoinRaid(false);
+        if (this.getTeam() != null) this.level.getScoreboard().addPlayerToTeam(mob.getStringUUID(), this.getTeam());
+        this.joinRaid(0, mob, blockPos, false);
+        if (mob instanceof PathfinderMob pathfinder) pathfinder.goalSelector.addGoal(3, new RunTowardBlitzGoal(pathfinder));
+        this.totalHealth += mob.getHealth();
+        mob.setPersistenceRequired();
+        return this.level.addFreshEntity(mob);
     }
 
     private int getDefaultNumSpawns(String string, int wave) {

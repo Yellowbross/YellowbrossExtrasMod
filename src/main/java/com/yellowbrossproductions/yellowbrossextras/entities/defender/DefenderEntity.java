@@ -872,7 +872,8 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
 
     public int getRequiredTransTicksEachPhase() {
         switch (this.getPhase()) {
-            case 1, 2: return 288;
+            case 1: return 288;
+            case 2: return 256;
             default : return 0;
         }
     }
@@ -886,6 +887,7 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
             }
             case 2: switch (this.getPhase()) {
                 case 1: return YESoundEvents.MUSIC_DEFENDER_PHASE1.get();
+                case 2: return YESoundEvents.MUSIC_DEFENDER_PHASE2.get();
             }
             case 3: switch (this.getPhase()) {
                 case 1: return YESoundEvents.MUSIC_DEFENDER_PHASE1_TRANS.get();
@@ -1194,9 +1196,9 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                 case attack_claws: return !this.shouldContinueAttacking;
                 case attack_saws: return false;
                 case attack_chainsaw: damage /= 2; break;
-                case attack_creepergun: damage /= 3; break;
+                case attack_creepergun: if (this.getTarget() instanceof Player) damage /= 3; break;
                 case attack_ratatatabow: if (this.attackTicks2 > 0) damage = 0; break;
-                case attack_snipe: return this.getCustomRender() != 2;
+                case attack_snipe: if (this.getCustomRender() == 2) damage = 0; break;
             }
         }
         if (source.getEntity() instanceof IsDefenderAligned && EntityUtil.canHurtThisMob(source.getEntity(), this)) {
@@ -1334,8 +1336,8 @@ public class DefenderEntity extends YExtrasMob implements YextrasEntity, IsDefen
                 this.lastHurtByPlayerTime = 10000;
             }
             this.deathAttackTicks = 1;
-            this.playSound(YESoundEvents.ENTITY_DEFENDER_PHASE_ENDED.get(), 3.0F, 1.0F);
-            CameraShakeEntity.cameraShake(this.level, position(), 30, 0.3f, 0, 15);
+            this.playSound(YESoundEvents.ENTITY_DEFENDER_PHASE_ENDED.get(), 6.0F, 1.0F);
+            CameraShakeEntity.cameraShake(this.level, position(), 60, 0.3f, 0, 15);
             this.makePhaseEndParticles();
         }
         if (this.getPhase() == 1) {

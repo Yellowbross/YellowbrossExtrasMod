@@ -32,5 +32,6 @@ public class CreeperGunGoal extends CustomAttackGoal {
     public void stop() {
         super.stop();
         getDefender().cooldown_creepergun = getTimeInSeconds(20);
+        if (getDefender().getTarget() instanceof Player) getDefender().timeToWaitBeforeUsingAnyOtherAttack = 40;
     }
 }

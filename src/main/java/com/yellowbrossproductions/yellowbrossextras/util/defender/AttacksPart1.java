@@ -168,7 +168,7 @@ public class AttacksPart1 {
                     if (target instanceof Player) {
                         defender.setDeltaMovement((target.getX() - defender.getX()) * 0.2D, 1.6D, (target.getZ() - defender.getZ()) * 0.2D);
                     } else {
-                        List<Mob> targets = defender.level.getEntitiesOfClass(Mob.class, target.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy);
+                        List<Mob> targets = defender.level.getEntitiesOfClass(Mob.class, target.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy && defender.isInAttackSight(p));
                         Vec3 strikeZone = EntityUtil.findDensestMobCluster(targets, 6.0d);
 
                         if (strikeZone != null) {
@@ -272,11 +272,19 @@ public class AttacksPart1 {
         }
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         if (defender.attackType == defender.attack_chainsaw) {
+            Vec3 lookTo = defender.getLookAngle().scale(4.0d);
+
             if (target != null) {
-                defender.setSpecialLookLocation(target.getX(), target.getY() + (target.getBbHeight() / 2), target.getZ());
-            } else {
-                defender.setSpecialLookLocation(defender.getLookAngle().scale(4.0d));
+                lookTo = target.getBoundingBox().getCenter();
+
+                if (!(target instanceof Player)) {
+                    List<Mob> targets = defender.level.getEntitiesOfClass(Mob.class, defender.getBoundingBox().inflate(10.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy && defender.isInAttackSight(p));
+                    Vec3 strikeZone = EntityUtil.findDensestMobCluster(targets, 6.0d);
+                    if (strikeZone != null) lookTo = strikeZone;
+                }
             }
+
+            defender.setSpecialLookLocation(lookTo);
             if (ticks == 3) {
                 defender.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, 0.5F);
             }
@@ -334,6 +342,7 @@ public class AttacksPart1 {
                     for (LivingEntity caught : list) {
                         if (caught != defender && caught.isAlive()) {
                             if (caught.hurt(DamageSource.mobAttack(defender), 8.0F)) {
+                                caught.stopRiding();
                                 defender.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
                                 caught.setDeltaMovement(caught.getDeltaMovement().add(0.0D, 2.0D, 0.0D));
                                 if (!caught.hasEffect(YEEffects.KNOCKED_OUT.get())) {
@@ -631,7 +640,7 @@ public class AttacksPart1 {
             }
             Vec3 throwTo = defender.getLookAngle().scale(10.0d);
             if (ticks >= 91 && target != null) {
-                List<Mob> targets = defender.level.getEntitiesOfClass(Mob.class, defender.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy);
+                List<Mob> targets = defender.level.getEntitiesOfClass(Mob.class, defender.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy && defender.isInAttackSight(p));
                 Vec3 strikeZone = EntityUtil.findDensestMobCluster(targets, 9.0d);
 
                 throwTo = target.getBoundingBox().getCenter();
@@ -665,6 +674,7 @@ public class AttacksPart1 {
                     ((motion.y * sqrt) * mult),
                     ((motion.z * sqrt) * mult)
             );
+            iGaveBirth.setOwner(defender);
 
             iGaveBirth.setTarget(defender.getTarget());
 

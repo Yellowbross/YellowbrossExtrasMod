@@ -134,8 +134,8 @@ public class DefenderAxeEntity extends CustomAbstractHurtingProjectile {
         this.makeExplodeParticles();
         this.playSound(SoundEvents.PLAYER_ATTACK_CRIT, 2.0F, 1.0F);
 
-        List<Entity> list = this.level.getEntities(this, new AABB(this.position().subtract(size, size, size), this.position().add(size, size, size)), p -> p instanceof LivingEntity && p != this.getOwner());
-        if (hitEntity instanceof LivingEntity) list.add(hitEntity);
+        List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, new AABB(this.position().subtract(size, size, size), this.position().add(size, size, size)), p -> p.isAlive() && p != this.getOwner());
+        if (hitEntity instanceof LivingEntity living) list.add(living);
 
         for (Entity entity : list) {
             boolean canHurt = !(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(entity, owner);

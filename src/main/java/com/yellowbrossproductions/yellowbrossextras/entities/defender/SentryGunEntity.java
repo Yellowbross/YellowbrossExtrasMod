@@ -56,6 +56,7 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
     int lifetimeLimit = YellowbrossExtrasConfig.defender_sentryGun_lifetimeCap.get() * 20;
     boolean mitosisInitiated = false;
     int killMyselfTicks;
+    LivingEntity owner = null;
 
     public SentryGunEntity(EntityType<? extends YExtrasMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
@@ -134,6 +135,15 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
         return false;
     }
 
+    @Nullable
+    public LivingEntity getOwner() {
+        return this.owner;
+    }
+
+    public void setOwner(@Nullable LivingEntity owner) {
+        this.owner = owner;
+    }
+
     @Override
     public void tick() {
         if (this.isActive()) this.setDeltaMovement(0.0, this.getDeltaMovement().y, 0.0);
@@ -201,6 +211,7 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
                                 0.3d + (this.random.nextDouble() * 0.5d),
                                 (-0.5 + this.random.nextDouble()) * mult
                         );
+                        iGaveBirth.setOwner(this.getOwner());
 
                         iGaveBirth.setTarget(this.getTarget());
 
@@ -312,6 +323,14 @@ public class SentryGunEntity extends YExtrasMob implements IsDefenderAligned {
             return false;
         }
         return super.hurt(source, amount);
+    }
+
+    @Override
+    public void die(DamageSource pDamageSource) {
+        super.die(pDamageSource);
+        if (pDamageSource.getEntity() instanceof Player && this.getOwner() != null) {
+            this.getOwner().hurt(pDamageSource, this.getMaxHealth());
+        }
     }
 
     class ShootGoal extends Goal {

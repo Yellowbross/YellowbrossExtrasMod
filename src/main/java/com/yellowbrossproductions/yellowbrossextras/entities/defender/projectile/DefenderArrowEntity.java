@@ -102,7 +102,7 @@ public class DefenderArrowEntity extends AbstractArrow {
                 break;
             }
             case 1 : {
-                if (hitRes.getEntity() instanceof LivingEntity living && !living.isBlocking()) {
+                if (hitRes.getEntity() instanceof LivingEntity living && !living.isBlocking() && !this.level.isClientSide) {
                     MobEffectInstance effect = living.getEffect(YEEffects.SUPER_DUPER_POISON.get());
                     int i = 1;
                     if (effect != null) {

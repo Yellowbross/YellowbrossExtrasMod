@@ -9,6 +9,7 @@ import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.Blitz
 import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.BunnyBlitz;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.TeamArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -16,6 +17,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Team;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -26,14 +30,17 @@ public class BunnyBlitzCommand {
             return p_180498_.hasPermission(2);
         });
         builder.then(Commands.literal("start").then(Commands.argument("pos", BlockPosArgument.blockPos()).executes((command) -> {
-            return start(command.getSource(), BlockPosArgument.getLoadedBlockPos(command, "pos"), false, false);
+            return start(command.getSource(), BlockPosArgument.getLoadedBlockPos(command, "pos"), false, false, null);
         })));
         builder.then(Commands.literal("start").then(Commands.argument("pos", BlockPosArgument.blockPos()).then(Commands.argument("centerOnVillage", BoolArgumentType.bool()).executes((command) -> {
-            return start(command.getSource(), BlockPosArgument.getLoadedBlockPos(command, "pos"), BoolArgumentType.getBool(command, "centerOnVillage"), false);
+            return start(command.getSource(), BlockPosArgument.getLoadedBlockPos(command, "pos"), BoolArgumentType.getBool(command, "centerOnVillage"), false, null);
         }))));
         builder.then(Commands.literal("start").then(Commands.argument("pos", BlockPosArgument.blockPos()).then(Commands.argument("centerOnVillage", BoolArgumentType.bool()).then(Commands.argument("absurdity", BoolArgumentType.bool()).executes((command) -> {
-            return start(command.getSource(), BlockPosArgument.getLoadedBlockPos(command, "pos"), BoolArgumentType.getBool(command, "centerOnVillage"), BoolArgumentType.getBool(command, "absurdity"));
+            return start(command.getSource(), BlockPosArgument.getLoadedBlockPos(command, "pos"), BoolArgumentType.getBool(command, "centerOnVillage"), BoolArgumentType.getBool(command, "absurdity"), null);
         })))));
+        builder.then(Commands.literal("start").then(Commands.argument("pos", BlockPosArgument.blockPos()).then(Commands.argument("centerOnVillage", BoolArgumentType.bool()).then(Commands.argument("absurdity", BoolArgumentType.bool()).then(Commands.argument("team", TeamArgument.team()).executes((command) -> {
+            return start(command.getSource(), BlockPosArgument.getLoadedBlockPos(command, "pos"), BoolArgumentType.getBool(command, "centerOnVillage"), BoolArgumentType.getBool(command, "absurdity"), TeamArgument.getTeam(command, "team"));
+        }))))));
         builder.then(Commands.literal("highlightBunnies").executes((command) -> {
             return highlightBunnies(command.getSource());
         }));
@@ -43,8 +50,8 @@ public class BunnyBlitzCommand {
         dispatcher.register(builder);
     }
 
-    private static int start(CommandSourceStack p_180485_, BlockPos pos, boolean centerOnVillage, boolean absurdity) throws CommandSyntaxException {
-        ServerPlayer serverplayer = p_180485_.getPlayerOrException();
+    private static int start(CommandSourceStack commandSourceStack, BlockPos pos, boolean centerOnVillage, boolean absurdity, @Nullable PlayerTeam team) throws CommandSyntaxException {
+        ServerPlayer serverplayer = commandSourceStack.getPlayerOrException();
         BunnyBlitz blitz = BlitzManager.createRaid(serverplayer.getLevel(), pos);
         blitz.addPlayerToRaid(serverplayer);
         if (centerOnVillage) {
@@ -53,10 +60,13 @@ public class BunnyBlitzCommand {
         if (absurdity) {
             blitz.setAbsurdity(true);
         }
+        if (team != null) {
+            blitz.setTeam(team);
+        }
         if (blitz != null) {
-            p_180485_.sendSuccess(Component.translatable("command.yellowbrossextras.bunny_blitz.start_success", (blitz.getCenter().getX() + ", " + blitz.getCenter().getY() + ", " + blitz.getCenter().getZ())), false);
+            commandSourceStack.sendSuccess(Component.translatable("command.yellowbrossextras.bunny_blitz.start_success", (blitz.getCenter().getX() + ", " + blitz.getCenter().getY() + ", " + blitz.getCenter().getZ())), false);
         } else {
-            p_180485_.sendFailure(Component.literal("Failed to create a raid in your local village"));
+            commandSourceStack.sendFailure(Component.literal("Failed to create a raid in your local village"));
         }
 
         return 1;

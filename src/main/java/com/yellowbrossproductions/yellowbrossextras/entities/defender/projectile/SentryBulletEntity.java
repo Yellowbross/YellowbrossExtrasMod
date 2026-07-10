@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.network.PacketDistributor;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class SentryBulletEntity extends CustomAbstractHurtingProjectile implements ItemSupplier {
@@ -44,13 +46,13 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
     }
 
     @Override
-    protected boolean canHitEntity(Entity p_36842_) {
+    protected boolean canHitEntity(Entity entity) {
         boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
         boolean team = true;
         if (shouldCareAboutTeams) {
-            team = EntityUtil.canHurtThisMob(p_36842_, (Mob) this.getOwner()) && !(p_36842_ instanceof IsDefenderAligned);
+            team = EntityUtil.canHurtThisMob(entity, (Mob) this.getOwner()) && !(entity instanceof IsDefenderAligned);
         }
-        return team && p_36842_ != this.getOwner() && !(p_36842_ instanceof Projectile) && super.canHitEntity(p_36842_);
+        return team && entity != this.getOwner() && !(entity instanceof Projectile) && super.canHitEntity(entity);
     }
 
     @Override
@@ -58,11 +60,11 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
         return false;
     }
 
-    protected void onHit(HitResult p_37406_) {
-        super.onHit(p_37406_);
+    protected void onHit(HitResult pResult) {
+        super.onHit(pResult);
         if (!this.level.isClientSide) {
             this.level.broadcastEntityEvent(this, (byte)3);
-            this.explode(2.0D);
+            this.explode(null, 2.0D);
             this.discard();
         }
     }
@@ -72,28 +74,25 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
         return ParticleTypes.ELECTRIC_SPARK;
     }
 
-    private void explode(double size) {
-        List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level, size, this, Entity::isAlive);
+    private void explode(@Nullable Entity hitEntity, double size) {
+        if (this.level.isClientSide) return;
 
-        boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
+        List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, new AABB(this.position().subtract(size, size, size), this.position().add(size, size, size)), p -> p.isAlive() && p != this.getOwner() && p.hasLineOfSight(this));
+        if (hitEntity instanceof LivingEntity living) list.add(living);
+
         this.makeExplodeParticles();
         this.stopShootingSound(this.level);
         this.playSound(YESoundEvents.ENTITY_DEFENDER_SENTRY_HIT.get(), 2.0F, 1.0F);
+
         for (Entity entity : list) {
-            if (entity instanceof LivingEntity living) {
-                boolean team = true;
-                if (shouldCareAboutTeams) {
-                    team = EntityUtil.canHurtThisMob(living, (Mob) this.getOwner()) && entity != this.getOwner() && !(living instanceof IsDefenderAligned);
-                }
-                if (team && entity.isAlive() && !entity.isInvulnerable() && !entity.isSpectator()) {
-                    living.hurt(DamageSource.thrown(this, this.getOwner()), 5.0F);
-                    living.invulnerableTime -= 9;
-                }
+            boolean canHurt = (!(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(entity, owner)) && entity != this.getOwner() && !(entity instanceof IsDefenderAligned);
+            if (canHurt) {
+                DamageSource damageSource = new IndirectEntityDamageSource("thrown", this, this.getOwner()).setProjectile();
+                entity.invulnerableTime -= 9;
+                entity.hurt(damageSource, 5.0F);
             }
         }
-        if (!this.level.isClientSide) {
-            this.discard();
-        }
+        this.discard();
     }
 
     @Override
@@ -103,7 +102,7 @@ public class SentryBulletEntity extends CustomAbstractHurtingProjectile implemen
         if (this.tickCount > 80) {
             if (!this.level.isClientSide) {
                 this.level.broadcastEntityEvent(this, (byte)3);
-                this.explode(2.0D);
+                this.explode(null, 2.0D);
                 this.discard();
             }
         }

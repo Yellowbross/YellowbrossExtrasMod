@@ -201,7 +201,7 @@ public class YECommonEventHandler {
                         -0.5f + random.nextFloat()
                 ));
             }
-            List<Entity> list = entity.level.getEntities(entity, entity.getBoundingBox().inflate(4.0f), p -> !(p instanceof DefenderEntity) && EntityUtil.isMobNotInCreativeMode(p));
+            List<Entity> list = entity.level.getEntities(entity, entity.getBoundingBox().inflate(4.0f), p -> !(p instanceof DefenderEntity) && p instanceof LivingEntity && EntityUtil.isMobNotInCreativeMode(p));
             for (Entity hit : list) {
                 hit.hurtMarked = true;
                 hit.setDeltaMovement(hit.getDeltaMovement()
