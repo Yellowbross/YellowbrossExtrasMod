@@ -2,11 +2,10 @@ package com.yellowbrossproductions.yellowbrossextras.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.StickFigureAnimation;
 import com.yellowbrossproductions.yellowbrossextras.client.render.layer.CustomHeadedModel;
-import com.yellowbrossproductions.yellowbrossextras.entities.StickFigureEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.StickFigure;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -408,7 +407,7 @@ public class StickFigureModel<T extends Entity> extends HierarchicalModel<T> imp
         this.spine_end1.xRot += (headPitch * ((float)Math.PI / 180F)) * 0.5F;
         this.spine1.xRot += (headPitch * ((float)Math.PI / 180F)) * 0.5F;
 
-        if (entity instanceof StickFigureEntity sticky) {
+        if (entity instanceof StickFigure sticky) {
             this.animate(sticky.anim_base, StickFigureAnimation.base, ageInTicks, sticky.getAnimationSpeed());
         }
     }

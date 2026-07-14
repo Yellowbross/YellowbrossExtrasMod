@@ -2,7 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderAxeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DefenderAxe;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -17,7 +17,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class DefenderAxeRenderer<T extends DefenderAxeEntity> extends EntityRenderer<T> {
+public class DefenderAxeRenderer<T extends DefenderAxe> extends EntityRenderer<T> {
     private static final ItemStack RENDER_ITEM = Items.IRON_AXE.getDefaultInstance();
     private final ItemRenderer itemRenderer;
 
@@ -40,7 +40,7 @@ public class DefenderAxeRenderer<T extends DefenderAxeEntity> extends EntityRend
     }
 
     @Override
-    public ResourceLocation getTextureLocation(DefenderAxeEntity pEntity) {
+    public ResourceLocation getTextureLocation(DefenderAxe pEntity) {
         return null;
     }
 }

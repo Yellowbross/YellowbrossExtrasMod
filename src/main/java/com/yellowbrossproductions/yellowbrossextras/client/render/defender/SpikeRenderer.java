@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.SpikeModel;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.SpikeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Spike;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -16,9 +16,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SpikeRenderer extends EntityRenderer<SpikeEntity> {
+public class SpikeRenderer extends EntityRenderer<Spike> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/spike.png");
-    private final SpikeModel<SpikeEntity> model;
+    private final SpikeModel<Spike> model;
 
     public SpikeRenderer(EntityRendererProvider.Context p_174100_) {
         super(p_174100_);
@@ -26,11 +26,11 @@ public class SpikeRenderer extends EntityRenderer<SpikeEntity> {
     }
 
     @Override
-    protected int getBlockLightLevel(SpikeEntity pEntity, BlockPos pPos) {
+    protected int getBlockLightLevel(Spike pEntity, BlockPos pPos) {
         return 15;
     }
 
-    public void render(SpikeEntity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(Spike pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
         float f = pEntity.getAnimationProgress(pPartialTick);
         if (f != 0.0F) {
             float f1 = 1.0F;
@@ -52,7 +52,7 @@ public class SpikeRenderer extends EntityRenderer<SpikeEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(SpikeEntity pEntity) {
+    public ResourceLocation getTextureLocation(Spike pEntity) {
         return TEXTURE;
     }
 }

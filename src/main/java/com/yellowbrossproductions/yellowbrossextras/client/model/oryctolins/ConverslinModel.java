@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.oryctolins.ConverslinAnimation;
 import com.yellowbrossproductions.yellowbrossextras.client.render.layer.CustomHeadedModel;
-import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.ConverslinEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.Converslin;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -117,7 +117,7 @@ public class ConverslinModel<T extends Entity> extends HierarchicalModel<T> impl
             body.getChild("lower_half").xRot = -1.4137167F;
         }
 
-        if (entity instanceof ConverslinEntity oryctolin) {
+        if (entity instanceof Converslin oryctolin) {
             this.animate(oryctolin.anim_celebrate, ConverslinAnimation.celebrate, ageInTicks, oryctolin.getAnimationSpeed());
             this.animate(oryctolin.anim_attack1, ConverslinAnimation.attack1, ageInTicks, oryctolin.getAnimationSpeed());
 

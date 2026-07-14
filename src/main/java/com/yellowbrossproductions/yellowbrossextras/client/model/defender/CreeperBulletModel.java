@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.defender.CreeperBulletAnimation;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBulletEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBullet;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -73,7 +73,7 @@ public class CreeperBulletModel<T extends Entity> extends HierarchicalModel<T> {
         this.creepleg3.xRot = Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
         this.creepleg4.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 
-        if (entity instanceof CreeperBulletEntity creeper) {
+        if (entity instanceof CreeperBullet creeper) {
             if (creeper.getAnimationState().equals("fly")) {
                 this.aim.yRot += creeper.getShootY() * ((float)Math.PI / 180F);
                 this.aim.xRot += creeper.getShootX() * ((float)Math.PI / 180F);

@@ -3,8 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.model.defender;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DeadlyArrowEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SniperRifleEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DeadlyArrow;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -12,7 +11,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 
-public class DeadlyArrowModel<T extends DeadlyArrowEntity> extends EntityModel<T> {
+public class DeadlyArrowModel<T extends DeadlyArrow> extends EntityModel<T> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(YellowbrossExtras.MOD_ID, "deadly_arrow"), "main");
     private final ModelPart arrow;
     private final ModelPart back;
@@ -42,7 +41,7 @@ public class DeadlyArrowModel<T extends DeadlyArrowEntity> extends EntityModel<T
     }
 
     @Override
-    public void setupAnim(DeadlyArrowEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(DeadlyArrow entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }
 

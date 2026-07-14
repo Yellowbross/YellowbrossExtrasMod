@@ -3,9 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.ParacreeperModel;
-import com.yellowbrossproductions.yellowbrossextras.client.model.SneakerModel;
-import com.yellowbrossproductions.yellowbrossextras.entities.creepers.ParacreeperEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.creepers.SneakerEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.creepers.Paracreeper;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -14,14 +12,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ParacreeperRenderer extends MobRenderer<ParacreeperEntity, ParacreeperModel<ParacreeperEntity>> {
+public class ParacreeperRenderer extends MobRenderer<Paracreeper, ParacreeperModel<Paracreeper>> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/creepers/paracreeper.png");
 
     public ParacreeperRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new ParacreeperModel<>(renderManagerIn.bakeLayer(ParacreeperModel.LAYER_LOCATION)), 0.5F);
     }
 
-    protected void scale(ParacreeperEntity creeper, PoseStack poseStack, float partialTick) {
+    protected void scale(Paracreeper creeper, PoseStack poseStack, float partialTick) {
         float f = creeper.getSwelling(partialTick);
         float f1 = 1.0F + Mth.sin(f * 100.0F) * f * 0.01F;
         f = Mth.clamp(f, 0.0F, 1.0F);
@@ -32,13 +30,13 @@ public class ParacreeperRenderer extends MobRenderer<ParacreeperEntity, Paracree
         poseStack.scale(f2, f3, f2);
     }
 
-    protected float getWhiteOverlayProgress(ParacreeperEntity p_114043_, float p_114044_) {
+    protected float getWhiteOverlayProgress(Paracreeper p_114043_, float p_114044_) {
         float f = p_114043_.getSwelling(p_114044_);
         return (int)(f * 10.0F) % 2 == 0 ? 0.0F : Mth.clamp(f, 0.5F, 1.0F);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ParacreeperEntity p_110775_1_) {
+    public ResourceLocation getTextureLocation(Paracreeper p_110775_1_) {
         return TEXTURE;
     }
 }

@@ -5,15 +5,15 @@ import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.*;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBulletEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBullet;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGun;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.LoseAIGoal;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.AbstractOryctolin;
-import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.ConverslinEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.Converslin;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.CarrotMinionEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.BoomerangEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.Boomerang;
 import com.yellowbrossproductions.yellowbrossextras.init.*;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
@@ -95,28 +95,28 @@ public class YECommonEventHandler {
 
         @SubscribeEvent
         public static void createAttributes(EntityAttributeCreationEvent event) {
-            event.put(YEEntityTypes.Defender.get(), DefenderEntity.createAttributes().build());
-            event.put(YEEntityTypes.SentryGun.get(), SentryGunEntity.createAttributes().build());
-            event.put(YEEntityTypes.CreeperBullet.get(), CreeperBulletEntity.createAttributes().build());
+            event.put(YEEntityTypes.Defender.get(), Defender.createAttributes().build());
+            event.put(YEEntityTypes.SentryGun.get(), SentryGun.createAttributes().build());
+            event.put(YEEntityTypes.CreeperBullet.get(), CreeperBullet.createAttributes().build());
 
-            event.put(YEEntityTypes.Sneaker.get(), SneakerEntity.createAttributes().build());
-            event.put(YEEntityTypes.Paracreeper.get(), ParacreeperEntity.createAttributes().build());
-            event.put(YEEntityTypes.Crawler.get(), CrawlerEntity.createAttributes().build());
-            event.put(YEEntityTypes.Freaker.get(), FreakerEntity.createAttributes().build());
-            event.put(YEEntityTypes.Sprayer.get(), SprayerEntity.createAttributes().build());
+            event.put(YEEntityTypes.Sneaker.get(), Sneaker.createAttributes().build());
+            event.put(YEEntityTypes.Paracreeper.get(), Paracreeper.createAttributes().build());
+            event.put(YEEntityTypes.Crawler.get(), Crawler.createAttributes().build());
+            event.put(YEEntityTypes.Freaker.get(), Freaker.createAttributes().build());
+            event.put(YEEntityTypes.Sprayer.get(), Sprayer.createAttributes().build());
 
-            event.put(YEEntityTypes.Vilvgaver.get(), VilvgaverEntity.createAttributes().build());
+            event.put(YEEntityTypes.Vilvgaver.get(), Vilvgaver.createAttributes().build());
 
-            event.put(YEEntityTypes.AmoebicDevourer.get(), AmoebicDevourerEntity.createAttributes().build());
-            event.put(YEEntityTypes.HyperSnowGolem.get(), HyperSnowGolemEntity.createAttributes().build());
-            event.put(YEEntityTypes.SkeletonSnap.get(), SkeletonSnapEntity.createAttributes().build());
-            event.put(YEEntityTypes.Aimbot.get(), AimbotEntity.createAttributes().build());
-            event.put(YEEntityTypes.StickFigure.get(), StickFigureEntity.createAttributes().build());
+            event.put(YEEntityTypes.AmoebicDevourer.get(), AmoebicDevourer.createAttributes().build());
+            event.put(YEEntityTypes.HyperSnowGolem.get(), HyperSnowGolem.createAttributes().build());
+            event.put(YEEntityTypes.SkeletonSnap.get(), SkeletonSnap.createAttributes().build());
+            event.put(YEEntityTypes.Aimbot.get(), Aimbot.createAttributes().build());
+            event.put(YEEntityTypes.StickFigure.get(), StickFigure.createAttributes().build());
 
-            event.put(YEEntityTypes.Converslin.get(), ConverslinEntity.createAttributes().build());
+            event.put(YEEntityTypes.Converslin.get(), Converslin.createAttributes().build());
             event.put(YEEntityTypes.CarrotMinion.get(), CarrotMinionEntity.createAttributes().build());
 
-            event.put(YEEntityTypes.Boomerang.get(), BoomerangEntity.createAttributes().build());
+            event.put(YEEntityTypes.Boomerang.get(), Boomerang.createAttributes().build());
         }
     }
 
@@ -141,7 +141,7 @@ public class YECommonEventHandler {
                     mob.targetSelector.addGoal(5, new NonTameRandomTargetGoal<>((TamableAnimal) entity, AbstractOryctolin.class, false, (Predicate<LivingEntity>)null));
                 }
 
-                mob.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mob, AimbotEntity.class, true));
+                mob.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(mob, Aimbot.class, true));
             }
         }
     }
@@ -179,13 +179,13 @@ public class YECommonEventHandler {
 
         if (source.getEntity() instanceof IsOryctolinAligned && source.getEntity() instanceof LivingEntity living && entity instanceof Mob mob) {
             if (entity.level.getGameRules().getBoolean(YEGameRules.CONVERSLIN_CONVERSION)) {
-                if (source.getEntity() instanceof ConverslinEntity) {
+                if (source.getEntity() instanceof Converslin) {
                     EntityUtil.convertMobToCarrot(mob, living, entity.getLevel());
                 }
             }
         }
 
-        if (source.getEntity() instanceof DefenderEntity defender) {
+        if (source.getEntity() instanceof Defender defender) {
             if (source.isExplosion() || defender.isCarnageAttack()) {
                 defender.increaseDefendersCarnage();
             }
@@ -201,14 +201,14 @@ public class YECommonEventHandler {
                         -0.5f + random.nextFloat()
                 ));
             }
-            List<Entity> list = entity.level.getEntities(entity, entity.getBoundingBox().inflate(4.0f), p -> !(p instanceof DefenderEntity) && p instanceof LivingEntity && EntityUtil.isMobNotInCreativeMode(p));
+            List<Entity> list = entity.level.getEntities(entity, entity.getBoundingBox().inflate(4.0f), p -> !(p instanceof Defender) && p instanceof LivingEntity && EntityUtil.isMobNotInCreativeMode(p));
             for (Entity hit : list) {
                 hit.hurtMarked = true;
                 hit.setDeltaMovement(hit.getDeltaMovement()
                         .add(hit.position().subtract(entity.position()).normalize().scale(2.5f))
                         .add(0, hit.isOnGround() ? 0.4d : 0, 0));
             }
-            CameraShakeEntity.cameraShake(entity.level, entity.position(), 20, 0.4f, 2, 3);
+            CameraShake.cameraShake(entity.level, entity.position(), 20, 0.4f, 2, 3);
             entity.playSound(YESoundEvents.SUPERDUPERPOISON_EXPLOSION.get(), 4.0F, 1.0F);
             EntityUtil.fireCircleOfPoisonBalls(entity.level, mob, 10, mob.getBbHeight() / 2, 1.0f, true);
             entity.discard();

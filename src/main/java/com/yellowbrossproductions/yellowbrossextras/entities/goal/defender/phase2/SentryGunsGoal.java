@@ -1,12 +1,12 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase2;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
 import net.minecraft.world.entity.player.Player;
 
 public class SentryGunsGoal extends CustomAttackGoal {
 
-    public SentryGunsGoal(DefenderEntity defender) {
+    public SentryGunsGoal(Defender defender) {
         super(defender);
     }
 

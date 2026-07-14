@@ -3,30 +3,29 @@ package com.yellowbrossproductions.yellowbrossextras.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.AmoebicDevourerModel;
-import com.yellowbrossproductions.yellowbrossextras.entities.AmoebicDevourerEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.AmoebicDevourer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.monster.Slime;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class AmoebicDevourerRenderer extends MobRenderer<AmoebicDevourerEntity, AmoebicDevourerModel<AmoebicDevourerEntity>> {
+public class AmoebicDevourerRenderer extends MobRenderer<AmoebicDevourer, AmoebicDevourerModel<AmoebicDevourer>> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/amoebic_devourer/amoebic_devourer.png");
 
     public AmoebicDevourerRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new AmoebicDevourerModel<>(renderManagerIn.bakeLayer(AmoebicDevourerModel.LAYER_LOCATION)), 0.7F);
     }
 
-    public void render(AmoebicDevourerEntity p_115976_, float p_115977_, float p_115978_, PoseStack p_115979_, MultiBufferSource p_115980_, int p_115981_) {
+    public void render(AmoebicDevourer p_115976_, float p_115977_, float p_115978_, PoseStack p_115979_, MultiBufferSource p_115980_, int p_115981_) {
         this.shadowRadius = 0.25F * (float)p_115976_.getSize();
         super.render(p_115976_, p_115977_, p_115978_, p_115979_, p_115980_, p_115981_);
     }
 
-    protected void scale(AmoebicDevourerEntity p_115983_, PoseStack p_115984_, float p_115985_) {
+    protected void scale(AmoebicDevourer p_115983_, PoseStack p_115984_, float p_115985_) {
         float smallMult = 0.5f;
         p_115984_.scale(0.999F, 0.999F, 0.999F);
         p_115984_.translate(0.0D, (double)0.001F, 0.0D);
@@ -37,7 +36,7 @@ public class AmoebicDevourerRenderer extends MobRenderer<AmoebicDevourerEntity, 
     }
 
     @Override
-    public ResourceLocation getTextureLocation(AmoebicDevourerEntity p_110775_1_) {
+    public ResourceLocation getTextureLocation(AmoebicDevourer p_110775_1_) {
         return TEXTURE;
     }
 }

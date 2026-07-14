@@ -1,13 +1,13 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase2;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.world.phys.Vec3;
 
 public class ForceGunGoal extends CustomAttackGoal {
 
-    public ForceGunGoal(DefenderEntity defender) {
+    public ForceGunGoal(Defender defender) {
         super(defender);
     }
 

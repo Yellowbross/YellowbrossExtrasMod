@@ -3,7 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.entities.HyperSnowGolemEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.HyperSnowGolem;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -110,7 +110,7 @@ public class HyperSnowGolemModel<T extends Entity> extends EntityModel<T> {
 
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (entity instanceof HyperSnowGolemEntity snowGolem) {
+        if (entity instanceof HyperSnowGolem snowGolem) {
             this.body_bottom.getAllParts().forEach(ModelPart::resetPose);
 
             this.left_hand_standby.visible = !snowGolem.isAggressive();

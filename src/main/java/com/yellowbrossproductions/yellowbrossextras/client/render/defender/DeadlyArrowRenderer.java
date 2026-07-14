@@ -5,9 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DeadlyArrowModel;
-import com.yellowbrossproductions.yellowbrossextras.client.model.defender.SniperRifleModel;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DeadlyArrowEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SniperRifleEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DeadlyArrow;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -18,9 +16,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class DeadlyArrowRenderer extends EntityRenderer<DeadlyArrowEntity> {
+public class DeadlyArrowRenderer extends EntityRenderer<DeadlyArrow> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/deadly_arrow.png");
-    private final DeadlyArrowModel<DeadlyArrowEntity> model;
+    private final DeadlyArrowModel<DeadlyArrow> model;
 
     public DeadlyArrowRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -28,12 +26,12 @@ public class DeadlyArrowRenderer extends EntityRenderer<DeadlyArrowEntity> {
     }
 
     @Override
-    public boolean shouldRender(DeadlyArrowEntity pLivingEntity, Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
+    public boolean shouldRender(DeadlyArrow pLivingEntity, Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
         return pLivingEntity.tickCount >= 20;
     }
 
     @Override
-    public void render(DeadlyArrowEntity arrow, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
+    public void render(DeadlyArrow arrow, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
         super.render(arrow, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
 
         if (arrow.tickCount >= 20) {
@@ -55,7 +53,7 @@ public class DeadlyArrowRenderer extends EntityRenderer<DeadlyArrowEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(DeadlyArrowEntity pEntity) {
+    public ResourceLocation getTextureLocation(DeadlyArrow pEntity) {
         return TEXTURE;
     }
 }

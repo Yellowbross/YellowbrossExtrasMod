@@ -1,9 +1,8 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.gamemode_fun;
 
-import com.google.common.collect.Lists;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.Intelligence;
+import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuide;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
@@ -20,9 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 public class CapTheIntelGoal extends Goal {
     Level level;
@@ -46,10 +43,10 @@ public class CapTheIntelGoal extends Goal {
     public boolean canUse() {
         return isItOkToFlee() &&
                 mob.getTeam() != null &&
-                !this.level.getEntitiesOfClass(IntelligenceEntity.class, mob.getBoundingBox().inflate(150.0D), p -> {
+                !this.level.getEntitiesOfClass(Intelligence.class, mob.getBoundingBox().inflate(150.0D), p -> {
             return p.getTeam() != mob.getTeam();
         }).isEmpty() &&
-                !this.level.getEntitiesOfClass(IntelligenceEntity.class, mob.getBoundingBox().inflate(150.0D), p -> {
+                !this.level.getEntitiesOfClass(Intelligence.class, mob.getBoundingBox().inflate(150.0D), p -> {
                     return p.getTeam() == mob.getTeam();
                 }).isEmpty();
     }
@@ -74,19 +71,19 @@ public class CapTheIntelGoal extends Goal {
     public void tick() {
         this.updateCooldown -= 1;
 
-        List<IntelligenceEntity> enemylist = this.level.getEntitiesOfClass(IntelligenceEntity.class, mob.getBoundingBox().inflate(150.0D), p -> {
+        List<Intelligence> enemylist = this.level.getEntitiesOfClass(Intelligence.class, mob.getBoundingBox().inflate(150.0D), p -> {
             return p.getTeam() != mob.getTeam();
         });
-        IntelligenceEntity enemy_intel = EntityUtil.getNearestIntel(enemylist, this.mob);
+        Intelligence enemy_intel = EntityUtil.getNearestIntel(enemylist, this.mob);
 
-        List<IntelligenceEntity> caplist = this.level.getEntitiesOfClass(IntelligenceEntity.class, mob.getBoundingBox().inflate(150.0D), p -> {
+        List<Intelligence> caplist = this.level.getEntitiesOfClass(Intelligence.class, mob.getBoundingBox().inflate(150.0D), p -> {
             return p.getTeam() == mob.getTeam();
         });
-        IntelligenceEntity cap_intel = EntityUtil.getNearestIntel(caplist, this.mob);
+        Intelligence cap_intel = EntityUtil.getNearestIntel(caplist, this.mob);
 
         if (enemy_intel != null && cap_intel != null) {
-            List<PathGuideEntity> guides = this.level.getEntitiesOfClass(PathGuideEntity.class, mob.getBoundingBox().inflate(150.0D));
-            PathGuideEntity guide = EntityUtil.getNearestGuide(guides, this.mob);
+            List<PathGuide> guides = this.level.getEntitiesOfClass(PathGuide.class, mob.getBoundingBox().inflate(150.0D));
+            PathGuide guide = EntityUtil.getNearestGuide(guides, this.mob);
 
             Vec3 home = new Vec3(cap_intel.getHomeX(), cap_intel.getHomeY(), cap_intel.getHomeZ());
             Vec3 enemy = new Vec3(enemy_intel.getX(), enemy_intel.getY(), enemy_intel.getZ());
@@ -143,11 +140,11 @@ public class CapTheIntelGoal extends Goal {
         return true;
     }
 
-    public void reroute(PathGuideEntity guide) {
+    public void reroute(PathGuide guide) {
         BlockPos go = EntityUtil.getNextGuide(guide, this.mob, this.goal);
         if (go != null) {
             if (!EntityUtil.checkGuide(go, this.mob, this.goal)) {
-                PathGuideEntity furtherGuide = EntityUtil.getGuideAt(go, this.mob.level);
+                PathGuide furtherGuide = EntityUtil.getGuideAt(go, this.mob.level);
                 if (furtherGuide != null) {
                     boolean goodPath1 = false;
                     for (BlockPos further1 : furtherGuide.getNeighbors()) {
@@ -161,7 +158,7 @@ public class CapTheIntelGoal extends Goal {
                     }
                     if (!goodPath1 && this.pos1 != null) {
                         boolean goodPath2 = false;
-                        PathGuideEntity furtherGuide2 = EntityUtil.getGuideAt(this.pos1, this.mob.level);
+                        PathGuide furtherGuide2 = EntityUtil.getGuideAt(this.pos1, this.mob.level);
                         if (furtherGuide2 != null) {
                             for (BlockPos further1 : furtherGuide2.getNeighbors()) {
                                 if (EntityUtil.checkGuide(further1, this.mob, this.goal) && checkPos(further1)) {
@@ -174,7 +171,7 @@ public class CapTheIntelGoal extends Goal {
                             }
                             if (!goodPath2 && this.pos2 != null) {
                                 boolean goodPath3 = false;
-                                PathGuideEntity furtherGuide3 = EntityUtil.getGuideAt(this.pos1, this.mob.level);
+                                PathGuide furtherGuide3 = EntityUtil.getGuideAt(this.pos1, this.mob.level);
                                 if (furtherGuide3 != null) {
                                     for (BlockPos further1 : furtherGuide3.getNeighbors()) {
                                         if (EntityUtil.checkGuide(further1, this.mob, goal) && checkPos(further1)) {
@@ -186,7 +183,7 @@ public class CapTheIntelGoal extends Goal {
                                         }
                                     }
                                     if (!goodPath3 && this.pos3 != null) {
-                                        PathGuideEntity furtherGuide4 = EntityUtil.getGuideAt(this.pos1, this.mob.level);
+                                        PathGuide furtherGuide4 = EntityUtil.getGuideAt(this.pos1, this.mob.level);
                                         if (furtherGuide4 != null) {
                                             for (BlockPos further1 : furtherGuide4.getNeighbors()) {
                                                 if (EntityUtil.checkGuide(further1, this.mob, goal) && checkPos(further1)) {

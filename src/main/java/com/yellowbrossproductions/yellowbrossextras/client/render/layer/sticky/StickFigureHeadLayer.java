@@ -6,7 +6,7 @@ import com.mojang.math.*;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.StickFigureModel;
 import com.yellowbrossproductions.yellowbrossextras.client.render.YERenderTypes;
-import com.yellowbrossproductions.yellowbrossextras.entities.StickFigureEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.StickFigure;
 import com.yellowbrossproductions.yellowbrossextras.client.render.util.RenderUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 // THANK YOU DARKPEASANT THANK YOU THANK YOU THANK YOUUUUUUUUUUU
 @OnlyIn(Dist.CLIENT)
-public class StickFigureHeadLayer<T extends StickFigureEntity, M extends StickFigureModel<T>> extends RenderLayer<T, M> {
+public class StickFigureHeadLayer<T extends StickFigure, M extends StickFigureModel<T>> extends RenderLayer<T, M> {
     private static final ResourceLocation HEAD = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/stick_figure/head.png");
 
     private static final float TEXTURE_WIDTH = 16;

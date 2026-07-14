@@ -3,8 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.client.model.animation.StickFigureAnimation;
-import com.yellowbrossproductions.yellowbrossextras.entities.AimbotEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.Aimbot;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
@@ -17,12 +16,8 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public class AimbotModel<T extends Mob> extends HierarchicalModel<T> implements ArmedModel {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(YellowbrossExtras.MOD_ID, "aimbot"), "main");
@@ -86,7 +81,7 @@ public class AimbotModel<T extends Mob> extends HierarchicalModel<T> implements 
         this.right_arm.xRot = (-(float)Math.PI / 2F) + this.head.xRot;
         this.left_arm.xRot = (-(float)Math.PI / 2F) + this.head.xRot;
 
-        if (entity instanceof AimbotEntity aimbot) {
+        if (entity instanceof Aimbot aimbot) {
             this.animate(aimbot.anim_shoot, shoot, ageInTicks, aimbot.getAnimationSpeed());
         }
     }

@@ -1,12 +1,12 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase2;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 
 public class RatatatabowGoal extends CustomAttackGoal {
 
-    public RatatatabowGoal(DefenderEntity defender) {
+    public RatatatabowGoal(Defender defender) {
         super(defender);
     }
 

@@ -1,19 +1,16 @@
 package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DefenderModel;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.SentryGunModel;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGun;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SentryGunRenderer extends MobRenderer<SentryGunEntity, SentryGunModel<SentryGunEntity>> {
+public class SentryGunRenderer extends MobRenderer<SentryGun, SentryGunModel<SentryGun>> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/sentry_gun.png");
 
     public SentryGunRenderer(EntityRendererProvider.Context renderManagerIn) {
@@ -21,7 +18,7 @@ public class SentryGunRenderer extends MobRenderer<SentryGunEntity, SentryGunMod
     }
 
     @Override
-    protected float getWhiteOverlayProgress(SentryGunEntity gun, float amount) {
+    protected float getWhiteOverlayProgress(SentryGun gun, float amount) {
         if (gun.getExplodeTimer() >= 3 * 20) {
             return 0.0f;
         }
@@ -29,7 +26,7 @@ public class SentryGunRenderer extends MobRenderer<SentryGunEntity, SentryGunMod
     }
 
     @Override
-    public ResourceLocation getTextureLocation(SentryGunEntity pEntity) {
+    public ResourceLocation getTextureLocation(SentryGun pEntity) {
         return TEXTURE;
     }
 }

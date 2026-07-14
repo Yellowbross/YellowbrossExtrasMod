@@ -4,15 +4,13 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.*;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SuperDuperPoisonBallEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuideEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SuperDuperPoisonBall;
+import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.Intelligence;
+import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuide;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.CarrotMinionEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.projectile.ConverslinBulletEntity;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
-import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.ParticlePacket;
 import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.BlitzManager;
@@ -21,19 +19,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -90,18 +85,18 @@ public class EntityUtil {
                 float ravagerCreeperWidth = 2.0F;
 
                 if (entity.getBbWidth() < paraCreeperWidth) {
-                    creeper = new ParacreeperEntity(YEEntityTypes.Paracreeper.get(), level);
+                    creeper = new Paracreeper(YEEntityTypes.Paracreeper.get(), level);
                 } else if (entity.getBbWidth() >= paraCreeperWidth && entity.getBbWidth() <= normalCreeperWidth) {
-                    creeper = new SneakerEntity(YEEntityTypes.Sneaker.get(), level);
+                    creeper = new Sneaker(YEEntityTypes.Sneaker.get(), level);
                     if (entity instanceof RangedAttackMob) {
                         if (random.nextBoolean()) {
-                            creeper = new SprayerEntity(YEEntityTypes.Sprayer.get(), level);
+                            creeper = new Sprayer(YEEntityTypes.Sprayer.get(), level);
                         }
                     }
                 } else if (entity.getBbWidth() >= normalCreeperWidth && entity.getBbWidth() <= ravagerCreeperWidth) {
-                    creeper = new CrawlerEntity(YEEntityTypes.Crawler.get(), level);
+                    creeper = new Crawler(YEEntityTypes.Crawler.get(), level);
                 } else {
-                    creeper = new FreakerEntity(YEEntityTypes.Freaker.get(), level);
+                    creeper = new Freaker(YEEntityTypes.Freaker.get(), level);
                 }
 
                 creeper.copyPosition(entity);
@@ -131,10 +126,10 @@ public class EntityUtil {
                     }
                 }
 
-                if (creeper instanceof SneakerEntity sneaker) {
+                if (creeper instanceof Sneaker sneaker) {
                     if (random.nextInt(4) == 0) {
                         sneaker.setCreeperType(1);
-                        List<SneakerEntity> list = level.getEntitiesOfClass(SneakerEntity.class, sneaker.getBoundingBox().inflate(30.0F), predicate -> {
+                        List<Sneaker> list = level.getEntitiesOfClass(Sneaker.class, sneaker.getBoundingBox().inflate(30.0F), predicate -> {
                             return predicate.getCreeperType() == 2 && predicate != sneaker;
                         });
                         if (list.isEmpty()) {
@@ -324,11 +319,11 @@ public class EntityUtil {
         return closestBlitz;
     }
 
-    public static IntelligenceEntity getNearestIntel(List<IntelligenceEntity> intels, LivingEntity playing) {
+    public static Intelligence getNearestIntel(List<Intelligence> intels, LivingEntity playing) {
         double d0 = -1.0D;
-        IntelligenceEntity t = null;
+        Intelligence t = null;
 
-        for(IntelligenceEntity t1 : intels) {
+        for(Intelligence t1 : intels) {
             double d1 = t1.distanceToSqr(playing.getX(), playing.getY(), playing.getZ());
             if (d0 == -1.0D || d1 < d0) {
                 d0 = d1;
@@ -341,7 +336,7 @@ public class EntityUtil {
 
     public static boolean isEnemyCapping(LivingEntity mob, LivingEntity defender) {
         for (Entity entity : mob.getPassengers()) {
-            if (entity instanceof IntelligenceEntity intel) {
+            if (entity instanceof Intelligence intel) {
                 if (intel.getTeam() == defender.getTeam()) return true;
             }
         }
@@ -349,11 +344,11 @@ public class EntityUtil {
     }
 
     @Nullable
-    public static PathGuideEntity getNearestGuide(List<PathGuideEntity> intels, LivingEntity playing) {
+    public static PathGuide getNearestGuide(List<PathGuide> intels, LivingEntity playing) {
         double d0 = -1.0D;
-        PathGuideEntity t = null;
+        PathGuide t = null;
 
-        for(PathGuideEntity t1 : intels) {
+        for(PathGuide t1 : intels) {
             double d1 = t1.distanceToSqr(playing.getX(), playing.getY(), playing.getZ());
             if (d0 == -1.0D || d1 < d0) {
                 d0 = d1;
@@ -365,7 +360,7 @@ public class EntityUtil {
     }
 
     @Nullable
-    public static BlockPos getNextGuide(PathGuideEntity guide, LivingEntity playing, Vec3 goal) {
+    public static BlockPos getNextGuide(PathGuide guide, LivingEntity playing, Vec3 goal) {
         BlockPos t = null;
 
         Random random = new Random();
@@ -392,7 +387,7 @@ public class EntityUtil {
     }
 
     public static boolean checkGuide(BlockPos pos, LivingEntity playing, Vec3 goal) {
-        PathGuideEntity guide = getGuideAt(pos, playing.level);
+        PathGuide guide = getGuideAt(pos, playing.level);
         if (guide != null) {
             for (BlockPos pos2 : guide.getNeighbors()) {
                 Vec3 pos2_distance = new Vec3(pos2.getX(), pos2.getY(), pos2.getZ());
@@ -406,9 +401,9 @@ public class EntityUtil {
     }
 
     @Nullable
-    public static PathGuideEntity getGuideAt(BlockPos pos, Level level) {
-        PathGuideEntity t = null;
-        List<PathGuideEntity> list = level.getEntitiesOfClass(PathGuideEntity.class, new AABB(pos));
+    public static PathGuide getGuideAt(BlockPos pos, Level level) {
+        PathGuide t = null;
+        List<PathGuide> list = level.getEntitiesOfClass(PathGuide.class, new AABB(pos));
 
         if (!list.isEmpty()) {
             t = list.get(0);
@@ -515,10 +510,10 @@ public class EntityUtil {
                 float vy = random.nextFloat() * 0.1F - 0.05f;
                 float vx = velocity * Mth.cos(yaw);
                 float vz = velocity * Mth.sin(yaw);
-                SuperDuperPoisonBallEntity bullet = new SuperDuperPoisonBallEntity(spawner.level, spawner, vx, vy, vz);
+                SuperDuperPoisonBall bullet = new SuperDuperPoisonBall(spawner.level, spawner, vx, vy, vz);
 
                 bullet.setPos(spawner.getX(), spawner.getY() + y, spawner.getZ());
-                List<DefenderEntity> defender = level.getEntitiesOfClass(DefenderEntity.class, spawner.getBoundingBox().inflate(40.0d),
+                List<Defender> defender = level.getEntitiesOfClass(Defender.class, spawner.getBoundingBox().inflate(40.0d),
                         p -> p.isAlive() && !p.isRemoved() && isMobOnOtherTeam2(p, spawner));
                 bullet.setOwner((shouldCheckForDefenders && !defender.isEmpty()) ? defender.get(0) : spawner);
                 level.addFreshEntity(bullet);

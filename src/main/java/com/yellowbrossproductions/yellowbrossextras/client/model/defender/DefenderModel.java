@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.defender.DefenderAnimation;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -75,6 +75,8 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
     private final ModelPart creepbody4;
     private final ModelPart creepbody5;
     private final ModelPart creepleg;
+    private final ModelPart wither_bazooka;
+    private final ModelPart wbazooka_head;
     private final ModelPart left_arm;
     private final ModelPart left_elbow;
     private final ModelPart left_hand;
@@ -151,6 +153,8 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
         this.creepbody4 = this.creeper_gun.getChild("creepbody4");
         this.creepbody5 = this.creeper_gun.getChild("creepbody5");
         this.creepleg = this.creeper_gun.getChild("creepleg");
+        this.wither_bazooka = this.right_hand.getChild("wither_bazooka");
+        this.wbazooka_head = this.wither_bazooka.getChild("wbazooka_head");
         this.left_arm = this.body.getChild("left_arm");
         this.left_elbow = this.left_arm.getChild("left_elbow");
         this.left_hand = this.left_elbow.getChild("left_hand");
@@ -318,6 +322,26 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
         PartDefinition creepleg = creeper_gun.addOrReplaceChild("creepleg", CubeListBuilder.create().texOffs(88, 142).addBox(-4.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, new CubeDeformation(0.0F))
                 .texOffs(88, 142).addBox(0.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 7.0F, 0.0F));
 
+        PartDefinition wither_bazooka = right_hand.addOrReplaceChild("wither_bazooka", CubeListBuilder.create().texOffs(0, 148).addBox(-1.5F, -6.0F, -1.5F, 3.0F, 10.0F, 3.0F, new CubeDeformation(0.0F))
+                .texOffs(0, 148).addBox(-1.5F, -10.0F, -19.5F, 3.0F, 10.0F, 3.0F, new CubeDeformation(0.0F))
+                .texOffs(0, 161).addBox(-1.5F, -4.0F, -1.5F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.5F))
+                .texOffs(0, 161).mirror().addBox(-1.5F, -5.0F, -19.5F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.5F)).mirror(false)
+                .texOffs(26, 166).addBox(-1.5F, -8.0F, -4.5F, 3.0F, 3.0F, 4.0F, new CubeDeformation(-0.25F))
+                .texOffs(0, 161).mirror().addBox(-1.5F, 1.0F, -1.5F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.5F)).mirror(false)
+                .texOffs(80, 152).addBox(-2.5F, -21.5F, -18.0F, 5.0F, 10.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -1.0F, -3.5F, 0.0F, 0.0F, -1.5708F));
+
+        PartDefinition cube_r1 = wither_bazooka.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(72, 148).addBox(-2.0F, -12.0F, -1.0F, 3.0F, 12.0F, 1.0F, new CubeDeformation(-0.1F)), PartPose.offsetAndRotation(0.5F, -1.0F, -0.5F, 0.8727F, 0.0F, 0.0F));
+
+        PartDefinition cube_r2 = wither_bazooka.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(36, 148).addBox(-11.0F, -6.0F, -1.0F, 12.0F, 6.0F, 6.0F, new CubeDeformation(0.25F)), PartPose.offsetAndRotation(-2.0F, -7.0F, -1.0F, 1.5708F, 0.7854F, 1.5708F));
+
+        PartDefinition cube_r3 = wither_bazooka.addOrReplaceChild("cube_r3", CubeListBuilder.create().texOffs(0, 167).addBox(-7.0F, -5.0F, -1.0F, 8.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.5F, -6.5F, -14.5F, 0.0F, -1.5708F, 0.0F));
+
+        PartDefinition cube_r4 = wither_bazooka.addOrReplaceChild("cube_r4", CubeListBuilder.create().texOffs(12, 160).addBox(-11.0F, -3.0F, -1.0F, 12.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, -7.5F, -2.5F, 0.0F, -1.5708F, 0.0F));
+
+        PartDefinition cube_r5 = wither_bazooka.addOrReplaceChild("cube_r5", CubeListBuilder.create().texOffs(12, 148).addBox(-3.0F, -3.0F, -3.0F, 6.0F, 6.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -9.0F, 1.5F, 0.0F, 3.1416F, 0.0F));
+
+        PartDefinition wbazooka_head = wither_bazooka.addOrReplaceChild("wbazooka_head", CubeListBuilder.create().texOffs(40, 162).addBox(-4.0F, -4.0F, -3.5F, 8.0F, 8.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -9.0F, -22.0F));
+
         PartDefinition left_arm = body.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(0, 12).addBox(-1.0F, -1.0F, -1.0F, 2.0F, 6.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(3.5F, -4.0F, 0.0F, 0.0F, 0.0F, -0.2618F));
 
         PartDefinition left_elbow = left_arm.addOrReplaceChild("left_elbow", CubeListBuilder.create().texOffs(0, 20).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 5.0F, 0.0F));
@@ -400,7 +424,7 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
         this.head.yRot += netHeadYaw * ((float)Math.PI / 180F);
         this.head.xRot += (headPitch * ((float)Math.PI / 180F));
 
-        if (entity instanceof DefenderEntity defender) {
+        if (entity instanceof Defender defender) {
             this.animate(defender.anim_jump, DefenderAnimation.jump, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.anim_jump2, DefenderAnimation.jump2, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.anim_defeated, DefenderAnimation.defeated, ageInTicks, defender.getAnimationSpeed());
@@ -428,6 +452,7 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
             this.animate(defender.anim_sentryguns, DefenderAnimation.sentryguns, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.anim_icethrower, DefenderAnimation.icethrower, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.anim_witherbazooka, DefenderAnimation.witherbazooka, ageInTicks, defender.getAnimationSpeed());
+            this.animate(defender.anim_witherbazooka, DefenderAnimation.witherbazooka_land, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.anim_creepergun, DefenderAnimation.creepergun, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.anim_flamethrower, DefenderAnimation.flamethrower, ageInTicks, defender.getAnimationSpeed());
 
@@ -458,6 +483,7 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
             this.poisondarts.visible = defender.getWeaponToShow() == 10;
             this.forcegun.visible = defender.getWeaponToShow() == 11;
             this.sniper_rifle.visible = defender.getWeaponToShow() == 12;
+            this.wither_bazooka.visible = defender.getWeaponToShow() == 13;
             this.creeper_gun.visible = defender.getWeaponToShow() == 15;
 
             this.chainsaw_handle.yRot += netHeadYaw * ((float)Math.PI / 180F);

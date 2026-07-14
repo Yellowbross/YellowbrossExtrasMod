@@ -1,6 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.creepers;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.CameraShake;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.particles.ParticleTypes;
@@ -274,7 +274,7 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
             Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
             this.dead = true;
             this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)this.explosionRadius * f, explosion$blockinteraction);
-            CameraShakeEntity.cameraShake(this.level, position(), 30, 0.1f, 0, 15);
+            CameraShake.cameraShake(this.level, position(), 30, 0.1f, 0, 15);
             this.discard();
             this.spawnLingeringCloud();
         }
@@ -372,7 +372,7 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
 
         @Override
         public boolean canUse() {
-            if (this.creeper.getTarget() != null || (!(this.creeper instanceof ParacreeperEntity) && !this.creeper.isOnGround())) return false;
+            if (this.creeper.getTarget() != null || (!(this.creeper instanceof Paracreeper) && !this.creeper.isOnGround())) return false;
 
             List<? extends AbstractCreeperEntity> nearbyMobs = this.creeper.level.getEntitiesOfClass(this.lookingForType, this.creeper.getBoundingBox().inflate(10.0d), predicate -> predicate.getAbsorbedCreepers() < predicate.getMaxAbsorbs());
 

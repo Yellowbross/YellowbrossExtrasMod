@@ -1,12 +1,12 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase1;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 
 public class SpikesGoal extends CustomAttackGoal {
 
-    public SpikesGoal(DefenderEntity defender) {
+    public SpikesGoal(Defender defender) {
         super(defender);
     }
 

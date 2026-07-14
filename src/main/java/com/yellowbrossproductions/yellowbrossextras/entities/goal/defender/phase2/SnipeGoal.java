@@ -1,13 +1,12 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase2;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 public class SnipeGoal extends CustomAttackGoal {
 
-    public SnipeGoal(DefenderEntity defender) {
+    public SnipeGoal(Defender defender) {
         super(defender);
     }
 

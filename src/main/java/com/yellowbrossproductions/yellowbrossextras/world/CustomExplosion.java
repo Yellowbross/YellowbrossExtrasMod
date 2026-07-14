@@ -1,21 +1,17 @@
 package com.yellowbrossproductions.yellowbrossextras.world;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBulletEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBullet;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundExplodePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.PrimedTnt;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
@@ -66,7 +62,7 @@ public class CustomExplosion extends Explosion {
         for(int k2 = 0; k2 < list.size(); ++k2) {
             Entity entity = list.get(k2);
             if (!entity.ignoreExplosion() &&
-                    (entity instanceof CreeperBulletEntity || (!(this.getExploder() instanceof Mob mob) || EntityUtil.canHurtThisMob(entity, mob)))) {
+                    (entity instanceof CreeperBullet || (!(this.getExploder() instanceof Mob mob) || EntityUtil.canHurtThisMob(entity, mob)))) {
                 double d12 = Math.sqrt(entity.distanceToSqr(vec3)) / (double)f2;
                 if (d12 <= 1.0D) {
                     double d5 = entity.getX() - this.x;

@@ -1,11 +1,11 @@
 package com.yellowbrossproductions.yellowbrossextras.util.defender;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBulletEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.CameraShake;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBullet;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGun;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.*;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.ChainsawEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Chainsaw;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Random;
 
 public class AttacksPart1 {
-    public static void tickPhase1Attacks(DefenderEntity defender) {
+    public static void tickPhase1Attacks(Defender defender) {
         LivingEntity target = defender.tryToFindTarget();
         int ticks = defender.attackTicks;
         int ticks2 = defender.attackTicks2;
@@ -121,7 +121,7 @@ public class AttacksPart1 {
             if ((ticks == 6 + (24 * (defender.throwTimes - 1))) || (ticks == 18 + (24 * (defender.throwTimes - 1)))) {
                 defender.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, 0.5F);
                 if (target != null && !defender.level.isClientSide) {
-                    DefenderAxeEntity axe = new DefenderAxeEntity(defender.level, defender, target.getBoundingBox().getCenter().subtract(defender.position().add(0, 1, 0)));
+                    DefenderAxe axe = new DefenderAxe(defender.level, defender, target.getBoundingBox().getCenter().subtract(defender.position().add(0, 1, 0)));
                     axe.setPos(defender.getX(), defender.getY() + 1, defender.getZ());
                     defender.level.addFreshEntity(axe);
                 }
@@ -133,7 +133,7 @@ public class AttacksPart1 {
                 defender.playSound(SoundEvents.WITCH_THROW, 2.0F, 0.9F);
                 defender.setWeaponToShow(0);
                 if (target != null && !defender.level.isClientSide) {
-                    BoomerangEntity projectile = new BoomerangEntity(YEEntityTypes.Boomerang.get(), defender.level);
+                    Boomerang projectile = new Boomerang(YEEntityTypes.Boomerang.get(), defender.level);
                     projectile.moveTo(defender.getPosition(0).add(0, 1, 0));
 
                     projectile.setYHeadRot(defender.getYHeadRot());
@@ -159,7 +159,7 @@ public class AttacksPart1 {
                 if (ticks == 15) {
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 2.0F, 1.0F);
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_SPIKE.get(), 2.0F, 1.0F);
-                    CameraShakeEntity.cameraShake(defender.level, defender.position(), 30, 0.1f, 0, 15);
+                    CameraShake.cameraShake(defender.level, defender.position(), 30, 0.1f, 0, 15);
                     defender.performSpellCasting(false);
                 }
                 if (ticks == 39) {
@@ -255,7 +255,7 @@ public class AttacksPart1 {
 
                 if (target != null) {
                     for (int i = 0; i < 75; ++i) {
-                        ShurikenEntity shuriken = new ShurikenEntity(defender.level, defender);
+                        Shuriken shuriken = new Shuriken(defender.level, defender);
 
                         shuriken.setPos(x, defender.getY() + 1.0D, z);
 
@@ -298,11 +298,11 @@ public class AttacksPart1 {
                 defender.setShakeMultiplier(30);
             }
             if (ticks >= 30) {
-                ChainsawEntity beam = null;
+                Chainsaw beam = null;
                 if (ticks == 30) {
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_CHAINSAW.get(), 2.0F, 1.0F);
                     if (!defender.level.isClientSide) {
-                        beam = new ChainsawEntity(YEEntityTypes.Chainsaw.get(), defender.level, defender, defender.getX(), defender.getY() + 1.125, defender.getZ(), (float) ((defender.yHeadRot + 90) * Math.PI / 180), (float) (-defender.getXRot() * Math.PI / 180), 66);
+                        beam = new Chainsaw(YEEntityTypes.Chainsaw.get(), defender.level, defender, defender.getX(), defender.getY() + 1.125, defender.getZ(), (float) ((defender.yHeadRot + 90) * Math.PI / 180), (float) (-defender.getXRot() * Math.PI / 180), 66);
                         defender.level.addFreshEntity(beam);
                     }
                 }
@@ -388,7 +388,7 @@ public class AttacksPart1 {
                         defender.clawsTarget.setDeltaMovement(0.0D, 0.0D, 0.0D);
                         if (defender.jumpTicks == (21 - 1) || defender.jumpTicks == (21 - 6)) {
                             if (defender.clawsTarget.hurt(DamageSource.mobAttack(defender), 6.0F)) {
-                                CameraShakeEntity.cameraShake(defender.level, defender.position(), 30, 0.1f, 0, 4);
+                                CameraShake.cameraShake(defender.level, defender.position(), 30, 0.1f, 0, 4);
                                 defender.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, defender.getVoicePitch());
                                 defender.clawsTarget.invulnerableTime = 0;
                                 defender.clawsTarget.hurtTime = 3;
@@ -396,7 +396,7 @@ public class AttacksPart1 {
                         }
                         if (defender.jumpTicks == (21 - 12) || defender.jumpTicks == (21 - 17)) {
                             if (defender.clawsTarget.hurt(DamageSource.mobAttack(defender), 5.0F)) {
-                                CameraShakeEntity.cameraShake(defender.level, defender.position(), 30, 0.1f, 0, 4);
+                                CameraShake.cameraShake(defender.level, defender.position(), 30, 0.1f, 0, 4);
                                 defender.playSound(YESoundEvents.ENTITY_DEFENDER_SMACK.get(), 2.0F, defender.getVoicePitch() + 0.2F);
                                 defender.clawsTarget.hurtTime = 3;
                                 defender.clawsTarget.invulnerableTime = 0;
@@ -407,7 +407,7 @@ public class AttacksPart1 {
                             if (defender.clawsTarget.hurt(DamageSource.mobAttack(defender), 8.0F)) {
                                 defender.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 2.0F, 1.0F);
                                 defender.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, 1.0F);
-                                CameraShakeEntity.cameraShake(defender.level, defender.position(), 30, 0.2f, 0, 15);
+                                CameraShake.cameraShake(defender.level, defender.position(), 30, 0.2f, 0, 15);
                                 defender.playSound(YESoundEvents.ENTITY_DEFENDER_SMACK.get(), 2.0F, defender.getVoicePitch());
                                 defender.clawsTarget.invulnerableTime = 0;
                                 defender.clawsTarget.fallDistance = 5.0F;
@@ -420,7 +420,7 @@ public class AttacksPart1 {
         }
     }
 
-    public static void tickPhase2Attacks(DefenderEntity defender) {
+    public static void tickPhase2Attacks(Defender defender) {
         LivingEntity target = defender.tryToFindTarget();
         int ticks = defender.attackTicks;
         int ticks2 = defender.attackTicks2;
@@ -515,7 +515,7 @@ public class AttacksPart1 {
                 defender.playSound(YESoundEvents.ENTITY_DEFENDER_CREEPERGUN_SHOOT.get(), 2.5F, 1.0F);
 
                 if (!defender.level.isClientSide) {
-                    CreeperBulletEntity iGaveBirth = new CreeperBulletEntity(YEEntityTypes.CreeperBullet.get(), defender.level);
+                    CreeperBullet iGaveBirth = new CreeperBullet(YEEntityTypes.CreeperBullet.get(), defender.level);
                     iGaveBirth.moveTo(defender.getPosition(0).add(0, 1.25D, 0));
 
                     iGaveBirth.setTarget(defender.getTarget());
@@ -534,13 +534,13 @@ public class AttacksPart1 {
                     }
                     defender.level.addFreshEntity(iGaveBirth);
 
-                    List<CreeperBulletEntity> bullets = defender.level.getEntitiesOfClass(CreeperBulletEntity.class, target.getBoundingBox().inflate(30.0d));
+                    List<CreeperBullet> bullets = defender.level.getEntitiesOfClass(CreeperBullet.class, target.getBoundingBox().inflate(30.0d));
                     if (bullets.size() > 200) {
                         boolean shouldContinue = true;
-                        for (CreeperBulletEntity bullet : bullets) if (bullet.isPowered()) shouldContinue = false;
+                        for (CreeperBullet bullet : bullets) if (bullet.isPowered()) shouldContinue = false;
 
                         if (shouldContinue) {
-                            CreeperBulletEntity chosenOne = bullets.get(new Random().nextInt(bullets.size()));
+                            CreeperBullet chosenOne = bullets.get(new Random().nextInt(bullets.size()));
                             chosenOne.beTheChosenOne();
                         }
                     }
@@ -555,7 +555,7 @@ public class AttacksPart1 {
                 EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, 20, 0.25f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 1.0F);
                 EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, 30, 0.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 2.0F);
                 EntityUtil.makeCircleParticles(defender.level, defender.getPosition(0).add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, 40, 0.75f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 5.0F);
-                CameraShakeEntity.cameraShake(defender.level, defender.position(), 30, 0.3f, 0, 20);
+                CameraShake.cameraShake(defender.level, defender.position(), 30, 0.3f, 0, 20);
 
                 float size = 8.0f;
                 List<Entity> entities = EntityUtil.getEntitiesFromAABB(defender.level, size, defender, predicate -> (predicate != defender));
@@ -592,7 +592,7 @@ public class AttacksPart1 {
                         double d2 = d0 - y1;
                         double d3 = target.getZ() + (double)$$6 - z;
 
-                        DefenderArrowEntity arrow = defender.getArrow(1.0F);
+                        DefenderArrow arrow = defender.getArrow(1.0F);
                         arrow.setPos(x, y1, z);
                         arrow.setArrowType(1);
                         arrow.shoot(d1, d2, d3, 3.0F, 0.0F);
@@ -620,7 +620,7 @@ public class AttacksPart1 {
                             0,
                             Math.cos(defender.tickCount / spinSpeed) * 50 * otherSide);
                     if (!defender.level.isClientSide) {
-                        DeadlyArrowEntity deadlyArrow = new DeadlyArrowEntity(defender.level, defender, shoot);
+                        DeadlyArrow deadlyArrow = new DeadlyArrow(defender.level, defender, shoot);
                         defender.level.addFreshEntity(deadlyArrow);
                     }
                 }
@@ -652,7 +652,7 @@ public class AttacksPart1 {
             if (ticks == 102) {
                 defender.playSound(SoundEvents.TRIDENT_THROW, 2.0F, 1.0F);
                 if (!defender.level.isClientSide) {
-                    SniperRifleEntity sniperRifle = new SniperRifleEntity(defender.level, defender, throwTo);
+                    SniperRifle sniperRifle = new SniperRifle(defender.level, defender, throwTo);
                     defender.level.addFreshEntity(sniperRifle);
                 }
                 defender.setDeltaMovement(defender.getLookAngle().scale(-1));
@@ -660,9 +660,9 @@ public class AttacksPart1 {
         }
     }
 
-    protected static void throwSentry(DefenderEntity defender, Vec3 whereTo) {
+    protected static void throwSentry(Defender defender, Vec3 whereTo) {
         if (!defender.level.isClientSide) {
-            SentryGunEntity iGaveBirth = new SentryGunEntity(YEEntityTypes.SentryGun.get(), defender.level);
+            SentryGun iGaveBirth = new SentryGun(YEEntityTypes.SentryGun.get(), defender.level);
             iGaveBirth.moveTo(defender.getPosition(0).add(0, 0.5, 0));
 
             double mult = 1.0d;

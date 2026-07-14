@@ -3,7 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.IntelligenceEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.Intelligence;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -39,7 +39,7 @@ public class IntelligenceModel<T extends Entity> extends EntityModel<T> {
     }
 
     public void setupAnim(T entity, float ageInTicks) {
-        if (entity instanceof IntelligenceEntity intel) {
+        if (entity instanceof Intelligence intel) {
             this.intelligence.yRot = (ageInTicks * 5) * ((float)Math.PI / 180F);
         }
     }

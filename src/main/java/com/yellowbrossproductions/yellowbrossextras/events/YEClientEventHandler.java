@@ -9,7 +9,7 @@ import com.yellowbrossproductions.yellowbrossextras.client.render.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.client.render.layer.SuperDuperPoisonLayer;
 import com.yellowbrossproductions.yellowbrossextras.client.render.oryctolins.*;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
-import com.yellowbrossproductions.yellowbrossextras.entities.CameraShakeEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.CameraShake;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YEParticleTypes;
 import com.yellowbrossproductions.yellowbrossextras.particles.RifleExplosionOnomatopoeiaParticle;
@@ -151,7 +151,7 @@ public class YEClientEventHandler {
         if (player != null) {
             if (YellowbrossExtrasConfig.cameraShakeMultiplier.get() > 0) {
                 float shakeAmplitude = 0;
-                for (CameraShakeEntity cameraShake : player.level.getEntitiesOfClass(CameraShakeEntity.class, player.getBoundingBox().inflate(100))) {
+                for (CameraShake cameraShake : player.level.getEntitiesOfClass(CameraShake.class, player.getBoundingBox().inflate(100))) {
                     if (cameraShake.distanceTo(player) < cameraShake.getRadius()) {
                         shakeAmplitude += cameraShake.getShakeAmount(player, delta);
                     }

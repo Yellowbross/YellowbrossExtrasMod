@@ -3,8 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.entities.AmoebicDevourerEntity;
-import net.minecraft.client.model.EntityModel;
+import com.yellowbrossproductions.yellowbrossextras.entities.AmoebicDevourer;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -104,7 +103,7 @@ public class AmoebicDevourerModel<T extends Entity> extends HierarchicalModel<T>
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        if (entity instanceof AmoebicDevourerEntity aaron) {
+        if (entity instanceof AmoebicDevourer aaron) {
             this.head.yRot += netHeadYaw * ((float)Math.PI / 180F);
             this.head.xRot += (headPitch * ((float)Math.PI / 180F));
 

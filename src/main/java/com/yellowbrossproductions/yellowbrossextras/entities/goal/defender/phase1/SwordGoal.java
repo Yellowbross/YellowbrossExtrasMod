@@ -1,11 +1,11 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase1;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
 
 public class SwordGoal  extends CustomAttackGoal {
 
-    public SwordGoal(DefenderEntity defender) {
+    public SwordGoal(Defender defender) {
         super(defender);
     }
 

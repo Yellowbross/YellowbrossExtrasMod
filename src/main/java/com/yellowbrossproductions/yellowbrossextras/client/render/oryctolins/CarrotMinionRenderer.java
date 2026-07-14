@@ -3,16 +3,11 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.oryctolins;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.oryctolins.CarrotMinionModel;
-import com.yellowbrossproductions.yellowbrossextras.client.model.oryctolins.ConverslinModel;
-import com.yellowbrossproductions.yellowbrossextras.client.render.layer.ConverslinGlowLayer;
 import com.yellowbrossproductions.yellowbrossextras.client.render.layer.HeadItemLayer;
-import com.yellowbrossproductions.yellowbrossextras.client.render.layer.faces.oryctolins.ConverslinFaceLayer;
-import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.ConverslinEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.CarrotMinionEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

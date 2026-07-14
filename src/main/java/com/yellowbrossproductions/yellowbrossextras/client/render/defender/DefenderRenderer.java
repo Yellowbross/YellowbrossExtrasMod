@@ -9,8 +9,7 @@ import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DefenderModel;
 import com.yellowbrossproductions.yellowbrossextras.client.render.layer.DefenderGlowLayer;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
-import com.yellowbrossproductions.yellowbrossextras.util.DynamicAnimationManager;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -25,7 +24,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.Random;
 
 @OnlyIn(Dist.CLIENT)
-public class DefenderRenderer extends MobRenderer<DefenderEntity, DefenderModel<DefenderEntity>> {
+public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defender>> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/defender.png");
     private final Random random = new Random();
 
@@ -41,7 +40,7 @@ public class DefenderRenderer extends MobRenderer<DefenderEntity, DefenderModel<
     }
 
     @Override
-    public Vec3 getRenderOffset(DefenderEntity pEntity, float pPartialTicks) {
+    public Vec3 getRenderOffset(Defender pEntity, float pPartialTicks) {
         return new Vec3(
                 (this.random.nextGaussian() * 0.001D) * pEntity.getShakeMultiplier(),
                 0.0D,
@@ -50,19 +49,19 @@ public class DefenderRenderer extends MobRenderer<DefenderEntity, DefenderModel<
     }
 
     @Override
-    protected void scale(DefenderEntity defender, PoseStack poseStack, float partialTick) {
+    protected void scale(Defender defender, PoseStack poseStack, float partialTick) {
         poseStack.scale(1.0F / (defender.getStretch() + 1),
                 (defender.getStretch() + 1),
                 1.0F / (defender.getStretch() + 1));
     }
 
     @Override
-    public ResourceLocation getTextureLocation(DefenderEntity pEntity) {
+    public ResourceLocation getTextureLocation(Defender pEntity) {
         return TEXTURE;
     }
 
     @Override
-    public void render(DefenderEntity defender, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int blockLightIn) {
+    public void render(Defender defender, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int blockLightIn) {
         switch (defender.getCustomRender()) {
             case 1:
                 renderSpinny(defender, partialTick, poseStack, multiBufferSource, blockLightIn);
@@ -75,7 +74,7 @@ public class DefenderRenderer extends MobRenderer<DefenderEntity, DefenderModel<
         }
     }
 
-    public void renderSpinny(DefenderEntity defender, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int light) {
+    public void renderSpinny(Defender defender, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int light) {
         poseStack.pushPose();
         poseStack.translate(0.0D, 1.35D, 0.0D);
 
@@ -117,7 +116,7 @@ public class DefenderRenderer extends MobRenderer<DefenderEntity, DefenderModel<
         poseStack.popPose();
     }
 
-    public void renderTornado(DefenderEntity defender, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int light) {
+    public void renderTornado(Defender defender, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int light) {
         poseStack.pushPose();
         float f = defender.getWobbling(partialTick);
 

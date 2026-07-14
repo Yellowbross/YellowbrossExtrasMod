@@ -6,7 +6,7 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.ChainsawEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Chainsaw;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -22,7 +22,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.Random;
 
 @OnlyIn(Dist.CLIENT)
-public class ChainsawRenderer extends EntityRenderer<ChainsawEntity> {
+public class ChainsawRenderer extends EntityRenderer<Chainsaw> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/chainsaw.png");
     private static final float TEXTURE_WIDTH = 256;
     private static final float TEXTURE_HEIGHT = 32;
@@ -35,12 +35,12 @@ public class ChainsawRenderer extends EntityRenderer<ChainsawEntity> {
     }
 
     @Override
-    public Vec3 getRenderOffset(ChainsawEntity pEntity, float pPartialTicks) {
+    public Vec3 getRenderOffset(Chainsaw pEntity, float pPartialTicks) {
         return new Vec3(this.random.nextGaussian() * 0.02D, 0.0D, this.random.nextGaussian() * 0.02D);
     }
 
     @Override
-    public void render(ChainsawEntity beam, float entityYaw, float delta, PoseStack poseStack, MultiBufferSource pBuffer, int light) {
+    public void render(Chainsaw beam, float entityYaw, float delta, PoseStack poseStack, MultiBufferSource pBuffer, int light) {
         double collidePosX = beam.prevCollidePosX + (beam.collidePosX - beam.prevCollidePosX) * delta;
         double collidePosY = beam.prevCollidePosY + (beam.collidePosY - beam.prevCollidePosY) * delta;
         double collidePosZ = beam.prevCollidePosZ + (beam.collidePosZ - beam.prevCollidePosZ) * delta;
@@ -72,7 +72,7 @@ public class ChainsawRenderer extends EntityRenderer<ChainsawEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ChainsawEntity pEntity) {
+    public ResourceLocation getTextureLocation(Chainsaw pEntity) {
         return TEXTURE;
     }
 

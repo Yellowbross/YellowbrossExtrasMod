@@ -1,13 +1,12 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase2;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
-import net.minecraft.world.entity.player.Player;
 
 public class PoisonDartsGoal extends CustomAttackGoal {
 
-    public PoisonDartsGoal(DefenderEntity defender) {
+    public PoisonDartsGoal(Defender defender) {
         super(defender);
     }
 

@@ -1,13 +1,13 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase1;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 public class ChainsawGoal extends CustomAttackGoal {
 
-    public ChainsawGoal(DefenderEntity defender) {
+    public ChainsawGoal(Defender defender) {
         super(defender);
     }
 

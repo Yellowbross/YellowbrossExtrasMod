@@ -1,7 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal;
 
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 
@@ -9,9 +9,9 @@ import java.util.EnumSet;
 
 public class StareAtDefenderGoal extends Goal {
     private final Mob mob;
-    private final DefenderEntity defender;
+    private final Defender defender;
 
-    public StareAtDefenderGoal(Mob affected, DefenderEntity defender) {
+    public StareAtDefenderGoal(Mob affected, Defender defender) {
         this.mob = affected;
         this.defender = defender;
         this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE, Flag.JUMP));

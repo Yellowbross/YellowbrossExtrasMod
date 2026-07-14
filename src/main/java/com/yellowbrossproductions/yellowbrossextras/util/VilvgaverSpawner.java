@@ -1,7 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.util;
 
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
-import com.yellowbrossproductions.yellowbrossextras.entities.VilvgaverEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.Vilvgaver;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YEGameRules;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
@@ -73,7 +73,7 @@ public class VilvgaverSpawner implements CustomSpawner {
                             this.hasEnoughSpace(p_35916_, blockpos2) &&
                             randomTest(player.getRandom()) == 0)
                     {
-                        VilvgaverEntity vilvgaver = YEEntityTypes.Vilvgaver.get().spawn(p_35916_, (CompoundTag)null, (Component)null, (Player)null, blockpos2, MobSpawnType.EVENT, false, false);
+                        Vilvgaver vilvgaver = YEEntityTypes.Vilvgaver.get().spawn(p_35916_, (CompoundTag)null, (Component)null, (Player)null, blockpos2, MobSpawnType.EVENT, false, false);
                         if (vilvgaver != null) {
                             vilvgaver.playSound(YESoundEvents.ENTITY_VILVGAVER_RESPAWN.get(), 10.0F, 1.0F);
                             AttributeInstance speed = vilvgaver.getAttributes().getInstance(Attributes.MOVEMENT_SPEED);
@@ -134,7 +134,7 @@ public class VilvgaverSpawner implements CustomSpawner {
         if (player == null) {
             return true;
         } else {
-            List<VilvgaverEntity> list = p_35916_.getEntitiesOfClass(VilvgaverEntity.class, player.getBoundingBox().inflate(100.0D), (predicate) -> {
+            List<Vilvgaver> list = p_35916_.getEntitiesOfClass(Vilvgaver.class, player.getBoundingBox().inflate(100.0D), (predicate) -> {
                 return predicate.isChallenge() || predicate.tickCount < 200;
             });
 
@@ -171,7 +171,7 @@ public class VilvgaverSpawner implements CustomSpawner {
             if (player == null) {
                 returning = true;
             } else {
-                List<VilvgaverEntity> list = p_35916_.getEntitiesOfClass(VilvgaverEntity.class, player.getBoundingBox().inflate(100.0D), (predicate) -> {
+                List<Vilvgaver> list = p_35916_.getEntitiesOfClass(Vilvgaver.class, player.getBoundingBox().inflate(100.0D), (predicate) -> {
                     return predicate.isChallenge() || predicate.tickCount < 200;
                 });
 

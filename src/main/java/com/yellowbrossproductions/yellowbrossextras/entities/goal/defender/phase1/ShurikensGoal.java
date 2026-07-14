@@ -1,11 +1,11 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase1;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
 
 public class ShurikensGoal extends CustomAttackGoal {
 
-    public ShurikensGoal(DefenderEntity defender) {
+    public ShurikensGoal(Defender defender) {
         super(defender);
     }
 

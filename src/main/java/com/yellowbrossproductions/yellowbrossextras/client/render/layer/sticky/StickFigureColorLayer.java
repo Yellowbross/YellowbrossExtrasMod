@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.client.model.StickFigureModel;
 import com.yellowbrossproductions.yellowbrossextras.client.render.YERenderTypes;
-import com.yellowbrossproductions.yellowbrossextras.entities.StickFigureEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.StickFigure;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class StickFigureColorLayer<T extends StickFigureEntity, M extends StickFigureModel<T>> extends RenderLayer<T, M> {
+public class StickFigureColorLayer<T extends StickFigure, M extends StickFigureModel<T>> extends RenderLayer<T, M> {
     private final ResourceLocation TEXTURE;
     private final int color;
     private final float r;

@@ -7,9 +7,8 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
-import com.yellowbrossproductions.yellowbrossextras.entities.VilvgaverEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.Vilvgaver;
 import com.yellowbrossproductions.yellowbrossextras.util.DynamicAnimationManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -17,13 +16,9 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.loading.FMLPaths;
-
-import java.io.File;
 
 @OnlyIn(Dist.CLIENT)
 public class VilvgaverRenderer extends EntityRenderer<Entity> {
@@ -46,7 +41,7 @@ public class VilvgaverRenderer extends EntityRenderer<Entity> {
 
         float f = pEntity.tickCount / (float)delay;
         float f1 = Math.min(f, 1.0F);
-        if (pEntity instanceof VilvgaverEntity vilvgaver) {
+        if (pEntity instanceof Vilvgaver vilvgaver) {
             if (!vilvgaver.isChallenge()) {
                 f1 = 1.0F;
             }

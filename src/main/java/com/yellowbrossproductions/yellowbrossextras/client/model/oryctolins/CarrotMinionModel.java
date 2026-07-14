@@ -3,16 +3,13 @@ package com.yellowbrossproductions.yellowbrossextras.client.model.oryctolins;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.client.model.animation.oryctolins.ConverslinAnimation;
 import com.yellowbrossproductions.yellowbrossextras.client.render.layer.CustomHeadedModel;
-import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.ConverslinEntity;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
 import java.util.Random;

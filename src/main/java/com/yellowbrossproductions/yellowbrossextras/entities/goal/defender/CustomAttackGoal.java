@@ -1,6 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender;
 
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.DefenderEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
@@ -9,15 +9,15 @@ import java.util.EnumSet;
 import java.util.Random;
 
 public class CustomAttackGoal extends Goal {
-    DefenderEntity defender;
+    Defender defender;
     Random random = new Random();
 
-    public CustomAttackGoal(DefenderEntity defender) {
+    public CustomAttackGoal(Defender defender) {
         this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
         this.defender = defender;
     }
 
-    public DefenderEntity getDefender() {
+    public Defender getDefender() {
         return this.defender;
     }
 

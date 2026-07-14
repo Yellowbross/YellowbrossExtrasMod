@@ -3,9 +3,8 @@ package com.yellowbrossproductions.yellowbrossextras.client.model.defender;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.client.model.animation.defender.DefenderAnimation;
 import com.yellowbrossproductions.yellowbrossextras.client.model.animation.defender.SentryGunAnimation;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGunEntity;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGun;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -92,7 +91,7 @@ public class SentryGunModel<T extends Entity> extends HierarchicalModel<T> {
         this.head.yRot += netHeadYaw * ((float)Math.PI / 180F);
         this.head.xRot += (headPitch * ((float)Math.PI / 180F));
 
-        if (entity instanceof SentryGunEntity defender) {
+        if (entity instanceof SentryGun defender) {
             this.animate(defender.anim_shoot, SentryGunAnimation.shoot, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.anim_intro, SentryGunAnimation.intro, ageInTicks, defender.getAnimationSpeed());
             this.animate(defender.anim_flying, SentryGunAnimation.flying, ageInTicks, defender.getAnimationSpeed());
