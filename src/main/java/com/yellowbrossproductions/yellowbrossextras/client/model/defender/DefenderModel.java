@@ -3,7 +3,8 @@ package com.yellowbrossproductions.yellowbrossextras.client.model.defender;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.client.model.animation.defender.DefenderAnimation;
+import com.yellowbrossproductions.yellowbrossextras.client.model.animation.defender.Phase1Animation;
+import com.yellowbrossproductions.yellowbrossextras.client.model.animation.defender.Phase2Animation;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -16,7 +17,7 @@ import net.minecraft.world.entity.Entity;
 
 import java.util.Objects;
 
-public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
+public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(YellowbrossExtras.MOD_ID, "defender"), "main");
     private final ModelPart root;
@@ -415,107 +416,112 @@ public class DefenderModel<T extends Entity> extends HierarchicalModel<T> {
     }
 
     @Override
-    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(Defender defender, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        this.animate(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-    }
 
-    public void animate(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.head.yRot += netHeadYaw * ((float)Math.PI / 180F);
         this.head.xRot += (headPitch * ((float)Math.PI / 180F));
 
-        if (entity instanceof Defender defender) {
-            this.animate(defender.anim_jump, DefenderAnimation.jump, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_jump2, DefenderAnimation.jump2, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_defeated, DefenderAnimation.defeated, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        this.animatePhase1(defender, ageInTicks);
+        this.animatePhase2(defender, ageInTicks);
+    }
 
-            this.animate(defender.anim_saws, DefenderAnimation.saws, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_sword, DefenderAnimation.sword, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_axes, DefenderAnimation.axes, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_boomerang, DefenderAnimation.boomerang, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_spikes, DefenderAnimation.spikes, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_spikes_land, DefenderAnimation.spikes_land, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_spikes_slam, DefenderAnimation.spikes_slam, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_shurikens, DefenderAnimation.shurikenlauncher, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_chainsaw, DefenderAnimation.chainsaw, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_claws_start, DefenderAnimation.claws_start, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_claws_continue, DefenderAnimation.claws_continue, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_claws_end, DefenderAnimation.claws_end, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_claws_punch, DefenderAnimation.claws_punch, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_excalibur, DefenderAnimation.excalibur, ageInTicks, defender.getAnimationSpeed());
+    private void animatePhase1(Defender defender, float ageInTicks) {
+        this.animate(defender.anim_saws, Phase1Animation.saws, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_sword, Phase1Animation.sword, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_axes, Phase1Animation.axes, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_boomerang, Phase1Animation.boomerang, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_spikes, Phase1Animation.spikes, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_spikes_land, Phase1Animation.spikes_land, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_spikes_slam, Phase1Animation.spikes_slam, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_shurikens, Phase1Animation.shurikenlauncher, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_chainsaw, Phase1Animation.chainsaw, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_claws_start, Phase1Animation.claws_start, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_claws_continue, Phase1Animation.claws_continue, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_claws_end, Phase1Animation.claws_end, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_claws_punch, Phase1Animation.claws_punch, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_excalibur, Phase1Animation.excalibur, ageInTicks, defender.getAnimationSpeed());
+    }
 
-            this.animate(defender.anim_ratatatabow, DefenderAnimation.ratatatabow, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_ratatatabow2, DefenderAnimation.ratatatabow2, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_poisondarts, DefenderAnimation.poisondarts, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_forcegun, DefenderAnimation.forcegun, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_snipe, DefenderAnimation.snipe, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_sentryguns, DefenderAnimation.sentryguns, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_icethrower, DefenderAnimation.icethrower, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_witherbazooka, DefenderAnimation.witherbazooka, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_witherbazooka, DefenderAnimation.witherbazooka_land, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_creepergun, DefenderAnimation.creepergun, ageInTicks, defender.getAnimationSpeed());
-            this.animate(defender.anim_flamethrower, DefenderAnimation.flamethrower, ageInTicks, defender.getAnimationSpeed());
+    private void animatePhase2(Defender defender, float ageInTicks) {
+        this.animate(defender.anim_ratatatabow, Phase2Animation.ratatatabow, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_ratatatabow2, Phase2Animation.ratatatabow2, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_poisondarts, Phase2Animation.poisondarts, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_forcegun, Phase2Animation.forcegun, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_snipe, Phase2Animation.snipe, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_sentryguns, Phase2Animation.sentryguns, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_icethrower, Phase2Animation.icethrower, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_witherbazooka, Phase2Animation.witherbazooka, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_witherbazooka_land, Phase2Animation.witherbazooka_land, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_creepergun, Phase2Animation.creepergun, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_flamethrower, Phase2Animation.flamethrower, ageInTicks, defender.getAnimationSpeed());
+    }
 
-            this.hat1.visible = (defender.getPhase() == 1 || defender.getSecondHat() == 1) && !defender.shouldHideAllHats();
-            this.hat2.visible = (defender.getPhase() == 2 || defender.getSecondHat() == 2) && !defender.shouldHideAllHats();
-            this.hat3.visible = (defender.getPhase() == 3 || defender.getSecondHat() == 3) && !defender.shouldHideAllHats();
-            this.hat4.visible = (defender.getPhase() == 4 || defender.getSecondHat() == 4) && !defender.shouldHideAllHats();
-            this.hat5.visible = (defender.getPhase() == 5 || defender.getSecondHat() == 5) && !defender.shouldHideAllHats();
-            this.hat6.visible = (defender.getPhase() == 6 || defender.getSecondHat() == 6) && !defender.shouldHideAllHats();
-            this.hat7.visible = (defender.getPhase() == 7 || defender.getSecondHat() == 7) && !defender.shouldHideAllHats();
-            this.hat8.visible = (defender.getPhase() == 8 || defender.getSecondHat() == 8) && !defender.shouldHideAllHats();
-            this.hat9.visible = (defender.getPhase() == 9 || defender.getSecondHat() == 9) && !defender.shouldHideAllHats();
-            this.hat10.visible = (defender.getPhase() == 10 || defender.getSecondHat() == 10) && !defender.shouldHideAllHats();
+    public void animate(Defender defender, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        this.animate(defender.anim_jump, Phase1Animation.jump, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_jump2, Phase1Animation.jump2, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_defeated, Phase1Animation.defeated, ageInTicks, defender.getAnimationSpeed());
 
-            this.buzzsaw.visible = defender.getWeaponToShow() == 1;
-            this.sword.visible = defender.getWeaponToShow() == 2;
-            this.boomerang.visible = defender.getWeaponToShow() == 3;
-            this.spike.visible = defender.getWeaponToShow() == 4;
-            this.shuriken_launcher.visible = defender.getWeaponToShow() == 5;
-            this.chainsaw_handle.visible = defender.getWeaponToShow() == 6;
-            this.claw1.visible = defender.getWeaponToShow() == 7;
-            this.claw2.visible = defender.getWeaponToShow() == 7;
-            this.rock.visible = defender.getWeaponToShow() == 8;
-            this.excalibur_fake.visible = defender.getWeaponToShow() == 8;
-            this.excalibur.visible = defender.getWeaponToShow() == 8;
-            this.ratatatabow.visible = defender.getWeaponToShow() == 9;
-            this.quiver.visible = defender.getWeaponToShow() == 9;
-            this.poisondarts.visible = defender.getWeaponToShow() == 10;
-            this.forcegun.visible = defender.getWeaponToShow() == 11;
-            this.sniper_rifle.visible = defender.getWeaponToShow() == 12;
-            this.wither_bazooka.visible = defender.getWeaponToShow() == 13;
-            this.creeper_gun.visible = defender.getWeaponToShow() == 15;
+        this.hat1.visible = (defender.getPhase() == 1 || defender.getSecondHat() == 1) && !defender.shouldHideAllHats();
+        this.hat2.visible = (defender.getPhase() == 2 || defender.getSecondHat() == 2) && !defender.shouldHideAllHats();
+        this.hat3.visible = (defender.getPhase() == 3 || defender.getSecondHat() == 3) && !defender.shouldHideAllHats();
+        this.hat4.visible = (defender.getPhase() == 4 || defender.getSecondHat() == 4) && !defender.shouldHideAllHats();
+        this.hat5.visible = (defender.getPhase() == 5 || defender.getSecondHat() == 5) && !defender.shouldHideAllHats();
+        this.hat6.visible = (defender.getPhase() == 6 || defender.getSecondHat() == 6) && !defender.shouldHideAllHats();
+        this.hat7.visible = (defender.getPhase() == 7 || defender.getSecondHat() == 7) && !defender.shouldHideAllHats();
+        this.hat8.visible = (defender.getPhase() == 8 || defender.getSecondHat() == 8) && !defender.shouldHideAllHats();
+        this.hat9.visible = (defender.getPhase() == 9 || defender.getSecondHat() == 9) && !defender.shouldHideAllHats();
+        this.hat10.visible = (defender.getPhase() == 10 || defender.getSecondHat() == 10) && !defender.shouldHideAllHats();
 
-            this.chainsaw_handle.yRot += netHeadYaw * ((float)Math.PI / 180F);
-            this.chainsaw_handle.xRot += defender.getChainsawLookX() * ((float)Math.PI / 180F);
+        this.buzzsaw.visible = defender.getWeaponToShow() == 1;
+        this.sword.visible = defender.getWeaponToShow() == 2;
+        this.boomerang.visible = defender.getWeaponToShow() == 3;
+        this.spike.visible = defender.getWeaponToShow() == 4;
+        this.shuriken_launcher.visible = defender.getWeaponToShow() == 5;
+        this.chainsaw_handle.visible = defender.getWeaponToShow() == 6;
+        this.claw1.visible = defender.getWeaponToShow() == 7;
+        this.claw2.visible = defender.getWeaponToShow() == 7;
+        this.rock.visible = defender.getWeaponToShow() == 8;
+        this.excalibur_fake.visible = defender.getWeaponToShow() == 8;
+        this.excalibur.visible = defender.getWeaponToShow() == 8;
+        this.ratatatabow.visible = defender.getWeaponToShow() == 9;
+        this.quiver.visible = defender.getWeaponToShow() == 9;
+        this.poisondarts.visible = defender.getWeaponToShow() == 10;
+        this.forcegun.visible = defender.getWeaponToShow() == 11;
+        this.sniper_rifle.visible = defender.getWeaponToShow() == 12;
+        this.wither_bazooka.visible = defender.getWeaponToShow() == 13;
+        this.creeper_gun.visible = defender.getWeaponToShow() == 15;
 
-            if (Objects.equals(defender.getAnimationState(), "none")) {
-                float moveX = (float) (defender.getX() - defender.xo);
-                float moveZ = (float) (defender.getZ() - defender.zo);
-                float speed = Mth.sqrt(moveX * moveX + moveZ * moveZ);
-                if (speed > 0.2) {
-                    this.left_leg.xRot += Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.8F;
-                    this.right_leg.xRot += Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount * 0.8F;
-                    this.animateRun(ageInTicks);
-                } else {
-                    this.animateIdle(defender.getFrame());
-                }
+        this.chainsaw_handle.yRot += netHeadYaw * ((float)Math.PI / 180F);
+        this.chainsaw_handle.xRot += defender.getChainsawLookX() * ((float)Math.PI / 180F);
+
+        if (Objects.equals(defender.getAnimationState(), "none")) {
+            float moveX = (float) (defender.getX() - defender.xo);
+            float moveZ = (float) (defender.getZ() - defender.zo);
+            float speed = Mth.sqrt(moveX * moveX + moveZ * moveZ);
+            if (speed > 0.2) {
+                this.left_leg.xRot += Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.8F;
+                this.right_leg.xRot += Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount * 0.8F;
+                this.animateRun(ageInTicks);
+            } else {
+                this.animateIdle(defender.getFrame());
             }
+        }
 
-            if (defender.getWeaponToShow() != 1 &&
-                    defender.getWeaponToShow() != 4 &&
-                    !Objects.equals(defender.getAnimationState(), "jump2")) {
-                this.left_leg.xRot += Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.5F;
-                this.right_leg.xRot += Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount * 0.5F;
-            }
+        if (defender.getWeaponToShow() != 1 &&
+                defender.getWeaponToShow() != 4 &&
+                !Objects.equals(defender.getAnimationState(), "jump2")) {
+            this.left_leg.xRot += Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.5F;
+            this.right_leg.xRot += Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount * 0.5F;
+        }
 
-            if (Objects.equals(defender.getAnimationState(), "creepergun") && defender.isFreakingOutInModel()) {
-                float tick = (defender.getFrame() + this.partialTick);
-                if ((Mth.cos(tick * 4) >= 0)) {
-                    this.all.xRot -= (50.0F * ((float)Math.PI / 180F));
-                    this.head.xRot -= (30.0F * ((float)Math.PI / 180F));
-                    this.right_arm.xRot -= (60.0F * ((float)Math.PI / 180F));
-                }
+        if (Objects.equals(defender.getAnimationState(), "creepergun") && defender.isFreakingOutInModel()) {
+            float tick = (defender.getFrame() + this.partialTick);
+            if ((Mth.cos(tick * 4) >= 0)) {
+                this.all.xRot -= (50.0F * ((float)Math.PI / 180F));
+                this.head.xRot -= (30.0F * ((float)Math.PI / 180F));
+                this.right_arm.xRot -= (60.0F * ((float)Math.PI / 180F));
             }
         }
     }

@@ -148,8 +148,9 @@ public class YEEntityTypes {
 
 
     // Misc
-    public static final RegistryObject<EntityType<CameraShake>> CameraShake = ENTITY_TYPES.register("camera_shake", () -> EntityType.Builder.<CameraShake>of(com.yellowbrossproductions.yellowbrossextras.entities.CameraShake::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "camera_shake").toString()));
+    public static final RegistryObject<EntityType<CameraShake>> CameraShake = ENTITY_TYPES.register("camera_shake", () -> EntityType.Builder.<CameraShake>of(CameraShake::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).noSave().updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "camera_shake").toString()));
 
+    public static final RegistryObject<EntityType<WitherExplosion>> WitherExplosion = ENTITY_TYPES.register("wither_explosion", () -> EntityType.Builder.<WitherExplosion>of(WitherExplosion::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).noSave().updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "wither_explosion").toString()));
 
 
     // Gamemode Fun

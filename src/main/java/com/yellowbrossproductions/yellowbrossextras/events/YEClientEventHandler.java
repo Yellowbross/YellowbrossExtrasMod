@@ -1,6 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.events;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
+import com.yellowbrossproductions.yellowbrossextras.client.gui.overlay.WitherExplosionOverlay;
 import com.yellowbrossproductions.yellowbrossextras.client.model.*;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.client.model.oryctolins.*;
@@ -23,6 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -116,6 +118,7 @@ public class YEClientEventHandler {
             event.registerEntityRenderer(YEEntityTypes.DeadlyArrow.get(), DeadlyArrowRenderer::new);
 
             event.registerEntityRenderer(YEEntityTypes.CameraShake.get(), NothingRenderer::new);
+            event.registerEntityRenderer(YEEntityTypes.WitherExplosion.get(), WitherExplosionRenderer::new);
 
             event.registerEntityRenderer(YEEntityTypes.PathGuide.get(), PathGuideRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.Intelligence.get(), IntelligenceRenderer::new);
@@ -135,6 +138,11 @@ public class YEClientEventHandler {
             event.register(YEEntityTypes.Crawler.get(), new ResourceLocation("shaders/post/creeper.json"));
             event.register(YEEntityTypes.Freaker.get(), new ResourceLocation("shaders/post/creeper.json"));
             event.register(YEEntityTypes.Sprayer.get(), new ResourceLocation("shaders/post/creeper.json"));
+        }
+
+        @SubscribeEvent
+        public static void registerOverlays(RegisterGuiOverlaysEvent event) {
+            event.registerBelowAll("witherexplosion_flash_overlay", WitherExplosionOverlay.HUD_OVERLAY);
         }
 
         @SubscribeEvent

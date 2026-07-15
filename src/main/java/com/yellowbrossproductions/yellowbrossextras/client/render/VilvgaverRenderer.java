@@ -75,13 +75,12 @@ public class VilvgaverRenderer extends EntityRenderer<Entity> {
         float minV = 0;
         float maxU = minU + 16F / TEXTURE_WIDTH;
         float maxV = minV + 16F / TEXTURE_HEIGHT;
-        PoseStack.Pose matrixstack$entry = matrixStackIn.last();
-        Matrix4f matrix4f = matrixstack$entry.pose();
-        Matrix3f matrix3f = matrixstack$entry.normal();
-        drawVertex(matrix4f, matrix3f, builder, -START_RADIUS, -START_RADIUS, 0, minU, minV, warning, packedLightIn);
-        drawVertex(matrix4f, matrix3f, builder, -START_RADIUS, START_RADIUS, 0, minU, maxV, warning, packedLightIn);
-        drawVertex(matrix4f, matrix3f, builder, START_RADIUS, START_RADIUS, 0, maxU, maxV, warning, packedLightIn);
-        drawVertex(matrix4f, matrix3f, builder, START_RADIUS, -START_RADIUS, 0, maxU, minV, warning, packedLightIn);
+        Matrix4f pose = matrixStackIn.last().pose();
+        Matrix3f normal = matrixStackIn.last().normal();
+        drawVertex(pose, normal, builder, -START_RADIUS, -START_RADIUS, 0, minU, minV, warning, packedLightIn);
+        drawVertex(pose, normal, builder, -START_RADIUS, START_RADIUS, 0, minU, maxV, warning, packedLightIn);
+        drawVertex(pose, normal, builder, START_RADIUS, START_RADIUS, 0, maxU, maxV, warning, packedLightIn);
+        drawVertex(pose, normal, builder, START_RADIUS, -START_RADIUS, 0, maxU, minV, warning, packedLightIn);
     }
 
     public void drawVertex(Matrix4f matrix, Matrix3f normals, VertexConsumer vertexBuilder, float offsetX, float offsetY, float offsetZ, float textureX, float textureY, float alpha, int packedLightIn) {

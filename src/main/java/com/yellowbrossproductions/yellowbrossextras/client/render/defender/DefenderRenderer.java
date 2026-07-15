@@ -99,7 +99,7 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
         Quaternion quat = this.entityRenderDispatcher.cameraOrientation();
         poseStack.mulPose(quat);
 
-        float minU = 0 + 16F / 64 * loop;
+        float minU = 16F / 64 * loop;
         float minV = startOver ? -16F / 32 : 0;
         float maxU = minU + 16F / 64;
         float maxV = minV + 16F / 32;
@@ -137,7 +137,7 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
         poseStack.pushPose();
         poseStack.mulPose(Vector3f.YP.rotationDegrees(-this.entityRenderDispatcher.camera.getYRot() + 180.0f));
 
-        float minU = 0 + 16F / 16;
+        float minU = 16F / 16;
         float minV = 0;
         float maxU = minU + 16F / 16;
         float maxV = minV + 16F / 16;

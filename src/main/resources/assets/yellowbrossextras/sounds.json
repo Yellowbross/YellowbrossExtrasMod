@@ -306,6 +306,27 @@
     ]
   },
 
+  "entity.defender.witherbazooka_explosion": {
+    "subtitle": "subtitles.entity.defender.witherbazooka_explosion",
+    "sounds": [
+      "yellowbrossextras:defender/witherbazooka_explosion"
+    ]
+  },
+
+  "entity.defender.witherbazooka_loop": {
+    "subtitle": "subtitles.entity.defender.witherbazooka_loop",
+    "sounds": [
+      "yellowbrossextras:defender/witherbazooka_loop"
+    ]
+  },
+
+  "entity.defender.witherbazooka_shoot": {
+    "subtitle": "subtitles.entity.defender.witherbazooka_shoot",
+    "sounds": [
+      "yellowbrossextras:defender/witherbazooka_shoot"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [
