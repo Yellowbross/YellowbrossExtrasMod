@@ -129,7 +129,7 @@ public class SniperRifle extends AbstractSnipingProjectile {
         if (hitEntity != null) list.add(hitEntity);
 
         for (LivingEntity entity : list) {
-            boolean canHurt = (!(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(entity, owner)) && (!(entity instanceof Player) || entity.hasLineOfSight(this));
+            boolean canHurt = EntityUtil.isMobNotInCreativeMode(entity) && ((!(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(entity, owner)) && (!(entity instanceof Player) || entity.hasLineOfSight(this)));
             if (canHurt) {
                 DamageSource damageSource = new IndirectEntityDamageSource("thrown", this, this.getOwner()).setProjectile();
                 entity.invulnerableTime = 0;

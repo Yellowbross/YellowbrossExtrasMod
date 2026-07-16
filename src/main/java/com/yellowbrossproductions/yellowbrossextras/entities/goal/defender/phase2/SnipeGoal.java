@@ -12,7 +12,7 @@ public class SnipeGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_snipe < 1 && getDefender().getPhase() == 2;
+        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_snipe < 1 && getDefender().getPhase() == 2 && (getDefender().distanceTo(getDefender().getTarget()) < 40.0D);
     }
 
     @Override

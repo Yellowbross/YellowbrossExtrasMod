@@ -12,7 +12,7 @@ public class PoisonDartsGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && getRandom().nextInt(6) == 0 && getDefender().cooldown_poisondarts < 1 && (getDefender().distanceTo(getDefender().getTarget()) > 15.0D) && getDefender().getPhase() == 2;
+        return doesAttackMeetNormalRequirements() && getRandom().nextInt(6) == 0 && getDefender().cooldown_poisondarts < 1 && (getDefender().distanceTo(getDefender().getTarget()) > 15.0D) && (getDefender().distanceTo(getDefender().getTarget()) < 25.0D) && getDefender().getPhase() == 2;
     }
 
     @Override

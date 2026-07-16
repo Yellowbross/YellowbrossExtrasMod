@@ -60,7 +60,7 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
         for (LivingEntity livingEntity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.5d))) {
             boolean canHurt = !(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(livingEntity, owner);
 
-            if (canHurt && !this.caught.contains(livingEntity) && livingEntity.hasLineOfSight(this)) {
+            if (canHurt && !this.caught.contains(livingEntity) && livingEntity.hasLineOfSight(this) && EntityUtil.isMobNotInCreativeMode(livingEntity)) {
                 this.caught.add(livingEntity);
                 livingEntity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, livingEntity.getVoicePitch());
                 livingEntity.hurt(DamageSource.thrown(this, this.getOwner()), 10.0F);
@@ -104,7 +104,7 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        return super.hurt(pSource, pAmount);
+        return false;
     }
 
     @Override
