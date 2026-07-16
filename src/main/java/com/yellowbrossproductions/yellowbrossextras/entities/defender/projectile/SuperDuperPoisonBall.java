@@ -22,16 +22,12 @@ import java.util.List;
 
 public class SuperDuperPoisonBall extends CustomAbstractHurtingProjectile implements ItemSupplier {
 
-    public SuperDuperPoisonBall(EntityType<? extends CustomAbstractHurtingProjectile> p_36833_, Level p_36834_) {
-        super(p_36833_, p_36834_);
+    public SuperDuperPoisonBall(EntityType<? extends CustomAbstractHurtingProjectile> entityType, Level level) {
+        super(entityType, level);
     }
 
-    public SuperDuperPoisonBall(EntityType<? extends CustomAbstractHurtingProjectile> p_36817_, double p_36818_, double p_36819_, double p_36820_, double p_36821_, double p_36822_, double p_36823_, Level p_36824_) {
-        super(YEEntityTypes.SuperDuperPoisonBall.get(), p_36818_, p_36819_, p_36820_, p_36821_, p_36822_, p_36823_, p_36824_);
-    }
-
-    public SuperDuperPoisonBall(Level p_36831_, LivingEntity p_36827_, double p_36828_, double p_36829_, double p_36830_) {
-        super(YEEntityTypes.SuperDuperPoisonBall.get(), p_36827_, p_36828_, p_36829_, p_36830_, p_36831_);
+    public SuperDuperPoisonBall(Level level, LivingEntity livingEntity, double vx, double vy, double vz) {
+        super(YEEntityTypes.SuperDuperPoisonBall.get(), livingEntity, vx, vy, vz, level);
     }
 
     @Override
@@ -49,8 +45,8 @@ public class SuperDuperPoisonBall extends CustomAbstractHurtingProjectile implem
         return false;
     }
 
-    protected void onHit(HitResult p_37406_) {
-        super.onHit(p_37406_);
+    protected void onHit(HitResult pResult) {
+        super.onHit(pResult);
         if (!this.level.isClientSide) {
             this.level.broadcastEntityEvent(this, (byte)3);
             this.explode(2.0D);
@@ -104,9 +100,9 @@ public class SuperDuperPoisonBall extends CustomAbstractHurtingProjectile implem
     }
 
     @Override
-    public boolean hurt(DamageSource p_36839_, float p_36840_) {
-        if (p_36839_ == DamageSource.OUT_OF_WORLD) {
-            return super.hurt(p_36839_, p_36840_);
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (pSource == DamageSource.OUT_OF_WORLD) {
+            return super.hurt(pSource, pAmount);
         }
         return false;
     }

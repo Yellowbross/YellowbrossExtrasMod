@@ -58,8 +58,8 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
     int killMyselfTicks;
     LivingEntity owner = null;
 
-    public SentryGun(EntityType<? extends YExtrasMob> p_21683_, Level p_21684_) {
-        super(p_21683_, p_21684_);
+    public SentryGun(EntityType<? extends YExtrasMob> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override

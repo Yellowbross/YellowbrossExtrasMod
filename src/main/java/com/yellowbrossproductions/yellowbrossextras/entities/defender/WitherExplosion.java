@@ -1,11 +1,16 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 
+import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShake;
+import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.WitherExplosionFlashPacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
+import com.yellowbrossproductions.yellowbrossextras.util.LoopingSound;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.world.damagesource.DamageSource;
@@ -17,7 +22,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.PacketDistributor;
+
+import javax.annotation.Nullable;
 
 public class WitherExplosion extends Entity {
     public Mob owner;
@@ -25,6 +35,12 @@ public class WitherExplosion extends Entity {
     public WitherExplosion(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.noPhysics = true;
+    }
+
+    public WitherExplosion(Level level, Vec3 pos, @Nullable Mob owner) {
+        super(YEEntityTypes.WitherExplosion.get(), level);
+        this.owner = owner;
+        this.setPos(pos);
     }
 
     @Override
@@ -58,7 +74,6 @@ public class WitherExplosion extends Entity {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        this.playSound(YESoundEvents.ENTITY_DEFENDER_WITHERBAZOOKA_EXPLOSION.get(), 10.0f, 1.0f);
         CameraShake.cameraShake(this.level, this.position(), 200, 0.04f, 40, 20);
 
         if (!this.level.isClientSide) {

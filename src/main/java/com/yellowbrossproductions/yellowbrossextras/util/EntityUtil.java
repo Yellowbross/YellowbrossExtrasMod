@@ -485,13 +485,13 @@ public class EntityUtil {
         return 1.0f;
     }
 
-    public static void makeAParticle(Level level, ParticleOptions particleType, boolean b, Vec3 spawnPosition, Vec3 motion) {
+    public static void makeAParticle(Level level, ParticleOptions particleType, boolean forceAlwaysRender, Vec3 spawnPosition, Vec3 motion) {
         if (!level.isClientSide) {
             for (ServerPlayer serverPlayer : ((ServerLevel)level).players()) {
                 if (serverPlayer.distanceToSqr(spawnPosition) < 4096.0D) {
                     ParticlePacket packet = new ParticlePacket();
 
-                    packet.queueParticle(particleType, b, spawnPosition, motion);
+                    packet.queueParticle(particleType, forceAlwaysRender, spawnPosition, motion);
 
                     PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
                 }

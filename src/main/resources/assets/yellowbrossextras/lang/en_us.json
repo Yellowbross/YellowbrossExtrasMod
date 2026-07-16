@@ -87,8 +87,10 @@
   "subtitles.entity.defender.snipe_shoot": "Deadly Arrow flies",
   "subtitles.entity.defender.snipe_hit": "Looks like he's getting his kill streak",
   "subtitles.entity.defender.witherbazooka_explosion": "B O O M",
-  "subtitles.entity.defender.witherbazooka_loop": "Super Wither Skull roars",
+  "subtitles.entity.defender.witherbazooka_loop": "The Skull of Doom roars",
   "subtitles.entity.defender.witherbazooka_shoot": "Wither Bazooka fired",
+  "subtitles.entity.defender.witherbazooka_start": "Defender gets his Wither Bazooka",
+  "subtitles.entity.defender.witherbazooka_end": "Defender dies for a second",
 
   "subtitles.entity.vilvgaver.attack": "Vilvgaver attacks",
   "subtitles.entity.vilvgaver.loop": "Vilvgaver screams",

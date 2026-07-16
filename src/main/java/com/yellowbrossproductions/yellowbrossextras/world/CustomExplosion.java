@@ -93,6 +93,10 @@ public class CustomExplosion extends Explosion {
         return create(exploderIn.level, exploderIn, x, y, z, sizeIn, false, multipliesToScrewArmor);
     }
 
+    public static CustomExplosion create(@Nonnull Entity exploderIn, Vec3 position, float sizeIn, boolean multipliesToScrewArmor) {
+        return create(exploderIn.level, exploderIn, position.x, position.y, position.z, sizeIn, false, multipliesToScrewArmor);
+    }
+
     public static CustomExplosion create(Level worldIn, @Nullable Entity exploderIn, double xIn, double yIn, double zIn, float sizeIn, boolean causesFireIn, boolean multipliesToScrewArmor) {
         Explosion.BlockInteraction mode = BlockInteraction.NONE;
 

@@ -327,6 +327,20 @@
     ]
   },
 
+  "entity.defender.witherbazooka_start": {
+    "subtitle": "subtitles.entity.defender.witherbazooka_start",
+    "sounds": [
+      "yellowbrossextras:defender/witherbazooka_start"
+    ]
+  },
+
+  "entity.defender.witherbazooka_end": {
+    "subtitle": "subtitles.entity.defender.witherbazooka_end",
+    "sounds": [
+      "yellowbrossextras:defender/witherbazooka_end"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [

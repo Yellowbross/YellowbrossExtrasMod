@@ -138,12 +138,12 @@ public class CustomAbstractHurtingProjectile extends Projectile {
         return 1.0F;
     }
 
-    public boolean hurt(DamageSource p_36839_, float p_36840_) {
-        if (this.isInvulnerableTo(p_36839_)) {
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (this.isInvulnerableTo(pSource)) {
             return false;
         } else {
             this.markHurt();
-            Entity entity = p_36839_.getEntity();
+            Entity entity = pSource.getEntity();
             if (entity != null) {
                 if (!this.level.isClientSide) {
                     Vec3 vec3 = entity.getLookAngle();

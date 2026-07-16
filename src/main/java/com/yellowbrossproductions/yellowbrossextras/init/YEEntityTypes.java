@@ -142,15 +142,17 @@ public class YEEntityTypes {
 
     public static final RegistryObject<EntityType<SuperDuperPoisonBall>> SuperDuperPoisonBall = ENTITY_TYPES.register("superduperpoison_ball", () -> EntityType.Builder.<SuperDuperPoisonBall>of(com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SuperDuperPoisonBall::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "superduperpoison_ball").toString()));
 
-    public static final RegistryObject<EntityType<SniperRifle>> SniperRifle = ENTITY_TYPES.register("sniper_rifle", () -> EntityType.Builder.<SniperRifle>of(com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SniperRifle::new, MobCategory.MISC).sized(0.0F, 0.0F).setCustomClientFactory(com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SniperRifle::new).setShouldReceiveVelocityUpdates(false).noSave().build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sniper_rifle").toString()));
+    public static final RegistryObject<EntityType<SniperRifle>> SniperRifle = ENTITY_TYPES.register("sniper_rifle", () -> EntityType.Builder.<SniperRifle>of(com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SniperRifle::new, MobCategory.MISC).sized(0.0F, 0.0F).setCustomClientFactory(SniperRifle::new).setShouldReceiveVelocityUpdates(false).noSave().build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sniper_rifle").toString()));
 
-    public static final RegistryObject<EntityType<DeadlyArrow>> DeadlyArrow = ENTITY_TYPES.register("deadly_arrow", () -> EntityType.Builder.<DeadlyArrow>of(com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DeadlyArrow::new, MobCategory.MISC).sized(0.0F, 0.0F).setCustomClientFactory(com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DeadlyArrow::new).setShouldReceiveVelocityUpdates(false).noSave().build(new ResourceLocation(YellowbrossExtras.MOD_ID, "deadly_arrow").toString()));
+    public static final RegistryObject<EntityType<DeadlyArrow>> DeadlyArrow = ENTITY_TYPES.register("deadly_arrow", () -> EntityType.Builder.<DeadlyArrow>of(com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DeadlyArrow::new, MobCategory.MISC).sized(0.0F, 0.0F).setCustomClientFactory(DeadlyArrow::new).setShouldReceiveVelocityUpdates(false).noSave().build(new ResourceLocation(YellowbrossExtras.MOD_ID, "deadly_arrow").toString()));
+
+    public static final RegistryObject<EntityType<SkullOfDoom>> SkullOfDoom = ENTITY_TYPES.register("skull_of_doom", () -> EntityType.Builder.<SkullOfDoom>of(com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SkullOfDoom::new, MobCategory.MISC).sized(3.0F,3.0F).clientTrackingRange(4).updateInterval(1).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "skull_of_doom").toString()));
 
 
     // Misc
     public static final RegistryObject<EntityType<CameraShake>> CameraShake = ENTITY_TYPES.register("camera_shake", () -> EntityType.Builder.<CameraShake>of(CameraShake::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).noSave().updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "camera_shake").toString()));
 
-    public static final RegistryObject<EntityType<WitherExplosion>> WitherExplosion = ENTITY_TYPES.register("wither_explosion", () -> EntityType.Builder.<WitherExplosion>of(WitherExplosion::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).noSave().updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "wither_explosion").toString()));
+    public static final RegistryObject<EntityType<WitherExplosion>> WitherExplosion = ENTITY_TYPES.register("wither_explosion", () -> EntityType.Builder.<WitherExplosion>of(WitherExplosion::new, MobCategory.MISC).sized(5.0F,5.0F).clientTrackingRange(12).noSave().updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "wither_explosion").toString()));
 
 
     // Gamemode Fun

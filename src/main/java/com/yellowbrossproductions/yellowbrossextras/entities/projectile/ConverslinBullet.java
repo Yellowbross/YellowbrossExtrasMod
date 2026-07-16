@@ -133,9 +133,9 @@ public class ConverslinBullet extends CustomAbstractHurtingProjectile implements
     }
 
     @Override
-    public boolean hurt(DamageSource p_36839_, float p_36840_) {
-        if (p_36839_ == DamageSource.OUT_OF_WORLD) {
-            return super.hurt(p_36839_, p_36840_);
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (pSource == DamageSource.OUT_OF_WORLD) {
+            return super.hurt(pSource, pAmount);
         }
         return false;
     }

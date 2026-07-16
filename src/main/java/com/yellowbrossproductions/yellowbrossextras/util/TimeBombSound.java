@@ -4,18 +4,18 @@ import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 // borrowed from Meet Your Fight
 @OnlyIn(Dist.CLIENT)
-public class LoopingSound extends AbstractTickableSoundInstance {
-    private final LivingEntity mob;
+public class TimeBombSound extends AbstractTickableSoundInstance {
+    private final Entity mob;
     private final float volumeMultiplier;
+    private final int timer;
 
-    public LoopingSound(LivingEntity mob, SoundEvent sound, float volume) {
+    public TimeBombSound(Entity mob, SoundEvent sound, float volume, int timer) {
         super(sound, SoundSource.HOSTILE, SoundInstance.createUnseededRandom());
         this.mob = mob;
         x = mob.getX();
@@ -23,6 +23,7 @@ public class LoopingSound extends AbstractTickableSoundInstance {
         z = mob.getZ();
         looping = true;
         volumeMultiplier = volume;
+        this.timer = timer;
     }
 
     @Override
@@ -32,10 +33,11 @@ public class LoopingSound extends AbstractTickableSoundInstance {
 
     @Override
     public void tick() {
-        if (mob != null && mob.isAlive() && !mob.isRemoved() && !mob.isSilent()) {
+        if (mob != null && !mob.isRemoved() && !mob.isSilent()) {
             x = mob.getX();
             y = mob.getY();
             z = mob.getZ();
+            this.pitch = 1 + Math.min((float) mob.tickCount / timer, 1.0F);
         } else stop();
     }
 }

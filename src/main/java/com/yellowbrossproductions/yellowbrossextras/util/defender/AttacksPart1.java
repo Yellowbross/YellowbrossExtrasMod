@@ -10,6 +10,7 @@ import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
+import com.yellowbrossproductions.yellowbrossextras.world.CustomExplosion;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -448,6 +449,7 @@ public class AttacksPart1 {
             if (ticks > 30) {
                 if (defender.isOnGround() && ticks2 == 0) {
                     defender.setDiscardFriction(false);
+                    defender.jumpAttacking = true;
                     defender.attackTicks2 = 1;
                     defender.setCustomRender(0);
                     defender.setAnimationState("ratatatabow2");
@@ -656,6 +658,43 @@ public class AttacksPart1 {
                     defender.level.addFreshEntity(sniperRifle);
                 }
                 defender.setDeltaMovement(defender.getLookAngle().scale(-1));
+            }
+        }
+        if (defender.attackType == defender.attack_witherbazooka) {
+            Vec3 throwTo = defender.getLookAngle().scale(10.0d);
+            if (ticks <= 24 && target != null) {
+                List<Mob> targets = defender.level.getEntitiesOfClass(Mob.class, defender.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy && defender.isInAttackSight(p));
+                Vec3 strikeZone = EntityUtil.findDensestMobCluster(targets, 15.0d);
+
+                throwTo = target.getBoundingBox().getCenter();
+                if (strikeZone != null && !(target instanceof Player)) {
+                    throwTo = strikeZone;
+                }
+                defender.setSpecialLookLocation(throwTo);
+            }
+            if (ticks == 38) {
+                defender.setDeltaMovement(defender.getLookAngle().scale(-2).add(0, 0.6, 0));
+                defender.playSound(YESoundEvents.ENTITY_DEFENDER_WITHERBAZOOKA_SHOOT.get(), 3.0F, 1.0F);
+                CameraShake.cameraShake(defender.level, defender.position(), 20, 0.05f, 0, 10);
+                defender.setDiscardFriction(true);
+
+                if (!defender.level.isClientSide) {
+                    SkullOfDoom skull = new SkullOfDoom(defender.level, defender, throwTo);
+                    skull.setPos(defender.position().add(0, 1.5, 0));
+                    defender.level.addFreshEntity(skull);
+                }
+            }
+            if (ticks > 38) {
+                if (defender.horizontalCollision || defender.isInWater()) {
+                    CustomExplosion.create(defender, defender.position().add(0, 0.3, 0), 4.0F, true);
+                    defender.setDiscardFriction(false);
+                    defender.attackTicks2 = 9999;
+                } else if (!defender.getAnimationState().equals("witherbazooka_land") && defender.isOnGround()) {
+                    defender.setAnimationState("witherbazooka_land");
+                    defender.attackTicks2 = 1;
+                    defender.playSound(YESoundEvents.ENTITY_DEFENDER_WITHERBAZOOKA_END.get(), 2.0F, 1.0F);
+                    defender.setDiscardFriction(false);
+                }
             }
         }
     }

@@ -73,6 +73,17 @@ public class WitherExplosionRenderer extends EntityRenderer<WitherExplosion> {
             }
         }
 
+        for (int i = 0; i < 100; ++i) {
+            float progress = Math.min(age / 20, 1.0f);
+            float easeOut = progress * (2.5f - progress);
+            float mult = (10.0f * easeOut) + (age / 3);
+            float x = (float) (Math.sin((i / 25.0f) * (Math.PI / 2)) * mult);
+            float z = (float) (Math.cos((i / 25.0f) * (Math.PI / 2)) * mult);
+            Vector3f vec = new Vector3f(x, 2.5f, z);
+
+            renderParticle(pPoseStack, sprite, pEntity.tickCount, pPartialTick, vec);
+        }
+
         renderDie(pPoseStack, sprite, pEntity.tickCount, pPartialTick);
 
         if (pEntity.tickCount <= 10) renderExplosion(pPoseStack, pBuffer.getBuffer(RenderType.entityTranslucentEmissive(TEXTURE)), pEntity.tickCount, pPartialTick);
@@ -92,7 +103,7 @@ public class WitherExplosionRenderer extends EntityRenderer<WitherExplosion> {
 
     @Override
     public Vec3 getRenderOffset(WitherExplosion pEntity, float pPartialTicks) {
-        float ranMult = 0.05f;
+        float ranMult = 0.1f;
         return new Vec3((-0.5 + random.nextDouble()) * ranMult, (-0.5 + random.nextDouble()) * ranMult, (-0.5 + random.nextDouble()) * ranMult);
     }
 

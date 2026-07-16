@@ -55,6 +55,8 @@ public class YESoundEvents {
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_WITHERBAZOOKA_EXPLOSION = addSoundsToRegistry("entity.defender.witherbazooka_explosion");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_WITHERBAZOOKA_LOOP = addSoundsToRegistry("entity.defender.witherbazooka_loop");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_WITHERBAZOOKA_SHOOT = addSoundsToRegistry("entity.defender.witherbazooka_shoot");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_WITHERBAZOOKA_START = addSoundsToRegistry("entity.defender.witherbazooka_start");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_WITHERBAZOOKA_END = addSoundsToRegistry("entity.defender.witherbazooka_end");
 
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_ATTACK = addSoundsToRegistry("entity.vilvgaver.attack");
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_LOOP = addSoundsToRegistry("entity.vilvgaver.loop");

@@ -532,6 +532,6 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
     @Override
     @OnlyIn(Dist.CLIENT)
     public void readSpawnData(FriendlyByteBuf additionalData) {
-        Minecraft.getInstance().getSoundManager().play(new LoopingSound(this, YESoundEvents.ENTITY_VILVGAVER_LOOP.get(), (float) (YellowbrossExtrasConfig.vilvgaver_ambienceVolume.get() * 1.0D)));
+        if (this.level.isClientSide) Minecraft.getInstance().getSoundManager().play(new LoopingSound(this, YESoundEvents.ENTITY_VILVGAVER_LOOP.get(), (float) (YellowbrossExtrasConfig.vilvgaver_ambienceVolume.get() * 1.0D)));
     }
 }

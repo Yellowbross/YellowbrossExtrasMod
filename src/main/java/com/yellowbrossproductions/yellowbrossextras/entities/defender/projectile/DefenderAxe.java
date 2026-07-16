@@ -119,8 +119,8 @@ public class DefenderAxe extends CustomAbstractHurtingProjectile {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        return source != DamageSource.OUT_OF_WORLD && super.hurt(source, amount);
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        return pSource != DamageSource.OUT_OF_WORLD && super.hurt(pSource, pAmount);
     }
 
     @Override

@@ -70,6 +70,7 @@ public class YEClientEventHandler {
             event.registerLayerDefinition(SpikeModel.LAYER_LOCATION, SpikeModel::createBodyLayer);
             event.registerLayerDefinition(SniperRifleModel.LAYER_LOCATION, SniperRifleModel::createBodyLayer);
             event.registerLayerDefinition(DeadlyArrowModel.LAYER_LOCATION, DeadlyArrowModel::createBodyLayer);
+            event.registerLayerDefinition(SkullOfDoomModel.LAYER_LOCATION, SkullOfDoomModel::createBodyLayer);
 
             event.registerLayerDefinition(PathGuideModel.LAYER_LOCATION, PathGuideModel::createBodyLayer);
             event.registerLayerDefinition(IntelligenceModel.LAYER_LOCATION, IntelligenceModel::createBodyLayer);
@@ -116,6 +117,7 @@ public class YEClientEventHandler {
             });
             event.registerEntityRenderer(YEEntityTypes.SniperRifle.get(), SniperRifleRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.DeadlyArrow.get(), DeadlyArrowRenderer::new);
+            event.registerEntityRenderer(YEEntityTypes.SkullOfDoom.get(), SkullOfDoomRenderer::new);
 
             event.registerEntityRenderer(YEEntityTypes.CameraShake.get(), NothingRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.WitherExplosion.get(), WitherExplosionRenderer::new);
