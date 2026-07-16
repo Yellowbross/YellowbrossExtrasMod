@@ -9,6 +9,7 @@ import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DefenderModel;
 import com.yellowbrossproductions.yellowbrossextras.client.render.layer.DefenderGlowLayer;
+import com.yellowbrossproductions.yellowbrossextras.client.render.util.RenderUtil;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -28,11 +29,14 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
     private static final ResourceLocation TEXTURE = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/defender.png");
     private final Random random = new Random();
 
-    private static final ResourceLocation SPINNY_P2 = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/phase2_spinny.png");
+    private static final ResourceLocation SPRITESHEET = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/2d_effects.png");
 
-    private static final float TEXTURE_WIDTH = 64;
-    private static final float TEXTURE_HEIGHT = 32;
-    private static final float START_RADIUS = -1f;
+    private static final float SHEET_WIDTH = 256;
+    private static final float SHEET_HEIGHT = 217;
+
+    private static final float SPINNY_SIZE = 64;
+    private static final float TORNADO_WIDTH = 58;
+    private static final float TORNADO_HEIGHT = 89;
 
     public DefenderRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new DefenderModel<>(renderManagerIn.bakeLayer(DefenderModel.LAYER_LOCATION)), 0.6F);
@@ -90,7 +94,7 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
 
         poseStack.scale(f2, f3, f2);
 
-        VertexConsumer sprite = multiBufferSource.getBuffer(RenderType.entityTranslucent(SPINNY_P2));
+        VertexConsumer sprite = multiBufferSource.getBuffer(RenderType.entityTranslucent(SPRITESHEET));
         float ageInTicks = defender.tickCount + partialTick;
         int loop = (int) (ageInTicks) % 4;
         boolean startOver = ageInTicks > 4;
@@ -99,17 +103,12 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
         Quaternion quat = this.entityRenderDispatcher.cameraOrientation();
         poseStack.mulPose(quat);
 
-        float minU = 16F / 64 * loop;
-        float minV = startOver ? -16F / 32 : 0;
-        float maxU = minU + 16F / 64;
-        float maxV = minV + 16F / 32;
-        PoseStack.Pose matrixstack$entry = poseStack.last();
-        Matrix4f matrix4f = matrixstack$entry.pose();
-        Matrix3f matrix3f = matrixstack$entry.normal();
-        drawVertex(matrix4f, matrix3f, sprite, -START_RADIUS, -START_RADIUS, 0, minU, minV, 1.0f, light);
-        drawVertex(matrix4f, matrix3f, sprite, -START_RADIUS, START_RADIUS, 0, minU, maxV, 1.0f, light);
-        drawVertex(matrix4f, matrix3f, sprite, START_RADIUS, START_RADIUS, 0, maxU, maxV, 1.0f, light);
-        drawVertex(matrix4f, matrix3f, sprite, START_RADIUS, -START_RADIUS, 0, maxU, minV, 1.0f, light);
+        RenderUtil.drawSprite(poseStack, sprite, 0,
+                loop * SPINNY_SIZE,
+                startOver ? SPINNY_SIZE : 0,
+                SPINNY_SIZE * (loop + 1),
+                SPINNY_SIZE + (startOver ? SPINNY_SIZE : 0),
+                SHEET_WIDTH, SHEET_HEIGHT);
 
         poseStack.popPose();
 
@@ -125,36 +124,27 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
 
         float f1 = 1.0F + Mth.sin(f * 10.0F) * f * 0.5F;
 
-        float f2 = (1.35F + f * 0.4F) * f1;
+        float f2 = (0.85F + f * 0.4F) * f1;
         float f3 = (1.35F + f * 0.4F) / f1;
 
         poseStack.scale(f2, f3, f2);
         poseStack.translate(0.0D, 1.0D + (f3 * 0.05f), 0.0D);
 
-        int frame = (int)((defender.tickCount + partialTick) % 4);
-        VertexConsumer sprite = multiBufferSource.getBuffer(RenderType.entityTranslucent(new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/phase2_tornado/frame" + (frame) + ".png")));
+        int loop = (int)((defender.tickCount + partialTick) % 4);
+        VertexConsumer sprite = multiBufferSource.getBuffer(RenderType.entityTranslucent(SPRITESHEET));
 
         poseStack.pushPose();
         poseStack.mulPose(Vector3f.YP.rotationDegrees(-this.entityRenderDispatcher.camera.getYRot() + 180.0f));
 
-        float minU = 16F / 16;
-        float minV = 0;
-        float maxU = minU + 16F / 16;
-        float maxV = minV + 16F / 16;
-        PoseStack.Pose matrixstack$entry = poseStack.last();
-        Matrix4f matrix4f = matrixstack$entry.pose();
-        Matrix3f matrix3f = matrixstack$entry.normal();
-        drawVertex(matrix4f, matrix3f, sprite, -START_RADIUS, -START_RADIUS, 0, minU, minV, 1.0f, light);
-        drawVertex(matrix4f, matrix3f, sprite, -START_RADIUS, START_RADIUS, 0, minU, maxV, 1.0f, light);
-        drawVertex(matrix4f, matrix3f, sprite, START_RADIUS, START_RADIUS, 0, maxU, maxV, 1.0f, light);
-        drawVertex(matrix4f, matrix3f, sprite, START_RADIUS, -START_RADIUS, 0, maxU, minV, 1.0f, light);
+        RenderUtil.drawSprite(poseStack, sprite, 0,
+                loop * TORNADO_WIDTH,
+                SPINNY_SIZE * 2,
+                TORNADO_WIDTH * (loop + 1),
+                SPINNY_SIZE * 2 + TORNADO_HEIGHT,
+                SHEET_WIDTH, SHEET_HEIGHT);
 
         poseStack.popPose();
 
         poseStack.popPose();
-    }
-
-    public void drawVertex(Matrix4f matrix, Matrix3f normals, VertexConsumer vertexBuilder, float offsetX, float offsetY, float offsetZ, float textureX, float textureY, float alpha, int packedLightIn) {
-        vertexBuilder.vertex(matrix, offsetX, offsetY, offsetZ).color(1, 1 * alpha, 1 * alpha, 1 * alpha).uv(textureX, textureY).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLightIn).normal(normals, 0.0F, 1.0F, 0.0F).endVertex();
     }
 }

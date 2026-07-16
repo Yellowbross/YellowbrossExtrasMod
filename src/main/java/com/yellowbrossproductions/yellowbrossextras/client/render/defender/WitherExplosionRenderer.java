@@ -6,6 +6,7 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
+import com.yellowbrossproductions.yellowbrossextras.client.render.util.RenderUtil;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.WitherExplosion;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -13,7 +14,6 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -107,7 +107,7 @@ public class WitherExplosionRenderer extends EntityRenderer<WitherExplosion> {
         float calculation = age * mult / 20;
         poseStack.scale(size - calculation, (size * height) + calculation, size - calculation);
         poseStack.translate(0, 0.75 + (calculation / 20), 0);
-        this.drawBody(poseStack, buffer, ticks > 40 ? (age - 40) / 20 : 0);
+        RenderUtil.drawSprite(poseStack, buffer, ticks > 40 ? (age - 40) / 20 : 0, 0, 0, BODY_WIDTH, BODY_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
         poseStack.popPose();
     }
 
@@ -122,7 +122,7 @@ public class WitherExplosionRenderer extends EntityRenderer<WitherExplosion> {
         float calculation = age * mult;
         poseStack.scale(size, size, size);
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(calculation));
-        this.drawParticle(poseStack, buffer, ticks > 40 ? (age - 40) / 20 : 0);
+        RenderUtil.drawSprite(poseStack, buffer, ticks > 40 ? (age - 40) / 20 : 0, BODY_WIDTH, 0, (BODY_WIDTH + PARTICLE_SIZE), PARTICLE_SIZE, TEXTURE_WIDTH, TEXTURE_HEIGHT);
         poseStack.popPose();
     }
 
@@ -139,7 +139,7 @@ public class WitherExplosionRenderer extends EntityRenderer<WitherExplosion> {
         poseStack.translate((-0.5 + random.nextDouble()) * ranMult, (-0.5 + random.nextDouble()) * ranMult, (-0.5 + random.nextDouble()) * ranMult);
         poseStack.translate(0, 3.25f + (calculation / 8), 0);
         poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-        this.drawDie(poseStack, buffer, ticks > 40 ? (age - 40) / 20 : 0);
+        RenderUtil.drawSprite(poseStack, buffer, ticks > 40 ? (age - 40) / 20 : 0, BODY_WIDTH, PARTICLE_SIZE, (BODY_WIDTH + DIE_WIDTH), (PARTICLE_SIZE + DIE_HEIGHT), TEXTURE_WIDTH, TEXTURE_HEIGHT);
         poseStack.popPose();
     }
 
@@ -153,66 +153,7 @@ public class WitherExplosionRenderer extends EntityRenderer<WitherExplosion> {
         float mult = 50.0f;
         float calculation = age * mult;
         poseStack.scale(size / calculation, size / calculation, size / calculation);
-        this.drawExplosion(poseStack, buffer);
+        RenderUtil.drawSprite(poseStack, buffer, 0, 0, BODY_HEIGHT, 256, (BODY_HEIGHT + 256), TEXTURE_WIDTH, TEXTURE_HEIGHT);
         poseStack.popPose();
-    }
-
-    private void drawBody(PoseStack matrixStackIn, VertexConsumer builder, float age) {
-        float minU = 0;
-        float minV = 0;
-        float maxU = BODY_WIDTH / TEXTURE_WIDTH;
-        float maxV = BODY_HEIGHT / TEXTURE_HEIGHT;
-        float alpha = 1 - age;
-        Matrix4f pose = matrixStackIn.last().pose();
-        Matrix3f normal = matrixStackIn.last().normal();
-        drawVertex(pose, normal, builder, 1, 1, 0, minU, minV, alpha, 15);
-        drawVertex(pose, normal, builder, 1, -1, 0, minU, maxV, alpha, 15);
-        drawVertex(pose, normal, builder, -1, -1, 0, maxU, maxV, alpha, 15);
-        drawVertex(pose, normal, builder, -1, 1, 0, maxU, minV, alpha, 15);
-    }
-
-    private void drawParticle(PoseStack matrixStackIn, VertexConsumer builder, float age) {
-        float minU = BODY_WIDTH / TEXTURE_WIDTH;
-        float minV = 0;
-        float maxU = (BODY_WIDTH + PARTICLE_SIZE) / TEXTURE_WIDTH;
-        float maxV = PARTICLE_SIZE / TEXTURE_HEIGHT;
-        float alpha = 1 - age;
-        Matrix4f pose = matrixStackIn.last().pose();
-        Matrix3f normal = matrixStackIn.last().normal();
-        drawVertex(pose, normal, builder, 1, 1, 0, minU, minV, alpha, 15);
-        drawVertex(pose, normal, builder, 1, -1, 0, minU, maxV, alpha, 15);
-        drawVertex(pose, normal, builder, -1, -1, 0, maxU, maxV, alpha, 15);
-        drawVertex(pose, normal, builder, -1, 1, 0, maxU, minV, alpha, 15);
-    }
-
-    private void drawDie(PoseStack matrixStackIn, VertexConsumer builder, float age) {
-        float minU = BODY_WIDTH / TEXTURE_WIDTH;
-        float minV = PARTICLE_SIZE / TEXTURE_HEIGHT;
-        float maxU = (BODY_WIDTH + DIE_WIDTH) / TEXTURE_WIDTH;
-        float maxV = (PARTICLE_SIZE + DIE_HEIGHT) / TEXTURE_HEIGHT;
-        float alpha = 1 - age;
-        Matrix4f pose = matrixStackIn.last().pose();
-        Matrix3f normal = matrixStackIn.last().normal();
-        drawVertex(pose, normal, builder, 1, 1, 0, minU, minV, alpha, 15);
-        drawVertex(pose, normal, builder, 1, -1, 0, minU, maxV, alpha, 15);
-        drawVertex(pose, normal, builder, -1, -1, 0, maxU, maxV, alpha, 15);
-        drawVertex(pose, normal, builder, -1, 1, 0, maxU, minV, alpha, 15);
-    }
-
-    private void drawExplosion(PoseStack matrixStackIn, VertexConsumer builder) {
-        float minU = 0;
-        float minV = BODY_HEIGHT / TEXTURE_HEIGHT;
-        float maxU = 256 / TEXTURE_WIDTH;
-        float maxV = (BODY_HEIGHT + 256) / TEXTURE_HEIGHT;
-        Matrix4f pose = matrixStackIn.last().pose();
-        Matrix3f normal = matrixStackIn.last().normal();
-        drawVertex(pose, normal, builder, 1, 1, 0, minU, minV, 1, 15);
-        drawVertex(pose, normal, builder, 1, -1, 0, minU, maxV, 1, 15);
-        drawVertex(pose, normal, builder, -1, -1, 0, maxU, maxV, 1, 15);
-        drawVertex(pose, normal, builder, -1, 1, 0, maxU, minV, 1, 15);
-    }
-
-    public void drawVertex(Matrix4f matrix, Matrix3f normals, VertexConsumer vertexBuilder, float offsetX, float offsetY, float offsetZ, float textureX, float textureY, float alpha, int packedLightIn) {
-        vertexBuilder.vertex(matrix, offsetX, offsetY, offsetZ).color(1, 1, 1, 1 * alpha).uv(textureX, textureY).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLightIn).normal(normals, 0.0F, 1.0F, 0.0F).endVertex();
     }
 }

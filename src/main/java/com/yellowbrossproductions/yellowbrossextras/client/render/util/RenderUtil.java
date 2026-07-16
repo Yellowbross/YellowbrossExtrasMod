@@ -1,8 +1,12 @@
 package com.yellowbrossproductions.yellowbrossextras.client.render.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -62,5 +66,23 @@ public class RenderUtil {
         }
 
         return bodyRot;
+    }
+
+    public static void drawSprite(PoseStack poseStack, VertexConsumer builder, float transparency, float startWidth, float startHeight, float endWidth, float endHeight, float textureWidth, float textureHeight) {
+        float minU = startWidth / textureWidth;
+        float minV = startHeight / textureHeight;
+        float maxU = endWidth / textureWidth;
+        float maxV = endHeight / textureHeight;
+        float alpha = 1 - transparency;
+        Matrix4f pose = poseStack.last().pose();
+        Matrix3f normal = poseStack.last().normal();
+        drawVertex(pose, normal, builder, 1, 1, 0, minU, minV, alpha, 15);
+        drawVertex(pose, normal, builder, 1, -1, 0, minU, maxV, alpha, 15);
+        drawVertex(pose, normal, builder, -1, -1, 0, maxU, maxV, alpha, 15);
+        drawVertex(pose, normal, builder, -1, 1, 0, maxU, minV, alpha, 15);
+    }
+
+    public static void drawVertex(Matrix4f matrix, Matrix3f normals, VertexConsumer vertexBuilder, float offsetX, float offsetY, float offsetZ, float textureX, float textureY, float alpha, int packedLightIn) {
+        vertexBuilder.vertex(matrix, offsetX, offsetY, offsetZ).color(1, 1, 1, 1 * alpha).uv(textureX, textureY).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(packedLightIn).normal(normals, 0.0F, 1.0F, 0.0F).endVertex();
     }
 }
