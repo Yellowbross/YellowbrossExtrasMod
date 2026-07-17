@@ -265,7 +265,7 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
     public void explodeCreeper() {
         if (!this.level.isClientSide) {
             this.dead = true;
-            CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), 4.0F, true);
+            CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), 4.0F, true, false);
             this.discard();
         }
     }

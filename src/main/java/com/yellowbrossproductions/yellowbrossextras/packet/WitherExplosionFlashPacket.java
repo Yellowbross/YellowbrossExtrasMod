@@ -1,6 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.packet;
 
-import com.yellowbrossproductions.yellowbrossextras.client.gui.overlay.WitherExplosionOverlay;
+import com.yellowbrossproductions.yellowbrossextras.client.gui.overlay.WitherExplosionFlash;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -16,7 +16,7 @@ public class WitherExplosionFlashPacket {
     }
 
     public static void handle(WitherExplosionFlashPacket msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(WitherExplosionOverlay::triggerFlash);
+        ctx.get().enqueueWork(WitherExplosionFlash::triggerFlash);
         ctx.get().setPacketHandled(true);
     }
 }

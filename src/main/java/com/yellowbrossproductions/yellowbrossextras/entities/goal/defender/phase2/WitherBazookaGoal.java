@@ -45,5 +45,6 @@ public class WitherBazookaGoal extends CustomAttackGoal {
         super.stop();
         getDefender().setDiscardFriction(false);
         getDefender().cooldown_witherbazooka = getTimeInSeconds(60);
+        if (getDefender().getTarget() instanceof Player) getDefender().timeToWaitBeforeUsingAnyOtherAttack = 60;
     }
 }

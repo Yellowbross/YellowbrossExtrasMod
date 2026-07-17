@@ -1,17 +1,11 @@
 package com.yellowbrossproductions.yellowbrossextras.client.gui.overlay;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,10 +13,11 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = YellowbrossExtras.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class WitherExplosionOverlay {
-    private static final int MAX_FLASH_TICKS = 8; // 1 second total fade time
+    private static final ResourceLocation OVERLAY_TEXTURE = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/witherbazooka/overlay.png");
+    private static final int MAX_FLASH_TICKS = 60;
     private static int currentFlashTicks = 0;
 
-    public static void triggerFlash() {
+    public static void triggerOverlay() {
         currentFlashTicks = MAX_FLASH_TICKS;
     }
 
@@ -39,18 +34,17 @@ public class WitherExplosionOverlay {
         float remaining = (float) currentFlashTicks - partialTick;
         if (remaining < 0) remaining = 0;
 
-        float alpha = remaining / (float) MAX_FLASH_TICKS;
-        int alphaByte = Math.round(alpha * 255.0F);
-
-        int color = (alphaByte << 24) | 0x00FFFFFF;
+        float alpha = 1.0f;
+        if (remaining <= 20.0F) alpha = Math.max(0, remaining / 20.0f);
 
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
+        RenderSystem.setShaderTexture(0, OVERLAY_TEXTURE);
 
-        GuiComponent.fill(poseStack, 0, 0, width, height, color);
+        GuiComponent.blit(poseStack, 0, 0, 0, 0, width, height, width, height);
 
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();

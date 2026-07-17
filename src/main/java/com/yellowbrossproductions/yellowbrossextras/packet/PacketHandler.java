@@ -21,5 +21,6 @@ public class PacketHandler {
         CHANNEL.registerMessage(id++, ParticlePacket.class, ParticlePacket::encode, ParticlePacket::new, ParticlePacket.Handler::onMessage);
         // CHANNEL.registerMessage(id++, MessageSuperDuperPoison.class, MessageSuperDuperPoison::serialize, MessageSuperDuperPoison::deserialize, MessageSuperDuperPoison::handle);
         CHANNEL.registerMessage(id++, WitherExplosionFlashPacket.class, WitherExplosionFlashPacket::encode, WitherExplosionFlashPacket::decode, WitherExplosionFlashPacket::handle);
+        CHANNEL.registerMessage(id++, WitherExplosionOverlayPacket.class, WitherExplosionOverlayPacket::encode, WitherExplosionOverlayPacket::decode, WitherExplosionOverlayPacket::handle);
     }
 }

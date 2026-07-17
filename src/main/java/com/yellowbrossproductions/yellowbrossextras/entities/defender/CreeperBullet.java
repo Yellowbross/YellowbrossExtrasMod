@@ -123,7 +123,7 @@ public class CreeperBullet extends AbstractCreeperEntity implements IsDefenderAl
     public void explodeCreeper() {
         if (!this.level.isClientSide) {
             this.dead = true;
-            CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), (float)this.explosionRadius * (this.isPowered() ? 2 : 1), true);
+            CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), (float)this.explosionRadius * (this.isPowered() ? 2 : 1), true, false);
             if (this.hasEffect(YEEffects.SUPER_DUPER_POISON.get())) {
                 EntityUtil.makeAParticle(this.level, YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, this.getBoundingBox().getCenter(), Vec3.ZERO);
                 for (int i = 0; i < 100; ++i) {

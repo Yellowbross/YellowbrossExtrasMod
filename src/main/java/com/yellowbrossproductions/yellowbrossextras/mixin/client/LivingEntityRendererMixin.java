@@ -20,8 +20,7 @@ import java.util.Random;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin {
-    @Inject(method = "isShaking(Lnet/minecraft/world/entity/LivingEntity;)Z", at = @At("HEAD"), cancellable = true
-    )
+    @Inject(method = "isShaking(Lnet/minecraft/world/entity/LivingEntity;)Z", at = @At("HEAD"), cancellable = true)
     private void onIsShaking(LivingEntity pEntity, CallbackInfoReturnable<Boolean> cir) {
         if (pEntity.hasEffect(YEEffects.SUPER_DUPER_POISON.get())) {
             cir.setReturnValue(true);

@@ -6,6 +6,7 @@ import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.packet.PacketHandler;
 import com.yellowbrossproductions.yellowbrossextras.packet.WitherExplosionFlashPacket;
+import com.yellowbrossproductions.yellowbrossextras.packet.WitherExplosionOverlayPacket;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.util.LoopingSound;
 import net.minecraft.client.Minecraft;
@@ -13,6 +14,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -76,13 +79,23 @@ public class WitherExplosion extends Entity {
 
         CameraShake.cameraShake(this.level, this.position(), 200, 0.04f, 40, 20);
 
-        if (!this.level.isClientSide) {
-            PacketHandler.CHANNEL.send(
-                    PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(
-                            this.getX(), this.getY(), this.getZ(), 100.0f, this.level.dimension()
-                    )),
-                    new WitherExplosionFlashPacket()
-            );
+        if (!this.level.isClientSide && this.level instanceof ServerLevel serverLevel) {
+            double radius = 150.0;
+
+            for (ServerPlayer player : serverLevel.players()) {
+                if (this.distanceToSqr(player) <= radius * radius) {
+                    PacketHandler.CHANNEL.send(
+                            PacketDistributor.PLAYER.with(() -> player),
+                            new WitherExplosionOverlayPacket()
+                    );
+                    if (player.hasLineOfSight(this)) {
+                        PacketHandler.CHANNEL.send(
+                                PacketDistributor.PLAYER.with(() -> player),
+                                new WitherExplosionFlashPacket()
+                        );
+                    }
+                }
+            }
         }
 
         for (LivingEntity entity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(50.0d))) {

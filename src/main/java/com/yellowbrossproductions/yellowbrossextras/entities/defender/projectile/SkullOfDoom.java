@@ -83,7 +83,7 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
         }
 
         if (!this.level.getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getMaterial().blocksMotion()) {
-            this.setPos(this.position().add(0, -0.2, 0));
+            this.setPos(this.position().add(0, -0.5, 0));
         }
 
         Vec3 flyAway = new Vec3(-xPower, -yPower, -zPower).scale(3.0d).scale(this.getDeltaMovement().length());
@@ -91,14 +91,18 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
         EntityUtil.makeAParticle(this.level, ParticleTypes.SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), flyAway);
         for (int i = 0; i < 5; ++i) EntityUtil.makeAParticle(this.level, ParticleTypes.ASH, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), flyAway);
 
-        if (this.tickCount > this.timer && !this.level.isClientSide) {
-            this.explode();
+        if (this.tickCount > this.timer || !this.level.getWorldBorder().isWithinBounds(this.blockPosition())) {
+            this.explode(Vec3.ZERO);
         }
     }
 
     @Override
     protected void onHitBlock(BlockHitResult pResult) {
-        if (this.level.getBlockState(pResult.getBlockPos().above()).getMaterial().blocksMotion()) this.explode();
+        if (this.level.getBlockState(pResult.getBlockPos().above()).getMaterial().blocksMotion()) {
+            BlockPos.MutableBlockPos pos = pResult.getBlockPos().mutable();
+            pos = pos.move(pResult.getDirection(), 2);
+            this.explode(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
+        }
         else this.setPos(this.position().add(0, 1, 0));
     }
 
@@ -112,14 +116,16 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
         return false;
     }
 
-    private void explode() {
+    private void explode(Vec3 position) {
         if (this.level.isClientSide) return;
 
-        BlockPos.MutableBlockPos yPosition = this.blockPosition().mutable();
-        while (yPosition.getY() > this.level.getMinBuildHeight() && !this.level.getBlockState(yPosition).getMaterial().blocksMotion()) {
-            yPosition.move(Direction.DOWN);
+        if (position == Vec3.ZERO) {
+            BlockPos.MutableBlockPos yPosition = this.blockPosition().mutable();
+            while (yPosition.getY() > this.level.getMinBuildHeight() && !this.level.getBlockState(yPosition).getMaterial().blocksMotion()) {
+                yPosition.move(Direction.DOWN);
+            }
+            position = new Vec3(this.getX(), yPosition.getY() + 1, this.getZ());
         }
-        Vec3 position = new Vec3(this.getX(), yPosition.getY() + 1, this.getZ());
         WitherExplosion explosion = new WitherExplosion(this.level, position, this.getOwner() instanceof Mob mob ? mob : null);
         this.level.addFreshEntity(explosion);
         this.playSound(YESoundEvents.ENTITY_DEFENDER_WITHERBAZOOKA_EXPLOSION.get(), 10.0f, 1.0f);

@@ -1,6 +1,7 @@
 package com.yellowbrossproductions.yellowbrossextras.events;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
+import com.yellowbrossproductions.yellowbrossextras.client.gui.overlay.WitherExplosionFlash;
 import com.yellowbrossproductions.yellowbrossextras.client.gui.overlay.WitherExplosionOverlay;
 import com.yellowbrossproductions.yellowbrossextras.client.model.*;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.*;
@@ -24,7 +25,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -144,7 +144,8 @@ public class YEClientEventHandler {
 
         @SubscribeEvent
         public static void registerOverlays(RegisterGuiOverlaysEvent event) {
-            event.registerBelowAll("witherexplosion_flash_overlay", WitherExplosionOverlay.HUD_OVERLAY);
+            event.registerBelowAll("witherexplosion_flash_overlay", WitherExplosionFlash.HUD_OVERLAY);
+            event.registerBelowAll("witherexplosion_overlay", WitherExplosionOverlay.HUD_OVERLAY);
         }
 
         @SubscribeEvent

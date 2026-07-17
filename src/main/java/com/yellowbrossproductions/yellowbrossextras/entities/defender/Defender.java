@@ -268,9 +268,9 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                 this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
                 this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 3.0F, 1.0F);
                 if (!this.level.isClientSide) {
-                    CustomExplosion.create(this, this.position().add(0, 0.3, 0), 6.0F, true);
-                    CustomExplosion.create(this, this.position().add(0, 0.3, 0), 3.0F, true);
-                    CustomExplosion.create(this, this.position().add(0, 0.3, 0), 3.0F, true);
+                    CustomExplosion.create(this, this.position().add(0, 0.3, 0), 6.0F, true, true);
+                    CustomExplosion.create(this, this.position().add(0, 0.3, 0), 3.0F, true, false);
+                    CustomExplosion.create(this, this.position().add(0, 0.3, 0), 3.0F, true, false);
                 }
                 this.performSpellCasting(true);
                 int thing = 2;

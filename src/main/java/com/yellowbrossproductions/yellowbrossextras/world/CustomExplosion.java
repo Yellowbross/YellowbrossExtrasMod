@@ -32,8 +32,9 @@ public class CustomExplosion extends Explosion {
     private final double z;
     private final float radius;
     private boolean multipliesToScrewArmor;
+    private boolean healExploder;
 
-    public CustomExplosion(Level worldIn, @Nullable Entity exploderIn, double xIn, double yIn, double zIn, float sizeIn, boolean causesFireIn, Explosion.BlockInteraction modeIn, boolean multToScrewArmor) {
+    public CustomExplosion(Level worldIn, @Nullable Entity exploderIn, double xIn, double yIn, double zIn, float sizeIn, boolean causesFireIn, Explosion.BlockInteraction modeIn, boolean multToScrewArmor, boolean healExploder) {
         super(worldIn, exploderIn, null, null, xIn, yIn, zIn, sizeIn, causesFireIn, modeIn);
         this.level = worldIn;
         this.size = sizeIn;
@@ -43,6 +44,7 @@ public class CustomExplosion extends Explosion {
         this.z = zIn;
         this.radius = sizeIn;
         this.multipliesToScrewArmor = multToScrewArmor;
+        this.healExploder = healExploder;
     }
 
     public void explode() {
@@ -82,6 +84,10 @@ public class CustomExplosion extends Explosion {
                         }
 
                         entity.setDeltaMovement(entity.getDeltaMovement().add(d5 * d11, d7 * d11, d9 * d11));
+
+                        if (this.healExploder && this.source instanceof LivingEntity living) {
+                            living.heal(1.0F);
+                        }
                     }
                 }
             }
@@ -89,18 +95,18 @@ public class CustomExplosion extends Explosion {
 
     }
 
-    public static CustomExplosion create(@Nonnull Entity exploderIn, double x, double y, double z, float sizeIn, boolean multipliesToScrewArmor) {
-        return create(exploderIn.level, exploderIn, x, y, z, sizeIn, false, multipliesToScrewArmor);
+    public static CustomExplosion create(@Nonnull Entity exploderIn, double x, double y, double z, float sizeIn, boolean multipliesToScrewArmor, boolean healExploder) {
+        return create(exploderIn.level, exploderIn, x, y, z, sizeIn, false, multipliesToScrewArmor, healExploder);
     }
 
-    public static CustomExplosion create(@Nonnull Entity exploderIn, Vec3 position, float sizeIn, boolean multipliesToScrewArmor) {
-        return create(exploderIn.level, exploderIn, position.x, position.y, position.z, sizeIn, false, multipliesToScrewArmor);
+    public static CustomExplosion create(@Nonnull Entity exploderIn, Vec3 position, float sizeIn, boolean multipliesToScrewArmor, boolean healExploder) {
+        return create(exploderIn.level, exploderIn, position.x, position.y, position.z, sizeIn, false, multipliesToScrewArmor, healExploder);
     }
 
-    public static CustomExplosion create(Level worldIn, @Nullable Entity exploderIn, double xIn, double yIn, double zIn, float sizeIn, boolean causesFireIn, boolean multipliesToScrewArmor) {
+    public static CustomExplosion create(Level worldIn, @Nullable Entity exploderIn, double xIn, double yIn, double zIn, float sizeIn, boolean causesFireIn, boolean multipliesToScrewArmor, boolean healExploder) {
         Explosion.BlockInteraction mode = BlockInteraction.NONE;
 
-        CustomExplosion explosion = new CustomExplosion(worldIn, exploderIn, xIn, yIn, zIn, sizeIn, causesFireIn, mode, multipliesToScrewArmor);
+        CustomExplosion explosion = new CustomExplosion(worldIn, exploderIn, xIn, yIn, zIn, sizeIn, causesFireIn, mode, multipliesToScrewArmor, healExploder);
         if (ForgeEventFactory.onExplosionStart(worldIn, explosion)) {
             return explosion;
         } else {

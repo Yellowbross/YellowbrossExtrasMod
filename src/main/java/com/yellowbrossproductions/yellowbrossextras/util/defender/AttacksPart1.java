@@ -565,7 +565,7 @@ public class AttacksPart1 {
                 for (Entity hit : entities) {
                     Vec3 hitVec = hit.position().subtract(defender.position()).normalize();
                     if (hitVec.length() > size) continue;
-                    if (viewVec.dot(hitVec) > 0.5D) {
+                    if (viewVec.dot(hitVec) > 0.5D && EntityUtil.isMobNotInCreativeMode(hit)) {
                         hit.hurtMarked = true;
                         if (hit instanceof LivingEntity living) living.setLastHurtByMob(defender);
                         hit.setDeltaMovement(hit.position().add(0, 0.5, 0).subtract(defender.position()).normalize().scale(4.0));
@@ -686,7 +686,7 @@ public class AttacksPart1 {
             }
             if (ticks > 38) {
                 if (defender.horizontalCollision || defender.isInWater()) {
-                    CustomExplosion.create(defender, defender.position().add(0, 0.3, 0), 4.0F, true);
+                    CustomExplosion.create(defender, defender.position().add(0, 0.3, 0), 4.0F, true, false);
                     defender.setDiscardFriction(false);
                     defender.attackTicks2 = 9999;
                 } else if (!defender.getAnimationState().equals("witherbazooka_land") && defender.isOnGround()) {
