@@ -197,6 +197,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(0, new IcethrowerGoal(this));
         this.goalSelector.addGoal(0, new WitherBazookaGoal(this));
         this.goalSelector.addGoal(0, new SnipeGoal(this));
         this.goalSelector.addGoal(0, new PoisonDartsGoal(this));
@@ -408,6 +409,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     public boolean canBeAffected(MobEffectInstance effect) {
         return effect.getEffect() != YEEffects.KNOCKED_OUT.get() &&
                 effect.getEffect() != YEEffects.SUPER_DUPER_POISON.get() &&
+                effect.getEffect() != YEEffects.FROZEN.get() &&
                 super.canBeAffected(effect);
     }
 

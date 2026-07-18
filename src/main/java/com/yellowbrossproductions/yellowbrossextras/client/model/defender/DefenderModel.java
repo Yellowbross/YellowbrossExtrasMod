@@ -47,6 +47,7 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
     private final ModelPart boomerang;
     private final ModelPart shuriken_launcher;
     private final ModelPart claw1;
+    private final ModelPart icethrower_glove1;
     private final ModelPart excalibur;
     private final ModelPart blade_angle3;
     private final ModelPart excalihandle3;
@@ -81,8 +82,10 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
     private final ModelPart left_elbow;
     private final ModelPart left_hand;
     private final ModelPart claw2;
+    private final ModelPart icethrower_glove2;
     private final ModelPart buzzsaw;
     private final ModelPart quiver;
+    private final ModelPart icethrower_back;
     private final ModelPart right_leg;
     private final ModelPart right_foot;
     private final ModelPart left_leg;
@@ -125,6 +128,7 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
         this.boomerang = this.right_hand.getChild("boomerang");
         this.shuriken_launcher = this.right_hand.getChild("shuriken_launcher");
         this.claw1 = this.right_hand.getChild("claw1");
+        this.icethrower_glove1 = this.right_hand.getChild("icethrower_glove1");
         this.excalibur = this.right_hand.getChild("excalibur");
         this.blade_angle3 = this.excalibur.getChild("blade_angle3");
         this.excalihandle3 = this.excalibur.getChild("excalihandle3");
@@ -159,8 +163,10 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
         this.left_elbow = this.left_arm.getChild("left_elbow");
         this.left_hand = this.left_elbow.getChild("left_hand");
         this.claw2 = this.left_hand.getChild("claw2");
+        this.icethrower_glove2 = this.left_hand.getChild("icethrower_glove2");
         this.buzzsaw = this.body.getChild("buzzsaw");
         this.quiver = this.body.getChild("quiver");
+        this.icethrower_back = this.body.getChild("icethrower_back");
         this.right_leg = this.all.getChild("right_leg");
         this.right_foot = this.right_leg.getChild("right_foot");
         this.left_leg = this.all.getChild("left_leg");
@@ -255,6 +261,10 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
 
         PartDefinition left_foot = left_leg.addOrReplaceChild("left_foot", CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, 1.0F, -6.0F, 6.0F, 4.0F, 8.0F, new CubeDeformation(0.0F))
                 .texOffs(20, 0).addBox(-3.0F, -1.0F, -2.0F, 6.0F, 2.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 9.0F, 0.0F));
+
+        PartDefinition icethrower_back = body.addOrReplaceChild("icethrower_back", CubeListBuilder.create().texOffs(100, 130).addBox(-6.0F, 6.0F, -1.0F, 12.0F, 2.0F, 12.0F, new CubeDeformation(0.2F))
+                .texOffs(100, 130).addBox(-6.0F, -8.0F, -1.0F, 12.0F, 2.0F, 12.0F, new CubeDeformation(0.2F))
+                .texOffs(136, 120).addBox(-5.0F, -6.0F, 0.0F, 10.0F, 12.0F, 10.0F, new CubeDeformation(0.2F)), PartPose.offset(0.0F, 0.0F, 3.0F));
 
         createPhase1Weapons(partdefinition, right_hand, left_hand);
         createPhase2Weapons(partdefinition, right_hand, left_hand);
@@ -424,6 +434,12 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
 
         PartDefinition wbazooka_head = wither_bazooka.addOrReplaceChild("wbazooka_head", CubeListBuilder.create().texOffs(40, 162).addBox(-4.0F, -4.0F, -3.5F, 8.0F, 8.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -9.0F, -22.0F));
 
+        PartDefinition icethrower_glove1 = right_hand.addOrReplaceChild("icethrower_glove1", CubeListBuilder.create().texOffs(96, 144).mirror().addBox(-3.0F, 1.0F, -6.0F, 6.0F, 2.0F, 8.0F, new CubeDeformation(0.5F)).mirror(false)
+                .texOffs(166, 120).mirror().addBox(-1.0F, 1.0F, -14.5F, 2.0F, 2.0F, 8.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+        PartDefinition icethrower_glove2 = left_hand.addOrReplaceChild("icethrower_glove2", CubeListBuilder.create().texOffs(96, 144).addBox(-3.0F, 1.0F, -6.0F, 6.0F, 2.0F, 8.0F, new CubeDeformation(0.5F))
+                .texOffs(166, 120).addBox(-1.0F, 1.0F, -14.5F, 2.0F, 2.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
     }
 
     @Override
@@ -502,6 +518,9 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
         this.forcegun.visible = defender.getWeaponToShow() == 11;
         this.sniper_rifle.visible = defender.getWeaponToShow() == 12;
         this.wither_bazooka.visible = defender.getWeaponToShow() == 13;
+        this.icethrower_back.visible = defender.getWeaponToShow() == 14;
+        this.icethrower_glove1.visible = defender.getWeaponToShow() == 14;
+        this.icethrower_glove2.visible = defender.getWeaponToShow() == 14;
         this.creeper_gun.visible = defender.getWeaponToShow() == 15;
 
         this.chainsaw_handle.yRot += netHeadYaw * ((float)Math.PI / 180F);

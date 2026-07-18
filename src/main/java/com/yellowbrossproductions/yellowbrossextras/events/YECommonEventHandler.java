@@ -22,9 +22,12 @@ import com.yellowbrossproductions.yellowbrossextras.world.raids.bunnyblitz.Blitz
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -165,6 +168,9 @@ public class YECommonEventHandler {
                 event.setCanceled(true);
             }
         }
+
+        // effects
+        if (entity.hasEffect(YEEffects.FROZEN.get()) && source.isFire()) entity.removeEffect(YEEffects.FROZEN.get());
     }
 
     @SubscribeEvent
@@ -191,37 +197,66 @@ public class YECommonEventHandler {
             }
         }
 
-        if (entity.hasEffect(YEEffects.SUPER_DUPER_POISON.get()) && entity instanceof Mob mob && !entity.level.isClientSide) {
-            EntityUtil.makeAParticle(entity.level, YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, entity.getBoundingBox().getCenter(), Vec3.ZERO);
-            for (int i = 0; i < 100; ++i) {
-                Random random = new Random();
-                EntityUtil.makeAParticle(entity.level, YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), false, entity.getBoundingBox().getCenter(), new Vec3(
-                        -0.5f + random.nextFloat(),
-                        (-0.5f + random.nextFloat()) + (entity.isOnGround() ? 0.5f : 0.0f),
-                        -0.5f + random.nextFloat()
-                ));
+        if (entity instanceof Mob mob && !entity.level.isClientSide) {
+            if (entity.hasEffect(YEEffects.SUPER_DUPER_POISON.get())) {
+                EntityUtil.makeAParticle(entity.level, YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, entity.getBoundingBox().getCenter(), Vec3.ZERO);
+                for (int i = 0; i < 100; ++i) {
+                    Random random = new Random();
+                    EntityUtil.makeAParticle(entity.level, YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), false, entity.getBoundingBox().getCenter(), new Vec3(
+                            -0.5f + random.nextFloat(),
+                            (-0.5f + random.nextFloat()) + (entity.isOnGround() ? 0.5f : 0.0f),
+                            -0.5f + random.nextFloat()
+                    ));
+                }
+                List<Entity> list = entity.level.getEntities(entity, entity.getBoundingBox().inflate(4.0f), p -> !(p instanceof Defender) && p instanceof LivingEntity && EntityUtil.isMobNotInCreativeMode(p));
+                for (Entity hit : list) {
+                    hit.hurtMarked = true;
+                    hit.setDeltaMovement(hit.getDeltaMovement()
+                            .add(hit.position().subtract(entity.position()).normalize().scale(2.5f))
+                            .add(0, hit.isOnGround() ? 0.4d : 0, 0));
+                }
+                CameraShake.cameraShake(entity.level, entity.position(), 20, 0.4f, 2, 3);
+                entity.playSound(YESoundEvents.SUPERDUPERPOISON_EXPLOSION.get(), 4.0F, 1.0F);
+                EntityUtil.fireCircleOfPoisonBalls(entity.level, mob, 10, mob.getBbHeight() / 2, 1.0f, true);
+                entity.discard();
             }
-            List<Entity> list = entity.level.getEntities(entity, entity.getBoundingBox().inflate(4.0f), p -> !(p instanceof Defender) && p instanceof LivingEntity && EntityUtil.isMobNotInCreativeMode(p));
-            for (Entity hit : list) {
-                hit.hurtMarked = true;
-                hit.setDeltaMovement(hit.getDeltaMovement()
-                        .add(hit.position().subtract(entity.position()).normalize().scale(2.5f))
-                        .add(0, hit.isOnGround() ? 0.4d : 0, 0));
+            if (entity.hasEffect(YEEffects.FROZEN.get())) {
+                entity.playSound(YESoundEvents.FROZEN_DEATH.get(), 2.0F, entity.getVoicePitch());
+                EntityUtil.makeAParticle(entity.level, ParticleTypes.EXPLOSION, false, entity.getBoundingBox().getCenter(), Vec3.ZERO);
+                for (int i = 0; i < 60; ++i) {
+                    Random random = new Random();
+                    EntityUtil.makeAParticle(entity.level, ParticleTypes.POOF, false, entity.getBoundingBox().getCenter(), new Vec3(
+                            -0.5f + random.nextFloat(),
+                            (-0.5f + random.nextFloat()) + (entity.isOnGround() ? 0.5f : 0.0f),
+                            -0.5f + random.nextFloat()
+                    ));
+                    EntityUtil.makeAParticle(entity.level, ParticleTypes.CRIT, false, entity.getBoundingBox().getCenter(), new Vec3(
+                            -0.5f + random.nextFloat(),
+                            (-0.5f + random.nextFloat()) + (entity.isOnGround() ? 0.5f : 0.0f),
+                            -0.5f + random.nextFloat()
+                    ));
+                }
+                entity.discard();
             }
-            CameraShake.cameraShake(entity.level, entity.position(), 20, 0.4f, 2, 3);
-            entity.playSound(YESoundEvents.SUPERDUPERPOISON_EXPLOSION.get(), 4.0F, 1.0F);
-            EntityUtil.fireCircleOfPoisonBalls(entity.level, mob, 10, mob.getBbHeight() / 2, 1.0f, true);
-            entity.discard();
         }
     }
 
     @SubscribeEvent
-    public static void doEffectVFX(LivingEvent.LivingTickEvent event) {
-        LivingEntity mob = event.getEntity();
-        Random random = new Random();
-        if (mob.hasEffect(YEEffects.KNOCKED_OUT.get())) {
-            EntityUtil.makeStunnedParticles(mob.level, mob);
+    public static void effectVFX(MobEffectEvent.Added event) {
+        MobEffect effect = event.getEffectInstance().getEffect();
+        LivingEntity entity = event.getEntity();
+
+        if (effect == YEEffects.FROZEN.get()) {
+            Random random = new Random();
+            boolean weird = random.nextInt(32) == 0;
+            entity.playSound(weird ? YESoundEvents.ENTITY_DEFENDER_ICETHROWER_WEIRD.get() : YESoundEvents.ENTITY_DEFENDER_ICETHROWER_FREEZE.get(), 2.0F,
+                    weird ? 1.0F : entity.getVoicePitch());
         }
+    }
+
+    @SubscribeEvent
+    public static void preventJumping(LivingEvent.LivingJumpEvent event) {
+        if (event.getEntity().hasEffect(YEEffects.FROZEN.get())) event.setCanceled(true);
     }
 
     private static final Map<ServerLevel, VilvgaverSpawner> VILVGAVER_SPAWN_MAP = new HashMap<>();
@@ -362,7 +397,7 @@ public class YECommonEventHandler {
     @SubscribeEvent
     public static void cancelHealing(LivingHealEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity.hasEffect(YEEffects.KNOCKED_OUT.get())) {
+        if (entity.hasEffect(YEEffects.KNOCKED_OUT.get()) || entity.hasEffect(YEEffects.FROZEN.get())) {
             event.setCanceled(true);
         }
     }

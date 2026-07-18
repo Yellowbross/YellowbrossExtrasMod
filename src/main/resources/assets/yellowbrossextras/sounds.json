@@ -341,6 +341,41 @@
     ]
   },
 
+  "entity.defender.icethrower_start": {
+    "subtitle": "subtitles.entity.defender.icethrower_start",
+    "sounds": [
+      "yellowbrossextras:defender/icethrower_start"
+    ]
+  },
+
+  "entity.defender.icethrower_murderheadphoneusers": {
+    "subtitle": "subtitles.entity.defender.icethrower_murderheadphoneusers",
+    "sounds": [
+      "yellowbrossextras:defender/icethrower_murderheadphoneusers"
+    ]
+  },
+
+  "entity.defender.icethrower_freeze": {
+    "subtitle": "subtitles.entity.defender.icethrower_freeze",
+    "sounds": [
+      "yellowbrossextras:defender/icethrower_freeze"
+    ]
+  },
+
+  "entity.defender.icethrower_weird": {
+    "subtitle": "subtitles.entity.defender.icethrower_freeze",
+    "sounds": [
+      "yellowbrossextras:defender/icethrower_weird"
+    ]
+  },
+
+  "entity.defender.icethrower_hit": {
+    "subtitle": "subtitles.entity.defender.icethrower_hit",
+    "sounds": [
+      "yellowbrossextras:defender/icethrower_hit"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [
@@ -500,6 +535,13 @@
     "subtitle": "subtitles.superduperpoison_noscream",
     "sounds": [
       "yellowbrossextras:superduperpoison_noscream"
+    ]
+  },
+
+  "frozen_death": {
+    "subtitle": "subtitles.frozen_death",
+    "sounds": [
+      "yellowbrossextras:frozen_death"
     ]
   },
 

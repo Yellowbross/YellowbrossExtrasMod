@@ -18,21 +18,21 @@ public abstract class YERenderTypes extends RenderType {
         super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
     }
 
-    private static final BiFunction<ResourceLocation, Boolean, RenderType> STICK_FIGURE = Util.memoize((p_173227_, p_173228_) -> {
+    private static final BiFunction<ResourceLocation, Boolean, RenderType> STICK_FIGURE = Util.memoize((resourceLocation, compositeState) -> {
         RenderType.CompositeState rendertype$compositestate = RenderType.CompositeState.builder()
                 .setShaderState(RenderStateShard.RENDERTYPE_BEACON_BEAM_SHADER)
-                .setTextureState(new RenderStateShard.TextureStateShard(p_173227_, false, false))
+                .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))
                 .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
                 .setCullState(RenderStateShard.CULL)
                 .setLightmapState(RenderStateShard.LIGHTMAP)
                 .setOverlayState(RenderStateShard.OVERLAY)
                 .setWriteMaskState(RenderStateShard.COLOR_WRITE)
-                .createCompositeState(p_173228_);
+                .createCompositeState(compositeState);
         return create("stickFigure", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, rendertype$compositestate);
     });
 
-    public static RenderType stickFigure(ResourceLocation p_110455_, boolean p_110456_) {
-        return STICK_FIGURE.apply(p_110455_, p_110456_);
+    public static RenderType stickFigure(ResourceLocation resourceLocation, boolean compositeState) {
+        return STICK_FIGURE.apply(resourceLocation, compositeState);
     }
 
     public static RenderType getMask(ResourceLocation location) {

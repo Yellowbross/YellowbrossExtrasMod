@@ -148,6 +148,8 @@ public class YEEntityTypes {
 
     public static final RegistryObject<EntityType<SkullOfDoom>> SkullOfDoom = ENTITY_TYPES.register("skull_of_doom", () -> EntityType.Builder.<SkullOfDoom>of(com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SkullOfDoom::new, MobCategory.MISC).sized(3.0F,3.0F).clientTrackingRange(4).updateInterval(1).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "skull_of_doom").toString()));
 
+    public static final RegistryObject<EntityType<Icicle>> Icicle = ENTITY_TYPES.register("icicle", () -> EntityType.Builder.<Icicle>of(com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.Icicle::new, MobCategory.MISC).sized(0.0F, 0.0F).setCustomClientFactory(Icicle::new).setShouldReceiveVelocityUpdates(false).noSave().build(new ResourceLocation(YellowbrossExtras.MOD_ID, "icicle").toString()));
+
 
     // Misc
     public static final RegistryObject<EntityType<CameraShake>> CameraShake = ENTITY_TYPES.register("camera_shake", () -> EntityType.Builder.<CameraShake>of(CameraShake::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).noSave().updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "camera_shake").toString()));

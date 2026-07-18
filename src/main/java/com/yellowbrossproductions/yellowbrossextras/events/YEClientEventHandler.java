@@ -8,6 +8,7 @@ import com.yellowbrossproductions.yellowbrossextras.client.model.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.client.model.oryctolins.*;
 import com.yellowbrossproductions.yellowbrossextras.client.render.*;
 import com.yellowbrossproductions.yellowbrossextras.client.render.defender.*;
+import com.yellowbrossproductions.yellowbrossextras.client.render.layer.FrozenLayer;
 import com.yellowbrossproductions.yellowbrossextras.client.render.layer.SuperDuperPoisonLayer;
 import com.yellowbrossproductions.yellowbrossextras.client.render.oryctolins.*;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
@@ -40,6 +41,7 @@ public class YEClientEventHandler {
             Minecraft.getInstance().getEntityRenderDispatcher().renderers.values().forEach(renderer -> {
                 if (renderer instanceof LivingEntityRenderer) {
                     ((LivingEntityRenderer<?, ?>) renderer).addLayer(new SuperDuperPoisonLayer((LivingEntityRenderer<?, ?>) renderer));
+                    ((LivingEntityRenderer<?, ?>) renderer).addLayer(new FrozenLayer((LivingEntityRenderer<?, ?>) renderer));
                 }
             });
         }
@@ -118,6 +120,7 @@ public class YEClientEventHandler {
             event.registerEntityRenderer(YEEntityTypes.SniperRifle.get(), SniperRifleRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.DeadlyArrow.get(), DeadlyArrowRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.SkullOfDoom.get(), SkullOfDoomRenderer::new);
+            event.registerEntityRenderer(YEEntityTypes.Icicle.get(), IcicleRenderer::new);
 
             event.registerEntityRenderer(YEEntityTypes.CameraShake.get(), NothingRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.WitherExplosion.get(), WitherExplosionRenderer::new);

@@ -17,7 +17,7 @@ public class LoseAIGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return this.entity.hasEffect(YEEffects.KNOCKED_OUT.get());
+        return this.entity.hasEffect(YEEffects.KNOCKED_OUT.get()) || this.entity.hasEffect(YEEffects.FROZEN.get());
     }
 
     @Override
@@ -27,10 +27,10 @@ public class LoseAIGoal extends Goal {
 
     @Override
     public void tick() {
-        if (this.entity instanceof Mob) {
-            ((Mob) this.entity).getNavigation().stop();
-            ((Mob) this.entity).setTarget(null);
-            ((Mob) this.entity).getLookControl().setLookAt(this.entity.getX(), this.entity.getY(), this.entity.getZ());
+        if (this.entity instanceof Mob mob) {
+            mob.getNavigation().stop();
+            mob.setTarget(null);
+            if (!mob.hasEffect(YEEffects.FROZEN.get())) mob.getLookControl().setLookAt(this.entity.getX(), this.entity.getY(), this.entity.getZ());
         }
     }
 }

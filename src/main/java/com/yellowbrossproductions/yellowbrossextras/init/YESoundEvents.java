@@ -57,6 +57,11 @@ public class YESoundEvents {
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_WITHERBAZOOKA_SHOOT = addSoundsToRegistry("entity.defender.witherbazooka_shoot");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_WITHERBAZOOKA_START = addSoundsToRegistry("entity.defender.witherbazooka_start");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_WITHERBAZOOKA_END = addSoundsToRegistry("entity.defender.witherbazooka_end");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_ICETHROWER_START = addSoundsToRegistry("entity.defender.icethrower_start");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_ICETHROWER_MURDERHEADPHONEUSERS = addSoundsToRegistry("entity.defender.icethrower_murderheadphoneusers");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_ICETHROWER_FREEZE = addSoundsToRegistry("entity.defender.icethrower_freeze");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_ICETHROWER_WEIRD = addSoundsToRegistry("entity.defender.icethrower_weird");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_ICETHROWER_HIT = addSoundsToRegistry("entity.defender.icethrower_hit");
 
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_ATTACK = addSoundsToRegistry("entity.vilvgaver.attack");
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_LOOP = addSoundsToRegistry("entity.vilvgaver.loop");
@@ -78,6 +83,7 @@ public class YESoundEvents {
     public static final RegistryObject<SoundEvent> AIMBOT_BANNED = addSoundsToRegistry("entity.aimbot.banned");
     public static final RegistryObject<SoundEvent> SUPERDUPERPOISON_EXPLOSION = addSoundsToRegistry("superduperpoison_explosion");
     public static final RegistryObject<SoundEvent> SUPERDUPERPOISON_NOSCREAM = addSoundsToRegistry("superduperpoison_noscream");
+    public static final RegistryObject<SoundEvent> FROZEN_DEATH = addSoundsToRegistry("frozen_death");
 
     public static final RegistryObject<SoundEvent> ENTITY_AMOEBIC_DEVOURER_GULP = addSoundsToRegistry("entity.amoebic_devourer.gulp");
     public static final RegistryObject<SoundEvent> ENTITY_AMOEBIC_DEVOURER_BIG_GULP = addSoundsToRegistry("entity.amoebic_devourer.big_gulp");

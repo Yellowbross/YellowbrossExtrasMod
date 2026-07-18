@@ -174,6 +174,12 @@ public class CreeperBullet extends AbstractCreeperEntity implements IsDefenderAl
     }
 
     @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        if (this.wasShotFromDefender) this.blocksBuilding = false;
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
@@ -224,6 +230,7 @@ public class CreeperBullet extends AbstractCreeperEntity implements IsDefenderAl
     public void die(DamageSource p_21014_) {
         super.die(p_21014_);
         this.wasShotFromDefender = false;
+        this.blocksBuilding = true;
         this.setAnimationState("none");
     }
 
@@ -362,6 +369,7 @@ public class CreeperBullet extends AbstractCreeperEntity implements IsDefenderAl
         @Override
         public void stop() {
             CreeperBullet.this.wasShotFromDefender = false;
+            CreeperBullet.this.blocksBuilding = true;
         }
     }
 }

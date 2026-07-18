@@ -249,22 +249,6 @@ public class EntityUtil {
         }
     }
 
-    public static void makeStunnedParticles(Level level, Entity caught) {
-        final Random random = new Random();
-        for(int i = 0; i < 2; ++i) {
-            double d0 = (-0.5 + random.nextGaussian()) / 10;
-            double d1 = (-0.5 + random.nextGaussian()) / 10;
-            double d2 = (-0.5 + random.nextGaussian()) / 10;
-            EntityUtil.makeAParticle(level, ParticleTypes.SPLASH, false, new Vec3(caught.getRandomX(0.5D), caught.getRandomY(), caught.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
-        }
-        for(int i = 0; i < 2; ++i) {
-            double d0 = (-0.5 + random.nextGaussian()) / 10;
-            double d1 = (-0.5 + random.nextGaussian()) / 10;
-            double d2 = (-0.5 + random.nextGaussian()) / 10;
-            EntityUtil.makeAParticle(level, ParticleTypes.CRIT, false, new Vec3(caught.getRandomX(0.5D), caught.getY() + caught.getBbHeight() + 0.2D, caught.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
-        }
-    }
-
     // Google's Gemini helped me figure out how the math for rotating and propelling the circle would work
     public static void makeCircleParticles(Level level, Vec3 spawnVec, ParticleOptions particleType, int amount, float velocityExpanding, Vec3 rotationVec, float velocityShoot) {
         final Random random = new Random();

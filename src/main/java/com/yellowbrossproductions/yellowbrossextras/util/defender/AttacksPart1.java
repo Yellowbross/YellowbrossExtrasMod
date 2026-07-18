@@ -11,6 +11,7 @@ import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.world.CustomExplosion;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -694,6 +695,74 @@ public class AttacksPart1 {
                     defender.attackTicks2 = 1;
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_WITHERBAZOOKA_END.get(), 2.0F, 1.0F);
                     defender.setDiscardFriction(false);
+                }
+            }
+        }
+        if (defender.attackType == defender.attack_icethrower) {
+            float f;
+            float f1;
+            float f2;
+
+            double mult;
+            Vec3 thereTo;
+            if (ticks >= 13 && ticks <= 23) {
+                f = (float)(Mth.wrapDegrees(defender.yBodyRot + 25.0f) * (Math.PI / 180F));
+                f1 = Mth.cos(f);
+                f2 = Mth.sin(f);
+
+                mult = 1.6d;
+                thereTo = new Vec3(
+                        defender.getX() + (double)f1 * mult,
+                        defender.getY() + 2.4d,
+                        defender.getZ() + (double)f2 * mult
+                );
+
+                Icicle icicle = new Icicle(defender.level, defender, thereTo,
+                        new BlockPos((int)defender.getX() + ((-14 + defender.getRandom().nextInt(28)) * 4), 0,
+                                (int)defender.getZ() + ((-14 + defender.getRandom().nextInt(28)) * 4)));
+                icicle.setTimer(80 + (defender.getRandom().nextInt(8) * 20));
+                defender.level.addFreshEntity(icicle);
+            }
+            if (ticks > 23 && ticks <= 33) {
+                f = (float)(Mth.wrapDegrees(defender.yBodyRot + 195.0f) * (Math.PI / 180F));
+                f1 = Mth.cos(f);
+                f2 = Mth.sin(f);
+
+                mult = 0.75d;
+                thereTo = new Vec3(
+                        defender.getX() + (double)f1 * mult,
+                        defender.getY() + 2.7d,
+                        defender.getZ() + (double)f2 * mult
+                );
+
+                Icicle icicle = new Icicle(defender.level, defender, thereTo,
+                        new BlockPos((int)defender.getX() + ((-7 + defender.getRandom().nextInt(14)) * 3), 0,
+                                (int)defender.getZ() + ((-7 + defender.getRandom().nextInt(14)) * 3)));
+                if (target != null) icicle.setDelayAndTarget(ticks - 23, target);
+                icicle.setTimer(30);
+                defender.level.addFreshEntity(icicle);
+            }
+            if (ticks == 37) {
+                defender.playSound(YESoundEvents.ENTITY_DEFENDER_ICETHROWER_MURDERHEADPHONEUSERS.get(), 3.0F, 1.0F);
+                CameraShake.cameraShake(defender.level, defender.position(), 50, 0.15f, 8, 5);
+            }
+            if (ticks >= 37 && ticks <= 47) {
+                for (int i = 0; i < 20; ++i) {
+                    f = (float)(Mth.wrapDegrees(defender.yBodyRot + defender.getRandom().nextInt(360)) * (Math.PI / 180F));
+                    f1 = Mth.cos(f);
+                    f2 = Mth.sin(f);
+
+                    mult = 1.2d;
+                    thereTo = new Vec3(
+                            defender.getX() + (double)f1 * mult,
+                            defender.getY() + 2.5d,
+                            defender.getZ() + (double)f2 * mult
+                    );
+
+                    Icicle icicle = new Icicle(defender.level, defender, thereTo,
+                            new BlockPos((int)defender.getX() + ((-16 + defender.getRandom().nextInt(32)) * 3), 0,
+                                    (int)defender.getZ() + ((-16 + defender.getRandom().nextInt(32)) * 3)));
+                    defender.level.addFreshEntity(icicle);
                 }
             }
         }

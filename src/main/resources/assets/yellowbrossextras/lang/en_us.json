@@ -12,7 +12,7 @@
 
   "item.yellowbrossextras.converslin_spawn_egg": "Converslin Spawn Egg (WIP)",
 
-  "item.yellowbrossextras.amoebic_devourer_spawn_egg": "Amoebic Devourer Spawn Egg",
+  "item.yellowbrossextras.amoebic_devourer_spawn_egg": "Amoebic Devourer Spawn Egg (WIP)",
   "item.yellowbrossextras.hyper_snow_golem_spawn_egg": "Hyper Snow Golem Spawn Egg",
   "item.yellowbrossextras.aimbot_spawn_egg": "Aimbot Spawn Egg",
 
@@ -91,6 +91,10 @@
   "subtitles.entity.defender.witherbazooka_shoot": "Wither Bazooka fired",
   "subtitles.entity.defender.witherbazooka_start": "Defender gets his Wither Bazooka",
   "subtitles.entity.defender.witherbazooka_end": "Defender dies for a second",
+  "subtitles.entity.defender.icethrower_start": "Defender gets the Icethrower",
+  "subtitles.entity.defender.icethrower_murderheadphoneusers": "(sorry headphone users)",
+  "subtitles.entity.defender.icethrower_freeze": "Mob frozen",
+  "subtitles.entity.defender.icethrower_hit": "Icicle explodes",
 
   "subtitles.entity.vilvgaver.attack": "Vilvgaver attacks",
   "subtitles.entity.vilvgaver.loop": "Vilvgaver screams",
@@ -114,6 +118,7 @@
   "subtitles.entity.aimbot.banned": "Justice is served",
   "subtitles.superduperpoison_explosion": "Somebody is now this thing called \"dead\"",
   "subtitles.superduperpoison_noscream": "Super Duper Poison™ comes to all.",
+  "subtitles.frozen_death": "Someone doing a Bottle impression",
 
   "gamerule.vilvgaverChallenge": "The Vilvgaver Challenge",
   "gamerule.vilvgaverChallenge.description": "If this gamerule is enabled, Vilvgavers will automatically spawn in to relentlessly chase the player. The idea is to beat the game whilst being on an endless, frantic run for survival.",
@@ -144,6 +149,7 @@
   "effect.yellowbrossextras.knocked_out": "Knocked Out",
   "effect.yellowbrossextras.hunted": "Hunted",
   "effect.yellowbrossextras.super_duper_poison": "Super Duper Poison™",
+  "effect.yellowbrossextras.frozen": "Frozen",
 
   "event.yellowbrossextras.bunny_blitz": "Bunny Blitz",
   "event.yellowbrossextras.bunny_blitz.victory": "Victory",

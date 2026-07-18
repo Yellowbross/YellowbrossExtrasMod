@@ -1,7 +1,9 @@
 package com.yellowbrossproductions.yellowbrossextras.mixin.common;
 
+import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.effect.CustomMobEffect;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
+import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -10,6 +12,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,26 +22,28 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 // Huge, huge, HUGE thanks to TheDarkPeasant for helping me get mixin code to work!
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends LivingEntity {
+public abstract class LivingEntityMixin extends Entity {
 
-    public LivingEntityMixin(EntityType<? extends LivingEntity> entityType, Level level) {
-        super(entityType, level);
+    public LivingEntityMixin(EntityType<?> pEntityType, Level pLevel) {
+        super(pEntityType, pLevel);
     }
 
     @Inject(method = "canAttack(Lnet/minecraft/world/entity/LivingEntity;)Z", at = @At("HEAD"), cancellable = true)
     private void ye$injectCanAttack(LivingEntity pTarget, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity entity = (LivingEntity) (Object) this;
-        if (entity.hasEffect(YEEffects.KNOCKED_OUT.get())) {
+        if (entity.hasEffect(YEEffects.KNOCKED_OUT.get()) || entity.hasEffect(YEEffects.FROZEN.get())) {
             cir.setReturnValue(false);
         }
     }
 
     @Inject(method = "onEffectAdded", at = @At("TAIL"))
     private void ye$injectOnEffectAdded(MobEffectInstance pEffectInstance, Entity pEntity, CallbackInfo ci) {
-        if (this.level.isClientSide) return;
-
         if (pEffectInstance.getEffect() instanceof CustomMobEffect effect) {
-            effect.onAdded(pEffectInstance, (LivingEntity) (Object) this, pEntity);
+            if (this.level.isClientSide) return;
+
+            LivingEntity entity = (LivingEntity) (Object) this;
+
+            effect.onAdded(pEffectInstance, entity, pEntity);
 
             if (effect.syncToClients) {
                 for (ServerPlayer player : ((ServerLevel) this.level).players()) {
