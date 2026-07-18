@@ -248,7 +248,7 @@ public class YECommonEventHandler {
 
         if (effect == YEEffects.FROZEN.get()) {
             Random random = new Random();
-            boolean weird = random.nextInt(32) == 0;
+            boolean weird = random.nextInt(100) == 0;
             entity.playSound(weird ? YESoundEvents.ENTITY_DEFENDER_ICETHROWER_WEIRD.get() : YESoundEvents.ENTITY_DEFENDER_ICETHROWER_FREEZE.get(), 2.0F,
                     weird ? 1.0F : entity.getVoicePitch());
         }
