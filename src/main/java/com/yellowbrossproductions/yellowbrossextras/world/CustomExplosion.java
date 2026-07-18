@@ -77,17 +77,17 @@ public class CustomExplosion extends Explosion {
                         d9 /= d13;
                         double d14 = (double)getSeenPercent(vec3, entity);
                         double d10 = (1.0D - d12) * d14;
-                        entity.hurt(this.getDamageSource(), ((float)((int)((d10 * d10 + d10) / 2.0D * 7.0D * (double)f2 + 1.0D))) * (entity instanceof LivingEntity && this.multipliesToScrewArmor ? (EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.25f)) : 1.0F));
+                        if (entity.hurt(this.getDamageSource(), ((float)((int)((d10 * d10 + d10) / 2.0D * 7.0D * (double)f2 + 1.0D))) * (entity instanceof LivingEntity && this.multipliesToScrewArmor ? (EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.25f)) : 1.0F))) {
+                            if (this.healExploder && this.source instanceof LivingEntity living) {
+                                living.heal(0.5F);
+                            }
+                        }
                         double d11 = d10;
                         if (entity instanceof LivingEntity) {
                             d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity)entity, d10);
                         }
 
                         entity.setDeltaMovement(entity.getDeltaMovement().add(d5 * d11, d7 * d11, d9 * d11));
-
-                        if (this.healExploder && this.source instanceof LivingEntity living) {
-                            living.heal(1.0F);
-                        }
                     }
                 }
             }
