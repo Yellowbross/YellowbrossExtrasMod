@@ -40,7 +40,7 @@ public class WatchYoToneGoal extends Goal {
 
             this.defender.getNavigation().stop();
 
-            boolean shouldJump = this.defender.distanceTo(soul) < 10.0d && this.defender.jumpscareTicks < 1 && soul.tickCount > 49;
+            boolean shouldJump = this.defender.distanceTo(soul) < 10.0d && this.defender.jumpscareTicks < 1 && soul.tickCount >= 48;
             if (shouldJump) {
                 if (!defender.level.isClientSide) {
                     CameraShake.cameraShake(this.defender.level, this.defender.position(), 100.0f, 0.25f, 110, 40);
