@@ -224,7 +224,9 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
         this.goalSelector.addGoal(0, new DefeatedGoal());
         this.goalSelector.addGoal(0, new JumpAwayGoal(this));
+
         this.goalSelector.addGoal(0, new WatchYoToneGoal(this));
+
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(4, new CustomMeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.7D));
