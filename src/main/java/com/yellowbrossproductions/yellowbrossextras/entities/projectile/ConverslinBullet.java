@@ -53,8 +53,8 @@ public class ConverslinBullet extends CustomAbstractHurtingProjectile implements
         return false;
     }
 
-    protected void onHit(HitResult p_37406_) {
-        super.onHit(p_37406_);
+    protected void onHit(HitResult pResult) {
+        super.onHit(pResult);
     }
 
     @Override

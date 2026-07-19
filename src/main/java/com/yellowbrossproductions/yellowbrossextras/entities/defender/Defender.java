@@ -61,6 +61,7 @@ import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAligned {
@@ -191,6 +192,11 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
     int musicTransTicks;
 
+    // Easter Eggs
+    String nameToLookFor = "illageandspillage:villager_soul";
+    public Entity villagerSoul = null;
+    public int jumpscareTicks = 0;
+
     public Defender(EntityType<? extends YExtrasMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
     }
@@ -218,6 +224,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
         this.goalSelector.addGoal(0, new DefeatedGoal());
         this.goalSelector.addGoal(0, new JumpAwayGoal(this));
+        this.goalSelector.addGoal(0, new WatchYoToneGoal(this));
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(4, new CustomMeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.7D));
@@ -413,9 +420,25 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                 super.canBeAffected(effect);
     }
 
+    public void setVillagerSoul(Entity soul) {
+        this.villagerSoul = soul;
+    }
+
+    @Override
+    public float getEyeHeight(Pose pPose) {
+        if (this.getCustomRender() == 3) return 5.75f;
+        return super.getEyeHeight(pPose);
+    }
+
     @Override
     public void tick() {
         this.calculateWobble();
+
+        if (this.getPhase() == 1 && this.tickCount % 20 == 0) {
+            List<Entity> anySoulsNearby = this.level.getEntities(this, this.getBoundingBox().inflate(20.0D), p -> Objects.equals(p.getEncodeId(), nameToLookFor));
+            if (!anySoulsNearby.isEmpty()) this.setVillagerSoul(anySoulsNearby.get(0));
+        }
+        if (this.jumpscareTicks > 0) this.jumpscareTicks += 1;
 
         if (this.getPhase() == 1) {
             this.cooldown_saws--;
@@ -762,7 +785,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
         }
         this.frame++;
 
-        if (this.tickCount % 20 == 1 && ((this.getTarget() != null && !this.getTarget().isAlive()) || this.getTarget() == null) && this.isAlive()) {
+        if (this.tickCount % 20 == 1 && (this.getTarget() == null || !this.getTarget().isAlive() || this.getTarget().isRemoved()) && this.isAlive()) {
             if (!this.level.isClientSide) {
                 this.heal(4.0F);
             }
@@ -1311,6 +1334,11 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     @Override
+    public boolean fireImmune() {
+        return this.deathAttackTicks > 0 && this.getCustomRender() != 0 && super.fireImmune();
+    }
+
+    @Override
     public void die(DamageSource pDamageSource) {
         if (!this.wasKilledByVoid()) {
             List<Mob> list = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(50.0D), p -> {
@@ -1326,6 +1354,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                 this.musicTransTicks = 0;
                 this.setMusicToPlay(3);
             }
+            this.clearFire();
             this.processDeath();
         } else {
             super.die(pDamageSource);

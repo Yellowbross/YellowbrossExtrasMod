@@ -3,7 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.CreeperBulletModel;
-import com.yellowbrossproductions.yellowbrossextras.client.render.layer.CreeperBulletChargeLayer;
+import com.yellowbrossproductions.yellowbrossextras.client.render.layer.defender.CreeperBulletChargeLayer;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBullet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;

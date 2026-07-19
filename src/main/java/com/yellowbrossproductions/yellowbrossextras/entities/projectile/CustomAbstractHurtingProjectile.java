@@ -96,8 +96,8 @@ public class CustomAbstractHurtingProjectile extends Projectile {
         }
     }
 
-    protected boolean canHitEntity(Entity p_36842_) {
-        return super.canHitEntity(p_36842_) && !p_36842_.noPhysics;
+    protected boolean canHitEntity(Entity pEntity) {
+        return super.canHitEntity(pEntity) && !pEntity.noPhysics;
     }
 
     protected boolean shouldBurn() {

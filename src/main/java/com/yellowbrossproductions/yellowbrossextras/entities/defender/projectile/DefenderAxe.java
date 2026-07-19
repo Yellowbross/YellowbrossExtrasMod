@@ -30,8 +30,8 @@ public class DefenderAxe extends CustomAbstractHurtingProjectile {
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult p_37259_) {
-        super.onHitEntity(p_37259_);
+    protected void onHitEntity(EntityHitResult pResult) {
+        super.onHitEntity(pResult);
         this.explode(null, 2.5D);
     }
 

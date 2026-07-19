@@ -376,6 +376,13 @@
     ]
   },
 
+  "entity.defender.watchyotonebuddyboy": {
+    "subtitle": "subtitles.entity.defender.watchyotonebuddyboy",
+    "sounds": [
+      "yellowbrossextras:defender/watchyotonebuddyboy"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [

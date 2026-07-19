@@ -2,13 +2,12 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DefenderModel;
-import com.yellowbrossproductions.yellowbrossextras.client.render.layer.DefenderGlowLayer;
+import com.yellowbrossproductions.yellowbrossextras.client.model.defender.WatchYoToneBuddyBoyModel;
+import com.yellowbrossproductions.yellowbrossextras.client.render.layer.defender.DefenderGlowLayer;
 import com.yellowbrossproductions.yellowbrossextras.client.render.util.RenderUtil;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,6 +15,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -29,6 +29,9 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
     private static final ResourceLocation TEXTURE = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/defender.png");
     private final Random random = new Random();
 
+    private static final ResourceLocation EASTER_EGG_1 = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/eastereggs/watchyotonebuddyboy.png");
+    private final WatchYoToneBuddyBoyModel<Defender> easterEgg1;
+
     private static final ResourceLocation SPRITESHEET = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/2d_effects.png");
 
     private static final float SHEET_WIDTH = 256;
@@ -38,9 +41,10 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
     private static final float TORNADO_WIDTH = 58;
     private static final float TORNADO_HEIGHT = 89;
 
-    public DefenderRenderer(EntityRendererProvider.Context renderManagerIn) {
-        super(renderManagerIn, new DefenderModel<>(renderManagerIn.bakeLayer(DefenderModel.LAYER_LOCATION)), 0.6F);
+    public DefenderRenderer(EntityRendererProvider.Context pContext) {
+        super(pContext, new DefenderModel<>(pContext.bakeLayer(DefenderModel.LAYER_LOCATION)), 0.6F);
         this.addLayer(new DefenderGlowLayer<>(this));
+        this.easterEgg1 = new WatchYoToneBuddyBoyModel<>(pContext.bakeLayer(WatchYoToneBuddyBoyModel.LAYER_LOCATION));
     }
 
     @Override
@@ -65,16 +69,20 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
     }
 
     @Override
-    public void render(Defender defender, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int blockLightIn) {
+    public void render(Defender defender, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
         switch (defender.getCustomRender()) {
             case 1:
-                renderSpinny(defender, partialTick, poseStack, multiBufferSource, blockLightIn);
+                renderSpinny(defender, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
                 break;
             case 2:
-                renderTornado(defender, partialTick, poseStack, multiBufferSource, blockLightIn);
+                renderTornado(defender, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
                 break;
+            case 3: {
+                renderMonster(defender, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
+                break;
+            }
 
-            default: super.render(defender, entityYaw, partialTick, poseStack, multiBufferSource, blockLightIn);
+            default: super.render(defender, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
         }
     }
 
@@ -146,5 +154,44 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
         poseStack.popPose();
 
         poseStack.popPose();
+    }
+
+    public void renderMonster(Defender defender, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
+        pPoseStack.pushPose();
+
+        pPoseStack.scale(-1.0F, -1.0F, 1.0F);
+        pPoseStack.translate((-0.5 + random.nextDouble()), -1.5, (-0.5 + random.nextDouble()));
+
+        VertexConsumer vertexconsumer = pBuffer.getBuffer(this.easterEgg1.renderType(EASTER_EGG_1));
+
+        float f = Mth.rotLerp(pPartialTicks, defender.yBodyRotO, defender.yBodyRot);
+        float f1 = Mth.rotLerp(pPartialTicks, defender.yHeadRotO, defender.yHeadRot);
+        float f2 = f1 - f;
+        float f3 = Mth.wrapDegrees(f2);
+        if (f3 < -85.0F) {
+            f3 = -85.0F;
+        }
+
+        if (f3 >= 85.0F) {
+            f3 = 85.0F;
+        }
+
+        f = f1 - f3;
+        if (f3 * f3 > 2500.0F) {
+            f += f3 * 0.2F;
+        }
+
+        f2 = f1 - f;
+        float f6 = Mth.lerp(pPartialTicks, defender.xRotO, defender.getXRot());
+        float f8 = Mth.lerp(pPartialTicks, defender.animationSpeedOld, defender.animationSpeed);
+        float f5 = defender.animationPosition - defender.animationSpeed * (1.0F - pPartialTicks);
+        float f7 = this.getBob(defender, pPartialTicks);
+
+        this.setupRotations(defender, pPoseStack, f7, -f, pPartialTicks);
+        this.easterEgg1.prepareMobModel(defender, f5, f8, pPartialTicks);
+        this.easterEgg1.setupAnim(defender, f5, f8, f7, f2, f6);
+        this.easterEgg1.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+
+        pPoseStack.popPose();
     }
 }

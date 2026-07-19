@@ -31,13 +31,13 @@ public class SuperDuperPoisonBall extends CustomAbstractHurtingProjectile implem
     }
 
     @Override
-    protected boolean canHitEntity(Entity p_36842_) {
+    protected boolean canHitEntity(Entity pEntity) {
         boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
         boolean team = true;
         if (shouldCareAboutTeams) {
-            team = EntityUtil.canHurtThisMob(p_36842_, (Mob) this.getOwner()) && !(p_36842_ instanceof IsDefenderAligned);
+            team = EntityUtil.canHurtThisMob(pEntity, (Mob) this.getOwner()) && !(pEntity instanceof IsDefenderAligned);
         }
-        return team && p_36842_ != this.getOwner() && !(p_36842_ instanceof Projectile) && super.canHitEntity(p_36842_);
+        return team && pEntity != this.getOwner() && !(pEntity instanceof Projectile) && super.canHitEntity(pEntity);
     }
 
     @Override

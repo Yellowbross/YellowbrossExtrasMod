@@ -44,8 +44,8 @@ public class HyperSnowball extends ThrowableItemProjectile {
     }
 
     @Override
-    protected void onHit(HitResult p_37406_) {
-        super.onHit(p_37406_);
+    protected void onHit(HitResult pResult) {
+        super.onHit(pResult);
         if (!this.level.isClientSide) {
             this.level.broadcastEntityEvent(this, (byte)3);
             this.level.explode(this.getOwner(), this.getX(), this.getY(), this.getZ(), (float)3.0F, Explosion.BlockInteraction.NONE);

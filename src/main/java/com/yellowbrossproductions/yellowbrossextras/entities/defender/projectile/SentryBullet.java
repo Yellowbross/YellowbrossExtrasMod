@@ -42,13 +42,13 @@ public class SentryBullet extends CustomAbstractHurtingProjectile implements Ite
     }
 
     @Override
-    protected boolean canHitEntity(Entity entity) {
+    protected boolean canHitEntity(Entity pEntity) {
         boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
         boolean team = true;
         if (shouldCareAboutTeams) {
-            team = EntityUtil.canHurtThisMob(entity, (Mob) this.getOwner()) && !(entity instanceof IsDefenderAligned);
+            team = EntityUtil.canHurtThisMob(pEntity, (Mob) this.getOwner()) && !(pEntity instanceof IsDefenderAligned);
         }
-        return team && entity != this.getOwner() && !(entity instanceof Projectile) && super.canHitEntity(entity);
+        return team && pEntity != this.getOwner() && !(pEntity instanceof Projectile) && super.canHitEntity(pEntity);
     }
 
     @Override

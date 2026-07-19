@@ -8,8 +8,8 @@ import com.yellowbrossproductions.yellowbrossextras.client.model.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.client.model.oryctolins.*;
 import com.yellowbrossproductions.yellowbrossextras.client.render.*;
 import com.yellowbrossproductions.yellowbrossextras.client.render.defender.*;
-import com.yellowbrossproductions.yellowbrossextras.client.render.layer.FrozenLayer;
-import com.yellowbrossproductions.yellowbrossextras.client.render.layer.SuperDuperPoisonLayer;
+import com.yellowbrossproductions.yellowbrossextras.client.render.layer.defender.FrozenLayer;
+import com.yellowbrossproductions.yellowbrossextras.client.render.layer.defender.SuperDuperPoisonLayer;
 import com.yellowbrossproductions.yellowbrossextras.client.render.oryctolins.*;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShake;
@@ -51,6 +51,8 @@ public class YEClientEventHandler {
             event.registerLayerDefinition(DefenderModel.LAYER_LOCATION, DefenderModel::createBodyLayer);
             event.registerLayerDefinition(SentryGunModel.LAYER_LOCATION, SentryGunModel::createBodyLayer);
             event.registerLayerDefinition(CreeperBulletModel.LAYER_LOCATION, CreeperBulletModel::createBodyLayer);
+            event.registerLayerDefinition(WatchYoToneBuddyBoyModel.LAYER_LOCATION, WatchYoToneBuddyBoyModel::createBodyLayer);
+            event.registerLayerDefinition(OkayMisterImSorryModel.LAYER_LOCATION, OkayMisterImSorryModel::createBodyLayer);
 
             event.registerLayerDefinition(SneakerModel.LAYER_LOCATION, SneakerModel::createBodyLayer);
             event.registerLayerDefinition(ParacreeperModel.LAYER_LOCATION, ParacreeperModel::createBodyLayer);
@@ -83,6 +85,7 @@ public class YEClientEventHandler {
             event.registerEntityRenderer(YEEntityTypes.Defender.get(), DefenderRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.SentryGun.get(), SentryGunRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.CreeperBullet.get(), CreeperBulletRenderer::new);
+            event.registerEntityRenderer(YEEntityTypes.OkayMisterImSorry.get(), OkayMisterImSorryRenderer::new);
 
             event.registerEntityRenderer(YEEntityTypes.Sneaker.get(), SneakerRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.Paracreeper.get(), ParacreeperRenderer::new);

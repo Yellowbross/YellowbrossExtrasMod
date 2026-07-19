@@ -133,6 +133,11 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
     }
 
     @Override
+    public boolean ignoreExplosion() {
+        return true;
+    }
+
+    @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
 

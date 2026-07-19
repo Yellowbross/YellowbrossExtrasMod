@@ -156,6 +156,8 @@ public class YEEntityTypes {
 
     public static final RegistryObject<EntityType<WitherExplosion>> WitherExplosion = ENTITY_TYPES.register("wither_explosion", () -> EntityType.Builder.<WitherExplosion>of(WitherExplosion::new, MobCategory.MISC).sized(5.0F,5.0F).clientTrackingRange(12).noSave().updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "wither_explosion").toString()));
 
+    public static final RegistryObject<EntityType<OkayMisterImSorry>> OkayMisterImSorry = ENTITY_TYPES.register("okaymisterimsorry", () -> EntityType.Builder.<OkayMisterImSorry>of(OkayMisterImSorry::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).noSave().noSummon().updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "okaymisterimsorry").toString()));
+
 
     // Gamemode Fun
     public static final RegistryObject<EntityType<PathGuide>> PathGuide = ENTITY_TYPES.register("path_guide", () -> EntityType.Builder.<PathGuide>of(com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuide::new, MobCategory.MISC).sized(1.0F,2.5F).clientTrackingRange(4).updateInterval(20).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "path_guide").toString()));

@@ -1,16 +1,12 @@
-package com.yellowbrossproductions.yellowbrossextras.client.render.layer;
+package com.yellowbrossproductions.yellowbrossextras.client.render.layer.defender;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DefenderModel;
-import com.yellowbrossproductions.yellowbrossextras.client.model.oryctolins.ConverslinModel;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

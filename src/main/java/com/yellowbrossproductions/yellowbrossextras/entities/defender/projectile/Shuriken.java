@@ -60,9 +60,9 @@ public class Shuriken extends ThrowableItemProjectile {
         }
     }
 
-    protected void onHit(HitResult p_37406_) {
-        super.onHit(p_37406_);
-        if (!(p_37406_ instanceof EntityHitResult)) {
+    protected void onHit(HitResult pResult) {
+        super.onHit(pResult);
+        if (!(pResult instanceof EntityHitResult)) {
             if (!this.level.isClientSide) {
                 this.level.broadcastEntityEvent(this, (byte)3);
                 this.discard();

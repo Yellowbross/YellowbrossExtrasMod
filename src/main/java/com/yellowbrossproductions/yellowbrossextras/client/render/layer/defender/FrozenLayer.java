@@ -1,4 +1,4 @@
-package com.yellowbrossproductions.yellowbrossextras.client.render.layer;
+package com.yellowbrossproductions.yellowbrossextras.client.render.layer.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -16,20 +16,20 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SuperDuperPoisonLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    public static final ResourceLocation POISON = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/layer/super_duper_poison.png");
+public class FrozenLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+    public static final ResourceLocation FROZEN = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/layer/frozen.png");
 
-    public SuperDuperPoisonLayer(RenderLayerParent renderer) {
+    public FrozenLayer(RenderLayerParent renderer) {
         super(renderer);
     }
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (!entitylivingbaseIn.isInvisible() && entitylivingbaseIn.hasEffect(YEEffects.SUPER_DUPER_POISON.get())) {
+        if (!entitylivingbaseIn.isInvisible() && entitylivingbaseIn.hasEffect(YEEffects.FROZEN.get())) {
             EntityModel<T> entityModel = this.getParentModel();
             entityModel.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
             this.getParentModel().copyPropertiesTo(entityModel);
-            VertexConsumer vertexConsumer = bufferIn.getBuffer(YERenderTypes.getMask(POISON));
+            VertexConsumer vertexConsumer = bufferIn.getBuffer(YERenderTypes.getMask(FROZEN));
             entityModel.setupAnim(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             entityModel.renderToBuffer(poseStack, vertexConsumer, packedLightIn, OverlayTexture.NO_OVERLAY,
                     1.0F, 1.0F, 1.0F, 0.25F);

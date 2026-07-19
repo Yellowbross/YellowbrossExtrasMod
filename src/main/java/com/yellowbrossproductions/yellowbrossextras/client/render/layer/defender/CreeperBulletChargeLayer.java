@@ -1,4 +1,4 @@
-package com.yellowbrossproductions.yellowbrossextras.client.render.layer;
+package com.yellowbrossproductions.yellowbrossextras.client.render.layer.defender;
 
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.CreeperBulletModel;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBullet;

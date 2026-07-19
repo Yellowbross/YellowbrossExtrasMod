@@ -39,25 +39,25 @@ public class TNTProjectile extends ThrowableItemProjectile {
         return Items.TNT;
     }
 
-    protected void onHitEntity(EntityHitResult p_37404_) {
-        if (!(p_37404_.getEntity() instanceof CreeperInfection)) {
-            super.onHitEntity(p_37404_);
+    protected void onHitEntity(EntityHitResult pResult) {
+        if (!(pResult.getEntity() instanceof CreeperInfection)) {
+            super.onHitEntity(pResult);
             if (!this.level.isClientSide) {
                 this.explode(2.5D);
                 CameraShake.cameraShake(this.level, position(), 20, 0.05f, 0, 15);
             }
-            Entity entity = p_37404_.getEntity();
+            Entity entity = pResult.getEntity();
             entity.hurt(DamageSource.thrown(this, this.getOwner()), 1.0F);
         }
     }
 
-    protected void onHit(HitResult p_37406_) {
-        super.onHit(p_37406_);
+    protected void onHit(HitResult pResult) {
+        super.onHit(pResult);
     }
 
     @Override
-    protected void onHitBlock(BlockHitResult p_37258_) {
-        super.onHitBlock(p_37258_);
+    protected void onHitBlock(BlockHitResult pResult) {
+        super.onHitBlock(pResult);
         if (!this.level.isClientSide) {
             this.level.broadcastEntityEvent(this, (byte)3);
             this.explode(2.5D);
