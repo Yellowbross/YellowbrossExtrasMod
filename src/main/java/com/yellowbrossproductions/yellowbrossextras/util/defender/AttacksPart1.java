@@ -717,9 +717,13 @@ public class AttacksPart1 {
                         defender.getZ() + (double)f2 * mult
                 );
 
-                Icicle icicle = new Icicle(defender.level, defender, thereTo,
-                        new BlockPos((int)defender.getX() + ((-14 + defender.getRandom().nextInt(28)) * 4), 0,
-                                (int)defender.getZ() + ((-14 + defender.getRandom().nextInt(28)) * 4)));
+                int x = target != null ? target.getBlockX() : defender.getBlockX();
+                int z = target != null ? target.getBlockZ() : defender.getBlockZ();
+
+                BlockPos blockPos = new BlockPos(x + ((-14 + defender.getRandom().nextInt(28)) * 4), 0,
+                        z + ((-14 + defender.getRandom().nextInt(28)) * 4));
+
+                Icicle icicle = new Icicle(defender.level, defender, thereTo, blockPos);
                 icicle.setTimer(80 + (defender.getRandom().nextInt(8) * 20));
                 defender.level.addFreshEntity(icicle);
             }
@@ -735,9 +739,13 @@ public class AttacksPart1 {
                         defender.getZ() + (double)f2 * mult
                 );
 
-                Icicle icicle = new Icicle(defender.level, defender, thereTo,
-                        new BlockPos((int)defender.getX() + ((-7 + defender.getRandom().nextInt(14)) * 3), 0,
-                                (int)defender.getZ() + ((-7 + defender.getRandom().nextInt(14)) * 3)));
+                int x = target != null ? target.getBlockX() : defender.getBlockX();
+                int z = target != null ? target.getBlockZ() : defender.getBlockZ();
+
+                BlockPos blockPos = new BlockPos(x + ((-7 + defender.getRandom().nextInt(14)) * 3), 0,
+                        z + ((-7 + defender.getRandom().nextInt(14)) * 3));
+
+                Icicle icicle = new Icicle(defender.level, defender, thereTo, blockPos);
                 if (target != null) icicle.setDelayAndTarget(ticks - 23, target);
                 icicle.setTimer(30);
                 defender.level.addFreshEntity(icicle);
@@ -759,9 +767,13 @@ public class AttacksPart1 {
                             defender.getZ() + (double)f2 * mult
                     );
 
-                    Icicle icicle = new Icicle(defender.level, defender, thereTo,
-                            new BlockPos((int)defender.getX() + ((-16 + defender.getRandom().nextInt(32)) * 3), 0,
-                                    (int)defender.getZ() + ((-16 + defender.getRandom().nextInt(32)) * 3)));
+                    int x = target != null ? target.getBlockX() : defender.getBlockX();
+                    int z = target != null ? target.getBlockZ() : defender.getBlockZ();
+
+                    BlockPos blockPos = new BlockPos(x + ((-16 + defender.getRandom().nextInt(32)) * 3), 0,
+                            z + ((-16 + defender.getRandom().nextInt(32)) * 3));
+
+                    Icicle icicle = new Icicle(defender.level, defender, thereTo, blockPos);
                     defender.level.addFreshEntity(icicle);
                 }
             }
