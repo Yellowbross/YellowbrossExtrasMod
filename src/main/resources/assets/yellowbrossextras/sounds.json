@@ -383,6 +383,13 @@
     ]
   },
 
+  "entity.defender.excalibur": {
+    "stream": true,
+    "sounds": [
+      "yellowbrossextras:defender/excalibur"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [

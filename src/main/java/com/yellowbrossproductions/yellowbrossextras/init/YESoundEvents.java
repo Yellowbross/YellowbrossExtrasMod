@@ -63,6 +63,7 @@ public class YESoundEvents {
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_ICETHROWER_WEIRD = addSoundsToRegistry("entity.defender.icethrower_weird");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_ICETHROWER_HIT = addSoundsToRegistry("entity.defender.icethrower_hit");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_WATCHYOTONEBUDDYBOY = addSoundsToRegistry("entity.defender.watchyotonebuddyboy");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_EXCALIBUR = addSoundsToRegistry("entity.defender.excalibur");
 
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_ATTACK = addSoundsToRegistry("entity.vilvgaver.attack");
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_LOOP = addSoundsToRegistry("entity.vilvgaver.loop");

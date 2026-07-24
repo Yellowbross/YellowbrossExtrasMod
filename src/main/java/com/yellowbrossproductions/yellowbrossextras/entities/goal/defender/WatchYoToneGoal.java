@@ -25,7 +25,7 @@ public class WatchYoToneGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return this.defender.villagerSoul != null && !this.defender.villagerSoul.isRemoved() && this.defender.jumpscareTicks < 1 && this.defender.getTarget() == null;
+        return this.defender.villagerSoul != null && !this.defender.villagerSoul.isRemoved() && this.defender.jumpscareTicks < 1 && this.defender.getTarget() == null && this.defender.attackType == 0 && this.defender.getPhase() == 1;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class WatchYoToneGoal extends Goal {
                     okayMisterImSorry.setPos(soul.position());
                     this.defender.level.addFreshEntity(okayMisterImSorry);
                     soul.discard();
-                    this.defender.villagerSoul = okayMisterImSorry;
+                    this.defender.setVillagerSoul(okayMisterImSorry);
                 }
             } else {
                 this.defender.getLookControl().setLookAt(soul, 100.0F, 100.0F);

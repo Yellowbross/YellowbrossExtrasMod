@@ -197,8 +197,8 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     public Entity villagerSoul = null;
     public int jumpscareTicks = 0;
 
-    public Defender(EntityType<? extends YExtrasMob> p_21683_, Level p_21684_) {
-        super(p_21683_, p_21684_);
+    public Defender(EntityType<? extends YExtrasMob> entityType, Level pLevel) {
+        super(entityType, pLevel);
     }
 
     @Override
@@ -428,16 +428,15 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
     @Override
     public float getEyeHeight(Pose pPose) {
-        if (this.getCustomRender() == 3) return 5.75f;
-        return super.getEyeHeight(pPose);
+        return this.getCustomRender() == 3 ? 5.75f : super.getEyeHeight(pPose);
     }
 
     @Override
     public void tick() {
         this.calculateWobble();
 
-        if (this.getPhase() == 1 && this.tickCount % 20 == 0) {
-            List<Entity> anySoulsNearby = this.level.getEntities(this, this.getBoundingBox().inflate(20.0D), p -> Objects.equals(p.getEncodeId(), nameToLookFor));
+        if (this.getPhase() == 1 && this.deathAttackTicks < 1 && this.attackType == 0 && this.tickCount % 20 == 0) {
+            List<Entity> anySoulsNearby = this.level.getEntities(this, this.getBoundingBox().inflate(60.0D), p -> Objects.equals(p.getEncodeId(), nameToLookFor));
             if (!anySoulsNearby.isEmpty()) this.setVillagerSoul(anySoulsNearby.get(0));
         }
         if (this.jumpscareTicks > 0) this.jumpscareTicks += 1;
@@ -670,11 +669,13 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                     }
 
                     if (this.deathAttackTicks >= 125 + 1) {
-                        this.setHealth(this.getHealth() + 2.0F);
+                        this.setHealth(this.getHealth() + 1.0F);
                         this.setHealthIFrames = 10;
                     }
 
-                    if (this.deathAttackTicks >= 125 + 1 && this.deathAttackTicks < 288 + 1) {
+                    if (this.deathAttackTicks >= 125 + 1 && this.deathAttackTicks < 640 + 1) {
+                        this.setDiscardFriction(true);
+
                         if ((this.deathAttackTicks - (125 + 1)) % 4 == 0) {
                             this.playSound(YESoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH.get(), 3.0F, 1.0F);
                             CameraShake.cameraShake(this.level, position(), 30, 0.2f, 0, 8);
@@ -696,13 +697,13 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                             double chargey = getY() - (t.getY() + t.getEyeHeight());
                             double chargez = getZ() - t.getZ();
                             double charged = Math.sqrt(chargex * chargex + chargey * chargey + chargez * chargez);
-                            float power = (float) 4.0F;
-                            double motionX = -(chargex / charged * (double) power * 0.2D);
-                            double motionY = -(chargey / charged * (double) power * 0.3D);
-                            double motionZ = -(chargez / charged * (double) power * 0.2D);
+                            float power = (float) 1.0F;
+                            double motionX = -(chargex / charged * (double) power);
+                            double motionY = -(chargey / charged * (double) power);
+                            double motionZ = -(chargez / charged * (double) power);
                             setCharge(motionX, motionY, motionZ);
                         }
-                        this.setDeltaMovement(chargeX, chargeY, chargeZ);
+                        this.setDeltaMovement(this.getDeltaMovement().multiply(1, 0, 1).add(chargeX, chargeY, chargeZ));
 
                         for (Entity entity : level.getEntities(this, getBoundingBox().inflate(100.0F))) {
                             if (EntityUtil.canHurtThisMob(entity, this) && entity instanceof LivingEntity && entity.isAlive() && EntityUtil.isMobNotInCreativeMode(entity) && !(entity instanceof Player)) {
@@ -754,15 +755,17 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                             }
                         }
                     }
-                    if (this.deathAttackTicks >= 296 + 1) {
+                    if (this.deathAttackTicks == 640 + 1) this.setDiscardFriction(false);
+
+                    if (this.deathAttackTicks >= 648 + 1) {
                         this.setSecondHat(this.getPhaseLimit() > 1 ? 2 : 0);
                     }
 
-                    if (this.deathAttackTicks == 320 + 1) {
-                        this.setDeltaMovement(0.0D, -1.0D, 0.0D);
+                    if (this.deathAttackTicks == 650 + 1) {
+                        this.setDeltaMovement(0.0D, -3.0D, 0.0D);
                     }
 
-                    if (this.deathAttackTicks >= 400 + 1 || (this.deathAttackTicks >= 320 + 1 && this.isOnGround())) {
+                    if (this.deathAttackTicks >= 672 + 1) {
                         this.deathAttackTicks = 0;
                         this.attackType = 0;
                         this.setPhase(this.getPhaseLimit() > 1 ? 2 : 0);
@@ -1379,6 +1382,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
         if (this.getPhase() == 1) {
             this.setAnimationState("excalibur");
             this.attackType = attack_excalibur;
+            // this.playSound(YESoundEvents.ENTITY_DEFENDER_EXCALIBUR.get(), 6.0F, 1.0F);
         }
         if (this.getPhase() == 2) {
             this.setAnimationState("flamethrower");
