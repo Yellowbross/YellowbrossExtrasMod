@@ -22,26 +22,26 @@ import java.util.List;
 
 public class ConverslinBullet extends CustomAbstractHurtingProjectile implements ItemSupplier {
 
-    public ConverslinBullet(EntityType<? extends CustomAbstractHurtingProjectile> p_36833_, Level p_36834_) {
-        super(p_36833_, p_36834_);
+    public ConverslinBullet(EntityType<? extends CustomAbstractHurtingProjectile> entityType, Level level) {
+        super(entityType, level);
     }
 
-    public ConverslinBullet(EntityType<? extends CustomAbstractHurtingProjectile> p_36817_, double p_36818_, double p_36819_, double p_36820_, double p_36821_, double p_36822_, double p_36823_, Level p_36824_) {
-        super(YEEntityTypes.ConverslinBullet.get(), p_36818_, p_36819_, p_36820_, p_36821_, p_36822_, p_36823_, p_36824_);
+    public ConverslinBullet(EntityType<? extends CustomAbstractHurtingProjectile> entityType, double startX, double startY, double startZ, double shootX, double shootY, double shootZ, Level level) {
+        super(YEEntityTypes.ConverslinBullet.get(), startX, startY, startZ, shootX, shootY, shootZ, level);
     }
 
-    public ConverslinBullet(Level p_36831_, LivingEntity p_36827_, double p_36828_, double p_36829_, double p_36830_) {
-        super(YEEntityTypes.ConverslinBullet.get(), p_36827_, p_36828_, p_36829_, p_36830_, p_36831_);
+    public ConverslinBullet(Level level, LivingEntity owner, double x, double y, double z) {
+        super(YEEntityTypes.ConverslinBullet.get(), owner, x, y, z, level);
     }
 
-    protected void onHitEntity(EntityHitResult p_37404_) {
+    protected void onHitEntity(EntityHitResult pResult) {
         boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
         boolean team = true;
         if (shouldCareAboutTeams) {
-            team = EntityUtil.canHurtThisMob(p_37404_.getEntity(), (Mob) this.getOwner()) && !(p_37404_.getEntity() instanceof AbstractOryctolin);
+            team = EntityUtil.canHurtThisMob(pResult.getEntity(), (Mob) this.getOwner()) && !(pResult.getEntity() instanceof AbstractOryctolin);
         }
-        if (team && p_37404_.getEntity() != this.getOwner() && !(p_37404_.getEntity() instanceof Projectile)) {
-            super.onHitEntity(p_37404_);
+        if (team && pResult.getEntity() != this.getOwner() && !(pResult.getEntity() instanceof Projectile)) {
+            super.onHitEntity(pResult);
             if (!this.level.isClientSide) {
                 this.explode(3.0D);
             }
@@ -58,8 +58,8 @@ public class ConverslinBullet extends CustomAbstractHurtingProjectile implements
     }
 
     @Override
-    protected void onHitBlock(BlockHitResult p_37258_) {
-        super.onHitBlock(p_37258_);
+    protected void onHitBlock(BlockHitResult pResult) {
+        super.onHitBlock(pResult);
         if (!this.level.isClientSide) {
             this.level.broadcastEntityEvent(this, (byte)3);
             this.explode(3.0D);

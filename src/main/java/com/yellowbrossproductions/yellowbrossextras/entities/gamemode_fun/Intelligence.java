@@ -38,8 +38,8 @@ public class Intelligence extends Entity {
     private double homeZ;
     private boolean captured = false;
 
-    public Intelligence(EntityType<?> p_19870_, Level p_19871_) {
-        super(p_19870_, p_19871_);
+    public Intelligence(EntityType<?> entityType, Level level) {
+        super(entityType, level);
         noCulling = true;
     }
 

@@ -31,7 +31,7 @@ public class VilvgaverRenderer extends EntityRenderer<Entity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Entity p_114482_) {
+    public ResourceLocation getTextureLocation(Entity pEntity) {
         return null;
     }
 
@@ -58,7 +58,7 @@ public class VilvgaverRenderer extends EntityRenderer<Entity> {
     }
 
     @Override
-    protected int getBlockLightLevel(Entity p_114496_, BlockPos p_114497_) {
+    protected int getBlockLightLevel(Entity pEntity, BlockPos pPos) {
         return 15;
     }
 

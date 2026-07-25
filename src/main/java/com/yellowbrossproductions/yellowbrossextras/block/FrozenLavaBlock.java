@@ -20,15 +20,15 @@ public class FrozenLavaBlock extends Block {
         return true;
     }
 
-    public void randomTick(BlockState p_221238_, ServerLevel p_221239_, BlockPos p_221240_, RandomSource p_221241_) {
-        this.tick(p_221238_, p_221239_, p_221240_, p_221241_);
+    public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
+        this.tick(pState, pLevel, pPos, pRandom);
     }
 
     @Override
-    public void tick(BlockState p_222945_, ServerLevel worldIn, BlockPos pos, RandomSource p_222957_) {
-        if (p_222957_.nextInt(4) == 0) {
-            worldIn.setBlockAndUpdate(pos, Blocks.LAVA.defaultBlockState());
-            worldIn.neighborChanged(pos, Blocks.LAVA, pos);
+    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
+        if (pRandom.nextInt(4) == 0) {
+            pLevel.setBlockAndUpdate(pPos, Blocks.LAVA.defaultBlockState());
+            pLevel.neighborChanged(pPos, Blocks.LAVA, pPos);
         }
     }
 }

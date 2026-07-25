@@ -19,8 +19,8 @@ public class YExtrasMob extends PathfinderMob implements ICanBeAnimated, Yextras
     protected static final EntityDataAccessor<String> ANIMATION_STATE = SynchedEntityData.defineId(YExtrasMob.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> MUSIC_TO_PLAY = SynchedEntityData.defineId(YExtrasMob.class, EntityDataSerializers.INT);
 
-    protected YExtrasMob(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
-        super(p_21683_, p_21684_);
+    protected YExtrasMob(EntityType<? extends PathfinderMob> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override

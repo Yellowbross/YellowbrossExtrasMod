@@ -19,7 +19,7 @@ public class SkeletonSnapRenderer extends MobRenderer<SkeletonSnap, SkeletonSnap
     }
 
     @Override
-    public ResourceLocation getTextureLocation(SkeletonSnap p_110775_1_) {
+    public ResourceLocation getTextureLocation(SkeletonSnap pEntity) {
         return TEXTURE;
     }
 }

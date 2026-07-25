@@ -203,6 +203,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(0, new FlamethrowerGoal(this));
         this.goalSelector.addGoal(0, new IcethrowerGoal(this));
         this.goalSelector.addGoal(0, new WitherBazookaGoal(this));
         this.goalSelector.addGoal(0, new SnipeGoal(this));
@@ -1264,27 +1265,27 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag p_21484_) {
-        super.addAdditionalSaveData(p_21484_);
-        p_21484_.putBoolean("ShouldShowBossBar", this.shouldShowBossBar());
-        p_21484_.putInt("Phase", this.getPhase());
-        p_21484_.putInt("PhaseLimit", this.getPhaseLimit());
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putBoolean("ShouldShowBossBar", this.shouldShowBossBar());
+        pCompound.putInt("Phase", this.getPhase());
+        pCompound.putInt("PhaseLimit", this.getPhaseLimit());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag p_21450_) {
-        super.readAdditionalSaveData(p_21450_);
-        this.setShowBossBar(p_21450_.getBoolean("ShouldShowBossBar"));
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        this.setShowBossBar(pCompound.getBoolean("ShouldShowBossBar"));
         if (this.hasCustomName()) {
             this.bossEvent.setName(this.getDisplayName());
         }
 
-        this.setPhase(p_21450_.getInt("Phase"));
+        this.setPhase(pCompound.getInt("Phase"));
 
-        this.setPhaseLimit(p_21450_.getInt("PhaseLimit"));
+        this.setPhaseLimit(pCompound.getInt("PhaseLimit"));
 
-        if (p_21450_.contains("Health", 99)) {
-            this.entityData.set(DATA_HEALTH_ID, Mth.clamp(p_21450_.getFloat("Health"), 0.0F, this.getMaxHealth()));
+        if (pCompound.contains("Health", 99)) {
+            this.entityData.set(DATA_HEALTH_ID, Mth.clamp(pCompound.getFloat("Health"), 0.0F, this.getMaxHealth()));
         }
     }
 
@@ -1360,6 +1361,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                 this.setMusicToPlay(3);
             }
             this.clearFire();
+            this.setDiscardFriction(false);
             this.processDeath();
         } else {
             super.die(pDamageSource);

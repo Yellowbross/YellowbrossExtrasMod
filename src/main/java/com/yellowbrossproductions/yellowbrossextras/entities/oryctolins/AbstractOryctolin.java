@@ -38,8 +38,8 @@ public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctoli
 
     public AnimationState anim_celebrate = new AnimationState();
 
-    public AbstractOryctolin(EntityType<? extends YExtrasMob> p_33002_, Level p_33003_) {
-        super(p_33002_, p_33003_);
+    public AbstractOryctolin(EntityType<? extends YExtrasMob> entityType, Level level) {
+        super(entityType, level);
         ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
     }
 
@@ -65,7 +65,7 @@ public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctoli
     }
 
     @Override
-    public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
         return false;
     }
 
@@ -110,15 +110,15 @@ public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctoli
     }
 
     @Override
-    public boolean hurt(DamageSource p_21016_, float p_21017_) {
-        if (p_21016_.getEntity() instanceof AbstractOryctolin oryctolin) {
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (pSource.getEntity() instanceof AbstractOryctolin oryctolin) {
             if (oryctolin.getTeam() != null || this.getTeam() != null) {
-                return EntityUtil.canHurtThisMob(oryctolin, this) && super.hurt(p_21016_, p_21017_);
+                return EntityUtil.canHurtThisMob(oryctolin, this) && super.hurt(pSource, pAmount);
             } else {
-                return super.hurt(p_21016_, p_21017_);
+                return super.hurt(pSource, pAmount);
             }
         }
-        return super.hurt(p_21016_, p_21017_);
+        return super.hurt(pSource, pAmount);
     }
 
     public abstract SoundEvent getCelebrateSound();
@@ -127,18 +127,18 @@ public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctoli
         EntityUtil.animateWhen(this.anim_celebrate, this.getAnimationState().equals("celebrate"), this.tickCount);
     }
 
-    protected PathNavigation createNavigation(Level p_33348_) {
-        return new OryctolinNavigation(this, p_33348_);
+    protected PathNavigation createNavigation(Level pLevel) {
+        return new OryctolinNavigation(this, pLevel);
     }
 
     static class OryctolinNavigation extends GroundPathNavigation {
-        public OryctolinNavigation(Mob p_33379_, Level p_33380_) {
-            super(p_33379_, p_33380_);
+        public OryctolinNavigation(Mob mob, Level level) {
+            super(mob, level);
         }
 
-        protected PathFinder createPathFinder(int p_33382_) {
+        protected PathFinder createPathFinder(int pMaxVisitedNodes) {
             this.nodeEvaluator = new OryctolinNodeEvaluator();
-            return new PathFinder(this.nodeEvaluator, p_33382_);
+            return new PathFinder(this.nodeEvaluator, pMaxVisitedNodes);
         }
     }
 
@@ -146,10 +146,8 @@ public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctoli
         OryctolinNodeEvaluator() {
         }
 
-        protected BlockPathTypes evaluateBlockPathType(BlockGetter p_33387_, boolean p_33388_, boolean p_33389_, BlockPos p_33390_, BlockPathTypes p_33391_) {
-            if (p_33391_ == BlockPathTypes.DOOR_WOOD_CLOSED) return BlockPathTypes.OPEN;
-            if (p_33391_ == BlockPathTypes.DOOR_OPEN) return BlockPathTypes.OPEN;
-            return super.evaluateBlockPathType(p_33387_, p_33388_, p_33389_, p_33390_, p_33391_);
+        protected BlockPathTypes evaluateBlockPathType(BlockGetter pLevel, boolean pCanOpenDoors, boolean pCanEnterDoors, BlockPos pPos, BlockPathTypes pNodeType) {
+            return super.evaluateBlockPathType(pLevel, true, true, pPos, pNodeType);
         }
     }
 

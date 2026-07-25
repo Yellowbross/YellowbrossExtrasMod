@@ -30,23 +30,23 @@ public class ConverslinRenderer extends MobRenderer<Converslin, ConverslinModel<
     }
 
     @Override
-    public Vec3 getRenderOffset(Converslin p_114483_, float p_114484_) {
+    public Vec3 getRenderOffset(Converslin pEntity, float pPartialTicks) {
         return new Vec3(
-                (this.random.nextGaussian() * 0.001D) * p_114483_.getShakeMultiplier(),
+                (this.random.nextGaussian() * 0.001D) * pEntity.getShakeMultiplier(),
                 0.0D,
-                (this.random.nextGaussian() * 0.001D) * p_114483_.getShakeMultiplier()
+                (this.random.nextGaussian() * 0.001D) * pEntity.getShakeMultiplier()
         );
     }
 
     @Override
-    protected void scale(Converslin p_115314_, PoseStack p_115315_, float p_115316_) {
+    protected void scale(Converslin pLivingEntity, PoseStack pMatrixStack, float pPartialTickTime) {
         float f1 = 0.8F;
-        p_115315_.scale(f1, f1, f1);
+        pMatrixStack.scale(f1, f1, f1);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Converslin p_110775_1_) {
-        if (p_110775_1_.getHealth() < (p_110775_1_.getMaxHealth() / 2)) {
+    public ResourceLocation getTextureLocation(Converslin pEntity) {
+        if (pEntity.getHealth() < (pEntity.getMaxHealth() / 2)) {
             return NEAR_DEATH;
         }
         return TEXTURE;

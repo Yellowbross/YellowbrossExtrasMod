@@ -33,6 +33,7 @@ public class Icicle extends Entity {
     private static final EntityDataAccessor<BlockPos> COLLISION_POS = SynchedEntityData.defineId(Icicle.class, EntityDataSerializers.BLOCK_POS);
     private static final EntityDataAccessor<Integer> TIMER = SynchedEntityData.defineId(Icicle.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DELAY = SynchedEntityData.defineId(Icicle.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> TICKS = SynchedEntityData.defineId(Icicle.class, EntityDataSerializers.INT);
     LivingEntity shooter = null;
     public boolean shotByDefender = false;
     LivingEntity target = null;
@@ -59,16 +60,17 @@ public class Icicle extends Entity {
         this.entityData.define(COLLISION_POS, BlockPos.ZERO);
         this.entityData.define(TIMER, 100);
         this.entityData.define(DELAY, 0);
+        this.entityData.define(TICKS, 0);
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag pCompound) {
-
+        this.setTicks(pCompound.getInt("ticks"));
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag pCompound) {
-
+        pCompound.putInt("ticks", this.getTicks());
     }
 
     @Override
@@ -115,15 +117,25 @@ public class Icicle extends Entity {
         return false;
     }
 
+    public void setTicks(int input) {
+        this.entityData.set(TICKS, input);
+    }
+
+    public int getTicks() {
+        return this.entityData.get(TICKS);
+    }
+
     @Override
     public void tick() {
         super.tick();
 
+        if (!this.level.isClientSide) this.setTicks(this.getTicks() + 1);
+
         if (this.shotByDefender) {
-            if (this.tickCount < 5 + this.getDelay() && this.target != null && this.target.isAlive() && !this.target.isRemoved()) {
+            if (this.getTicks() < 5 + this.getDelay() && this.target != null && this.target.isAlive() && !this.target.isRemoved()) {
                 this.setCollisionPos(this.target.getBlockX(), this.target.getBlockZ());
             }
-            if (this.tickCount >= 5 + this.getDelay()) {
+            if (this.getTicks() >= 5 + this.getDelay()) {
                 BlockPos.MutableBlockPos yPosition = this.getCollisionPos().mutable();
                 while (yPosition.getY() > this.level.getMinBuildHeight() && !this.level.getBlockState(yPosition).getMaterial().blocksMotion()) {
                     yPosition.move(Direction.DOWN);
@@ -134,7 +146,7 @@ public class Icicle extends Entity {
             }
         }
 
-        if (this.tickCount == this.getTrueTimer()) {
+        if (this.getTicks() == this.getTrueTimer()) {
             this.playSound(YESoundEvents.ENTITY_DEFENDER_ICETHROWER_HIT.get(), 2.0F, 1.0F);
             EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4, 0), ParticleTypes.POOF, 30, 1.0F, Vec3.ZERO, 0.0F);
             for(int i = 0; i < 10; ++i) {
@@ -153,6 +165,6 @@ public class Icicle extends Entity {
             }
         }
 
-        if (this.tickCount > 140) this.discard();
+        if (this.getTicks() > 140) this.discard();
     }
 }

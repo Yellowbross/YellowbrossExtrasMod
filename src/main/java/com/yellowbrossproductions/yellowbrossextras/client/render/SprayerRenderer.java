@@ -30,13 +30,13 @@ public class SprayerRenderer extends MobRenderer<Sprayer, SprayerModel<Sprayer>>
         poseStack.scale(f2, f3, f2);
     }
 
-    protected float getWhiteOverlayProgress(Sprayer p_114043_, float p_114044_) {
-        float f = p_114043_.getSwelling(p_114044_);
+    protected float getWhiteOverlayProgress(Sprayer pLivingEntity, float pPartialTicks) {
+        float f = pLivingEntity.getSwelling(pPartialTicks);
         return (int)(f * 10.0F) % 2 == 0 ? 0.0F : Mth.clamp(f, 0.5F, 1.0F);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Sprayer p_110775_1_) {
+    public ResourceLocation getTextureLocation(Sprayer pEntity) {
         return TEXTURE;
     }
 }

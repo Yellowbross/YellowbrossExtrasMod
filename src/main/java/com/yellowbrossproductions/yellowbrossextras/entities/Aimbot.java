@@ -45,8 +45,8 @@ public class Aimbot extends YExtrasMob implements Enemy {
     Vec3 stareAt = Vec3.ZERO;
     int shotTick = 0;
 
-    public Aimbot(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
-        super(p_21683_, p_21684_);
+    public Aimbot(EntityType<? extends PathfinderMob> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class Aimbot extends YExtrasMob implements Enemy {
         return SoundEvents.SKELETON_AMBIENT;
     }
 
-    protected SoundEvent getHurtSound(DamageSource p_33579_) {
+    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
         return SoundEvents.SKELETON_HURT;
     }
 
@@ -112,7 +112,7 @@ public class Aimbot extends YExtrasMob implements Enemy {
         return SoundEvents.SKELETON_DEATH;
     }
 
-    protected void playStepSound(BlockPos p_32159_, BlockState p_32160_) {
+    protected void playStepSound(BlockPos pPos, BlockState pState) {
         this.playSound(this.getStepSound(), 0.15F, 1.0F);
     }
 

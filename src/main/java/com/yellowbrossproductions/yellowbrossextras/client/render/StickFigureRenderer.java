@@ -29,19 +29,19 @@ public class StickFigureRenderer extends MobRenderer<StickFigure, StickFigureMod
     }
 
     @Override
-    public ResourceLocation getTextureLocation(StickFigure p_110775_1_) {
+    public ResourceLocation getTextureLocation(StickFigure pEntity) {
         return TEXTURE;
     }
 
     @Override
-    public void render(StickFigure stick, float p_115456_, float p_115457_, PoseStack poseStack, MultiBufferSource bufferSource, int light) {
-        super.render(stick, p_115456_, p_115457_, poseStack, bufferSource, light);
+    public void render(StickFigure pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack, MultiBufferSource pBuffer, int pPackedLight) {
+        super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
     }
 
     @Override
-    protected void scale(StickFigure p_115314_, PoseStack p_115315_, float p_115316_) {
+    protected void scale(StickFigure pLivingEntity, PoseStack pMatrixStack, float pPartialTickTime) {
         boolean kingOrChosen = true;
         float size = kingOrChosen ? 1.0F : 0.9F;
-        p_115315_.scale(size, size, size);
+        pMatrixStack.scale(size, size, size);
     }
 }

@@ -112,15 +112,15 @@ public class CustomAbstractHurtingProjectile extends Projectile {
         return 0.95F;
     }
 
-    public void addAdditionalSaveData(CompoundTag p_36848_) {
-        super.addAdditionalSaveData(p_36848_);
-        p_36848_.put("power", this.newDoubleList(new double[]{this.xPower, this.yPower, this.zPower}));
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.put("power", this.newDoubleList(new double[]{this.xPower, this.yPower, this.zPower}));
     }
 
-    public void readAdditionalSaveData(CompoundTag p_36844_) {
-        super.readAdditionalSaveData(p_36844_);
-        if (p_36844_.contains("power", 9)) {
-            ListTag listtag = p_36844_.getList("power", 6);
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        if (pCompound.contains("power", 9)) {
+            ListTag listtag = pCompound.getList("power", 6);
             if (listtag.size() == 3) {
                 this.xPower = listtag.getDouble(0);
                 this.yPower = listtag.getDouble(1);

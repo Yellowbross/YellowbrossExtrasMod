@@ -39,11 +39,11 @@ public class IcicleRenderer extends EntityRenderer<Icicle> {
 
         VertexConsumer sprite = pBuffer.getBuffer(RenderType.entityTranslucent(TEXTURE));
 
-        if (pEntity.tickCount <= 4) renderIcicle(pPoseStack, sprite, pEntity.tickCount, pPartialTick, pEntity.getTrueTimer(),  false);
-        if (pEntity.tickCount > 6 + pEntity.getDelay() && pEntity.tickCount < pEntity.getTrueTimer()) renderWarning(pPoseStack, sprite, pEntity.tickCount);
-        if (pEntity.tickCount >= pEntity.getTrueTimer() - 4 && pEntity.tickCount < pEntity.getTrueTimer())
-            renderIcicle(pPoseStack, sprite, pEntity.tickCount, pPartialTick, pEntity.getTrueTimer(), true);
-        if (pEntity.tickCount >= pEntity.getTrueTimer()) renderExplosion(pPoseStack, sprite, pEntity.tickCount, pPartialTick, pEntity.getTrueTimer());
+        if (pEntity.getTicks() <= 4) renderIcicle(pPoseStack, sprite, pEntity.getTicks(), pPartialTick, pEntity.getTrueTimer(),  false);
+        if (pEntity.getTicks() > 6 + pEntity.getDelay() && pEntity.getTicks() < pEntity.getTrueTimer()) renderWarning(pPoseStack, sprite, pEntity.getTicks());
+        if (pEntity.getTicks() >= pEntity.getTrueTimer() - 4 && pEntity.getTicks() < pEntity.getTrueTimer())
+            renderIcicle(pPoseStack, sprite, pEntity.getTicks(), pPartialTick, pEntity.getTrueTimer(), true);
+        if (pEntity.getTicks() >= pEntity.getTrueTimer()) renderExplosion(pPoseStack, sprite, pEntity.getTicks(), pPartialTick, pEntity.getTrueTimer());
 
         pPoseStack.popPose();
 
@@ -51,7 +51,7 @@ public class IcicleRenderer extends EntityRenderer<Icicle> {
 
         VertexConsumer glow = pBuffer.getBuffer(YERenderTypes.stickFigure(TEXTURE, false));
 
-        if (pEntity.tickCount > 6 + pEntity.getDelay() && pEntity.tickCount < pEntity.getTrueTimer()) renderWarning(pPoseStack, glow, pEntity.tickCount);
+        if (pEntity.getTicks() > 6 + pEntity.getDelay() && pEntity.getTicks() < pEntity.getTrueTimer()) renderWarning(pPoseStack, glow, pEntity.getTicks());
 
         pPoseStack.popPose();
     }

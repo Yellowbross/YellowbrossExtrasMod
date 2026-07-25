@@ -50,7 +50,7 @@ public class MobRemoverItemBase extends Item {
     }
 
     @Override
-    public boolean canAttackBlock(BlockState p_41441_, Level p_41442_, BlockPos p_41443_, Player p_41444_) {
+    public boolean canAttackBlock(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
         return false;
     }
 }

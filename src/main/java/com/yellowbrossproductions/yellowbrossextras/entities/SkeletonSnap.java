@@ -12,8 +12,8 @@ import net.minecraft.world.level.Level;
 
 public class SkeletonSnap extends AbstractSkeleton implements YextrasEntity {
 
-    public SkeletonSnap(EntityType<? extends AbstractSkeleton> p_32133_, Level p_32134_) {
-        super(p_32133_, p_32134_);
+    public SkeletonSnap(EntityType<? extends AbstractSkeleton> entityType, Level level) {
+        super(entityType, level);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -33,7 +33,7 @@ public class SkeletonSnap extends AbstractSkeleton implements YextrasEntity {
         return SoundEvents.SKELETON_AMBIENT;
     }
 
-    protected SoundEvent getHurtSound(DamageSource p_33579_) {
+    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
         return SoundEvents.SKELETON_HURT;
     }
 

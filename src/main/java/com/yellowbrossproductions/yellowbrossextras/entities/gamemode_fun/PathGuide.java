@@ -31,8 +31,8 @@ public class PathGuide extends Entity {
     private static final EntityDataAccessor<Boolean> WAITING_FOR_SIGNAL = SynchedEntityData.defineId(PathGuide.class, EntityDataSerializers.BOOLEAN);
     private List<BlockPos> savedLocations = Lists.newArrayList();
 
-    public PathGuide(EntityType<?> p_19870_, Level p_19871_) {
-        super(p_19870_, p_19871_);
+    public PathGuide(EntityType<?> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override
@@ -41,9 +41,9 @@ public class PathGuide extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag p_20052_) {
-        if (p_20052_.contains("SavedLocations")) {
-            ListTag listTag = p_20052_.getList("SavedLocations", 10);
+    protected void readAdditionalSaveData(CompoundTag pCompound) {
+        if (pCompound.contains("SavedLocations")) {
+            ListTag listTag = pCompound.getList("SavedLocations", 10);
 
             for(int i = 0; i < listTag.size(); ++i) {
                 BlockPos pos = NbtUtils.readBlockPos(listTag.getCompound(i));
@@ -53,14 +53,14 @@ public class PathGuide extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag p_20139_) {
+    protected void addAdditionalSaveData(CompoundTag pCompound) {
         ListTag listtag = new ListTag();
 
         for (BlockPos savedLocation : this.savedLocations) {
             listtag.add(NbtUtils.writeBlockPos(savedLocation));
         }
 
-        p_20139_.put("SavedLocations", listtag);
+        pCompound.put("SavedLocations", listtag);
     }
 
     @Override

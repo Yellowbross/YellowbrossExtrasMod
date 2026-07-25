@@ -30,8 +30,8 @@ public class AmoebicDevourer extends YExtrasMob implements Enemy {
     public float oSquish;
     private boolean wasOnGround;
 
-    public AmoebicDevourer(EntityType<? extends YExtrasMob> p_33002_, Level p_33003_) {
-        super(p_33002_, p_33003_);
+    public AmoebicDevourer(EntityType<? extends YExtrasMob> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override
@@ -97,16 +97,16 @@ public class AmoebicDevourer extends YExtrasMob implements Enemy {
         return this.entityData.get(SIZE);
     }
 
-    public void addAdditionalSaveData(CompoundTag p_33619_) {
-        super.addAdditionalSaveData(p_33619_);
-        p_33619_.putFloat("Size", this.getSize() - 1);
-        p_33619_.putBoolean("wasOnGround", this.wasOnGround);
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putFloat("Size", this.getSize() - 1);
+        pCompound.putBoolean("wasOnGround", this.wasOnGround);
     }
 
-    public void readAdditionalSaveData(CompoundTag p_33607_) {
-        this.setSize(p_33607_.getInt("Size") + 1, false);
-        super.readAdditionalSaveData(p_33607_);
-        this.wasOnGround = p_33607_.getBoolean("wasOnGround");
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        this.setSize(pCompound.getInt("Size") + 1, false);
+        super.readAdditionalSaveData(pCompound);
+        this.wasOnGround = pCompound.getBoolean("wasOnGround");
     }
 
     public void refreshDimensions() {
@@ -125,17 +125,17 @@ public class AmoebicDevourer extends YExtrasMob implements Enemy {
         super.onSyncedDataUpdated(pKey);
     }
 
-    protected float getStandingEyeHeight(Pose p_33614_, EntityDimensions p_33615_) {
-        return 0.8F * p_33615_.height;
+    protected float getStandingEyeHeight(Pose pPose, EntityDimensions pDimensions) {
+        return 0.8F * pDimensions.height;
     }
 
-    public EntityDimensions getDimensions(Pose p_33597_) {
-        return super.getDimensions(p_33597_).scale(0.5f * (float)this.getSize());
+    public EntityDimensions getDimensions(Pose pPose) {
+        return super.getDimensions(pPose).scale(0.5f * (float)this.getSize());
     }
 
     @Override
-    public boolean doHurtTarget(Entity p_21372_) {
-        boolean hurt = super.doHurtTarget(p_21372_);
+    public boolean doHurtTarget(Entity pEntity) {
+        boolean hurt = super.doHurtTarget(pEntity);
         if (hurt) {
             this.playSound(SoundEvents.PLAYER_HURT_ON_FIRE, this.getSoundVolume(), 1.0F);
         }
@@ -156,11 +156,12 @@ public class AmoebicDevourer extends YExtrasMob implements Enemy {
             }
             return false;
         }
+        if (source != DamageSource.OUT_OF_WORLD) amount *= 0.1f;
         return super.hurt(source, amount);
     }
 
     @Override
-    public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
         return false;
     }
 

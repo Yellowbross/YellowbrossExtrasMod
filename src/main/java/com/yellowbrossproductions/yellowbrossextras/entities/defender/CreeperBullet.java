@@ -145,12 +145,12 @@ public class CreeperBullet extends AbstractCreeperEntity implements IsDefenderAl
     }
 
     @Override
-    public boolean causeFallDamage(float p_149687_, float p_149688_, DamageSource p_149689_) {
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
         if (this.wasShotFromDefender) {
             this.playSound(YESoundEvents.ENTITY_DEFENDER_CREEPERBULLET_LAND.get());
             this.setAnimationState("getup");
         }
-        return super.causeFallDamage(p_149687_, p_149688_, p_149689_);
+        return super.causeFallDamage(pFallDistance, pMultiplier, pSource);
     }
 
     public void setShooter(LivingEntity shooter) {
@@ -227,8 +227,8 @@ public class CreeperBullet extends AbstractCreeperEntity implements IsDefenderAl
     }
 
     @Override
-    public void die(DamageSource p_21014_) {
-        super.die(p_21014_);
+    public void die(DamageSource pDamageSource) {
+        super.die(pDamageSource);
         this.wasShotFromDefender = false;
         this.blocksBuilding = true;
         this.setAnimationState("none");

@@ -23,18 +23,18 @@ public class PvEBlock extends Block {
         return true;
     }
 
-    public void randomTick(BlockState p_221238_, ServerLevel p_221239_, BlockPos p_221240_, RandomSource p_221241_) {
-        this.tick(p_221238_, p_221239_, p_221240_, p_221241_);
+    public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
+        this.tick(pState, pLevel, pPos, pRandom);
     }
 
     @Override
-    public void tick(BlockState p_222945_, ServerLevel worldIn, BlockPos pos, RandomSource p_222957_) {
+    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         int size = YellowbrossExtrasConfig.pveBlocks_decayRadius.get();
         if (size > 0) {
-            List<Player> list = worldIn.getEntitiesOfClass(Player.class, new AABB(pos).inflate(size));
+            List<Player> list = pLevel.getEntitiesOfClass(Player.class, new AABB(pPos).inflate(size));
             if (list.isEmpty()) {
-                worldIn.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                worldIn.levelEvent(2001, pos, Block.getId(YEItemsAndBlocks.PVE_BLOCK.get().defaultBlockState()));
+                pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
+                pLevel.levelEvent(2001, pPos, Block.getId(YEItemsAndBlocks.PVE_BLOCK.get().defaultBlockState()));
             }
         }
     }

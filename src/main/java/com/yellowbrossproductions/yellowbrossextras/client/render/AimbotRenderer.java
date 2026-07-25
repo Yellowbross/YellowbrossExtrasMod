@@ -20,7 +20,7 @@ public class AimbotRenderer extends MobRenderer<Aimbot, AimbotModel<Aimbot>> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Aimbot p_110775_1_) {
+    public ResourceLocation getTextureLocation(Aimbot pEntity) {
         return TEXTURE;
     }
 }

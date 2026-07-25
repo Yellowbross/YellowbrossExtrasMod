@@ -18,7 +18,7 @@ public class HyperSnowGolemRenderer extends MobRenderer<HyperSnowGolem, HyperSno
     }
 
     @Override
-    public ResourceLocation getTextureLocation(HyperSnowGolem p_110775_1_) {
+    public ResourceLocation getTextureLocation(HyperSnowGolem pEntity) {
         return TEXTURE;
     }
 }

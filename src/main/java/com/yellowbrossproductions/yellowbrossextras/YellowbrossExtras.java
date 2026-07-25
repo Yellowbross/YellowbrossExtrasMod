@@ -71,8 +71,8 @@ public class YellowbrossExtras
         BunnyBlitzCommand.register(dispatcher);
     }
 
-    public static boolean checkYExtrasMonsterSpawnRules(EntityType<? extends YExtrasMob> p_219014_, ServerLevelAccessor p_219015_, MobSpawnType p_219016_, BlockPos p_219017_, RandomSource p_219018_) {
-        return p_219015_.getDifficulty() != Difficulty.PEACEFUL && isDarkEnoughToSpawn(p_219015_, p_219017_, p_219018_) && checkMobSpawnRules(p_219014_, p_219015_, p_219016_, p_219017_, p_219018_);
+    public static boolean checkYExtrasMonsterSpawnRules(EntityType<? extends YExtrasMob> entityType, ServerLevelAccessor server, MobSpawnType mobSpawnType, BlockPos pPos, RandomSource pRandom) {
+        return server.getDifficulty() != Difficulty.PEACEFUL && isDarkEnoughToSpawn(server, pPos, pRandom) && checkMobSpawnRules(entityType, server, mobSpawnType, pPos, pRandom);
     }
 
     public static ResourceLocation prefix(String name) {

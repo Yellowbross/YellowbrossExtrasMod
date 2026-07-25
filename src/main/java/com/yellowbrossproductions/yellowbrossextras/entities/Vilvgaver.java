@@ -60,8 +60,8 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
     double zMot;
     double speedBackUp = 1;
 
-    public Vilvgaver(EntityType<? extends YExtrasMob> p_21683_, Level p_21684_) {
-        super(p_21683_, p_21684_);
+    public Vilvgaver(EntityType<? extends YExtrasMob> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override
@@ -81,18 +81,18 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
     }
 
     @Override
-    public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
         this.canDestroyBlocks = false;
-        return super.causeFallDamage(p_147187_, p_147188_, p_147189_);
+        return super.causeFallDamage(pFallDistance, pMultiplier, pSource);
     }
 
     @Override
-    public boolean hasLineOfSight(Entity p_147185_) {
-        if (p_147185_.level != this.level) {
+    public boolean hasLineOfSight(Entity pEntity) {
+        if (pEntity.level != this.level) {
             return false;
         } else {
             Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
-            Vec3 vec31 = new Vec3(p_147185_.getX(), p_147185_.getEyeY(), p_147185_.getZ());
+            Vec3 vec31 = new Vec3(pEntity.getX(), pEntity.getEyeY(), pEntity.getZ());
             if (vec31.distanceTo(vec3) > 128.0D) {
                 return false;
             } else {
@@ -101,12 +101,12 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
         }
     }
 
-    public boolean isInAttackSight(Entity p_147185_) {
-        if (p_147185_.level != this.level) {
+    public boolean isInAttackSight(Entity pEntity) {
+        if (pEntity.level != this.level) {
             return false;
         } else {
             Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
-            Vec3 vec31 = new Vec3(p_147185_.getX(), p_147185_.getEyeY(), p_147185_.getZ());
+            Vec3 vec31 = new Vec3(pEntity.getX(), pEntity.getEyeY(), pEntity.getZ());
             if (vec31.distanceTo(vec3) > 128.0D) {
                 return false;
             } else {
@@ -130,17 +130,17 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag p_21484_) {
-        super.addAdditionalSaveData(p_21484_);
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
 
-        p_21484_.putBoolean("challenge", this.isChallenge());
+        pCompound.putBoolean("challenge", this.isChallenge());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag p_21450_) {
-        super.readAdditionalSaveData(p_21450_);
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
 
-        this.setChallenge(p_21450_.getBoolean("challenge"));
+        this.setChallenge(pCompound.getBoolean("challenge"));
     }
 
     public boolean isChallenge() {
@@ -375,7 +375,7 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
     }
 
     @Override
-    public boolean startRiding(Entity p_20330_) {
+    public boolean startRiding(Entity pVehicle) {
         return false;
     }
 
@@ -454,10 +454,10 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
     }
 
     @Override
-    public Vec3 handleRelativeFrictionAndCalculateMovement(Vec3 p_21075_, float p_21076_) {
-        this.moveRelative(this.getFrictionInfluencedSpeed(1.5F), p_21075_);
+    public Vec3 handleRelativeFrictionAndCalculateMovement(Vec3 pDeltaMovement, float pFriction) {
+        this.moveRelative(this.getFrictionInfluencedSpeed(1.5F), pDeltaMovement);
 
-        return super.handleRelativeFrictionAndCalculateMovement(p_21075_, p_21076_);
+        return super.handleRelativeFrictionAndCalculateMovement(pDeltaMovement, pFriction);
     }
 
     @Override
@@ -465,18 +465,18 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
         return true;
     }
 
-    private float getFrictionInfluencedSpeed(float p_21331_) {
-        return this.onGround ? this.getSpeed() * (0.21600002F / (p_21331_ * p_21331_ * p_21331_)) : this.flyingSpeed;
+    private float getFrictionInfluencedSpeed(float v) {
+        return this.onGround ? this.getSpeed() * (0.21600002F / (v * v * v)) : this.flyingSpeed;
     }
 
     @Override
-    public boolean hurt(DamageSource p_21016_, float p_21017_) {
-        if (p_21016_ == DamageSource.OUT_OF_WORLD) {
-            p_21017_ = Float.MAX_VALUE;
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        if (pSource == DamageSource.OUT_OF_WORLD) {
+            pAmount = Float.MAX_VALUE;
         }
-        if (p_21016_.isProjectile() && this.isChallenge()) {
-            if (p_21016_.getEntity() != null) {
-                Entity entity = p_21016_.getEntity();
+        if (pSource.isProjectile() && this.isChallenge()) {
+            if (pSource.getEntity() != null) {
+                Entity entity = pSource.getEntity();
                 double chargex = this.getX() - entity.getX();
                 double chargey = this.getY() - entity.getY();
                 double chargez = this.getZ() - entity.getZ();
@@ -492,20 +492,20 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
                 this.speedBackUp = Math.max(speedCheck, -YellowbrossExtrasConfig.vilvgaverChallenge_pushLimit.get());
             }
         }
-        if (p_21017_ < 1000000000000.0F) {
+        if (pAmount < 1000000000000.0F) {
             return false;
         }
-        return super.hurt(p_21016_, p_21017_);
+        return super.hurt(pSource, pAmount);
     }
 
     @Override
-    public void die(DamageSource p_21014_) {
+    public void die(DamageSource pDamageSource) {
         this.deathTime = 19;
-        super.die(p_21014_);
+        super.die(pDamageSource);
     }
 
     @Override
-    public boolean removeWhenFarAway(double p_21542_) {
+    public boolean removeWhenFarAway(double pDistanceToClosestPlayer) {
         return this.getTarget() == null && this.tickCount > 300;
     }
 

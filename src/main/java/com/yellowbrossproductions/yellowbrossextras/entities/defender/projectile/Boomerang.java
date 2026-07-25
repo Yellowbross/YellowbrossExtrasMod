@@ -52,7 +52,7 @@ public class Boomerang extends PathfinderMob implements MobAttack {
     }
 
     @Override
-    public boolean canBeAffected(MobEffectInstance p_21197_) {
+    public boolean canBeAffected(MobEffectInstance pEffectInstance) {
         return false;
     }
 
@@ -265,13 +265,13 @@ public class Boomerang extends PathfinderMob implements MobAttack {
         this.setXRot(this.xRotO);
     }
 
-    public void shootFromRotation(Entity p_234612_1_, float p_234612_2_, float p_234612_3_, float p_234612_4_, float p_234612_5_, float p_234612_6_) {
+    public void shootFromRotation(Entity pEntity, float p_234612_2_, float p_234612_3_, float p_234612_4_, float p_234612_5_, float p_234612_6_) {
         float f = -Mth.sin(p_234612_3_ * ((float)Math.PI / 180F)) * Mth.cos(p_234612_2_ * ((float)Math.PI / 180F));
         float f1 = -Mth.sin((p_234612_2_ + p_234612_4_) * ((float)Math.PI / 180F));
         float f2 = Mth.cos(p_234612_3_ * ((float)Math.PI / 180F)) * Mth.cos(p_234612_2_ * ((float)Math.PI / 180F));
         this.shoot((double)f, (double)f1, (double)f2, p_234612_5_, p_234612_6_);
-        Vec3 vector3d = p_234612_1_.getDeltaMovement();
-        this.setDeltaMovement(this.getDeltaMovement().add(vector3d.x, p_234612_1_.isOnGround() ? 0.0D : vector3d.y, vector3d.z));
+        Vec3 vector3d = pEntity.getDeltaMovement();
+        this.setDeltaMovement(this.getDeltaMovement().add(vector3d.x, pEntity.isOnGround() ? 0.0D : vector3d.y, vector3d.z));
         this.accelerationX = this.getDeltaMovement().x;
         this.accelerationY = this.getDeltaMovement().y;
         this.accelerationZ = this.getDeltaMovement().z;
@@ -286,12 +286,12 @@ public class Boomerang extends PathfinderMob implements MobAttack {
     }
 
     @Override
-    public boolean shouldRenderAtSqrDistance(double p_19883_) {
-        return p_19883_ < 2048;
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        return pDistance < 2048;
     }
 
     @Override
-    public boolean removeWhenFarAway(double p_21542_) {
+    public boolean removeWhenFarAway(double pDistanceToClosestPlayer) {
         return false;
     }
 
@@ -309,7 +309,7 @@ public class Boomerang extends PathfinderMob implements MobAttack {
     }
 
     @Override
-    public void setHealth(float p_21154_) {
+    public void setHealth(float pHealth) {
 
     }
 

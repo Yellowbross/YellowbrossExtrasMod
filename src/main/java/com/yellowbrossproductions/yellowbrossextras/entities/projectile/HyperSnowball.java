@@ -15,12 +15,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 
 public class HyperSnowball extends ThrowableItemProjectile {
-    public HyperSnowball(EntityType<? extends ThrowableItemProjectile> p_37391_, Level p_37392_) {
-        super(p_37391_, p_37392_);
+    public HyperSnowball(EntityType<? extends ThrowableItemProjectile> entityType, Level level) {
+        super(entityType, level);
     }
 
-    public HyperSnowball(Level p_37399_, LivingEntity p_37400_) {
-        super(YEEntityTypes.HyperSnowball.get(), p_37400_, p_37399_);
+    public HyperSnowball(Level level, LivingEntity livingEntity) {
+        super(YEEntityTypes.HyperSnowball.get(), livingEntity, level);
     }
 
     protected Item getDefaultItem() {
@@ -32,8 +32,8 @@ public class HyperSnowball extends ThrowableItemProjectile {
         return (ParticleOptions)(itemstack.isEmpty() ? ParticleTypes.ITEM_SNOWBALL : new ItemParticleOption(ParticleTypes.ITEM, itemstack));
     }
 
-    public void handleEntityEvent(byte p_37402_) {
-        if (p_37402_ == 3) {
+    public void handleEntityEvent(byte pId) {
+        if (pId == 3) {
             ParticleOptions particleoptions = this.getParticle();
 
             for(int i = 0; i < 8; ++i) {

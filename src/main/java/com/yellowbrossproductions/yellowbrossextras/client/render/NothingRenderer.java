@@ -22,7 +22,7 @@ public class NothingRenderer extends EntityRenderer<Entity> {
     }
 
     @Override
-    public void render(Entity p_114485_, float p_114486_, float p_114487_, PoseStack p_114488_, MultiBufferSource p_114489_, int p_114490_) {
+    public void render(Entity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
 
     }
 }

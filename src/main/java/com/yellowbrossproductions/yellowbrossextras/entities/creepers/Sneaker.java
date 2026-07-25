@@ -63,16 +63,16 @@ public class Sneaker extends AbstractCreeperEntity implements CreeperInfection, 
         this.entityData.define(CREEPER_TYPE, 0);
     }
 
-    public void addAdditionalSaveData(CompoundTag p_32304_) {
-        super.addAdditionalSaveData(p_32304_);
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
 
-        p_32304_.putInt("CreeperType", this.getCreeperType());
+        pCompound.putInt("CreeperType", this.getCreeperType());
     }
 
-    public void readAdditionalSaveData(CompoundTag p_32296_) {
-        super.readAdditionalSaveData(p_32296_);
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
 
-        this.setCreeperType(p_32296_.getInt("CreeperType"));
+        this.setCreeperType(pCompound.getInt("CreeperType"));
     }
 
     @Override
@@ -267,7 +267,7 @@ public class Sneaker extends AbstractCreeperEntity implements CreeperInfection, 
     }
 
     @Override
-    public void die(DamageSource p_21014_) {
+    public void die(DamageSource pDamageSource) {
         this.ignite();
     }
 

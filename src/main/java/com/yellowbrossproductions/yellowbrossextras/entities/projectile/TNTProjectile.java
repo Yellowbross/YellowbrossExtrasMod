@@ -22,16 +22,16 @@ import java.util.List;
 public class TNTProjectile extends ThrowableItemProjectile {
     public Mob shooter = null;
 
-    public TNTProjectile(EntityType<? extends ThrowableItemProjectile> p_37442_, Level p_37443_) {
-        super(p_37442_, p_37443_);
+    public TNTProjectile(EntityType<? extends ThrowableItemProjectile> entityType, Level level) {
+        super(entityType, level);
     }
 
-    public TNTProjectile(double p_37433_, double p_37434_, double p_37435_, Level p_37436_) {
-        super(YEEntityTypes.TNTProjectile.get(), p_37433_, p_37434_, p_37435_, p_37436_);
+    public TNTProjectile(double x, double y, double z, Level level) {
+        super(YEEntityTypes.TNTProjectile.get(), x, y, z, level);
     }
 
-    public TNTProjectile(Level p_37440_, LivingEntity p_37439_) {
-        super(YEEntityTypes.TNTProjectile.get(), p_37439_, p_37440_);
+    public TNTProjectile(Level level, LivingEntity livingEntity) {
+        super(YEEntityTypes.TNTProjectile.get(), livingEntity, level);
     }
 
     @Override

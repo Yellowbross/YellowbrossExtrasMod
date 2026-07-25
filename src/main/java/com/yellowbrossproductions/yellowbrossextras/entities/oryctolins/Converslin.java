@@ -52,8 +52,8 @@ public class Converslin extends AbstractOryctolin {
 
     public AnimationState anim_attack1 = new AnimationState();
 
-    public Converslin(EntityType<? extends AbstractOryctolin> p_33002_, Level p_33003_) {
-        super(p_33002_, p_33003_);
+    public Converslin(EntityType<? extends AbstractOryctolin> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override
@@ -100,21 +100,21 @@ public class Converslin extends AbstractOryctolin {
     }
 
     @Override
-    public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
         if (this.getFace() == 1) {
             this.setFace(FACE_CRY);
         }
-        return super.causeFallDamage(p_147187_, p_147188_, p_147189_);
+        return super.causeFallDamage(pFallDistance, pMultiplier, pSource);
     }
 
     @Override
-    public boolean hasLineOfSight(Entity p_147185_) {
+    public boolean hasLineOfSight(Entity pEntity) {
         if (this.getFace() == 2) {
-            if (p_147185_.level != this.level) {
+            if (pEntity.level != this.level) {
                 return false;
             } else {
                 Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
-                Vec3 vec31 = new Vec3(p_147185_.getX(), p_147185_.getEyeY(), p_147185_.getZ());
+                Vec3 vec31 = new Vec3(pEntity.getX(), pEntity.getEyeY(), pEntity.getZ());
                 if (vec31.distanceTo(vec3) > 128.0D) {
                     return false;
                 } else {
@@ -122,11 +122,11 @@ public class Converslin extends AbstractOryctolin {
                 }
             }
         }
-        return super.hasLineOfSight(p_147185_);
+        return super.hasLineOfSight(pEntity);
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose p_21131_, EntityDimensions p_21132_) {
+    protected float getStandingEyeHeight(Pose pPose, EntityDimensions pDimensions) {
         return 1.25F;
     }
 
@@ -309,7 +309,7 @@ public class Converslin extends AbstractOryctolin {
     }
 
     @Override
-    protected void playStepSound(BlockPos p_20135_, BlockState p_20136_) {
+    protected void playStepSound(BlockPos pPos, BlockState pState) {
 
     }
 
@@ -318,10 +318,10 @@ public class Converslin extends AbstractOryctolin {
     }
 
     @Override
-    public boolean hurt(DamageSource p_21016_, float p_21017_) {
-        boolean soup = super.hurt(p_21016_, p_21017_);
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        boolean soup = super.hurt(pSource, pAmount);
         if (soup) {
-            if (p_21016_.getEntity() instanceof LivingEntity entity && !this.level.isClientSide && !this.AHHHHHH) {
+            if (pSource.getEntity() instanceof LivingEntity entity && !this.level.isClientSide && !this.AHHHHHH) {
                 this.runAwayTimer = 300;
                 this.AHHHHHH = true;
                 this.runAwayFrom = entity;
@@ -331,14 +331,14 @@ public class Converslin extends AbstractOryctolin {
     }
 
     @Override
-    public boolean doHurtTarget(Entity p_21372_) {
+    public boolean doHurtTarget(Entity pEntity) {
         return false;
     }
 
     class OryctolinAvoidGoal extends AvoidEntityGoal {
 
-        public OryctolinAvoidGoal(PathfinderMob p_25027_, Class p_25028_, float p_25029_, double p_25030_, double p_25031_) {
-            super(p_25027_, p_25028_, p_25029_, p_25030_, p_25031_);
+        public OryctolinAvoidGoal(PathfinderMob pathfinderMob, Class classToAvoid, float maxDistance, double walkModifier, double sprintModifier) {
+            super(pathfinderMob, classToAvoid, maxDistance, walkModifier, sprintModifier);
         }
 
         @Override

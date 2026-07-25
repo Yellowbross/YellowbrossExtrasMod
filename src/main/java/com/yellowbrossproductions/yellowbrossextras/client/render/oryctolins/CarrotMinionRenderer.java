@@ -25,14 +25,14 @@ public class CarrotMinionRenderer extends MobRenderer<CarrotMinionEntity, Carrot
     }
 
     @Override
-    protected void scale(CarrotMinionEntity p_115314_, PoseStack p_115315_, float p_115316_) {
+    protected void scale(CarrotMinionEntity pLivingEntity, PoseStack pMatrixStack, float pPartialTickTime) {
         float f1 = 0.8F;
-        p_115315_.scale(f1, f1, f1);
+        pMatrixStack.scale(f1, f1, f1);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(CarrotMinionEntity p_110775_1_) {
-        if (p_110775_1_.getHealth() < (p_110775_1_.getMaxHealth() / 2)) {
+    public ResourceLocation getTextureLocation(CarrotMinionEntity pEntity) {
+        if (pEntity.getHealth() < (pEntity.getMaxHealth() / 2)) {
             return NEAR_DEATH;
         }
         return TEXTURE;

@@ -14,8 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class DefenderGlowLayer<T extends Defender> extends EyesLayer<T, DefenderModel<T>> {
     private static final RenderType LAYER = RenderType.eyes(new ResourceLocation(YellowbrossExtras.MOD_ID,"textures/entity/defender/defender_glow.png"));
 
-    public DefenderGlowLayer(RenderLayerParent<T, DefenderModel<T>> p_i226039_1_) {
-        super(p_i226039_1_);
+    public DefenderGlowLayer(RenderLayerParent<T, DefenderModel<T>> aSuper) {
+        super(aSuper);
     }
 
     @Override

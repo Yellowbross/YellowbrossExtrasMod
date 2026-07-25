@@ -22,8 +22,8 @@ public class CameraShake extends Entity {
     private static final EntityDataAccessor<Integer> DURATION = SynchedEntityData.defineId(CameraShake.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> FADE_DURATION = SynchedEntityData.defineId(CameraShake.class, EntityDataSerializers.INT);
 
-    public CameraShake(EntityType<?> p_19870_, Level p_19871_) {
-        super(p_19870_, p_19871_);
+    public CameraShake(EntityType<?> entityType, Level level) {
+        super(entityType, level);
     }
 
     public CameraShake(Level world, Vec3 position, float radius, float magnitude, int duration, int fadeDuration) {

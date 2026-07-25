@@ -22,16 +22,16 @@ import net.minecraft.world.level.gameevent.GameEvent;
 
 public class PvEBlockItem extends BlockItem {
 
-    public PvEBlockItem(Block p_40565_, Properties p_40566_) {
-        super(p_40565_, p_40566_);
+    public PvEBlockItem(Block block, Properties properties) {
+        super(block, properties);
     }
 
     @Override
-    public InteractionResult place(BlockPlaceContext p_40577_) {
-        if (!p_40577_.canPlace()) {
+    public InteractionResult place(BlockPlaceContext pContext) {
+        if (!pContext.canPlace()) {
             return InteractionResult.FAIL;
         } else {
-            BlockPlaceContext blockplacecontext = this.updatePlacementContext(p_40577_);
+            BlockPlaceContext blockplacecontext = this.updatePlacementContext(pContext);
             if (blockplacecontext == null) {
                 return InteractionResult.FAIL;
             } else {
@@ -56,8 +56,8 @@ public class PvEBlockItem extends BlockItem {
                     }
 
                     level.gameEvent(GameEvent.BLOCK_PLACE, blockpos, GameEvent.Context.of(player, blockstate1));
-                    SoundType soundtype = blockstate1.getSoundType(level, blockpos, p_40577_.getPlayer());
-                    level.playSound(player, blockpos, this.getPlaceSound(blockstate1, level, blockpos, p_40577_.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                    SoundType soundtype = blockstate1.getSoundType(level, blockpos, pContext.getPlayer());
+                    level.playSound(player, blockpos, this.getPlaceSound(blockstate1, level, blockpos, pContext.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
@@ -65,12 +65,12 @@ public class PvEBlockItem extends BlockItem {
         }
     }
 
-    private BlockState updateBlockStateFromTag(BlockPos p_40603_, Level p_40604_, ItemStack p_40605_, BlockState p_40606_) {
-        BlockState blockstate = p_40606_;
-        CompoundTag compoundtag = p_40605_.getTag();
+    private BlockState updateBlockStateFromTag(BlockPos pPos, Level level, ItemStack itemStack, BlockState pState) {
+        BlockState blockstate = pState;
+        CompoundTag compoundtag = itemStack.getTag();
         if (compoundtag != null) {
             CompoundTag compoundtag1 = compoundtag.getCompound("BlockStateTag");
-            StateDefinition<Block, BlockState> statedefinition = p_40606_.getBlock().getStateDefinition();
+            StateDefinition<Block, BlockState> statedefinition = pState.getBlock().getStateDefinition();
 
             for(String s : compoundtag1.getAllKeys()) {
                 Property<?> property = statedefinition.getProperty(s);
@@ -81,16 +81,16 @@ public class PvEBlockItem extends BlockItem {
             }
         }
 
-        if (blockstate != p_40606_) {
-            p_40604_.setBlock(p_40603_, blockstate, 2);
+        if (blockstate != pState) {
+            level.setBlock(pPos, blockstate, 2);
         }
 
         return blockstate;
     }
 
-    private static <T extends Comparable<T>> BlockState updateState(BlockState p_40594_, Property<T> p_40595_, String p_40596_) {
-        return p_40595_.getValue(p_40596_).map((p_40592_) -> {
-            return p_40594_.setValue(p_40595_, p_40592_);
-        }).orElse(p_40594_);
+    private static <T extends Comparable<T>> BlockState updateState(BlockState pState, Property<T> tProperty, String s) {
+        return tProperty.getValue(s).map((t) -> {
+            return pState.setValue(tProperty, t);
+        }).orElse(pState);
     }
 }

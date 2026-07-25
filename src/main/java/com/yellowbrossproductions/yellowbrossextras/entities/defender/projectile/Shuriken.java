@@ -15,16 +15,16 @@ import net.minecraft.world.phys.HitResult;
 
 public class Shuriken extends ThrowableItemProjectile {
 
-    public Shuriken(EntityType<? extends ThrowableItemProjectile> p_37442_, Level p_37443_) {
-        super(p_37442_, p_37443_);
+    public Shuriken(EntityType<? extends ThrowableItemProjectile> entityType, Level level) {
+        super(entityType, level);
     }
 
-    public Shuriken(double p_37433_, double p_37434_, double p_37435_, Level p_37436_) {
-        super(YEEntityTypes.Shuriken.get(), p_37433_, p_37434_, p_37435_, p_37436_);
+    public Shuriken(double x, double y, double z, Level level) {
+        super(YEEntityTypes.Shuriken.get(), x, y, z, level);
     }
 
-    public Shuriken(Level p_37440_, LivingEntity p_37439_) {
-        super(YEEntityTypes.Shuriken.get(), p_37439_, p_37440_);
+    public Shuriken(Level level, LivingEntity owner) {
+        super(YEEntityTypes.Shuriken.get(), owner, level);
     }
 
     @Override
@@ -49,9 +49,9 @@ public class Shuriken extends ThrowableItemProjectile {
         return 0.0F;
     }
 
-    protected void onHitEntity(EntityHitResult p_37404_) {
-        super.onHitEntity(p_37404_);
-        Entity entity = p_37404_.getEntity();
+    protected void onHitEntity(EntityHitResult pResult) {
+        super.onHitEntity(pResult);
+        Entity entity = pResult.getEntity();
         if (entity instanceof LivingEntity) {
             float amount = ((LivingEntity) entity).getMaxHealth() / 12.5F;
             entity.hurt(DamageSource.thrown(this, this.getOwner()), 4.0F + amount);

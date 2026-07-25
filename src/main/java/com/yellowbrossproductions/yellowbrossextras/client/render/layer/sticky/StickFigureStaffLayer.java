@@ -23,8 +23,8 @@ public class StickFigureStaffLayer<T extends StickFigure, M extends StickFigureM
     }
 
     @Override
-    public void render(PoseStack p_117349_, MultiBufferSource p_117350_, int p_117351_, T p_117352_, float p_117353_, float p_117354_, float p_117355_, float p_117356_, float p_117357_, float p_117358_) {
-        VertexConsumer vertexconsumer = p_117350_.getBuffer(YERenderTypes.entityTranslucent(this.TEXTURE));
-        this.getParentModel().renderToBuffer(p_117349_, vertexconsumer, 15728640, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+    public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTick, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
+        VertexConsumer vertexconsumer = pBuffer.getBuffer(YERenderTypes.entityTranslucent(this.TEXTURE));
+        this.getParentModel().renderToBuffer(pPoseStack, vertexconsumer, 15728640, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
     }
 }

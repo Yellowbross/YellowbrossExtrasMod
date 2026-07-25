@@ -16,8 +16,8 @@ import net.minecraft.world.level.Level;
 public class StickFigure extends YExtrasMob {
     public AnimationState anim_base = new AnimationState();
 
-    public StickFigure(EntityType<? extends YExtrasMob> p_33002_, Level p_33003_) {
-        super(p_33002_, p_33003_);
+    public StickFigure(EntityType<? extends YExtrasMob> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override

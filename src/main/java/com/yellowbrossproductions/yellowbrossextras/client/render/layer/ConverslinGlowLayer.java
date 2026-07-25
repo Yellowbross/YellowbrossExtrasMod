@@ -14,8 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ConverslinGlowLayer<T extends LivingEntity> extends EyesLayer<T, ConverslinModel<T>> {
     private static final RenderType LAYER = RenderType.eyes(new ResourceLocation(YellowbrossExtras.MOD_ID,"textures/entity/oryctolins/converslin/converslin_glow.png"));
 
-    public ConverslinGlowLayer(RenderLayerParent<T, ConverslinModel<T>> p_i226039_1_) {
-        super(p_i226039_1_);
+    public ConverslinGlowLayer(RenderLayerParent<T, ConverslinModel<T>> aSuper) {
+        super(aSuper);
     }
 
     @Override

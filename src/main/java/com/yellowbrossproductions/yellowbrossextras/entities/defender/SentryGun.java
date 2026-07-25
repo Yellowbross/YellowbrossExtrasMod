@@ -166,6 +166,8 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
         if (this.setupTicks < 60) this.setupTicks -= 1;
         if (this.setupTicks < 1) this.setActive(true);
 
+        if (this.getOwner() instanceof Mob mob && this.getTarget() == null) this.setTarget(mob.getTarget());
+
         if (this.isActive() && this.isAlive()) {
             if (this.getTarget() != null && !this.getTarget().isRemoved() && this.getTarget().isAlive() && EntityUtil.isMobNotInCreativeMode(this.getTarget())) {
                 if (this.hasLineOfSight(this.getTarget()) && this.tickCount % 5 == 0 && !this.mitosisInitiated) {

@@ -72,8 +72,8 @@ public class BunnyBlitzCommand {
         return 1;
     }
 
-    private static int highlightBunnies(CommandSourceStack p_180485_) throws CommandSyntaxException {
-        ServerPlayer serverplayer = p_180485_.getPlayerOrException();
+    private static int highlightBunnies(CommandSourceStack commandSourceStack) throws CommandSyntaxException {
+        ServerPlayer serverplayer = commandSourceStack.getPlayerOrException();
         List<BunnyBlitz> list = BlitzManager.getRaids(serverplayer.getLevel());
         if (!list.isEmpty()) {
             int i = 0;
@@ -86,15 +86,15 @@ public class BunnyBlitzCommand {
                     }
                 }
             }
-            p_180485_.sendSuccess(Component.translatable("command.yellowbrossextras.bunny_blitz.highlight_success", i), false);
+            commandSourceStack.sendSuccess(Component.translatable("command.yellowbrossextras.bunny_blitz.highlight_success", i), false);
         } else {
-            p_180485_.sendFailure(Component.translatable("command.yellowbrossextras.bunny_blitz.overall_fail"));
+            commandSourceStack.sendFailure(Component.translatable("command.yellowbrossextras.bunny_blitz.overall_fail"));
         }
         return 1;
     }
 
-    private static int skipToWave(CommandSourceStack p_180485_, BlockPos pos, int i, int range) throws CommandSyntaxException {
-        ServerPlayer serverplayer = p_180485_.getPlayerOrException();
+    private static int skipToWave(CommandSourceStack commandSourceStack, BlockPos pos, int i, int range) throws CommandSyntaxException {
+        ServerPlayer serverplayer = commandSourceStack.getPlayerOrException();
         List<BunnyBlitz> list = BlitzManager.getRaids(serverplayer.getLevel());
 
         if (!list.isEmpty()) {
@@ -110,12 +110,12 @@ public class BunnyBlitzCommand {
                 }
             }
             if (i1 == 0) {
-                p_180485_.sendFailure(Component.translatable("command.yellowbrossextras.bunny_blitz.skip_fail"));
+                commandSourceStack.sendFailure(Component.translatable("command.yellowbrossextras.bunny_blitz.skip_fail"));
             } else {
-                p_180485_.sendSuccess(Component.translatable("command.yellowbrossextras.bunny_blitz.skip_success", i), false);
+                commandSourceStack.sendSuccess(Component.translatable("command.yellowbrossextras.bunny_blitz.skip_success", i), false);
             }
         } else {
-            p_180485_.sendFailure(Component.translatable("command.yellowbrossextras.bunny_blitz.overall_fail"));
+            commandSourceStack.sendFailure(Component.translatable("command.yellowbrossextras.bunny_blitz.overall_fail"));
         }
 
         return 1;

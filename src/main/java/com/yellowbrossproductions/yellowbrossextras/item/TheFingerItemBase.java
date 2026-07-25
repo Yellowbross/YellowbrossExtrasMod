@@ -50,10 +50,10 @@ public class TheFingerItemBase extends Item {
     }
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack p_41398_, Player player, LivingEntity p_41400_, InteractionHand p_41401_) {
+    public InteractionResult interactLivingEntity(ItemStack pStack, Player player, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
         this.yeetMobs(player.getLevel(), 8.0D, player);
-        player.swing(p_41401_);
-        return super.interactLivingEntity(p_41398_, player, p_41400_, p_41401_);
+        player.swing(pUsedHand);
+        return super.interactLivingEntity(pStack, player, pInteractionTarget, pUsedHand);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class TheFingerItemBase extends Item {
     }
 
     @Override
-    public boolean canAttackBlock(BlockState p_41441_, Level p_41442_, BlockPos p_41443_, Player p_41444_) {
+    public boolean canAttackBlock(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
         return false;
     }
 

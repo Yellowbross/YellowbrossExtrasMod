@@ -138,6 +138,11 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
     }
 
     @Override
+    public boolean isOnFire() {
+        return false;
+    }
+
+    @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
 

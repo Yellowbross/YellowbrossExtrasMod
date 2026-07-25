@@ -119,4 +119,9 @@ public class WitherExplosion extends Entity {
     public boolean isPickable() {
         return false;
     }
+
+    @Override
+    public boolean isOnFire() {
+        return false;
+    }
 }

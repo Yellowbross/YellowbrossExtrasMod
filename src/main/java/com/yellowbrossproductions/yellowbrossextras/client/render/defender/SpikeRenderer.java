@@ -20,9 +20,9 @@ public class SpikeRenderer extends EntityRenderer<Spike> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(YellowbrossExtras.MOD_ID, "textures/entity/defender/spike.png");
     private final SpikeModel<Spike> model;
 
-    public SpikeRenderer(EntityRendererProvider.Context p_174100_) {
-        super(p_174100_);
-        this.model = new SpikeModel<>(p_174100_.bakeLayer(SpikeModel.LAYER_LOCATION));
+    public SpikeRenderer(EntityRendererProvider.Context context) {
+        super(context);
+        this.model = new SpikeModel<>(context.bakeLayer(SpikeModel.LAYER_LOCATION));
     }
 
     @Override

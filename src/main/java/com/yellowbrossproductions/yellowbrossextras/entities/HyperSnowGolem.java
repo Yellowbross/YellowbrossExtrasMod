@@ -30,8 +30,8 @@ public class HyperSnowGolem extends SnowGolem implements YextrasEntity {
         }));
     }
 
-    public HyperSnowGolem(EntityType<? extends SnowGolem> p_29902_, Level p_29903_) {
-        super(p_29902_, p_29903_);
+    public HyperSnowGolem(EntityType<? extends SnowGolem> entityType, Level level) {
+        super(entityType, level);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -64,12 +64,12 @@ public class HyperSnowGolem extends SnowGolem implements YextrasEntity {
     }
 
     @Override
-    public void performRangedAttack(LivingEntity p_29912_, float p_29913_) {
+    public void performRangedAttack(LivingEntity pTarget, float pDistanceFactor) {
         HyperSnowball snowball = new HyperSnowball(this.level, this);
-        double d0 = p_29912_.getEyeY() - (double)1.1F;
-        double d1 = p_29912_.getX() - this.getX();
+        double d0 = pTarget.getEyeY() - (double)1.1F;
+        double d1 = pTarget.getX() - this.getX();
         double d2 = d0 - snowball.getY();
-        double d3 = p_29912_.getZ() - this.getZ();
+        double d3 = pTarget.getZ() - this.getZ();
         double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
         snowball.shoot(d1, d2 + d4, d3, 3.0F, 30.0F);
         this.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 3.0F, (0.5F + this.getRandom().nextFloat() + (this.getRandom().nextFloat() / 2.0F)));

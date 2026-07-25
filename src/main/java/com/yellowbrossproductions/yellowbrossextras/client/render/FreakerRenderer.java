@@ -30,13 +30,13 @@ public class FreakerRenderer extends MobRenderer<Freaker, FreakerModel<Freaker>>
         poseStack.scale(f2, f3, f2);
     }
 
-    protected float getWhiteOverlayProgress(Freaker p_114043_, float p_114044_) {
-        float f = p_114043_.getSwelling(p_114044_);
+    protected float getWhiteOverlayProgress(Freaker pLivingEntity, float pPartialTicks) {
+        float f = pLivingEntity.getSwelling(pPartialTicks);
         return (int)(f * 10.0F) % 2 == 0 ? 0.0F : Mth.clamp(f, 0.5F, 1.0F);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Freaker p_110775_1_) {
+    public ResourceLocation getTextureLocation(Freaker pEntity) {
         return TEXTURE;
     }
 }

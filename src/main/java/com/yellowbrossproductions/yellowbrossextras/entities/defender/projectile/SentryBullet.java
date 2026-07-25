@@ -29,16 +29,16 @@ import java.util.List;
 
 public class SentryBullet extends CustomAbstractHurtingProjectile implements ItemSupplier {
 
-    public SentryBullet(EntityType<? extends CustomAbstractHurtingProjectile> p_36833_, Level p_36834_) {
-        super(p_36833_, p_36834_);
+    public SentryBullet(EntityType<? extends CustomAbstractHurtingProjectile> entityType, Level level) {
+        super(entityType, level);
     }
 
-    public SentryBullet(EntityType<? extends CustomAbstractHurtingProjectile> p_36817_, double p_36818_, double p_36819_, double p_36820_, double p_36821_, double p_36822_, double p_36823_, Level p_36824_) {
-        super(YEEntityTypes.SentryBullet.get(), p_36818_, p_36819_, p_36820_, p_36821_, p_36822_, p_36823_, p_36824_);
+    public SentryBullet(EntityType<? extends CustomAbstractHurtingProjectile> entityType, double startX, double startY, double startZ, double shootX, double shootY, double shootZ, Level level) {
+        super(YEEntityTypes.SentryBullet.get(), startX, startY, startZ, shootX, shootY, shootZ, level);
     }
 
-    public SentryBullet(Level p_36831_, LivingEntity p_36827_, double p_36828_, double p_36829_, double p_36830_) {
-        super(YEEntityTypes.SentryBullet.get(), p_36827_, p_36828_, p_36829_, p_36830_, p_36831_);
+    public SentryBullet(Level level, LivingEntity owner, double x, double y, double z) {
+        super(YEEntityTypes.SentryBullet.get(), owner, x, y, z, level);
     }
 
     @Override

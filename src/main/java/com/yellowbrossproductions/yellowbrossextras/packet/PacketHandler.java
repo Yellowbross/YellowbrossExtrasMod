@@ -5,7 +5,7 @@ import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-// code borrowed from The Twilight Forest
+// code adapted from The Twilight Forest
 public class PacketHandler {
     private static final String PROTOCOL_VERSION = "2";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(

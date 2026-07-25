@@ -59,7 +59,7 @@ public class Crawler extends AbstractCreeperEntity implements CreeperInfection, 
     }
 
     @Override
-    public void die(DamageSource p_21014_) {
+    public void die(DamageSource pDamageSource) {
         this.ignite();
     }
 

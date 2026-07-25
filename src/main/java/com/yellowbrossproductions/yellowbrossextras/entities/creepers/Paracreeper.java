@@ -50,7 +50,7 @@ public class Paracreeper extends AbstractCreeperEntity implements CreeperInfecti
     }
 
     @Override
-    public boolean causeFallDamage(float p_149687_, float p_149688_, DamageSource p_149689_) {
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
         return false;
     }
 
@@ -103,7 +103,7 @@ public class Paracreeper extends AbstractCreeperEntity implements CreeperInfecti
     }
 
     @Override
-    public void die(DamageSource p_21014_) {
+    public void die(DamageSource pDamageSource) {
         this.ignite();
     }
 
