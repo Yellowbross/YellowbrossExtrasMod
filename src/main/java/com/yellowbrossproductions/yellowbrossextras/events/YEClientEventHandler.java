@@ -124,6 +124,7 @@ public class YEClientEventHandler {
             event.registerEntityRenderer(YEEntityTypes.DeadlyArrow.get(), DeadlyArrowRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.SkullOfDoom.get(), SkullOfDoomRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.Icicle.get(), IcicleRenderer::new);
+            event.registerEntityRenderer(YEEntityTypes.Fireball.get(), FireballRenderer::new);
 
             event.registerEntityRenderer(YEEntityTypes.CameraShake.get(), NothingRenderer::new);
             event.registerEntityRenderer(YEEntityTypes.WitherExplosion.get(), WitherExplosionRenderer::new);

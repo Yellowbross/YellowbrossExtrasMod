@@ -52,12 +52,12 @@ public class ParticlePacket {
         }
     }
 
-    public void queueParticle(ParticleOptions particleOptions, boolean b, double x, double y, double z, double x2, double y2, double z2) {
-        this.queuedParticles.add(new QueuedParticle(particleOptions, b, x, y, z, x2, y2, z2));
+    public void queueParticle(ParticleOptions particleOptions, boolean forceAlwaysRender, double spawnX, double spawnY, double spawnZ, double motX, double motY, double motZ) {
+        this.queuedParticles.add(new QueuedParticle(particleOptions, forceAlwaysRender, spawnX, spawnY, spawnZ, motX, motY, motZ));
     }
 
-    public void queueParticle(ParticleOptions particleOptions, boolean b, Vec3 xyz, Vec3 xyz2) {
-        this.queuedParticles.add(new QueuedParticle(particleOptions, b, xyz.x, xyz.y, xyz.z, xyz2.x, xyz2.y, xyz2.z));
+    public void queueParticle(ParticleOptions particleOptions, boolean forceAlwaysRender, Vec3 spawnXYZ, Vec3 motionXYZ) {
+        this.queuedParticles.add(new QueuedParticle(particleOptions, forceAlwaysRender, spawnXYZ.x, spawnXYZ.y, spawnXYZ.z, motionXYZ.x, motionXYZ.y, motionXYZ.z));
     }
 
     private record QueuedParticle(ParticleOptions particleOptions, boolean b, double x, double y, double z, double x2,

@@ -269,7 +269,7 @@ public class Aimbot extends YExtrasMob implements Enemy {
                         this.aimbot.getX(), this.aimbot.getY() + 1.5d, this.aimbot.getZ(),
                         target.getX(),
                         target.getEyeY(),
-                        target.getZ());
+                        target.getZ(), 1);
 
                 if (target.hurt(new EntityDamageSource("arrow", this.aimbot).setProjectile(), Float.MAX_VALUE)) {
                     target.invulnerableTime = 0;

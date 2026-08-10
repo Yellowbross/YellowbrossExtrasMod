@@ -5,8 +5,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.*;
-import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.Intelligence;
-import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.PathGuide;
+import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.*;
@@ -149,6 +148,8 @@ public class YEEntityTypes {
     public static final RegistryObject<EntityType<SkullOfDoom>> SkullOfDoom = ENTITY_TYPES.register("skull_of_doom", () -> EntityType.Builder.<SkullOfDoom>of(com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SkullOfDoom::new, MobCategory.MISC).sized(3.0F,3.0F).clientTrackingRange(4).updateInterval(1).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "skull_of_doom").toString()));
 
     public static final RegistryObject<EntityType<Icicle>> Icicle = ENTITY_TYPES.register("icicle", () -> EntityType.Builder.<Icicle>of(com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.Icicle::new, MobCategory.MISC).sized(0.0F, 0.0F).setCustomClientFactory(Icicle::new).setShouldReceiveVelocityUpdates(false).noSave().build(new ResourceLocation(YellowbrossExtras.MOD_ID, "icicle").toString()));
+
+    public static final RegistryObject<EntityType<Fireball>> Fireball = ENTITY_TYPES.register("fireball", () -> EntityType.Builder.<Fireball>of(Fireball::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(1).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "fireball").toString()));
 
 
     // Misc

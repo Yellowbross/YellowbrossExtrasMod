@@ -56,7 +56,7 @@ public class HyperSnowGolem extends SnowGolem implements YextrasEntity {
             if (worldHeight > level.getMinBuildHeight() + 1) {
                 EntityUtil.makeSimpleTrail(this, ParticleTypes.SONIC_BOOM, 50,
                         this.getX(), this.getY(), this.getZ(),
-                        x, worldHeight, z);
+                        x, worldHeight, z, 1);
                 this.playSound(SoundEvents.ENDERMAN_TELEPORT, 3.0F, 1.0F);
                 this.setPos(x, worldHeight, z);
             }

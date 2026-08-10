@@ -165,6 +165,6 @@ public class Icicle extends Entity {
             }
         }
 
-        if (this.getTicks() > 140) this.discard();
+        if (this.getTicks() > this.getTrueTimer() + 40) this.discard();
     }
 }

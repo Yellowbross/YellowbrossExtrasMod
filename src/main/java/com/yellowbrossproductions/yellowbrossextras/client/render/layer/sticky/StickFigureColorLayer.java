@@ -33,7 +33,7 @@ public class StickFigureColorLayer<T extends StickFigure, M extends StickFigureM
 
     @Override
     public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTick, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-        VertexConsumer vertexconsumer = pBuffer.getBuffer(YERenderTypes.stickFigure(TEXTURE, false));
+        VertexConsumer vertexconsumer = pBuffer.getBuffer(YERenderTypes.noShadingAllowed(TEXTURE, false));
         this.getParentModel().renderToBuffer(pPoseStack, vertexconsumer, 15728640, OverlayTexture.NO_OVERLAY, this.r, this.g, this.b, 1.0F);
     }
 }

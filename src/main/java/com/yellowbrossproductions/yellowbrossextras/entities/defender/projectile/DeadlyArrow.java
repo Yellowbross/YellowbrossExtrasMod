@@ -7,6 +7,9 @@ import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -20,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class DeadlyArrow extends AbstractSnipingProjectile {
+    private static final EntityDataAccessor<Integer> WARN_TIMER = SynchedEntityData.defineId(DeadlyArrow.class, EntityDataSerializers.INT);
     SnipingProjectileHitResult hitResult = new SnipingProjectileHitResult();
     int i = 6;
 
@@ -28,14 +32,15 @@ public class DeadlyArrow extends AbstractSnipingProjectile {
         this.noPhysics = true;
     }
 
-    public DeadlyArrow(Level level, LivingEntity shooter, Vec3 shootTo) {
+    public DeadlyArrow(Level level, LivingEntity shooter, double yPos, Vec3 shootTo, int warnTimer) {
         super(YEEntityTypes.DeadlyArrow.get(), level);
         this.setOwner(shooter);
         if (!level.isClientSide) {
             this.setCollisionPos(new BlockPos(shootTo));
         }
         this.setMaxTime(4);
-        this.setPos(shooter.position().add(0, 1.25, 0));
+        this.setWarnTimer(warnTimer);
+        this.setPos(shooter.position().add(0, yPos, 0));
 
         double x = this.getCollisionPos().getX() - this.getX();
         double y = this.getCollisionPos().getY() - this.getY();
@@ -54,17 +59,31 @@ public class DeadlyArrow extends AbstractSnipingProjectile {
     }
 
     @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(WARN_TIMER, 0);
+    }
+
+    public int getWarnTimer() {
+        return this.entityData.get(WARN_TIMER);
+    }
+
+    public void setWarnTimer(int timer) {
+        this.entityData.set(WARN_TIMER, timer);
+    }
+
+    @Override
     public void tick() {
         super.tick();
-        if (this.tickCount < 20) {
+        if (this.tickCount < this.getWarnTimer()) {
             DustParticleOptions red = new DustParticleOptions(new Vector3f(1, 0.2f, 0.2f), (this.tickCount / 15.0f));
             DustParticleOptions flash = new DustParticleOptions(new Vector3f(1, 1, 1), (this.tickCount / 15.0f));
             if (this.tickCount % i == i - 1) {
                 if (i > 2) i -= 1;
             }
-            EntityUtil.makeSimpleTrail(this, this.tickCount % i == i - 1 ? flash : red, 50, this.getX(), this.getY(), this.getZ(), this.getCollisionPos().getX(), this.getCollisionPos().getY(), this.getCollisionPos().getZ());
+            EntityUtil.makeSimpleTrail(this, this.tickCount % i == i - 1 ? flash : red, 50, this.getX(), this.getY(), this.getZ(), this.getCollisionPos().getX(), this.getCollisionPos().getY(), this.getCollisionPos().getZ(), 0);
         }
-        if (tickCount == 20) {
+        if (this.tickCount == this.getWarnTimer()) {
             this.playSound(YESoundEvents.ENTITY_DEFENDER_SNIPE_SHOOT.get(), 3.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
 
             Vec3 from = this.position();
@@ -90,7 +109,7 @@ public class DeadlyArrow extends AbstractSnipingProjectile {
                 }
             }
         }
-        if (tickCount == this.getMaxTime() + 20) {
+        if (this.tickCount == this.getMaxTime() + this.getWarnTimer()) {
             DamageSource damageSource = new IndirectEntityDamageSource("thrown", this, this.getOwner()).setProjectile();
             for (LivingEntity living : this.hitResult.entities) {
                 if (living.hurt(damageSource, Math.max(15, living.getMaxHealth() * 0.25F))) {

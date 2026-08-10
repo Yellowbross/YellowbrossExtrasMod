@@ -75,7 +75,7 @@ public class StickFigureHeadLayer<T extends StickFigure, M extends StickFigureMo
             pPoseStack.mulPose(Vector3f.YP.rotationDegrees(RenderUtil.getDefaultBodyRot(pLivingEntity, pPartialTick)));
             pPoseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
             this.renderFlatQuad(pPoseStack, pBuffer.getBuffer(RenderType.entityTranslucent(HEAD)), !whichPart.equals("head"));
-            this.renderFlatQuad(pPoseStack, pBuffer.getBuffer(YERenderTypes.stickFigure(HEAD, false)), !whichPart.equals("head"));
+            this.renderFlatQuad(pPoseStack, pBuffer.getBuffer(YERenderTypes.noShadingAllowed(HEAD, false)), !whichPart.equals("head"));
             pPoseStack.popPose();
         }
     }

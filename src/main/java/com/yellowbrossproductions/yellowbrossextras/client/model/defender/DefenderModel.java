@@ -78,14 +78,22 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
     private final ModelPart creepleg;
     private final ModelPart wither_bazooka;
     private final ModelPart wbazooka_head;
+    private final ModelPart flamethrower_arm2;
     private final ModelPart left_arm;
     private final ModelPart left_elbow;
     private final ModelPart left_hand;
     private final ModelPart claw2;
     private final ModelPart icethrower_glove2;
+    private final ModelPart flamethrower_arm1;
     private final ModelPart buzzsaw;
     private final ModelPart quiver;
     private final ModelPart icethrower_back;
+    private final ModelPart flamethrower_wing1;
+    private final ModelPart flamethrower_wingg1;
+    private final ModelPart flamethrower_winggg2;
+    private final ModelPart flamethrower_wing2;
+    private final ModelPart flamethrower_wingg2;
+    private final ModelPart flamethrower_winggg3;
     private final ModelPart right_leg;
     private final ModelPart right_foot;
     private final ModelPart left_leg;
@@ -159,14 +167,22 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
         this.creepleg = this.creeper_gun.getChild("creepleg");
         this.wither_bazooka = this.right_hand.getChild("wither_bazooka");
         this.wbazooka_head = this.wither_bazooka.getChild("wbazooka_head");
+        this.flamethrower_arm2 = this.right_elbow.getChild("flamethrower_arm2");
         this.left_arm = this.body.getChild("left_arm");
         this.left_elbow = this.left_arm.getChild("left_elbow");
         this.left_hand = this.left_elbow.getChild("left_hand");
         this.claw2 = this.left_hand.getChild("claw2");
         this.icethrower_glove2 = this.left_hand.getChild("icethrower_glove2");
+        this.flamethrower_arm1 = this.left_elbow.getChild("flamethrower_arm1");
         this.buzzsaw = this.body.getChild("buzzsaw");
         this.quiver = this.body.getChild("quiver");
         this.icethrower_back = this.body.getChild("icethrower_back");
+        this.flamethrower_wing1 = this.body.getChild("flamethrower_wing1");
+        this.flamethrower_wingg1 = this.flamethrower_wing1.getChild("flamethrower_wingg1");
+        this.flamethrower_winggg2 = this.flamethrower_wingg1.getChild("flamethrower_winggg2");
+        this.flamethrower_wing2 = this.body.getChild("flamethrower_wing2");
+        this.flamethrower_wingg2 = this.flamethrower_wing2.getChild("flamethrower_wingg2");
+        this.flamethrower_winggg3 = this.flamethrower_wingg2.getChild("flamethrower_winggg3");
         this.right_leg = this.all.getChild("right_leg");
         this.right_foot = this.right_leg.getChild("right_foot");
         this.left_leg = this.all.getChild("left_leg");
@@ -235,12 +251,16 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
 
         PartDefinition right_elbow = right_arm.addOrReplaceChild("right_elbow", CubeListBuilder.create().texOffs(0, 20).mirror().addBox(-1.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(0.0F, 5.0F, 0.0F));
 
+        PartDefinition flamethrower_arm2 = right_elbow.addOrReplaceChild("flamethrower_arm2", CubeListBuilder.create().texOffs(168, 142).mirror().addBox(-1.0F, -1.0F, -1.0F, 2.0F, 12.0F, 2.0F, new CubeDeformation(0.5F)).mirror(false), PartPose.offset(0.0F, 5.0F, 0.0F));
+
         PartDefinition right_hand = right_elbow.addOrReplaceChild("right_hand", CubeListBuilder.create().texOffs(13, 42).mirror().addBox(-3.0F, 1.0F, -6.0F, 6.0F, 2.0F, 8.0F, new CubeDeformation(0.0F)).mirror(false)
                 .texOffs(0, 42).mirror().addBox(-3.0F, -1.0F, -2.0F, 6.0F, 2.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.0F, 5.0F, 0.0F, 0.7854F, 0.0F, 0.0F));
 
         PartDefinition left_arm = body.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(0, 12).addBox(-1.0F, -1.0F, -1.0F, 2.0F, 6.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(3.5F, -4.0F, 0.0F, 0.0F, 0.0F, -0.2618F));
 
         PartDefinition left_elbow = left_arm.addOrReplaceChild("left_elbow", CubeListBuilder.create().texOffs(0, 20).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 5.0F, 0.0F));
+
+        PartDefinition flamethrower_arm1 = left_elbow.addOrReplaceChild("flamethrower_arm1", CubeListBuilder.create().texOffs(168, 142).addBox(-1.0F, -1.0F, -1.0F, 2.0F, 12.0F, 2.0F, new CubeDeformation(0.5F)), PartPose.offset(0.0F, 5.0F, 0.0F));
 
         PartDefinition left_hand = left_elbow.addOrReplaceChild("left_hand", CubeListBuilder.create().texOffs(13, 42).addBox(-3.0F, 1.0F, -6.0F, 6.0F, 2.0F, 8.0F, new CubeDeformation(0.0F))
                 .texOffs(0, 42).addBox(-3.0F, -1.0F, -2.0F, 6.0F, 2.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 5.0F, 0.0F, 0.7854F, 0.0F, 0.0F));
@@ -265,6 +285,30 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
         PartDefinition icethrower_back = body.addOrReplaceChild("icethrower_back", CubeListBuilder.create().texOffs(100, 130).addBox(-6.0F, 6.0F, -1.0F, 12.0F, 2.0F, 12.0F, new CubeDeformation(0.2F))
                 .texOffs(100, 130).addBox(-6.0F, -8.0F, -1.0F, 12.0F, 2.0F, 12.0F, new CubeDeformation(0.2F))
                 .texOffs(136, 120).addBox(-5.0F, -6.0F, 0.0F, 10.0F, 12.0F, 10.0F, new CubeDeformation(0.2F)), PartPose.offset(0.0F, 0.0F, 3.0F));
+
+        PartDefinition flamethrower_wing1 = body.addOrReplaceChild("flamethrower_wing1", CubeListBuilder.create().texOffs(116, 148).addBox(0.0F, -1.0F, -1.0F, 12.0F, 2.0F, 2.0F, new CubeDeformation(1.0F))
+                .texOffs(144, 142).addBox(3.0F, 1.0F, -3.0F, 6.0F, 14.0F, 6.0F, new CubeDeformation(0.0F))
+                .texOffs(120, 154).addBox(2.0F, 15.0F, -4.0F, 8.0F, 2.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(1.0F, -4.0F, 4.0F));
+
+        PartDefinition flamethrower_wingg1 = flamethrower_wing1.addOrReplaceChild("flamethrower_wingg1", CubeListBuilder.create().texOffs(116, 148).addBox(0.0F, -1.0F, -1.0F, 12.0F, 2.0F, 2.0F, new CubeDeformation(0.5F))
+                .texOffs(144, 142).addBox(3.0F, 1.0F, -3.0F, 6.0F, 14.0F, 6.0F, new CubeDeformation(0.0F))
+                .texOffs(120, 154).addBox(2.0F, 15.0F, -4.0F, 8.0F, 2.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(12.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.0873F));
+
+        PartDefinition flamethrower_winggg2 = flamethrower_wingg1.addOrReplaceChild("flamethrower_winggg2", CubeListBuilder.create().texOffs(116, 148).addBox(0.0F, -1.0F, -1.0F, 12.0F, 2.0F, 2.0F, new CubeDeformation(0.0F))
+                .texOffs(144, 142).addBox(3.0F, 1.0F, -3.0F, 6.0F, 14.0F, 6.0F, new CubeDeformation(0.0F))
+                .texOffs(120, 154).addBox(2.0F, 15.0F, -4.0F, 8.0F, 2.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(12.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.1745F));
+
+        PartDefinition flamethrower_wing2 = body.addOrReplaceChild("flamethrower_wing2", CubeListBuilder.create().texOffs(116, 148).mirror().addBox(-12.0F, -1.0F, -1.0F, 12.0F, 2.0F, 2.0F, new CubeDeformation(1.0F)).mirror(false)
+                .texOffs(144, 142).mirror().addBox(-9.0F, 1.0F, -3.0F, 6.0F, 14.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false)
+                .texOffs(120, 154).mirror().addBox(-10.0F, 15.0F, -4.0F, 8.0F, 2.0F, 8.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-1.0F, -4.0F, 4.0F));
+
+        PartDefinition flamethrower_wingg2 = flamethrower_wing2.addOrReplaceChild("flamethrower_wingg2", CubeListBuilder.create().texOffs(116, 148).mirror().addBox(-12.0F, -1.0F, -1.0F, 12.0F, 2.0F, 2.0F, new CubeDeformation(0.5F)).mirror(false)
+                .texOffs(144, 142).mirror().addBox(-9.0F, 1.0F, -3.0F, 6.0F, 14.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false)
+                .texOffs(120, 154).mirror().addBox(-10.0F, 15.0F, -4.0F, 8.0F, 2.0F, 8.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(-12.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0873F));
+
+        PartDefinition flamethrower_winggg3 = flamethrower_wingg2.addOrReplaceChild("flamethrower_winggg3", CubeListBuilder.create().texOffs(116, 148).mirror().addBox(-12.0F, -1.0F, -1.0F, 12.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false)
+                .texOffs(144, 142).mirror().addBox(-9.0F, 1.0F, -3.0F, 6.0F, 14.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false)
+                .texOffs(120, 154).mirror().addBox(-10.0F, 15.0F, -4.0F, 8.0F, 2.0F, 8.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(-12.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1745F));
 
         createPhase1Weapons(partdefinition, right_hand, left_hand);
         createPhase2Weapons(partdefinition, right_hand, left_hand);
@@ -522,6 +566,10 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
         this.icethrower_glove1.visible = defender.getWeaponToShow() == 14;
         this.icethrower_glove2.visible = defender.getWeaponToShow() == 14;
         this.creeper_gun.visible = defender.getWeaponToShow() == 15;
+        this.flamethrower_arm1.visible = defender.getWeaponToShow() == 16;
+        this.flamethrower_arm2.visible = defender.getWeaponToShow() == 16;
+        this.flamethrower_wing1.visible = defender.getWeaponToShow() == 16;
+        this.flamethrower_wing2.visible = defender.getWeaponToShow() == 16;
 
         this.chainsaw_handle.yRot += netHeadYaw * ((float)Math.PI / 180F);
         this.chainsaw_handle.xRot += defender.getChainsawLookX() * ((float)Math.PI / 180F);

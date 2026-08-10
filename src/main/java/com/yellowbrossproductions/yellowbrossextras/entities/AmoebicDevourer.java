@@ -80,7 +80,6 @@ public class AmoebicDevourer extends YExtrasMob implements Enemy {
         return SoundEvents.SLIME_SQUISH;
     }
 
-    @VisibleForTesting
     public void setSize(float size, boolean updateHealth) {
         float i = Mth.clamp(size, 1, 20);
         this.entityData.set(SIZE, i);

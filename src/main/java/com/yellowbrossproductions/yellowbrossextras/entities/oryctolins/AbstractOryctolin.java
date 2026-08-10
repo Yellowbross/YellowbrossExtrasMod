@@ -3,15 +3,14 @@ package com.yellowbrossproductions.yellowbrossextras.entities.oryctolins;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AnimationState;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
@@ -20,9 +19,11 @@ import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
@@ -45,7 +46,7 @@ public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctoli
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(0, new OpenDoorGoal(this, true));
         super.registerGoals();
     }
 
@@ -55,6 +56,12 @@ public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctoli
         }
 
         super.customServerAiStep();
+    }
+
+    @Override
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+        ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
     protected void defineSynchedData() {

@@ -27,20 +27,20 @@ public class DeadlyArrowRenderer extends EntityRenderer<DeadlyArrow> {
 
     @Override
     public boolean shouldRender(DeadlyArrow pLivingEntity, Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
-        return pLivingEntity.tickCount >= 20;
+        return pLivingEntity.tickCount >= pLivingEntity.getWarnTimer();
     }
 
     @Override
     public void render(DeadlyArrow arrow, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
         super.render(arrow, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
 
-        if (arrow.tickCount >= 20) {
+        if (arrow.tickCount >= arrow.getWarnTimer()) {
             pPoseStack.pushPose();
             float maxTime = arrow.getMaxTime() - 1;
 
-            double x = (arrow.getCollisionPos().getX() - arrow.getX()) * ((arrow.tickCount - 20) + pPartialTick) / maxTime;
-            double y = (arrow.getCollisionPos().getY() - arrow.getY()) * ((arrow.tickCount - 20) + pPartialTick) / maxTime;
-            double z = (arrow.getCollisionPos().getZ() - arrow.getZ()) * ((arrow.tickCount - 20) + pPartialTick) / maxTime;
+            double x = (arrow.getCollisionPos().getX() - arrow.getX()) * ((arrow.tickCount - arrow.getWarnTimer()) + pPartialTick) / maxTime;
+            double y = (arrow.getCollisionPos().getY() - arrow.getY()) * ((arrow.tickCount - arrow.getWarnTimer()) + pPartialTick) / maxTime;
+            double z = (arrow.getCollisionPos().getZ() - arrow.getZ()) * ((arrow.tickCount - arrow.getWarnTimer()) + pPartialTick) / maxTime;
             pPoseStack.translate(x, y - 1, z);
             pPoseStack.mulPose(Vector3f.YP.rotationDegrees(arrow.getYRot()));
             pPoseStack.mulPose(Vector3f.XP.rotationDegrees(arrow.getXRot()));

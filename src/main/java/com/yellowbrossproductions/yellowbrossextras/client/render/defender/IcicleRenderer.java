@@ -49,7 +49,7 @@ public class IcicleRenderer extends EntityRenderer<Icicle> {
 
         pPoseStack.pushPose();
 
-        VertexConsumer glow = pBuffer.getBuffer(YERenderTypes.stickFigure(TEXTURE, false));
+        VertexConsumer glow = pBuffer.getBuffer(YERenderTypes.noShadingAllowed(TEXTURE, false));
 
         if (pEntity.getTicks() > 6 + pEntity.getDelay() && pEntity.getTicks() < pEntity.getTrueTimer()) renderWarning(pPoseStack, glow, pEntity.getTicks());
 

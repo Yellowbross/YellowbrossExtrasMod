@@ -177,10 +177,10 @@ public class Boomerang extends PathfinderMob implements MobAttack {
                         this.olderX, this.olderY, this.olderZ,
                         this.olderX + (this.getDeltaMovement().x * 40.0D),
                         this.olderY + (this.getDeltaMovement().y * 40.0D),
-                        this.olderZ + (this.getDeltaMovement().z * 40.0D));
+                        this.olderZ + (this.getDeltaMovement().z * 40.0D), 0);
             } else {
                 if (this.shooter != null) {
-                    EntityUtil.makeSimpleTrail(this, ParticleTypes.ELECTRIC_SPARK, 30, this.olderX, this.olderY, this.olderZ, this.shooter.getX(), this.shooter.getY() + 2.2, this.shooter.getZ());
+                    EntityUtil.makeSimpleTrail(this, ParticleTypes.ELECTRIC_SPARK, 30, this.olderX, this.olderY, this.olderZ, this.shooter.getX(), this.shooter.getY() + 2.2, this.shooter.getZ(), 0);
                 }
             }
         }

@@ -18,7 +18,7 @@ public abstract class YERenderTypes extends RenderType {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
     }
 
-    private static final BiFunction<ResourceLocation, Boolean, RenderType> STICK_FIGURE = Util.memoize((resourceLocation, compositeState) -> {
+    private static final BiFunction<ResourceLocation, Boolean, RenderType> NO_SHADING_ALLOWED = Util.memoize((resourceLocation, compositeState) -> {
         RenderType.CompositeState rendertype$compositestate = RenderType.CompositeState.builder()
                 .setShaderState(RenderStateShard.RENDERTYPE_BEACON_BEAM_SHADER)
                 .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))
@@ -28,11 +28,11 @@ public abstract class YERenderTypes extends RenderType {
                 .setOverlayState(RenderStateShard.OVERLAY)
                 .setWriteMaskState(RenderStateShard.COLOR_WRITE)
                 .createCompositeState(compositeState);
-        return create("stickFigure", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, rendertype$compositestate);
+        return create("noShadingAllowed", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, rendertype$compositestate);
     });
 
-    public static RenderType stickFigure(ResourceLocation resourceLocation, boolean compositeState) {
-        return STICK_FIGURE.apply(resourceLocation, compositeState);
+    public static RenderType noShadingAllowed(ResourceLocation resourceLocation, boolean compositeState) {
+        return NO_SHADING_ALLOWED.apply(resourceLocation, compositeState);
     }
 
     public static RenderType getMask(ResourceLocation location) {

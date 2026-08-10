@@ -65,7 +65,7 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAligned {
-    int frame;
+    public int frame;
     private final ServerBossEvent bossEvent = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.NOTCHED_10));
     private static final EntityDataAccessor<Boolean> SHOULD_SHOW_BOSSBAR = SynchedEntityData.defineId(Defender.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<String> ANIMATION_STATE = SynchedEntityData.defineId(Defender.class, EntityDataSerializers.STRING);
@@ -165,7 +165,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     public int timeToWaitBeforeUsingAnyOtherAttack = 0;
 
     public double chargeX;
-    double chargeY;
+    public double chargeY;
     public double chargeZ;
     public int throwTimes = 1;
     public boolean jumpAttacking = false;
@@ -176,7 +176,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     public LivingEntity clawsTarget = null;
     public boolean itsTimeToClawTarget = false;
     int jumpStuckTicks;
-    int setHealthIFrames;
+    public int setHealthIFrames;
     public int deathAttackTicks;
     public double stareYOffsetter = 0;
     public int lerpChainsawSteps;
@@ -527,10 +527,10 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             this.shouldContinueAttacking = false;
         }
 
-        if (this.isAlive()) {
-            if (this.getPhase() == 1) AttacksPart1.tickPhase1Attacks(this);
-            if (this.getPhase() == 2) AttacksPart1.tickPhase2Attacks(this);
+        if (this.getPhase() == 1) AttacksPart1.tickPhase1Attacks(this);
+        if (this.getPhase() == 2) AttacksPart1.tickPhase2Attacks(this);
 
+        if (this.isAlive()) {
             if (this.attackType == attack_jump) {
                 if (this.attackTicks == 4 && this.getTarget() != null) {
                     if (this.howShouldDefenderApproachHisTarget() == 1 || this.distanceTo(this.getTarget()) < 6.0D) {
@@ -585,193 +585,6 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                         if (!this.level.isClientSide()) {
                             this.remove(RemovalReason.KILLED);
                         }
-                    }
-                }
-
-                if (this.getPhase() == 1) {
-                    this.setDeltaMovement(0.0D, this.getDeltaMovement().y, 0.0D);
-                    if (this.deathAttackTicks == 10) {
-                        this.setWeaponToShow(8);
-                    }
-
-                    if (this.deathAttackTicks == 20 + 1) {
-                        this.stareYOffsetter = 4.1;
-                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.8F);
-                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.5F);
-                        this.playSound(SoundEvents.GENERIC_EXPLODE, 3.0F, 0.7F);
-                        CameraShake.cameraShake(this.level, position(), 50, 0.4f, 0, 15);
-                        EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.3, 0), ParticleTypes.POOF, 50, 1.0F, Vec3.ZERO, 0.0F);
-
-                        for (Entity entity : level.getEntities(this, getBoundingBox().inflate(15.0F))) {
-                            if (EntityUtil.canHurtThisMob(entity, this) && entity instanceof LivingEntity && entity.isAlive()) {
-                                double x = this.getX() - entity.getX();
-                                double y = this.getY() - entity.getY();
-                                double z = this.getZ() - entity.getZ();
-                                double d = Math.sqrt(x * x + y * y + z * z);
-                                if (this.distanceTo(entity) < 3.0D) {
-                                    this.playSound(YESoundEvents.ENTITY_DEFENDER_BOOMERANG_HIT.get(), 2.0F, this.getVoicePitch());
-                                    entity.hurt(DamageSource.mobAttack(this), 30.0F);
-                                    entity.hurtMarked = true;
-                                    entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 2.5D, (-y / d * 0.4D) + 0.8D, -z / d * 2.5D));
-                                }
-                            }
-                        }
-                    }
-                    if (this.deathAttackTicks == 35 + 1) {
-                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 1.2F);
-                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
-                        this.playSound(YESoundEvents.ENTITY_DEFENDER_SPIKE.get(), 3.0F, 0.7F);
-                        CameraShake.cameraShake(this.level, position(), 50, 0.2f, 0, 15);
-
-                        LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(this.level);
-                        assert lightning != null;
-                        lightning.setPos(this.getX(), this.getY() + 2.7D, this.getZ());
-                        lightning.setVisualOnly(true);
-                        this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 3.0F, 1.0F);
-                        this.playSound(SoundEvents.LIGHTNING_BOLT_THUNDER, 10000.0F, 1.0F);
-                        this.level.addFreshEntity(lightning);
-                    }
-                    if (this.deathAttackTicks >= 35 + 1 && this.deathAttackTicks < 45 + 1) {
-                        this.makeExcaliburLandParticles();
-                    }
-
-                    if (this.deathAttackTicks >= 59 + 1 && this.deathAttackTicks < 81 + 1) {
-                        this.stareYOffsetter += 0.05D;
-                        this.playSound(YESoundEvents.ENTITY_DEFENDER_EARTH_RUMBLE.get(), 3.0F, this.getVoicePitch());
-                        CameraShake.cameraShake(this.level, position(), 50, 0.02f, 0, 15);
-                    }
-
-                    if (this.deathAttackTicks == 81 + 1) {
-                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 1.2F);
-                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
-                        this.playSound(YESoundEvents.ENTITY_DEFENDER_SPIKE.get(), 3.0F, 0.5F);
-                        CameraShake.cameraShake(this.level, position(), 50, 0.3f, 0, 15);
-                    }
-
-                    if (this.deathAttackTicks == 102 + 1) {
-                        this.stareYOffsetter = -0.4;
-                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.8F);
-                        this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.5F);
-                        this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.0F);
-                        this.playSound(SoundEvents.GENERIC_EXPLODE, 3.0F, 0.7F);
-                        CameraShake.cameraShake(this.level, position(), 30, 0.4f, 0, 15);
-                        EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.3, 0), ParticleTypes.POOF, 50, 1.0F, Vec3.ZERO, 0.0F);
-                        this.makeRockExplodeParticles();
-
-                        if (!this.level.isClientSide) {
-                            this.level.explode(this, this.getX(), this.getY() + 0.3, this.getZ(), 6.0F, Explosion.BlockInteraction.NONE);
-                            this.level.explode(this, this.getX(), this.getY() + 0.3, this.getZ(), 3.0F, Explosion.BlockInteraction.NONE);
-                            this.level.explode(this, this.getX(), this.getY() + 0.3, this.getZ(), 3.0F, Explosion.BlockInteraction.NONE);
-                        }
-                    }
-
-                    if (this.deathAttackTicks == 114 + 1) {
-                        this.stareYOffsetter = 0.0;
-                    }
-
-                    if (this.deathAttackTicks >= 125 + 1) {
-                        this.setHealth(this.getHealth() + 1.0F);
-                        this.setHealthIFrames = 10;
-                    }
-
-                    if (this.deathAttackTicks >= 125 + 1 && this.deathAttackTicks < 640 + 1) {
-                        this.setDiscardFriction(true);
-
-                        if ((this.deathAttackTicks - (125 + 1)) % 4 == 0) {
-                            this.playSound(YESoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH.get(), 3.0F, 1.0F);
-                            CameraShake.cameraShake(this.level, position(), 30, 0.2f, 0, 8);
-                        }
-
-                        LivingEntity t = null;
-                        List<Mob> list = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(50.0D), p -> {
-                            return p instanceof Enemy && EntityUtil.canHurtThisMob(p, this) && ((p.getBlockStateOn() != Blocks.AIR.defaultBlockState())) && this.isInAttackSight(p);
-                        });
-                        if (this.getTarget() != null && (list.isEmpty() || this.distanceTo(this.getTarget()) < 25.0D)) {
-                            t = getTarget();
-                        } else {
-                            if (!list.isEmpty()) {
-                                t = list.get(0);
-                            }
-                        }
-                        if (t != null && (!(t instanceof Player) || ((this.deathAttackTicks == 125 + 1) || (this.distanceTo(t) > 30.0D)))) {
-                            double chargex = getX() - t.getX();
-                            double chargey = getY() - (t.getY() + t.getEyeHeight());
-                            double chargez = getZ() - t.getZ();
-                            double charged = Math.sqrt(chargex * chargex + chargey * chargey + chargez * chargez);
-                            float power = (float) 1.0F;
-                            double motionX = -(chargex / charged * (double) power);
-                            double motionY = -(chargey / charged * (double) power);
-                            double motionZ = -(chargez / charged * (double) power);
-                            setCharge(motionX, motionY, motionZ);
-                        }
-                        this.setDeltaMovement(this.getDeltaMovement().multiply(1, 0, 1).add(chargeX, chargeY, chargeZ));
-
-                        for (Entity entity : level.getEntities(this, getBoundingBox().inflate(100.0F))) {
-                            if (EntityUtil.canHurtThisMob(entity, this) && entity instanceof LivingEntity && entity.isAlive() && EntityUtil.isMobNotInCreativeMode(entity) && !(entity instanceof Player)) {
-                                double x = this.getX() - entity.getX();
-                                double y = this.getY() - entity.getY();
-                                double z = this.getZ() - entity.getZ();
-                                double d = Math.sqrt(x * x + y * y + z * z);
-
-                                double distance = this.distanceTo(entity) * 0.1D;
-
-                                if (this.distanceTo(entity) < 40.0D && this.distanceTo(entity) > 5.0D && entity.invulnerableTime == 0) {
-                                    if (entity.fallDistance > 10) {
-                                        entity.fallDistance = 10;
-                                    }
-                                    entity.hurtMarked = true;
-                                    entity.setDeltaMovement(entity.getDeltaMovement().add(
-                                            (x / d * 0.5D) / distance,
-                                            (y / d * 1.0D) / distance,
-                                            (z / d * 0.5D) / distance));
-                                }
-                            }
-                        }
-
-                        for (Entity entity : level.getEntities(this, getBoundingBox().inflate(15.0F))) {
-                            if (EntityUtil.canHurtThisMob(entity, this) && entity instanceof LivingEntity && entity.isAlive() && EntityUtil.isMobNotInCreativeMode(entity)) {
-                                double x = this.getX() - entity.getX();
-                                double y = this.getY() - entity.getY();
-                                double z = this.getZ() - entity.getZ();
-                                double d = Math.sqrt(x * x + y * y + z * z);
-                                if (this.distanceTo(entity) < 5.0D) {
-                                    if (entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.25f))) {
-                                        for (int i = 0; i < 4; ++i) entity.hurt(DamageSource.mobAttack(this).bypassArmor(), 25.0F * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.25f));
-                                        this.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, this.getVoicePitch() - 0.2F);
-                                        CameraShake.cameraShake(this.level, position(), 10, 0.2f, 0, 8);
-                                        entity.hurtMarked = true;
-                                        if (this.distanceTo(entity) < 2.0D) {
-                                            entity.setDeltaMovement(entity.getDeltaMovement().add(
-                                                    (-0.5D + this.random.nextDouble()) * 3.0D,
-                                                    (-0.5D + this.random.nextDouble()) * 3.0D,
-                                                    (-0.5D + this.random.nextDouble()) * 3.0D));
-                                        } else {
-                                            entity.setDeltaMovement(entity.getDeltaMovement().add(
-                                                    (x / d * 3.0D),
-                                                    (y / d * 3.0D),
-                                                    (z / d * 3.0D)));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (this.deathAttackTicks == 640 + 1) this.setDiscardFriction(false);
-
-                    if (this.deathAttackTicks >= 648 + 1) {
-                        this.setSecondHat(this.getPhaseLimit() > 1 ? 2 : 0);
-                    }
-
-                    if (this.deathAttackTicks == 650 + 1) {
-                        this.setDeltaMovement(0.0D, -3.0D, 0.0D);
-                    }
-
-                    if (this.deathAttackTicks >= 672 + 1) {
-                        this.deathAttackTicks = 0;
-                        this.attackType = 0;
-                        this.setPhase(this.getPhaseLimit() > 1 ? 2 : 0);
-                        this.setSecondHat(0);
-                        this.frame = 0;
                     }
                 }
             }

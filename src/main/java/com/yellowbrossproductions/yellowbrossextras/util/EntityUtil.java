@@ -405,7 +405,7 @@ public class EntityUtil {
     }
 
     // code borrowed from Twilight Forest
-    public static void makeSimpleTrail(Entity entity, ParticleOptions type, int amount, double srcX, double srcY, double srcZ, double destX, double destY, double destZ) {
+    public static void makeSimpleTrail(Entity entity, ParticleOptions type, int amount, double srcX, double srcY, double srcZ, double destX, double destY, double destZ, float randomMult) {
         Random random = new Random();
 
         if (!entity.level.isClientSide) {
@@ -415,9 +415,9 @@ public class EntityUtil {
 
                     for (int i = 0; i < amount; i++) {
                         double trailFactor = i / (amount - 1.0D);
-                        float f = (random.nextFloat() - 0.5F) * 0.2F;
-                        float f1 = (random.nextFloat() - 0.5F) * 0.2F;
-                        float f2 = (random.nextFloat() - 0.5F) * 0.2F;
+                        float f = (random.nextFloat() - 0.5F) * 0.2F * randomMult;
+                        float f1 = (random.nextFloat() - 0.5F) * 0.2F * randomMult;
+                        float f2 = (random.nextFloat() - 0.5F) * 0.2F * randomMult;
                         double tx = srcX + (destX - srcX) * trailFactor;
                         double ty = srcY + (destY - srcY) * trailFactor;
                         double tz = srcZ + (destZ - srcZ) * trailFactor;
@@ -484,24 +484,24 @@ public class EntityUtil {
     }
 
     public static void fireCircleOfPoisonBalls(Level level, Mob spawner, int amount, double y, float velocity, boolean shouldCheckForDefenders) {
+        if (level.isClientSide()) return;
+
         final Random random = new Random();
-        if (!level.isClientSide) {
-            // code adapted from Mowzie's Mobs
-            for (int i = 0; i < amount; i++) {
-                float TAU = (float) (2 * StrictMath.PI);
+        // code adapted from Mowzie's Mobs
+        for (int i = 0; i < amount; i++) {
+            float TAU = (float) (2 * StrictMath.PI);
 
-                float yaw = i * (TAU / amount);
-                float vy = random.nextFloat() * 0.1F - 0.05f;
-                float vx = velocity * Mth.cos(yaw);
-                float vz = velocity * Mth.sin(yaw);
-                SuperDuperPoisonBall bullet = new SuperDuperPoisonBall(spawner.level, spawner, vx, vy, vz);
+            float yaw = i * (TAU / amount);
+            float vy = random.nextFloat() * 0.1F - 0.05f;
+            float vx = velocity * Mth.cos(yaw);
+            float vz = velocity * Mth.sin(yaw);
+            SuperDuperPoisonBall bullet = new SuperDuperPoisonBall(spawner.level, spawner, vx, vy, vz);
 
-                bullet.setPos(spawner.getX(), spawner.getY() + y, spawner.getZ());
-                List<Defender> defender = level.getEntitiesOfClass(Defender.class, spawner.getBoundingBox().inflate(40.0d),
-                        p -> p.isAlive() && !p.isRemoved() && isMobOnOtherTeam2(p, spawner));
-                bullet.setOwner((shouldCheckForDefenders && !defender.isEmpty()) ? defender.get(0) : spawner);
-                level.addFreshEntity(bullet);
-            }
+            bullet.setPos(spawner.getX(), spawner.getY() + y, spawner.getZ());
+            List<Defender> defender = level.getEntitiesOfClass(Defender.class, spawner.getBoundingBox().inflate(40.0d),
+                    p -> p.isAlive() && !p.isRemoved() && isMobOnOtherTeam2(p, spawner));
+            bullet.setOwner((shouldCheckForDefenders && !defender.isEmpty()) ? defender.get(0) : spawner);
+            level.addFreshEntity(bullet);
         }
     }
 
@@ -530,5 +530,13 @@ public class EntityUtil {
         }
 
         return bestTargetPosition;
+    }
+
+    public static void disableShield(LivingEntity livingEntity, int ticks) {
+        if (livingEntity instanceof Player && livingEntity.isBlocking()) {
+            ((Player) livingEntity).getCooldowns().addCooldown(livingEntity.getUseItem().getItem(), ticks);
+            livingEntity.stopUsingItem();
+            livingEntity.level.broadcastEntityEvent(livingEntity, (byte)30);
+        }
     }
 }

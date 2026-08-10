@@ -3,6 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShake;
 import com.yellowbrossproductions.yellowbrossextras.entities.YExtrasMob;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DeadlyArrow;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SentryBullet;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
@@ -57,6 +58,7 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
     boolean mitosisInitiated = false;
     int killMyselfTicks;
     LivingEntity owner = null;
+    boolean isSniper = false;
 
     public SentryGun(EntityType<? extends YExtrasMob> entityType, Level level) {
         super(entityType, level);
@@ -107,6 +109,20 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
         EntityUtil.animateWhen(this.anim_intro, this.getAnimationState().equals("intro"), this.tickCount);
         EntityUtil.animateWhen(this.anim_flying, this.getAnimationState().equals("flying"), this.tickCount);
         EntityUtil.animateWhen(this.anim_mitosis, this.getAnimationState().equals("mitosis"), this.tickCount);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
+        pCompound.putBoolean("IsSniper", this.isSniper);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        this.isSniper = pCompound.getBoolean("IsSniper");
     }
 
     @Override
@@ -216,6 +232,7 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
                         iGaveBirth.setOwner(this.getOwner());
 
                         iGaveBirth.setTarget(this.getTarget());
+                        iGaveBirth.isSniper = this.isSniper;
 
                         if (this.level instanceof ServerLevel serverLevel) iGaveBirth.finalizeSpawn(serverLevel, this.level.getCurrentDifficultyAt(this.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
 
@@ -273,21 +290,29 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
     }
 
     public void performRangedAttack(LivingEntity target) {
-        double x = this.getX();
-        double z = this.getZ();
-        double y1 = this.getY() + 0.75D;
+        if (this.level.isClientSide) return;
 
-        double d0 = target.getEyeY();
-        double d1 = target.getX() - x;
-        double d2 = d0 - y1;
-        double d3 = target.getZ() - z;
-        double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
+        if (this.isSniper) {
+            Vec3 position = target.position().subtract(this.position()).normalize().scale(15.0d);
+            DeadlyArrow deadlyArrow = new DeadlyArrow(this.level, this, 0.75d, target.getBoundingBox().getCenter().add(position), 1);
+            this.level.addFreshEntity(deadlyArrow);
+        } else {
+            double x = this.getX();
+            double z = this.getZ();
+            double y1 = this.getY() + 0.75D;
 
-        SentryBullet bullet = new SentryBullet(this.level, this, d1, d2, d3);
+            double d0 = target.getEyeY();
+            double d1 = target.getX() - x;
+            double d2 = d0 - y1;
+            double d3 = target.getZ() - z;
+            double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
 
-        bullet.setPos(x, y1, z);
-        bullet.setOwner(this);
-        this.level.addFreshEntity(bullet);
+            SentryBullet bullet = new SentryBullet(this.level, this, d1, d2, d3);
+
+            bullet.setPos(x, y1, z);
+            bullet.setOwner(this);
+            this.level.addFreshEntity(bullet);
+        }
     }
 
     public void stopShootingSound(Level world) {

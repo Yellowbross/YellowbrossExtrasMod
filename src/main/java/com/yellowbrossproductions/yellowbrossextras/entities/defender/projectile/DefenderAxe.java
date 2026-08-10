@@ -88,34 +88,19 @@ public class DefenderAxe extends CustomAbstractHurtingProjectile {
     }
 
     public void makeExplodeParticles() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
-                if (serverPlayer.distanceToSqr(this) < 4096.0D) {
-                    ParticlePacket packet = new ParticlePacket();
-
-                    for(int i = 0; i < 10; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (-0.5 + this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-                    }
-                    for(int i = 0; i < 20; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (-0.5 + this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.CRIT, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-                    }
-                    for(int i = 0; i < 6; ++i) {
-                        double d0 = (-0.5 + this.random.nextGaussian());
-                        double d1 = (-0.5 + this.random.nextGaussian());
-                        double d2 = (-0.5 + this.random.nextGaussian());
-                        packet.queueParticle(ParticleTypes.EXPLOSION, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
-                    }
-
-                    PacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
-                }
-            }
+        for(int i = 0; i < 10; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian());
+            double d1 = (-0.5 + this.random.nextGaussian());
+            double d2 = (-0.5 + this.random.nextGaussian());
+            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
+        for(int i = 0; i < 20; ++i) {
+            double d0 = (-0.5 + this.random.nextGaussian());
+            double d1 = (-0.5 + this.random.nextGaussian());
+            double d2 = (-0.5 + this.random.nextGaussian());
+            EntityUtil.makeAParticle(this.level, ParticleTypes.CRIT, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+        }
+        EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION, false, this.position(), Vec3.ZERO);
     }
 
     @Override
@@ -137,12 +122,13 @@ public class DefenderAxe extends CustomAbstractHurtingProjectile {
         List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, new AABB(this.position().subtract(size, size, size), this.position().add(size, size, size)), p -> p.isAlive() && p != this.getOwner());
         if (hitEntity instanceof LivingEntity living) list.add(living);
 
-        for (Entity entity : list) {
-            boolean canHurt = !(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(entity, owner);
+        for (LivingEntity entity : list) {
+            boolean canHurt = (!(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(entity, owner)) && entity.hasLineOfSight(this);
             if (canHurt) {
                 DamageSource damageSource = new IndirectEntityDamageSource("thrown", this, this.getOwner()).setProjectile();
                 entity.invulnerableTime = 0;
                 entity.hurt(damageSource, 8.0F);
+                EntityUtil.disableShield(entity, 100);
             }
         }
 

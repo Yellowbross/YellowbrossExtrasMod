@@ -57,7 +57,7 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
     public void tick() {
         if (!this.level.isClientSide) this.hurtMarked = true;
 
-        for (LivingEntity livingEntity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.5d))) {
+        for (LivingEntity livingEntity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.5d), p -> !p.isRemoved() && p != this.getOwner())) {
             boolean canHurt = !(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(livingEntity, owner);
 
             if (canHurt && !this.caught.contains(livingEntity) && livingEntity.hasLineOfSight(this) && EntityUtil.isMobNotInCreativeMode(livingEntity)) {

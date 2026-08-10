@@ -148,10 +148,10 @@ public class CustomAbstractHurtingProjectile extends Projectile {
                 if (!this.level.isClientSide) {
                     Vec3 vec3 = entity.getLookAngle();
                     this.setDeltaMovement(vec3);
-                    this.xPower = vec3.x * 0.1D;
-                    this.yPower = vec3.y * 0.1D;
-                    this.zPower = vec3.z * 0.1D;
-                    this.setOwner(entity);
+                    this.xPower = vec3.x * 0.1D * this.getHitBackMultiplier();
+                    this.yPower = vec3.y * 0.1D * this.getHitBackMultiplier();
+                    this.zPower = vec3.z * 0.1D * this.getHitBackMultiplier();
+                    if (this.doesHittingMeChangeMyOwner()) this.setOwner(entity);
                 }
 
                 return true;
@@ -159,6 +159,14 @@ public class CustomAbstractHurtingProjectile extends Projectile {
                 return false;
             }
         }
+    }
+
+    public double getHitBackMultiplier() {
+        return 1.0D;
+    }
+
+    public boolean doesHittingMeChangeMyOwner() {
+        return true;
     }
 
     public float getLightLevelDependentMagicValue() {
