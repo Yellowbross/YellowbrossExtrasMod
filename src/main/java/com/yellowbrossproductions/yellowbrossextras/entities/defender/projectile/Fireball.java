@@ -28,6 +28,7 @@ import java.util.List;
 
 public class Fireball extends CustomAbstractHurtingProjectile {
     private static final EntityDataAccessor<Integer> SIZE = SynchedEntityData.defineId(Fireball.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> SHOULD_FLASH = SynchedEntityData.defineId(Fireball.class, EntityDataSerializers.BOOLEAN);
     Vec3 startPos = Vec3.ZERO;
     Vec3 destPos = Vec3.ZERO;
     boolean wasHit = false;
@@ -51,6 +52,7 @@ public class Fireball extends CustomAbstractHurtingProjectile {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(SIZE, 0);
+        this.entityData.define(SHOULD_FLASH, false);
     }
 
     public int getSize() {
@@ -79,11 +81,20 @@ public class Fireball extends CustomAbstractHurtingProjectile {
         return true;
     }
 
+    public boolean shouldFlash() {
+        return this.entityData.get(SHOULD_FLASH);
+    }
+
+    public void setShouldFlash(boolean shouldFlash) {
+        this.entityData.set(SHOULD_FLASH, shouldFlash);
+    }
+
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         if (pSource.getDirectEntity() instanceof Fireball) return false;
         if (this.getSize() == 1) return false;
         this.wasHit = true;
+        if (!this.level.isClientSide) this.setShouldFlash(false);
         return super.hurt(pSource, pAmount);
     }
 

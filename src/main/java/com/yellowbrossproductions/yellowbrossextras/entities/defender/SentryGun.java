@@ -167,6 +167,8 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
         this.setYRot(this.getYHeadRot());
         this.yBodyRot = this.getYRot();
 
+        if (this.getOwner() != null && this.getOwner().isDeadOrDying()) this.kill();
+
         if (this.killMyselfTicks > 0) this.killMyselfTicks--;
         if (this.killMyselfTicks > 100) this.explodeCreeper();
 

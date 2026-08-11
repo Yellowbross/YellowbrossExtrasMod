@@ -738,6 +738,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             }
             case 3: switch (this.getPhase()) {
                 case 1: return YESoundEvents.MUSIC_DEFENDER_PHASE1_TRANS.get();
+                case 2: return YESoundEvents.MUSIC_DEFENDER_PHASE2_TRANS.get();
             }
             default: return null;
         }

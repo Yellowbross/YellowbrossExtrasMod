@@ -997,6 +997,15 @@ public class AttacksPart1 {
                     }
                 }
                 if (defender.deathAttackTicks == 32) defender.setWeaponToShow(16);
+                if (defender.deathAttackTicks == 43 || defender.deathAttackTicks == 52) {
+                    defender.playSound(YESoundEvents.ENTITY_DEFENDER_FLAMETHROWER_WING.get(), 3.0F, 1.0F);
+                    CameraShake.cameraShake(defender.level, defender.position(), 50, 0.2f, 0, 10);
+                }
+
+                if (defender.deathAttackTicks >= 70 && defender.deathAttackTicks <= 86) {
+                    defender.playSound(YESoundEvents.ENTITY_DEFENDER_EARTH_RUMBLE.get(), 3.0F, defender.getVoicePitch());
+                    CameraShake.cameraShake(defender.level, defender.position(), 50, 0.02f, 0, 15);
+                }
             }
         }
     }

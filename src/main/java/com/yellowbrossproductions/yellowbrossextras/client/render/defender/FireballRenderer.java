@@ -27,7 +27,7 @@ public class FireballRenderer extends EntityRenderer<Fireball> {
     private final Random random = new Random();
 
     private static final float TEXTURE_WIDTH = 128;
-    private static final float TEXTURE_HEIGHT = 64;
+    private static final float TEXTURE_HEIGHT = 128;
 
     private static final float BALL_SIZE_HUGE = 64;
     private static final float BALL_SIZE_BIG = 32;

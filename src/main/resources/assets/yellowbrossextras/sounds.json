@@ -390,6 +390,13 @@
     ]
   },
 
+  "entity.defender.flamethrower_wing": {
+    "subtitle": "subtitles.entity.defender.flamethrower_wing",
+    "sounds": [
+      "yellowbrossextras:defender/flamethrower_wing"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [
