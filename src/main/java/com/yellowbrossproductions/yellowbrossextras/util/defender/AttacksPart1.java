@@ -1194,7 +1194,7 @@ public class AttacksPart1 {
                 }
                 if (defender.deathAttackTicks == 600) {
                     Vec3 landingPosition = target != null ? target.position().add(target.getLookAngle().scale(16.0D).multiply(1, 0, 1)) : defender.position();
-                    BlockPos.MutableBlockPos yPosition = new BlockPos.MutableBlockPos(landingPosition.x, landingPosition.y, landingPosition.z);
+                    BlockPos.MutableBlockPos yPosition = new BlockPos.MutableBlockPos(landingPosition.x, landingPosition.y + defender.level.getMaxBuildHeight(), landingPosition.z);
                     while (yPosition.getY() > defender.level.getMinBuildHeight() && !defender.level.getBlockState(yPosition).getMaterial().blocksMotion()) {
                         yPosition.move(Direction.DOWN);
                     }
