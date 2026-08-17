@@ -22,7 +22,7 @@ public class IcethrowerGoal extends CustomAttackGoal {
         getDefender().setImmediateTurn(true);
         getDefender().attackType = getDefender().attack_icethrower;
         getDefender().setWeaponToShow(14);
-        getDefender().playSound(YESoundEvents.ENTITY_DEFENDER_ICETHROWER_START.get(), 3.0F, 1.0F);
+        getDefender().playSound(YESoundEvents.ENTITY_DEFENDER_ICETHROWER_START.get(), 5.0F, 1.0F);
     }
 
     @Override

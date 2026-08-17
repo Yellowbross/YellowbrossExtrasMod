@@ -838,7 +838,7 @@ public class AttacksPart1 {
                         defender.setDeltaMovement(0, 1.0, 0);
                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_JUMP.get(), 2.0F, 1.0F);
                     }
-                    Vec3 throwTo = defender.position().add(defender.getLookAngle().scale(10.0d));
+                    Vec3 throwTo = defender.position().add(defender.getLookAngle().scale(60.0d));
                     if (ticks >= 91 && target != null) {
                         List<Mob> targets = defender.level.getEntitiesOfClass(Mob.class, target.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy && defender.isInAttackSight(p));
                         Vec3 strikeZone = EntityUtil.findDensestMobCluster(targets, 9.0d);
@@ -1192,18 +1192,20 @@ public class AttacksPart1 {
                         defender.setInvisible(true);
                     }
                 }
-                if (defender.deathAttackTicks >= 605) {
-                    defender.setDeltaMovement(0, -1, 0);
-                    if (target != null) defender.setSpecialLookLocation(target.position().add(0, target.getEyeHeight(), 0));
-                }
-                if (defender.deathAttackTicks == 605) {
+                if (defender.deathAttackTicks == 600) {
                     Vec3 landingPosition = target != null ? target.position().add(target.getLookAngle().scale(10.0D).multiply(1, 0, 1)) : defender.position();
                     BlockPos.MutableBlockPos yPosition = new BlockPos.MutableBlockPos(landingPosition.x, landingPosition.y, landingPosition.z);
                     while (yPosition.getY() > defender.level.getMinBuildHeight() && !defender.level.getBlockState(yPosition).getMaterial().blocksMotion()) {
                         yPosition.move(Direction.DOWN);
                     }
 
-                    defender.setPos(landingPosition.x, yPosition.getY() + 1, landingPosition.z);
+                    if (!defender.level.isClientSide) defender.teleportTo(landingPosition.x, yPosition.getY() + 1, landingPosition.z);
+                }
+                if (defender.deathAttackTicks >= 605) {
+                    defender.setDeltaMovement(0, -1, 0);
+                    if (target != null) defender.setSpecialLookLocation(target.position().add(0, target.getEyeHeight(), 0));
+                }
+                if (defender.deathAttackTicks == 605) {
                     defender.setInvisible(false);
                     defender.setAnimationState("flamethrower_end");
                 }

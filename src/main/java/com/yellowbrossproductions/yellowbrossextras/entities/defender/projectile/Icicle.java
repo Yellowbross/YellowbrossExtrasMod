@@ -154,7 +154,7 @@ public class Icicle extends Entity {
             }
             CameraShake.cameraShake(this.level, position(), 35, 0.05f, 0, 10);
 
-            List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(3),
+            List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(3).setMaxY(this.level.getMaxBuildHeight()),
                     p -> !p.isOnFire() && p.getType().isBlockDangerous(Blocks.POWDER_SNOW.defaultBlockState()));
             for (LivingEntity hit : entities) {
                 if (hit.hurt(DamageSource.thrown(this, this.getOwner()), 8.0F)) {
