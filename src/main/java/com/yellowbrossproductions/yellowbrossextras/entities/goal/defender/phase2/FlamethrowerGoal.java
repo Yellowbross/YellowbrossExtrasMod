@@ -29,8 +29,7 @@ public class FlamethrowerGoal extends CustomAttackGoal {
     public void tick() {
         getDefender().getNavigation().stop();
 
-        if (getDefender().getAnimationState().equals("flamethrower_big")) {
-
+        if (getDefender().getAnimationState().equals("flamethrower_big") || getDefender().deathAttackTicks > 605) {
             if (getDefender().specialLookLocation != Vec3.ZERO) {
                 getDefender().getLookControl().setLookAt(getDefender().specialLookLocation.x, getDefender().specialLookLocation.y, getDefender().specialLookLocation.z, 100.0F, 100.0F);
             }

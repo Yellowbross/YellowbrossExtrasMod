@@ -65,6 +65,11 @@ public class YESoundEvents {
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_WATCHYOTONEBUDDYBOY = addSoundsToRegistry("entity.defender.watchyotonebuddyboy");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_EXCALIBUR = addSoundsToRegistry("entity.defender.excalibur");
     public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_FLAMETHROWER_WING = addSoundsToRegistry("entity.defender.flamethrower_wing");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_FLAMETHROWER_START = addSoundsToRegistry("entity.defender.flamethrower_start");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_FLAMETHROWER_ROW = addSoundsToRegistry("entity.defender.flamethrower_row");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_FLAMETHROWER_BIG = addSoundsToRegistry("entity.defender.flamethrower_big");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_FLAMETHROWER_VANISH = addSoundsToRegistry("entity.defender.flamethrower_vanish");
+    public static final RegistryObject<SoundEvent> ENTITY_DEFENDER_FLAMETHROWER_SHOOT = addSoundsToRegistry("entity.defender.flamethrower_shoot");
 
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_ATTACK = addSoundsToRegistry("entity.vilvgaver.attack");
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_LOOP = addSoundsToRegistry("entity.vilvgaver.loop");

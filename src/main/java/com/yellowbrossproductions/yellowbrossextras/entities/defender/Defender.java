@@ -208,7 +208,14 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FlamethrowerGoal(this));
-
+        this.goalSelector.addGoal(0, new IcethrowerGoal(this));
+        this.goalSelector.addGoal(0, new WitherBazookaGoal(this));
+        this.goalSelector.addGoal(0, new SnipeGoal(this));
+        this.goalSelector.addGoal(0, new PoisonDartsGoal(this));
+        this.goalSelector.addGoal(0, new ForceGunGoal(this));
+        this.goalSelector.addGoal(0, new CreeperGunGoal(this));
+        this.goalSelector.addGoal(0, new SentryGunsGoal(this));
+        this.goalSelector.addGoal(0, new RatatatabowGoal(this));
 
         this.goalSelector.addGoal(0, new ExcaliburGoal(this));
         this.goalSelector.addGoal(0, new ClawsGoal(this));

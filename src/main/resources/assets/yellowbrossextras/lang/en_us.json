@@ -97,6 +97,11 @@
   "subtitles.entity.defender.icethrower_hit": "Icicle explodes",
   "subtitles.entity.defender.watchyotonebuddyboy": "Be grateful for once, Ragno, jeez...",
   "subtitles.entity.defender.flamethrower_wing": "Defender prepares Flamethrower",
+  "subtitles.entity.defender.flamethrower_start": "Defender is blasting off again",
+  "subtitles.entity.defender.flamethrower_row": "WATCH YO JET",
+  "subtitles.entity.defender.flamethrower_big": "Defender with his nuclear fireball",
+  "subtitles.entity.defender.flamethrower_vanish": "Defender vanishes into the flames",
+  "subtitles.entity.defender.flamethrower_shoot": "Defender using his fire-arms",
 
   "subtitles.entity.vilvgaver.attack": "Vilvgaver attacks",
   "subtitles.entity.vilvgaver.loop": "Vilvgaver screams",

@@ -397,6 +397,41 @@
     ]
   },
 
+  "entity.defender.flamethrower_start": {
+    "subtitle": "subtitles.entity.defender.flamethrower_start",
+    "sounds": [
+      "yellowbrossextras:defender/flamethrower_start"
+    ]
+  },
+
+  "entity.defender.flamethrower_row": {
+    "subtitle": "subtitles.entity.defender.flamethrower_row",
+    "sounds": [
+      "yellowbrossextras:defender/flamethrower_row"
+    ]
+  },
+
+  "entity.defender.flamethrower_big": {
+    "subtitle": "subtitles.entity.defender.flamethrower_big",
+    "sounds": [
+      "yellowbrossextras:defender/flamethrower_big"
+    ]
+  },
+
+  "entity.defender.flamethrower_vanish": {
+    "subtitle": "subtitles.entity.defender.flamethrower_vanish",
+    "sounds": [
+      "yellowbrossextras:defender/flamethrower_vanish"
+    ]
+  },
+
+  "entity.defender.flamethrower_shoot": {
+    "subtitle": "subtitles.entity.defender.flamethrower_shoot",
+    "sounds": [
+      "yellowbrossextras:defender/flamethrower_shoot"
+    ]
+  },
+
   "entity.vilvgaver.attack": {
     "subtitle": "subtitles.entity.vilvgaver.attack",
     "sounds": [
