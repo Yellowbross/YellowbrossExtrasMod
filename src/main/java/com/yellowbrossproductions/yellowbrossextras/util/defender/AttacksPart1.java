@@ -1029,7 +1029,7 @@ public class AttacksPart1 {
                         for (int i1 = 0; i1 < 40; i1++) EntityUtil.makeAParticle(defender.level, ParticleTypes.FLAME, true, defender.position().add(0, 0.5, 0).add(spawnAt).add(defender.getLookAngle().scale(-1).multiply(1, 0, 1)), new Vec3(0, (-0.5f + defender.getRandom().nextFloat()) * 5.0f, 0));
                     }
                 }
-                if (defender.deathAttackTicks == 88) defender.setInvisible(true);
+                if (defender.deathAttackTicks == 88 && !defender.level.isClientSide) defender.setInvisible(true);
 
                 if (defender.deathAttackTicks <= 120 && target != null) defender.lookAtWhileDead(target, 100.0F, 0.0F);
 
@@ -1065,7 +1065,7 @@ public class AttacksPart1 {
                         }
                     }
                     if (bigBallTimes.contains(defender.deathAttackTicks)) {
-                        defender.setInvisible(false);
+                        if (!defender.level.isClientSide) defender.setInvisible(false);
 
                         Vec3 throwTo = defender.getLookAngle().scale(10.0d).subtract(0, 20, 0);
                         defender.setSpecialLookLocation(defender.position().add(throwTo));
@@ -1098,7 +1098,7 @@ public class AttacksPart1 {
                         defender.setAnimationState("none");
                         defender.setSpecialLookLocation(Vec3.ZERO);
                         defender.setPos(defender.position().subtract(0, 6, 0));
-                        defender.setInvisible(true);
+                        if (!defender.level.isClientSide) defender.setInvisible(true);
                     }
 
                     // Row
@@ -1144,7 +1144,7 @@ public class AttacksPart1 {
                         defender.level.playSound(null, defender, YESoundEvents.ENTITY_DEFENDER_FLAMETHROWER_ROW.get(), defender.getSoundSource(), 5.0F, 1.0F);
                         defender.setAnimationState("flamethrower_row");
 
-                        defender.setInvisible(false);
+                        if (!defender.level.isClientSide) defender.setInvisible(false);
 
                         EntityUtil.makeAParticle(defender.level, ParticleTypes.EXPLOSION, true, defender.getBoundingBox().getCenter(), Vec3.ZERO);
                         EntityUtil.makeCircleParticles(defender.level, defender.position().add(0, 1.5, 0), ParticleTypes.FLAME, true, 60, 1.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 0.25F);
@@ -1189,7 +1189,7 @@ public class AttacksPart1 {
                         defender.setCharge(Vec3.ZERO);
                         defender.setForcedDirection(0);
                         if (target != null) defender.setPos(target.position().add(0, 3, 0));
-                        defender.setInvisible(true);
+                        if (!defender.level.isClientSide) defender.setInvisible(true);
                     }
                 }
                 if (defender.deathAttackTicks == 600) {
@@ -1206,7 +1206,7 @@ public class AttacksPart1 {
                     if (target != null) defender.setSpecialLookLocation(target.position().add(0, target.getEyeHeight(), 0));
                 }
                 if (defender.deathAttackTicks == 605) {
-                    defender.setInvisible(false);
+                    if (!defender.level.isClientSide) defender.setInvisible(false);
                     defender.setAnimationState("flamethrower_end");
                 }
                 if (defender.deathAttackTicks == 607) {
