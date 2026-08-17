@@ -250,7 +250,7 @@ public class EntityUtil {
     }
 
     // Google's Gemini helped me figure out how the math for rotating and propelling the circle would work
-    public static void makeCircleParticles(Level level, Vec3 spawnVec, ParticleOptions particleType, int amount, float velocityExpanding, Vec3 rotationVec, float velocityShoot) {
+    public static void makeCircleParticles(Level level, Vec3 spawnVec, ParticleOptions particleType, boolean forceAlwaysRender, int amount, float velocityExpanding, Vec3 rotationVec, float velocityShoot) {
         final Random random = new Random();
         float TAU = (float) (2 * StrictMath.PI);
 
@@ -269,7 +269,7 @@ public class EntityUtil {
 
             Vector3f velocityVec = new Vector3f(vx, vy, vz);
             velocityVec.transform(rotation);
-            makeAParticle(level, particleType, false, spawnVec, new Vec3(velocityVec.x(), velocityVec.y(), velocityVec.z()));
+            makeAParticle(level, particleType, forceAlwaysRender, spawnVec, new Vec3(velocityVec.x(), velocityVec.y(), velocityVec.z()));
         }
     }
 

@@ -29,7 +29,8 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
     private final ModelPart hat2_flap1;
     private final ModelPart hat2_flap2;
     private final ModelPart hat3;
-    private final ModelPart hat3_propeller;
+    private final ModelPart hat_wrench1;
+    private final ModelPart hat_wrench2;
     private final ModelPart hat4;
     private final ModelPart hat5;
     private final ModelPart hat6;
@@ -118,7 +119,8 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
         this.hat2_flap1 = this.hat2.getChild("hat2_flap1");
         this.hat2_flap2 = this.hat2.getChild("hat2_flap2");
         this.hat3 = this.head.getChild("hat3");
-        this.hat3_propeller = this.hat3.getChild("hat3_propeller");
+        this.hat_wrench1 = this.hat3.getChild("hat_wrench1");
+        this.hat_wrench2 = this.hat3.getChild("hat_wrench2");
         this.hat4 = this.head.getChild("hat4");
         this.hat5 = this.head.getChild("hat5");
         this.hat6 = this.head.getChild("hat6");
@@ -218,11 +220,23 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
 
         PartDefinition hat2_flap2 = hat2.addOrReplaceChild("hat2_flap2", CubeListBuilder.create().texOffs(234, 55).mirror().addBox(-3.0F, 0.0F, -8.0F, 3.0F, 0.0F, 16.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(-7.0F, 2.0F, 0.0F, 0.0F, 0.0F, 0.7854F));
 
-        PartDefinition hat3 = head.addOrReplaceChild("hat3", CubeListBuilder.create().texOffs(224, 82).addBox(-4.0F, -2.0F, -4.0F, 8.0F, 3.0F, 8.0F, new CubeDeformation(0.0F))
-                .texOffs(224, 82).addBox(-1.0F, -6.0F, -1.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -13.0F, 0.0F));
+        PartDefinition hat3 = head.addOrReplaceChild("hat3", CubeListBuilder.create().texOffs(228, 71).addBox(-6.0F, -4.0F, -1.0F, 12.0F, 3.0F, 2.0F, new CubeDeformation(0.0F))
+                .texOffs(246, 76).addBox(-9.0F, -4.0F, -1.0F, 3.0F, 8.0F, 2.0F, new CubeDeformation(0.0F))
+                .texOffs(246, 76).addBox(6.0F, -4.0F, -1.0F, 3.0F, 12.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -13.0F, 0.0F));
 
-        PartDefinition hat3_propeller = hat3.addOrReplaceChild("hat3_propeller", CubeListBuilder.create().texOffs(228, 93).addBox(-6.0F, -0.5F, -1.0F, 12.0F, 1.0F, 2.0F, new CubeDeformation(0.0F))
-                .texOffs(228, 96).addBox(-1.0F, -0.5F, -6.0F, 2.0F, 1.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -6.5F, 0.0F));
+        PartDefinition hat_wrench1 = hat3.addOrReplaceChild("hat_wrench1", CubeListBuilder.create().texOffs(246, 76).addBox(-1.5F, 0.0F, -1.0F, 3.0F, 8.0F, 2.0F, new CubeDeformation(0.25F))
+                .texOffs(234, 76).addBox(-2.0F, 8.5F, -1.0F, 4.0F, 1.0F, 2.0F, new CubeDeformation(0.25F)), PartPose.offsetAndRotation(5.5F, 7.0F, 0.0F, 0.0F, 0.0F, -1.1345F));
+
+        PartDefinition cube_r1 = hat_wrench1.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(240, 79).addBox(-0.5F, 0.5F, -1.0F, 1.0F, 3.0F, 2.0F, new CubeDeformation(0.3F)), PartPose.offsetAndRotation(2.0F, 8.5F, 0.0F, 0.0F, 0.0F, 0.2618F));
+
+        PartDefinition cube_r2 = hat_wrench1.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(240, 79).addBox(-0.5F, 0.5F, -1.0F, 1.0F, 3.0F, 2.0F, new CubeDeformation(0.3F)), PartPose.offsetAndRotation(-2.0F, 8.5F, 0.0F, 0.0F, 0.0F, -0.2618F));
+
+        PartDefinition hat_wrench2 = hat3.addOrReplaceChild("hat_wrench2", CubeListBuilder.create().texOffs(246, 76).addBox(-1.5F, 0.0F, -1.0F, 3.0F, 8.0F, 2.0F, new CubeDeformation(0.25F))
+                .texOffs(234, 76).addBox(-2.0F, 8.5F, -1.0F, 4.0F, 1.0F, 2.0F, new CubeDeformation(0.25F)), PartPose.offsetAndRotation(-5.5F, 4.0F, 0.0F, 0.0F, 0.0F, 2.0071F));
+
+        PartDefinition cube_r3 = hat_wrench2.addOrReplaceChild("cube_r3", CubeListBuilder.create().texOffs(240, 79).addBox(-0.5F, 0.5F, -1.0F, 1.0F, 3.0F, 2.0F, new CubeDeformation(0.3F)), PartPose.offsetAndRotation(2.0F, 8.5F, 0.0F, 0.0F, 0.0F, 0.2618F));
+
+        PartDefinition cube_r4 = hat_wrench2.addOrReplaceChild("cube_r4", CubeListBuilder.create().texOffs(240, 79).addBox(-0.5F, 0.5F, -1.0F, 1.0F, 3.0F, 2.0F, new CubeDeformation(0.3F)), PartPose.offsetAndRotation(-2.0F, 8.5F, 0.0F, 0.0F, 0.0F, -0.2618F));
 
         PartDefinition hat4 = head.addOrReplaceChild("hat4", CubeListBuilder.create().texOffs(208, 109).addBox(-6.0F, -6.0F, -6.0F, 12.0F, 12.0F, 12.0F, new CubeDeformation(0.25F)), PartPose.offset(0.0F, -6.0F, 0.0F));
 
@@ -499,6 +513,18 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
     }
 
     private void animatePhase1(Defender defender, float ageInTicks) {
+        this.buzzsaw.visible = defender.getWeaponToShow() == 1;
+        this.sword.visible = defender.getWeaponToShow() == 2;
+        this.boomerang.visible = defender.getWeaponToShow() == 3;
+        this.spike.visible = defender.getWeaponToShow() == 4;
+        this.shuriken_launcher.visible = defender.getWeaponToShow() == 5;
+        this.chainsaw_handle.visible = defender.getWeaponToShow() == 6;
+        this.claw1.visible = defender.getWeaponToShow() == 7;
+        this.claw2.visible = defender.getWeaponToShow() == 7;
+        this.rock.visible = defender.getWeaponToShow() == 8;
+        this.excalibur_fake.visible = defender.getWeaponToShow() == 8;
+        this.excalibur.visible = defender.getWeaponToShow() == 8;
+
         this.animate(defender.anim_saws, Phase1Animation.saws, ageInTicks, defender.getAnimationSpeed());
         this.animate(defender.anim_sword, Phase1Animation.sword, ageInTicks, defender.getAnimationSpeed());
         this.animate(defender.anim_axes, Phase1Animation.axes, ageInTicks, defender.getAnimationSpeed());
@@ -516,6 +542,21 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
     }
 
     private void animatePhase2(Defender defender, float ageInTicks) {
+        this.ratatatabow.visible = defender.getWeaponToShow() == 9;
+        this.quiver.visible = defender.getWeaponToShow() == 9;
+        this.poisondarts.visible = defender.getWeaponToShow() == 10;
+        this.forcegun.visible = defender.getWeaponToShow() == 11;
+        this.sniper_rifle.visible = defender.getWeaponToShow() == 12;
+        this.wither_bazooka.visible = defender.getWeaponToShow() == 13;
+        this.icethrower_back.visible = defender.getWeaponToShow() == 14;
+        this.icethrower_glove1.visible = defender.getWeaponToShow() == 14;
+        this.icethrower_glove2.visible = defender.getWeaponToShow() == 14;
+        this.creeper_gun.visible = defender.getWeaponToShow() == 15;
+        this.flamethrower_arm1.visible = defender.getWeaponToShow() == 16;
+        this.flamethrower_arm2.visible = defender.getWeaponToShow() == 16;
+        this.flamethrower_wing1.visible = defender.getWeaponToShow() == 16;
+        this.flamethrower_wing2.visible = defender.getWeaponToShow() == 16;
+
         this.animate(defender.anim_ratatatabow, Phase2Animation.ratatatabow, ageInTicks, defender.getAnimationSpeed());
         this.animate(defender.anim_ratatatabow2, Phase2Animation.ratatatabow2, ageInTicks, defender.getAnimationSpeed());
         this.animate(defender.anim_poisondarts, Phase2Animation.poisondarts, ageInTicks, defender.getAnimationSpeed());
@@ -527,6 +568,9 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
         this.animate(defender.anim_witherbazooka_land, Phase2Animation.witherbazooka_land, ageInTicks, defender.getAnimationSpeed());
         this.animate(defender.anim_creepergun, Phase2Animation.creepergun, ageInTicks, defender.getAnimationSpeed());
         this.animate(defender.anim_flamethrower, Phase2Animation.flamethrower, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_flamethrower_row, Phase2Animation.flamethrower_row, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_flamethrower_big, Phase2Animation.flamethrower_big, ageInTicks, defender.getAnimationSpeed());
+        this.animate(defender.anim_flamethrower_end, Phase2Animation.flamethrower_end, ageInTicks, defender.getAnimationSpeed());
     }
 
     public void animate(Defender defender, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
@@ -544,32 +588,6 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
         this.hat8.visible = (defender.getPhase() == 8 || defender.getSecondHat() == 8) && !defender.shouldHideAllHats();
         this.hat9.visible = (defender.getPhase() == 9 || defender.getSecondHat() == 9) && !defender.shouldHideAllHats();
         this.hat10.visible = (defender.getPhase() == 10 || defender.getSecondHat() == 10) && !defender.shouldHideAllHats();
-
-        this.buzzsaw.visible = defender.getWeaponToShow() == 1;
-        this.sword.visible = defender.getWeaponToShow() == 2;
-        this.boomerang.visible = defender.getWeaponToShow() == 3;
-        this.spike.visible = defender.getWeaponToShow() == 4;
-        this.shuriken_launcher.visible = defender.getWeaponToShow() == 5;
-        this.chainsaw_handle.visible = defender.getWeaponToShow() == 6;
-        this.claw1.visible = defender.getWeaponToShow() == 7;
-        this.claw2.visible = defender.getWeaponToShow() == 7;
-        this.rock.visible = defender.getWeaponToShow() == 8;
-        this.excalibur_fake.visible = defender.getWeaponToShow() == 8;
-        this.excalibur.visible = defender.getWeaponToShow() == 8;
-        this.ratatatabow.visible = defender.getWeaponToShow() == 9;
-        this.quiver.visible = defender.getWeaponToShow() == 9;
-        this.poisondarts.visible = defender.getWeaponToShow() == 10;
-        this.forcegun.visible = defender.getWeaponToShow() == 11;
-        this.sniper_rifle.visible = defender.getWeaponToShow() == 12;
-        this.wither_bazooka.visible = defender.getWeaponToShow() == 13;
-        this.icethrower_back.visible = defender.getWeaponToShow() == 14;
-        this.icethrower_glove1.visible = defender.getWeaponToShow() == 14;
-        this.icethrower_glove2.visible = defender.getWeaponToShow() == 14;
-        this.creeper_gun.visible = defender.getWeaponToShow() == 15;
-        this.flamethrower_arm1.visible = defender.getWeaponToShow() == 16;
-        this.flamethrower_arm2.visible = defender.getWeaponToShow() == 16;
-        this.flamethrower_wing1.visible = defender.getWeaponToShow() == 16;
-        this.flamethrower_wing2.visible = defender.getWeaponToShow() == 16;
 
         this.chainsaw_handle.yRot += netHeadYaw * ((float)Math.PI / 180F);
         this.chainsaw_handle.xRot += defender.getChainsawLookX() * ((float)Math.PI / 180F);
@@ -589,7 +607,8 @@ public class DefenderModel<T extends Defender> extends HierarchicalModel<T> {
 
         if (defender.getWeaponToShow() != 1 &&
                 defender.getWeaponToShow() != 4 &&
-                !Objects.equals(defender.getAnimationState(), "jump2")) {
+                !Objects.equals(defender.getAnimationState(), "jump2") &&
+                !Objects.equals(defender.getAnimationState(), "flamethrower_row")) {
             this.left_leg.xRot += Mth.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.5F;
             this.right_leg.xRot += Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount * 0.5F;
         }

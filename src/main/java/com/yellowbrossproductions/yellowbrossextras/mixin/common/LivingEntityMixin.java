@@ -2,6 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.mixin.common;
 
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.effect.CustomMobEffect;
+import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
@@ -34,6 +35,7 @@ public abstract class LivingEntityMixin extends Entity {
         if (entity.hasEffect(YEEffects.KNOCKED_OUT.get()) || entity.hasEffect(YEEffects.FROZEN.get())) {
             cir.setReturnValue(false);
         }
+        if (pTarget instanceof Defender defender && !defender.attackable()) cir.setReturnValue(false);
     }
 
     @Inject(method = "onEffectAdded", at = @At("TAIL"))

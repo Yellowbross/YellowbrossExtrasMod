@@ -2,6 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phas
 
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.CustomAttackGoal;
+import net.minecraft.world.phys.Vec3;
 
 public class FlamethrowerGoal extends CustomAttackGoal {
 
@@ -22,6 +23,18 @@ public class FlamethrowerGoal extends CustomAttackGoal {
     @Override
     public void start() {
         getDefender().setImmediateTurn(true);
+    }
+
+    @Override
+    public void tick() {
+        getDefender().getNavigation().stop();
+
+        if (getDefender().getAnimationState().equals("flamethrower_big")) {
+
+            if (getDefender().specialLookLocation != Vec3.ZERO) {
+                getDefender().getLookControl().setLookAt(getDefender().specialLookLocation.x, getDefender().specialLookLocation.y, getDefender().specialLookLocation.z, 100.0F, 100.0F);
+            }
+        }
     }
 
     @Override

@@ -72,24 +72,26 @@ public class FireballRenderer extends EntityRenderer<Fireball> {
     }
 
     private void renderBallWithType(Fireball pEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, VertexConsumer sprite) {
-        if (pEntity.getSize() == 3) renderHugeBall(pPoseStack, sprite, pEntity.tickCount, pPartialTick);
+        if (pEntity.getSize() == 3) renderHugeBall(pPoseStack, sprite, pEntity.tickCount, pPartialTick, pEntity.shouldFlash());
         if (pEntity.getSize() == 2) renderBigBall(pPoseStack, sprite, pEntity.tickCount, pPartialTick);
         if (pEntity.getSize() == 1) renderSmallBall(pPoseStack, sprite, pEntity.tickCount, pPartialTick);
     }
 
-    private void renderHugeBall(PoseStack poseStack, VertexConsumer buffer, float ticks, float partialTick) {
+    private void renderHugeBall(PoseStack poseStack, VertexConsumer buffer, float ticks, float partialTick, boolean shouldFlash) {
         poseStack.pushPose();
-        poseStack.translate(0, 1.5, 0);
+        poseStack.translate(0, 2.75, 0);
 
         poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
         float age = ticks + partialTick;
 
-        float size = 3.0f;
+        int interval = 10;
+
+        float size = Math.min(age, 3.0f);
         float mult = -5.0f;
         float calculation = age * mult;
         poseStack.scale(size, size, size);
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(calculation));
-        RenderUtil.drawSprite(poseStack, buffer, 0, 0, 0, BALL_SIZE_HUGE, BALL_SIZE_HUGE, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+        RenderUtil.drawSprite(poseStack, buffer, 0, 0, ((ticks % interval >= ((float)interval / 2)) && shouldFlash ? BALL_SIZE_HUGE : 0), BALL_SIZE_HUGE, BALL_SIZE_HUGE + ((ticks % interval >= ((float)interval / 2)) && shouldFlash ? BALL_SIZE_HUGE : 0), TEXTURE_WIDTH, TEXTURE_HEIGHT);
         poseStack.popPose();
     }
 

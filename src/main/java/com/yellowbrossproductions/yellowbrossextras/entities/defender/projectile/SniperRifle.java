@@ -114,7 +114,7 @@ public class SniperRifle extends AbstractSnipingProjectile {
             for (int i = 0; i < 30; ++i) {
                 EntityUtil.makeAParticle(this.level, ParticleTypes.CAMPFIRE_COSY_SMOKE, false, this.position(), new Vec3(-0.5 + this.random.nextDouble(), -0.5 + this.random.nextDouble(), -0.5 + this.random.nextDouble()));
             }
-            EntityUtil.makeCircleParticles(this.level, this.position(), ParticleTypes.POOF, 40, 0.75f, new Vec3(90.0f, -this.getYRot(), 0.0f), 0.0F);
+            EntityUtil.makeCircleParticles(this.level, this.position(), ParticleTypes.POOF, false, 40, 0.75f, new Vec3(90.0f, -this.getYRot(), 0.0f), 0.0F);
             CameraShake.cameraShake(this.level, position(), 30, 0.1f, 0, 25);
             this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 2.5f, 1.2f);
             this.explode(null, 9.0d);

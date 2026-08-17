@@ -60,6 +60,7 @@ public class YEEntityTypes {
     public static final RegistryObject<EntityType<Defender>> Defender = ENTITY_TYPES.register("defender",
             () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender::new, MobCategory.MONSTER)
                     .sized(0.75f, 2.25f)
+                    .clientTrackingRange(12)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "defender").toString()));
 
     public static final RegistryObject<EntityType<SentryGun>> SentryGun = ENTITY_TYPES.register("sentry_gun",
@@ -149,7 +150,7 @@ public class YEEntityTypes {
 
     public static final RegistryObject<EntityType<Icicle>> Icicle = ENTITY_TYPES.register("icicle", () -> EntityType.Builder.<Icicle>of(com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.Icicle::new, MobCategory.MISC).sized(0.0F, 0.0F).setCustomClientFactory(Icicle::new).setShouldReceiveVelocityUpdates(false).noSave().build(new ResourceLocation(YellowbrossExtras.MOD_ID, "icicle").toString()));
 
-    public static final RegistryObject<EntityType<Fireball>> Fireball = ENTITY_TYPES.register("fireball", () -> EntityType.Builder.<Fireball>of(Fireball::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(4).updateInterval(1).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "fireball").toString()));
+    public static final RegistryObject<EntityType<Fireball>> Fireball = ENTITY_TYPES.register("fireball", () -> EntityType.Builder.<Fireball>of(Fireball::new, MobCategory.MISC).sized(0.5F,0.5F).clientTrackingRange(6).updateInterval(1).build(new ResourceLocation(YellowbrossExtras.MOD_ID, "fireball").toString()));
 
 
     // Misc

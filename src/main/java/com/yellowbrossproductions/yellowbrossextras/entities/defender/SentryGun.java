@@ -259,7 +259,7 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
     }
 
     public void makePopParticles() {
-        EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4, 0), ParticleTypes.POOF, 30, 1.0F, Vec3.ZERO, 0.0F);
+        EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4, 0), ParticleTypes.POOF, false, 30, 1.0F, Vec3.ZERO, 0.0F);
         for(int i = 0; i < 30; ++i) {
             EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(0, this.random.nextGaussian(), 0));
         }

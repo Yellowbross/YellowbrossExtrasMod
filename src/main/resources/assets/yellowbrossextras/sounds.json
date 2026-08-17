@@ -524,6 +524,13 @@
     ]
   },
 
+  "huge_slam": {
+    "subtitle": "subtitles.huge_slam",
+    "sounds": [
+      "yellowbrossextras:huge_slam"
+    ]
+  },
+
   "yeet": {
     "subtitle": "subtitles.yeet",
     "sounds": [

@@ -1,5 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile;
 
+import com.yellowbrossproductions.yellowbrossextras.entities.CameraShake;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.CustomAbstractHurtingProjectile;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
@@ -31,8 +32,9 @@ public class Fireball extends CustomAbstractHurtingProjectile {
     private static final EntityDataAccessor<Boolean> SHOULD_FLASH = SynchedEntityData.defineId(Fireball.class, EntityDataSerializers.BOOLEAN);
     Vec3 startPos = Vec3.ZERO;
     Vec3 destPos = Vec3.ZERO;
-    boolean wasHit = false;
+    public boolean wasHit = false;
     List<LivingEntity> caught = new ArrayList<>();
+    public boolean defenderYeet = false;
 
     public Fireball(EntityType<? extends CustomAbstractHurtingProjectile> entityType, Level level) {
         super(entityType, level);
@@ -127,14 +129,27 @@ public class Fireball extends CustomAbstractHurtingProjectile {
     }
 
     public EntityDimensions getDimensions(Pose pPose) {
-        return super.getDimensions(pPose).scale(1.5f * (float)this.getSize());
+        return super.getDimensions(pPose).scale(1.5f * (float)this.getSize()).scale(this.getSize() == 3 ? 2.6F : 1.0F);
     }
 
     @Override
     public void tick() {
+        if (this.defenderYeet) {
+            this.setDeltaMovement(Vec3.ZERO);
+
+            if (this.tickCount <= 8) {
+                if (this.getOwner() != null) this.setPos(this.getOwner().position().add(0, 3, 0).add(0, 0.15 * this.tickCount, 0));
+            }
+            if (this.tickCount == 9) {
+                this.playSound(YESoundEvents.YEET.get(), 3.0F, 0.9F);
+                this.playSound(YESoundEvents.YEET.get(), 3.0F, 0.8F);
+                this.playSound(YESoundEvents.YEET.get(), 3.0F, 0.7F);
+                this.defenderYeet = false;
+            }
+        }
         super.tick();
 
-        if (this.isInWater() || this.tickCount > 300 || !this.level.getWorldBorder().isWithinBounds(this.blockPosition())) this.explode(3.0F);
+        if (this.isInWater() || this.tickCount > 150 || !this.level.getWorldBorder().isWithinBounds(this.blockPosition())) this.explode(3.0F);
 
         if (this.startPos != Vec3.ZERO && this.destPos != Vec3.ZERO && !this.wasHit) {
             int amount = Math.max(25, 60 - (int)(this.tickCount / 5));
@@ -169,7 +184,7 @@ public class Fireball extends CustomAbstractHurtingProjectile {
         if (!this.level.isClientSide &&
                 !this.level.getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getMaterial().blocksMotion()
                 && !this.level.getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getMaterial().isLiquid()
-                && this.getSize() == 1) {
+                && this.getSize() == 1 && !this.wasHit) {
             this.setPos(this.position().add(0, -1, 0));
         }
 
@@ -211,13 +226,15 @@ public class Fireball extends CustomAbstractHurtingProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
-        if (pResult.getEntity() instanceof LivingEntity living) {
-            if (!living.fireImmune()) {
-                living.invulnerableTime = 0;
-                living.hurt(DamageSource.thrown(this, this.getOwner()), 1.0F);
-                living.invulnerableTime = 0;
-                living.setSecondsOnFire(8);
-                living.playSound(SoundEvents.PLAYER_HURT_ON_FIRE, 2.0F, living.getVoicePitch());
+        if (this.getSize() < 3 || this.distanceToSqr(pResult.getEntity()) < 10.0D) {
+            if (pResult.getEntity() instanceof LivingEntity living && pResult.getEntity() != this.getOwner()) {
+                if (!living.fireImmune()) {
+                    living.invulnerableTime = 0;
+                    living.hurt(DamageSource.thrown(this, this.getOwner()), 1.0F * this.getSize());
+                    living.invulnerableTime = 0;
+                    living.setSecondsOnFire(8);
+                    living.playSound(SoundEvents.PLAYER_HURT_ON_FIRE, 2.0F, living.getVoicePitch());
+                }
             }
         }
     }
@@ -252,7 +269,7 @@ public class Fireball extends CustomAbstractHurtingProjectile {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.SMOKE, false, this.position(), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level, ParticleTypes.LARGE_SMOKE, true, this.position(), new Vec3(d0, d1, d2));
         }
         EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION, true, this.position(), Vec3.ZERO);
         if (this.getSize() > 1) EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION_EMITTER, true, this.position(), Vec3.ZERO);
@@ -269,6 +286,7 @@ public class Fireball extends CustomAbstractHurtingProjectile {
         };
         this.playSound(SoundEvents.PLAYER_HURT_ON_FIRE, 2.0F, 1.0F);
         this.playSound(sound, 1.5F * this.getSize(), 1.0F);
+        if (this.getSize() == 3) CameraShake.cameraShake(this.level, this.position(), 50, 0.1f, 0, 20);
 
         float size = s * this.getSize();
 
@@ -279,12 +297,12 @@ public class Fireball extends CustomAbstractHurtingProjectile {
             if (canHurt) {
                 DamageSource damageSource = new IndirectEntityDamageSource("thrown", this, this.getOwner()).setProjectile();
                 entity.invulnerableTime = 0;
-                entity.hurt(damageSource, 10.0F * this.getSize());
+                entity.hurt(damageSource, 8.0F * this.getSize() * EntityUtil.multiplyToScrewArmor(entity, 0.2f));
             }
         }
 
-        if (this.getSize() == 2) this.fireProjectiles(this.getOwner(), 8, 0.75, 1.0f, 1, true);
-        if (this.getSize() == 3) this.fireProjectiles(this.getOwner(), 50, 2.0, 1.0f, 2, false);
+        if (this.getSize() == 2) this.fireProjectiles(this.getOwner(), 8, this.getBbHeight() / 2, 1.0f, 1, true);
+        if (this.getSize() == 3) this.fireProjectiles(this.getOwner(), 50, this.getBbHeight() / 2, 1.0f, 2, false);
 
         this.discard();
     }

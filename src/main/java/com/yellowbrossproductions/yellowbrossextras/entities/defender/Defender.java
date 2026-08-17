@@ -83,6 +83,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     private static final EntityDataAccessor<Integer> MAX_WOBBLE = SynchedEntityData.defineId(Defender.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> WOBBLE = SynchedEntityData.defineId(Defender.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> FREAKING_OUT_IN_MODEL = SynchedEntityData.defineId(Defender.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> FORCED_DIRECTION = SynchedEntityData.defineId(Defender.class, EntityDataSerializers.INT);
 
     public final AnimationState anim_jump = new AnimationState();
     public final AnimationState anim_jump2 = new AnimationState();
@@ -116,6 +117,9 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     public final AnimationState anim_witherbazooka_land = new AnimationState();
     public final AnimationState anim_creepergun = new AnimationState();
     public final AnimationState anim_flamethrower = new AnimationState();
+    public final AnimationState anim_flamethrower_row = new AnimationState();
+    public final AnimationState anim_flamethrower_big = new AnimationState();
+    public final AnimationState anim_flamethrower_end = new AnimationState();
 
     public int cooldown_saws;
     public int cooldown_axes;
@@ -204,14 +208,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FlamethrowerGoal(this));
-        this.goalSelector.addGoal(0, new IcethrowerGoal(this));
-        this.goalSelector.addGoal(0, new WitherBazookaGoal(this));
-        this.goalSelector.addGoal(0, new SnipeGoal(this));
-        this.goalSelector.addGoal(0, new PoisonDartsGoal(this));
-        this.goalSelector.addGoal(0, new ForceGunGoal(this));
-        this.goalSelector.addGoal(0, new CreeperGunGoal(this));
-        this.goalSelector.addGoal(0, new SentryGunsGoal(this));
-        this.goalSelector.addGoal(0, new RatatatabowGoal(this));
+
 
         this.goalSelector.addGoal(0, new ExcaliburGoal(this));
         this.goalSelector.addGoal(0, new ClawsGoal(this));
@@ -269,6 +266,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
         this.entityData.define(MAX_WOBBLE, 0);
         this.entityData.define(WOBBLE, 0);
         this.entityData.define(FREAKING_OUT_IN_MODEL, false);
+        this.entityData.define(FORCED_DIRECTION, 0);
     }
 
     @Override
@@ -339,7 +337,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                     }
                 }
                 CameraShake.cameraShake(this.level, position(), 20, 0.1f, 0, 15);
-                EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4d, 0), ParticleTypes.LARGE_SMOKE, 30, 1.0F, Vec3.ZERO, 0.0F);
+                EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4d, 0), ParticleTypes.LARGE_SMOKE, false, 30, 1.0F, Vec3.ZERO, 0.0F);
                 this.setDiscardFriction(false);
             }
         }
@@ -353,6 +351,11 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
     public int getFrame() {
         return frame;
+    }
+
+    @Override
+    public boolean attackable() {
+        return super.attackable() && this.attackType != attack_flamethrower;
     }
 
     @Override
@@ -398,6 +401,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     public LivingEntity tryToFindTarget() {
         LivingEntity t = null;
         if (this.getTarget() != null && this.getTarget().isAlive()) t = getTarget();
+        else if (this.getLastHurtByMob() != null && this.getLastHurtByMob().isAlive() && EntityUtil.isMobNotInCreativeMode(this.getLastHurtByMob())) t = getLastHurtByMob();
         else {
             List<Mob> list = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(40.0D), p -> {
                 return p instanceof Enemy && EntityUtil.canHurtThisMob(p, this) && this.isInAttackSight(p) && p.isAlive();
@@ -432,9 +436,28 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
         return this.getCustomRender() == 3 ? 5.75f : super.getEyeHeight(pPose);
     }
 
+    public int getForcedDirection() {
+        return this.entityData.get(FORCED_DIRECTION);
+    }
+
+    public void setForcedDirection(int direction) {
+        if (!this.level.isClientSide) this.entityData.set(FORCED_DIRECTION, direction);
+    }
+
     @Override
     public void tick() {
         this.calculateWobble();
+
+        if (this.getForcedDirection() > 0) {
+            switch (this.getForcedDirection()) {
+                case 1 -> this.setYRot(270.0F); // East
+                case 2 -> this.setYRot(0.0F); // South
+                case 3 -> this.setYRot(90.0F); // West
+                case 4 -> this.setYRot(180.0F); // North
+            }
+            this.yBodyRot = this.getYRot();
+            this.yRotO = this.getYRot();
+        }
 
         if (this.getPhase() == 1 && this.deathAttackTicks < 1 && this.attackType == 0 && this.tickCount % 20 == 0) {
             List<Entity> anySoulsNearby = this.level.getEntities(this, this.getBoundingBox().inflate(60.0D), p -> Objects.equals(p.getEncodeId(), nameToLookFor));
@@ -490,15 +513,14 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
         this.timeToWaitBeforeUsingAnyOtherAttack--;
 
         if (this.gagTimer == 0 && this.guysKilled >= 10) {
-            int randomGag = this.random.nextInt(3);
+            int randomGag = this.random.nextInt(3) + 1;
             this.guysKilled = 0;
-            if (randomGag == 0) {
-                this.playSound(YESoundEvents.ENTITY_DEFENDER_GAG1.get(), 3.0F, 1.0F);
-            } else if (randomGag == 1) {
-                this.playSound(YESoundEvents.ENTITY_DEFENDER_GAG2.get(), 3.0F, 1.0F);
-            } else {
-                this.playSound(YESoundEvents.ENTITY_DEFENDER_GAG3.get(), 3.0F, 1.0F);
-            }
+            SoundEvent gag = switch (randomGag) {
+                case 2 -> YESoundEvents.ENTITY_DEFENDER_GAG2.get();
+                case 3 -> YESoundEvents.ENTITY_DEFENDER_GAG3.get();
+                default -> YESoundEvents.ENTITY_DEFENDER_GAG1.get();
+            };
+            this.playSound(gag, 3.0F, 1.0F);
         }
         if (this.gagTimer > 8 && this.guysKilled >= 7) {
             if (this.random.nextInt(4) == 0) {
@@ -1292,7 +1314,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public void makeSpikeParticles() {
-        EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4, 0), ParticleTypes.LARGE_SMOKE, 50, 1.0F, Vec3.ZERO, 0.0F);
+        EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4, 0), ParticleTypes.LARGE_SMOKE, false, 50, 1.0F, Vec3.ZERO, 0.0F);
         for(int i = 0; i < 100; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (this.random.nextGaussian());
@@ -1370,6 +1392,9 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
         EntityUtil.animateWhen(this.anim_witherbazooka_land, this.getAnimationState().equals("witherbazooka_land"), this.tickCount);
         EntityUtil.animateWhen(this.anim_creepergun, this.getAnimationState().equals("creepergun"), this.tickCount);
         EntityUtil.animateWhen(this.anim_flamethrower, this.getAnimationState().equals("flamethrower"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_flamethrower_row, this.getAnimationState().equals("flamethrower_row"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_flamethrower_big, this.getAnimationState().equals("flamethrower_big"), this.tickCount);
+        EntityUtil.animateWhen(this.anim_flamethrower_end, this.getAnimationState().equals("flamethrower_end"), this.tickCount);
     }
 
     public boolean doesJumpMeetNormalRequirements() {

@@ -148,7 +148,7 @@ public class Icicle extends Entity {
 
         if (this.getTicks() == this.getTrueTimer()) {
             this.playSound(YESoundEvents.ENTITY_DEFENDER_ICETHROWER_HIT.get(), 2.0F, 1.0F);
-            EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4, 0), ParticleTypes.POOF, 30, 1.0F, Vec3.ZERO, 0.0F);
+            EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4, 0), ParticleTypes.POOF, false, 30, 1.0F, Vec3.ZERO, 0.0F);
             for(int i = 0; i < 10; ++i) {
                 EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(0, this.random.nextGaussian() * 2, 0));
             }
