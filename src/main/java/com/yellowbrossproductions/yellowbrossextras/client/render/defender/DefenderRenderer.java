@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DefenderModel;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.WatchYoToneBuddyBoyModel;
+import com.yellowbrossproductions.yellowbrossextras.client.render.YERenderTypes;
 import com.yellowbrossproductions.yellowbrossextras.client.render.layer.defender.DefenderGlowLayer;
 import com.yellowbrossproductions.yellowbrossextras.client.render.util.RenderUtil;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
@@ -102,7 +103,7 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
 
         poseStack.scale(f2, f3, f2);
 
-        VertexConsumer sprite = multiBufferSource.getBuffer(RenderType.entityTranslucent(SPRITESHEET));
+        VertexConsumer sprite = multiBufferSource.getBuffer(YERenderTypes.twoDimensionalEffects(SPRITESHEET, false));
         float ageInTicks = defender.tickCount + partialTick;
         int loop = (int) (ageInTicks) % 4;
         boolean startOver = ageInTicks > 4;
@@ -139,7 +140,7 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
         poseStack.translate(0.0D, 1.0D + (f3 * 0.05f), 0.0D);
 
         int loop = (int)((defender.tickCount + partialTick) % 4);
-        VertexConsumer sprite = multiBufferSource.getBuffer(RenderType.entityTranslucent(SPRITESHEET));
+        VertexConsumer sprite = multiBufferSource.getBuffer(YERenderTypes.twoDimensionalEffects(SPRITESHEET, false));
 
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(-this.entityRenderDispatcher.camera.getYRot() + 180.0f));
