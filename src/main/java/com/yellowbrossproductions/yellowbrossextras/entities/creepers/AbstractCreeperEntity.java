@@ -15,6 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.*;
@@ -80,7 +81,7 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
             this.makeHealParticles();
             return false;
         }
-        if (source == DamageSource.FALL) {
+        if (source.is(DamageTypes.FALL)) {
             amount = 0.0F;
         }
         return super.hurt(source, amount);
@@ -91,7 +92,7 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.HEART, false, new Vec3(this.getRandomX(0.5D), this.getY() + 1.0D, this.getRandomZ(0.5D)), new Vec3(d0, 0.0D, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.HEART, false, new Vec3(this.getRandomX(0.5D), this.getY() + 1.0D, this.getRandomZ(0.5D)), new Vec3(d0, 0.0D, d2));
         }
     }
 
@@ -100,7 +101,7 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.HAPPY_VILLAGER, false, new Vec3(this.getRandomX(1.5D), this.getRandomY(), this.getRandomZ(1.5D)), new Vec3(d0, 0.0D, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.HAPPY_VILLAGER, false, new Vec3(this.getRandomX(1.5D), this.getRandomY(), this.getRandomZ(1.5D)), new Vec3(d0, 0.0D, d2));
         }
     }
 
@@ -146,7 +147,7 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
 
     @Override
     public boolean hasLineOfSight(Entity pEntity) {
-        if (pEntity.level != this.level) {
+        if (pEntity.level() != this.level()) {
             return false;
         } else {
             Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
@@ -160,7 +161,7 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
     }
 
     public boolean isInAttackSight(Entity pEntity) {
-        if (pEntity.level != this.level) {
+        if (pEntity.level() != this.level()) {
             return false;
         } else {
             Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
@@ -168,7 +169,7 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
             if (vec31.distanceTo(vec3) > 128.0D) {
                 return false;
             } else {
-                return this.level.clip(new ClipContext(vec3, vec31, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS;
+                return this.level().clip(new ClipContext(vec3, vec31, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS;
             }
         }
     }
@@ -184,7 +185,7 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
     public void tick() {
         this.calculateSwell();
 
-        if (this.getAbsorbedCreepers() >= this.getMaxAbsorbs() && this.random.nextInt(16) == 0 && !this.level.isClientSide) {
+        if (this.getAbsorbedCreepers() >= this.getMaxAbsorbs() && this.random.nextInt(16) == 0 && !this.level().isClientSide) {
             this.ignite();
         }
 
@@ -255,26 +256,26 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
     protected InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         if (itemstack.is(Items.FLINT_AND_STEEL)) {
-            this.level.playSound(pPlayer, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
-            if (!this.level.isClientSide) {
+            this.level().playSound(pPlayer, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
+            if (!this.level().isClientSide) {
                 this.ignite();
                 itemstack.hurtAndBreak(1, pPlayer, (player) -> {
                     player.broadcastBreakEvent(pHand);
                 });
             }
 
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(this.level().isClientSide);
         } else {
             return super.mobInteract(pPlayer, pHand);
         }
     }
 
     public void explodeCreeper() {
-        if (!this.level.isClientSide) {
-            Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
+        if (!this.level().isClientSide) {
+            Level.ExplosionInteraction explosion$blockinteraction = Level.ExplosionInteraction.MOB;
             this.dead = true;
-            this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)this.explosionRadius * f, explosion$blockinteraction);
-            CameraShake.cameraShake(this.level, position(), 30, 0.1f, 0, 15);
+            this.level().explode(this, this.getX(), this.getY(), this.getZ(), (float)this.explosionRadius * f, explosion$blockinteraction);
+            CameraShake.cameraShake(this.level(), position(), 30, 0.1f, 0, 15);
             this.discard();
             this.spawnLingeringCloud();
         }
@@ -284,7 +285,7 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
     public void spawnLingeringCloud() {
         Collection<MobEffectInstance> collection = this.getActiveEffects();
         if (!collection.isEmpty()) {
-            AreaEffectCloud areaeffectcloud = new AreaEffectCloud(this.level, this.getX(), this.getY(), this.getZ());
+            AreaEffectCloud areaeffectcloud = new AreaEffectCloud(this.level(), this.getX(), this.getY(), this.getZ());
             areaeffectcloud.setRadius(2.5F);
             areaeffectcloud.setRadiusOnUse(-0.5F);
             areaeffectcloud.setWaitTime(10);
@@ -295,7 +296,7 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
                 areaeffectcloud.addEffect(new MobEffectInstance(mobeffectinstance));
             }
 
-            this.level.addFreshEntity(areaeffectcloud);
+            this.level().addFreshEntity(areaeffectcloud);
         }
 
     }
@@ -372,9 +373,9 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
 
         @Override
         public boolean canUse() {
-            if (this.creeper.getTarget() != null || (!(this.creeper instanceof Paracreeper) && !this.creeper.isOnGround())) return false;
+            if (this.creeper.getTarget() != null || (!(this.creeper instanceof Paracreeper) && !this.creeper.onGround())) return false;
 
-            List<? extends AbstractCreeperEntity> nearbyMobs = this.creeper.level.getEntitiesOfClass(this.lookingForType, this.creeper.getBoundingBox().inflate(10.0d), predicate -> predicate.getAbsorbedCreepers() < predicate.getMaxAbsorbs());
+            List<? extends AbstractCreeperEntity> nearbyMobs = this.creeper.level().getEntitiesOfClass(this.lookingForType, this.creeper.getBoundingBox().inflate(10.0d), predicate -> predicate.getAbsorbedCreepers() < predicate.getMaxAbsorbs());
 
             double closestDistanceSq = Double.MAX_VALUE;
             for (AbstractCreeperEntity potentialLove : nearbyMobs) {
@@ -402,7 +403,7 @@ public class AbstractCreeperEntity extends YExtrasMob implements PowerableMob {
             if (this.myLove != null) {
                 this.creeper.getNavigation().moveTo(this.myLove, 1.0D);
 
-                if (this.creeper.distanceToSqr(this.myLove) < 9.0D && AbstractCreeperEntity.this.random.nextInt(8) == 0 && !this.creeper.level.isClientSide) {
+                if (this.creeper.distanceToSqr(this.myLove) < 9.0D && AbstractCreeperEntity.this.random.nextInt(8) == 0 && !this.creeper.level().isClientSide) {
                     this.myLove.setAbsorbedCreepers(this.myLove.getAbsorbedCreepers() + this.creeper.getAbsorbedCreepers() + 1);
                     this.myLove.makeMergeParticles();
                     this.creeper.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, 1.0F);

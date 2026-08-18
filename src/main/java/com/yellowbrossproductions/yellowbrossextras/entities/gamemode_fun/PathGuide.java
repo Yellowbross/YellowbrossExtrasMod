@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -64,7 +65,7 @@ public class PathGuide extends Entity {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -73,11 +74,11 @@ public class PathGuide extends Entity {
         super.tick();
 
         if (this.tickCount % 20 == 0) {
-            List<PathfinderMob> playing = this.level.getEntitiesOfClass(PathfinderMob.class, this.getBoundingBox().inflate(150.0D), p -> {
+            List<PathfinderMob> playing = this.level().getEntitiesOfClass(PathfinderMob.class, this.getBoundingBox().inflate(150.0D), p -> {
                 return !p.isRemoved() && p.isAlive() && p.getTeam() != null && p.getTeam() != this.getTeam() && p.getTags().contains("playing");
             });
 
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 // this.setInvisible(!playing.isEmpty());
             }
 
@@ -99,8 +100,8 @@ public class PathGuide extends Entity {
         double destY = destination.getY();
         double destZ = destination.getZ() + 0.5;
 
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
+        if (!this.level().isClientSide) {
+            for (ServerPlayer serverPlayer : ((ServerLevel) this.level()).players()) {
                 if (serverPlayer.distanceToSqr(this) < 4096.0D) {
                     ParticlePacket packet = new ParticlePacket();
 
@@ -127,7 +128,7 @@ public class PathGuide extends Entity {
         if (!this.isWaitingForSignal()) {
             this.setWaitingForSignal(true);
         }
-        List<PathGuide> neighbors = this.level.getEntitiesOfClass(PathGuide.class, this.getBoundingBox().inflate(150.0D), p -> {
+        List<PathGuide> neighbors = this.level().getEntitiesOfClass(PathGuide.class, this.getBoundingBox().inflate(150.0D), p -> {
             return p.isWaitingForSignal() && p != this;
         });
         if (!neighbors.isEmpty()) {
@@ -144,7 +145,7 @@ public class PathGuide extends Entity {
             this.setWaitingForSignal(false);
             neighbors.get(0).setWaitingForSignal(false);
         }
-        return InteractionResult.sidedSuccess(this.level.isClientSide);
+        return InteractionResult.sidedSuccess(this.level().isClientSide);
     }
 
     public boolean isWaitingForSignal() {
@@ -152,7 +153,7 @@ public class PathGuide extends Entity {
     }
 
     public void setWaitingForSignal(boolean i) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.entityData.set(WAITING_FOR_SIGNAL, i);
             this.setGlowingTag(i);
         }

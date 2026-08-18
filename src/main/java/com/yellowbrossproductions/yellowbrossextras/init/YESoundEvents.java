@@ -111,6 +111,6 @@ public class YESoundEvents {
 
     private static RegistryObject<SoundEvent> addSoundsToRegistry(String soundId) {
         ResourceLocation name = new ResourceLocation(YellowbrossExtras.MOD_ID, soundId);
-        return SOUND_EVENTS.register(soundId, () -> new SoundEvent(name));
+        return SOUND_EVENTS.register(soundId, () -> SoundEvent.createVariableRangeEvent(name));
     }
 }

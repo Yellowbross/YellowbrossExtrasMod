@@ -23,6 +23,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -33,6 +34,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
@@ -175,7 +177,7 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
         if (this.isInWater()) this.killMyselfTicks += 2;
 
         if (!this.isActive() && this.setupTicks == 60) {
-            if (!this.isOnGround()) this.setAnimationState("flying");
+            if (!this.onGround()) this.setAnimationState("flying");
             else {
                 this.setupTicks = 59;
                 this.setAnimationState("intro");
@@ -191,7 +193,7 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
                 if (this.hasLineOfSight(this.getTarget()) && this.tickCount % 5 == 0 && !this.mitosisInitiated) {
                     this.setAnimationState("none");
                     this.setAnimationState("shoot");
-                    this.stopShootingSound(this.level);
+                    this.stopShootingSound(this.level());
                     this.playSound(YESoundEvents.ENTITY_DEFENDER_SENTRY_SHOOT.get(), 3.0F, 1.0F);
                     this.performRangedAttack(this.getTarget());
                 }
@@ -200,11 +202,11 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
             }
             explodeTimer--;
             if (explodeTimer < 1 && this.random.nextInt(4) == 0) {
-                List<SentryGun> list = this.level.getEntitiesOfClass(SentryGun.class, this.getBoundingBox().inflate(50.0D), p -> {
+                List<SentryGun> list = this.level().getEntitiesOfClass(SentryGun.class, this.getBoundingBox().inflate(50.0D), p -> {
                     return p != this;
                 });
                 if (list.size() < YellowbrossExtrasConfig.defender_sentryGun_mitosisCap.get() && !this.mitosisInitiated) {
-                    if (!this.level.isClientSide) {
+                    if (!this.level().isClientSide) {
                         this.playSound(YESoundEvents.ENTITY_DEFENDER_SENTRY_MITOSIS.get(), 2.0F, 1.0F);
                         this.setAnimationState("mitosis");
                         this.mitosisInitiated = true;
@@ -215,14 +217,14 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
             }
             if (this.mitosisInitiated) {
                 this.mitosisTicks -= 1;
-                if (this.mitosisTicks < 1 && !this.level.isClientSide) {
+                if (this.mitosisTicks < 1 && !this.level().isClientSide) {
                     this.dead = true;
                     this.playSound(YESoundEvents.ENTITY_DEFENDER_SENTRY_POP.get(), 2.0F, 1.0F);
                     this.explode(5.0d);
                     this.makePopParticles();
-                    CameraShake.cameraShake(this.level, position(), 35, 0.2f, 0, 10);
+                    CameraShake.cameraShake(this.level(), position(), 35, 0.2f, 0, 10);
                     for (int i = 0; i < 2; i++) {
-                        SentryGun iGaveBirth = new SentryGun(YEEntityTypes.SentryGun.get(), this.level);
+                        SentryGun iGaveBirth = new SentryGun(YEEntityTypes.SentryGun.get(), this.level());
                         iGaveBirth.moveTo(this.getPosition(0).add(0, 0.5, 0));
 
                         double mult = 1.0d;
@@ -236,20 +238,20 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
                         iGaveBirth.setTarget(this.getTarget());
                         iGaveBirth.isSniper = this.isSniper;
 
-                        if (this.level instanceof ServerLevel serverLevel) iGaveBirth.finalizeSpawn(serverLevel, this.level.getCurrentDifficultyAt(this.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
+                        if (this.level() instanceof ServerLevel serverLevel) iGaveBirth.finalizeSpawn(serverLevel, this.level().getCurrentDifficultyAt(this.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
 
                         if (this.getTeam() != null) {
-                            this.level.getScoreboard().addPlayerToTeam(iGaveBirth.getStringUUID(),
-                                    this.level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                            this.level().getScoreboard().addPlayerToTeam(iGaveBirth.getStringUUID(),
+                                    this.level().getScoreboard().getPlayerTeam(this.getTeam().getName()));
                         }
-                        this.level.addFreshEntity(iGaveBirth);
+                        this.level().addFreshEntity(iGaveBirth);
                     }
                     this.discard();
                 }
             }
             this.lifeTime += 1;
             if (!this.mitosisInitiated && this.lifetimeLimit != 0 && this.lifeTime > this.lifetimeLimit && this.random.nextInt(16) == 0) {
-                List<SentryGun> list = this.level.getEntitiesOfClass(SentryGun.class, this.getBoundingBox().inflate(50.0D), p -> {
+                List<SentryGun> list = this.level().getEntitiesOfClass(SentryGun.class, this.getBoundingBox().inflate(50.0D), p -> {
                     return p != this;
                 });
                 for (SentryGun sentryGun : list) sentryGun.explodeCreeper();
@@ -259,11 +261,11 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
     }
 
     public void makePopParticles() {
-        EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4, 0), ParticleTypes.POOF, false, 30, 1.0F, Vec3.ZERO, 0.0F);
+        EntityUtil.makeCircleParticles(this.level(), this.getPosition(0).add(0, 0.4, 0), ParticleTypes.POOF, false, 30, 1.0F, Vec3.ZERO, 0.0F);
         for(int i = 0; i < 30; ++i) {
-            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(0, this.random.nextGaussian(), 0));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.POOF, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(0, this.random.nextGaussian(), 0));
         }
-        EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(0, 0, 0));
+        EntityUtil.makeAParticle(this.level(), ParticleTypes.EXPLOSION, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(0, 0, 0));
     }
 
     public int getExplodeTimer() {
@@ -271,20 +273,20 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
     }
 
     private void explode(double size) {
-        List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level, size, this, Entity::isAlive);
+        List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level(), size, this, Entity::isAlive);
 
         for (Entity entity : list) {
             if (entity instanceof LivingEntity living) {
                 boolean team = EntityUtil.canHurtThisMob(living, this) && !(living instanceof IsDefenderAligned);
                 if (team && entity.isAlive() && !entity.isInvulnerable() && !entity.isSpectator()) {
-                    living.hurt(DamageSource.explosion(this), 24.0F);
+                    living.hurt(this.damageSources().explosion(this, null), 24.0F);
                 }
             }
         }
     }
 
     public void explodeCreeper() {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.dead = true;
             CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), 4.0F, true, false);
             this.discard();
@@ -292,12 +294,12 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
     }
 
     public void performRangedAttack(LivingEntity target) {
-        if (this.level.isClientSide) return;
+        if (this.level().isClientSide) return;
 
         if (this.isSniper) {
             Vec3 position = target.position().subtract(this.position()).normalize().scale(15.0d);
-            DeadlyArrow deadlyArrow = new DeadlyArrow(this.level, this, 0.75d, target.getBoundingBox().getCenter().add(position), 1);
-            this.level.addFreshEntity(deadlyArrow);
+            DeadlyArrow deadlyArrow = new DeadlyArrow(this.level(), this, 0.75d, target.getBoundingBox().getCenter().add(position), 1);
+            this.level().addFreshEntity(deadlyArrow);
         } else {
             double x = this.getX();
             double z = this.getZ();
@@ -309,11 +311,11 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
             double d3 = target.getZ() - z;
             double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
 
-            SentryBullet bullet = new SentryBullet(this.level, this, d1, d2, d3);
+            SentryBullet bullet = new SentryBullet(this.level(), this, d1, d2, d3);
 
             bullet.setPos(x, y1, z);
             bullet.setOwner(this);
-            this.level.addFreshEntity(bullet);
+            this.level().addFreshEntity(bullet);
         }
     }
 
@@ -331,7 +333,7 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
 
     @Override
     public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor p_21434_, DifficultyInstance p_21435_, MobSpawnType p_21436_, @Nullable SpawnGroupData p_21437_, @Nullable CompoundTag p_21438_) {
-        if (!this.isActive() && !this.isOnGround()) this.setAnimationState("flying");
+        if (!this.isActive() && !this.onGround()) this.setAnimationState("flying");
         return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
     }
 
@@ -345,7 +347,7 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.isProjectile() && source.getEntity() instanceof Player) {
+        if (source.getDirectEntity() instanceof Projectile && source.getEntity() instanceof Player) {
             amount = Float.MAX_VALUE;
         }
         if (source.getEntity() instanceof IsDefenderAligned && EntityUtil.canHurtThisMob(source.getEntity(), this)) {

@@ -27,6 +27,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -170,7 +172,7 @@ public class YECommonEventHandler {
         }
 
         // effects
-        if (entity.hasEffect(YEEffects.FROZEN.get()) && source.isFire()) entity.removeEffect(YEEffects.FROZEN.get());
+        if (entity.hasEffect(YEEffects.FROZEN.get()) && source.is(DamageTypes.IN_FIRE)) entity.removeEffect(YEEffects.FROZEN.get());
     }
 
     @SubscribeEvent
@@ -178,61 +180,61 @@ public class YECommonEventHandler {
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
         if (source.getEntity() instanceof CreeperInfection && source.getEntity() instanceof LivingEntity living && entity instanceof Mob mob) {
-            if (entity.level.getGameRules().getBoolean(YEGameRules.ENABLE_CREEPER_INFECTION)) {
-                EntityUtil.convertMobToCreeper(mob, living, entity.getLevel());
+            if (entity.level().getGameRules().getBoolean(YEGameRules.ENABLE_CREEPER_INFECTION)) {
+                EntityUtil.convertMobToCreeper(mob, living, entity.level());
             }
         }
 
         if (source.getEntity() instanceof IsOryctolinAligned && source.getEntity() instanceof LivingEntity living && entity instanceof Mob mob) {
-            if (entity.level.getGameRules().getBoolean(YEGameRules.CONVERSLIN_CONVERSION)) {
+            if (entity.level().getGameRules().getBoolean(YEGameRules.CONVERSLIN_CONVERSION)) {
                 if (source.getEntity() instanceof Converslin) {
-                    EntityUtil.convertMobToCarrot(mob, living, entity.getLevel());
+                    EntityUtil.convertMobToCarrot(mob, living, entity.level());
                 }
             }
         }
 
         if (source.getEntity() instanceof Defender defender) {
-            if (source.isExplosion() || defender.isCarnageAttack()) {
+            if (source.is(DamageTypes.EXPLOSION) || defender.isCarnageAttack()) {
                 defender.increaseDefendersCarnage();
             }
         }
 
-        if (entity instanceof Mob mob && !entity.level.isClientSide) {
+        if (entity instanceof Mob mob && !entity.level().isClientSide) {
             if (entity.hasEffect(YEEffects.SUPER_DUPER_POISON.get())) {
-                EntityUtil.makeAParticle(entity.level, YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, entity.getBoundingBox().getCenter(), Vec3.ZERO);
+                EntityUtil.makeAParticle(entity.level(), YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, entity.getBoundingBox().getCenter(), Vec3.ZERO);
                 for (int i = 0; i < 100; ++i) {
                     Random random = new Random();
-                    EntityUtil.makeAParticle(entity.level, YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), false, entity.getBoundingBox().getCenter(), new Vec3(
+                    EntityUtil.makeAParticle(entity.level(), YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), false, entity.getBoundingBox().getCenter(), new Vec3(
                             -0.5f + random.nextFloat(),
-                            (-0.5f + random.nextFloat()) + (entity.isOnGround() ? 0.5f : 0.0f),
+                            (-0.5f + random.nextFloat()) + (entity.onGround() ? 0.5f : 0.0f),
                             -0.5f + random.nextFloat()
                     ));
                 }
-                List<Entity> list = entity.level.getEntities(entity, entity.getBoundingBox().inflate(4.0f), p -> !(p instanceof Defender) && p instanceof LivingEntity && EntityUtil.isMobNotInCreativeMode(p));
+                List<Entity> list = entity.level().getEntities(entity, entity.getBoundingBox().inflate(4.0f), p -> !(p instanceof Defender) && p instanceof LivingEntity && EntityUtil.isMobNotInCreativeMode(p));
                 for (Entity hit : list) {
                     hit.hurtMarked = true;
                     hit.setDeltaMovement(hit.getDeltaMovement()
                             .add(hit.position().subtract(entity.position()).normalize().scale(2.5f))
-                            .add(0, hit.isOnGround() ? 0.4d : 0, 0));
+                            .add(0, hit.onGround() ? 0.4d : 0, 0));
                 }
-                CameraShake.cameraShake(entity.level, entity.position(), 20, 0.4f, 2, 3);
+                CameraShake.cameraShake(entity.level(), entity.position(), 20, 0.4f, 2, 3);
                 entity.playSound(YESoundEvents.SUPERDUPERPOISON_EXPLOSION.get(), 4.0F, 1.0F);
-                EntityUtil.fireCircleOfPoisonBalls(entity.level, mob, 10, mob.getBbHeight() / 2, 1.0f, true);
+                EntityUtil.fireCircleOfPoisonBalls(entity.level(), mob, 10, mob.getBbHeight() / 2, 1.0f, true);
                 entity.discard();
             }
             if (entity.hasEffect(YEEffects.FROZEN.get())) {
                 entity.playSound(YESoundEvents.FROZEN_DEATH.get(), 2.0F, entity.getVoicePitch());
-                EntityUtil.makeAParticle(entity.level, ParticleTypes.EXPLOSION, false, entity.getBoundingBox().getCenter(), Vec3.ZERO);
+                EntityUtil.makeAParticle(entity.level(), ParticleTypes.EXPLOSION, false, entity.getBoundingBox().getCenter(), Vec3.ZERO);
                 for (int i = 0; i < 60; ++i) {
                     Random random = new Random();
-                    EntityUtil.makeAParticle(entity.level, ParticleTypes.POOF, false, entity.getBoundingBox().getCenter(), new Vec3(
+                    EntityUtil.makeAParticle(entity.level(), ParticleTypes.POOF, false, entity.getBoundingBox().getCenter(), new Vec3(
                             -0.5f + random.nextFloat(),
-                            (-0.5f + random.nextFloat()) + (entity.isOnGround() ? 0.5f : 0.0f),
+                            (-0.5f + random.nextFloat()) + (entity.onGround() ? 0.5f : 0.0f),
                             -0.5f + random.nextFloat()
                     ));
-                    EntityUtil.makeAParticle(entity.level, ParticleTypes.CRIT, false, entity.getBoundingBox().getCenter(), new Vec3(
+                    EntityUtil.makeAParticle(entity.level(), ParticleTypes.CRIT, false, entity.getBoundingBox().getCenter(), new Vec3(
                             -0.5f + random.nextFloat(),
-                            (-0.5f + random.nextFloat()) + (entity.isOnGround() ? 0.5f : 0.0f),
+                            (-0.5f + random.nextFloat()) + (entity.onGround() ? 0.5f : 0.0f),
                             -0.5f + random.nextFloat()
                     ));
                 }
@@ -252,11 +254,6 @@ public class YECommonEventHandler {
             entity.playSound(weird ? YESoundEvents.ENTITY_DEFENDER_ICETHROWER_WEIRD.get() : YESoundEvents.ENTITY_DEFENDER_ICETHROWER_FREEZE.get(), 2.0F,
                     weird ? 1.0F : entity.getVoicePitch());
         }
-    }
-
-    @SubscribeEvent
-    public static void preventJumping(LivingEvent.LivingJumpEvent event) {
-        if (event.getEntity().hasEffect(YEEffects.FROZEN.get())) event.setCanceled(true);
     }
 
     private static final Map<ServerLevel, VilvgaverSpawner> VILVGAVER_SPAWN_MAP = new HashMap<>();
@@ -302,8 +299,8 @@ public class YECommonEventHandler {
     @SubscribeEvent
     public static void huntedEffects2(TickEvent.PlayerTickEvent event) {
         Player mob = event.player;
-        if (!mob.getLevel().isClientSide) {
-            if (mob.getLevel().getGameRules().getBoolean(YEGameRules.VILVGAVERCHALLENGE)) {
+        if (!mob.level().isClientSide) {
+            if (mob.level().getGameRules().getBoolean(YEGameRules.VILVGAVERCHALLENGE)) {
                 mob.addEffect(new MobEffectInstance(YEEffects.HUNTED.get(), 1200, 0, false, false, true));
 
                 if (YellowbrossExtrasConfig.vilvgaverChallenge_speedBuff.get() > -1) {
@@ -315,7 +312,7 @@ public class YECommonEventHandler {
                     mob.getFoodData().setFoodLevel(20);
                 }
 
-                if (mob.level.dimension() == Level.NETHER) {
+                if (mob.level().dimension() == Level.NETHER) {
                     final ObjectArrayList<BlockPos> toBlow = new ObjectArrayList<>();
                     Set<BlockPos> set = Sets.newHashSet();
                     int k;
@@ -331,16 +328,16 @@ public class YECommonEventHandler {
                                     d0 /= d3;
                                     d1 /= d3;
                                     d2 /= d3;
-                                    float f = (float) (YellowbrossExtrasConfig.vilvgaverChallenge_lavaFreezeRadius.get() * (0.7F + mob.level.random.nextFloat() * 0.6F));
+                                    float f = (float) (YellowbrossExtrasConfig.vilvgaverChallenge_lavaFreezeRadius.get() * (0.7F + mob.level().random.nextFloat() * 0.6F));
                                     double d4 = mob.getX();
                                     double d6 = mob.getY();
                                     double d8 = mob.getZ();
 
                                     for(float f1 = 0.3F; f > 0.0F; f -= 0.22500001F) {
-                                        BlockPos blockpos = new BlockPos(d4, d6, d8);
-                                        BlockState blockstate = mob.level.getBlockState(blockpos);
-                                        FluidState fluidstate = mob.level.getFluidState(blockpos);
-                                        if (!mob.level.isInWorldBounds(blockpos)) {
+                                        BlockPos blockpos = BlockPos.containing(d4, d6, d8);
+                                        BlockState blockstate = mob.level().getBlockState(blockpos);
+                                        FluidState fluidstate = mob.level().getFluidState(blockpos);
+                                        if (!mob.level().isInWorldBounds(blockpos)) {
                                             break;
                                         }
 
@@ -361,14 +358,14 @@ public class YECommonEventHandler {
                     ObjectListIterator var5 = toBlow.iterator();
                     while(var5.hasNext()) {
                         BlockPos blockpos = (BlockPos)var5.next();
-                        BlockState blockstate = mob.level.getBlockState(blockpos);
+                        BlockState blockstate = mob.level().getBlockState(blockpos);
                         net.minecraft.world.level.block.Block block = blockstate.getBlock();
                         if (!blockstate.isAir() && blockstate.is(Blocks.LAVA)) {
                             BlockPos blockpos1 = blockpos.immutable();
-                            mob.level.getProfiler().push("explosion_blocks");
+                            mob.level().getProfiler().push("explosion_blocks");
 
-                            mob.level.setBlockAndUpdate(blockpos1, YEItemsAndBlocks.FROZEN_LAVA.get().defaultBlockState());
-                            mob.level.getProfiler().pop();
+                            mob.level().setBlockAndUpdate(blockpos1, YEItemsAndBlocks.FROZEN_LAVA.get().defaultBlockState());
+                            mob.level().getProfiler().pop();
                         }
                     }
                 }
@@ -379,15 +376,15 @@ public class YECommonEventHandler {
     @SubscribeEvent
     public static void huntedEffects3(PlayerEvent.BreakSpeed event) {
         Player mob = event.getEntity();
-        if (!mob.getLevel().isClientSide) {
+        if (!mob.level().isClientSide) {
             ResourceLocation name = ForgeRegistries.BLOCKS.getKey(event.getState().getBlock());
             if (name != null) {
                 if (mob.hasEffect(YEEffects.HUNTED.get()) &&
                         YellowbrossExtrasConfig.vilvgaverChallenge_blockInstabreaks.get().contains(name.toString())) {
                     event.setNewSpeed(50.0F);
                     if (event.getPosition().isPresent()) {
-                        mob.getLevel().levelEvent(2001, event.getPosition().get(), Block.getId(event.getState()));
-                        mob.getLevel().setBlockAndUpdate(event.getPosition().get(), Blocks.AIR.defaultBlockState());
+                        mob.level().levelEvent(2001, event.getPosition().get(), Block.getId(event.getState()));
+                        mob.level().setBlockAndUpdate(event.getPosition().get(), Blocks.AIR.defaultBlockState());
                     }
                 }
             }

@@ -135,9 +135,9 @@ public class YEClientEventHandler {
 
         @SubscribeEvent
         public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
-            event.register(YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), SuperDuperPoisonDripParticle.Provider::new);
-            event.register(YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), SuperDuperPoisonExplosionParticle.Provider::new);
-            event.register(YEParticleTypes.RIFLE_EXPLOSION_ONOMATOPOEIA.get(), RifleExplosionOnomatopoeiaParticle.Provider::new);
+            event.registerSpriteSet(YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), SuperDuperPoisonDripParticle.Provider::new);
+            event.registerSpriteSet(YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), SuperDuperPoisonExplosionParticle.Provider::new);
+            event.registerSpriteSet(YEParticleTypes.RIFLE_EXPLOSION_ONOMATOPOEIA.get(), RifleExplosionOnomatopoeiaParticle.Provider::new);
         }
 
         @SubscribeEvent
@@ -169,7 +169,7 @@ public class YEClientEventHandler {
         if (player != null) {
             if (YellowbrossExtrasConfig.cameraShakeMultiplier.get() > 0) {
                 float shakeAmplitude = 0;
-                for (CameraShake cameraShake : player.level.getEntitiesOfClass(CameraShake.class, player.getBoundingBox().inflate(100))) {
+                for (CameraShake cameraShake : player.level().getEntitiesOfClass(CameraShake.class, player.getBoundingBox().inflate(100))) {
                     if (cameraShake.distanceTo(player) < cameraShake.getRadius()) {
                         shakeAmplitude += cameraShake.getShakeAmount(player, delta);
                     }

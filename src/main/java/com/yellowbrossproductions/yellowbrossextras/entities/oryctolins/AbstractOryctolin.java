@@ -91,7 +91,7 @@ public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctoli
     }
 
     public void setShakeMultiplier(int shake) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.entityData.set(SHAKE_MULTIPLIER, shake);
         }
     }
@@ -101,7 +101,7 @@ public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctoli
     }
 
     public void setFace(int face) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.entityData.set(FACE_STATE, face);
         }
     }
@@ -153,8 +153,19 @@ public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctoli
         OryctolinNodeEvaluator() {
         }
 
-        protected BlockPathTypes evaluateBlockPathType(BlockGetter pLevel, boolean pCanOpenDoors, boolean pCanEnterDoors, BlockPos pPos, BlockPathTypes pNodeType) {
-            return super.evaluateBlockPathType(pLevel, true, true, pPos, pNodeType);
+        @Override
+        public boolean canOpenDoors() {
+            return true;
+        }
+
+        @Override
+        public boolean canPassDoors() {
+            return true;
+        }
+
+        @Override
+        protected BlockPathTypes evaluateBlockPathType(BlockGetter pLevel, BlockPos pPos, BlockPathTypes pNodeType) {
+            return super.evaluateBlockPathType(pLevel, pPos, pNodeType);
         }
     }
 

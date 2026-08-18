@@ -2,7 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DeadlyArrowModel;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DeadlyArrow;
@@ -42,8 +42,8 @@ public class DeadlyArrowRenderer extends EntityRenderer<DeadlyArrow> {
             double y = (arrow.getCollisionPos().getY() - arrow.getY()) * ((arrow.tickCount - arrow.getWarnTimer()) + pPartialTick) / maxTime;
             double z = (arrow.getCollisionPos().getZ() - arrow.getZ()) * ((arrow.tickCount - arrow.getWarnTimer()) + pPartialTick) / maxTime;
             pPoseStack.translate(x, y - 1, z);
-            pPoseStack.mulPose(Vector3f.YP.rotationDegrees(arrow.getYRot()));
-            pPoseStack.mulPose(Vector3f.XP.rotationDegrees(arrow.getXRot()));
+            pPoseStack.mulPose(Axis.YP.rotationDegrees(arrow.getYRot()));
+            pPoseStack.mulPose(Axis.XP.rotationDegrees(arrow.getXRot()));
 
             VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(this.getTextureLocation(arrow)));
             this.model.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);

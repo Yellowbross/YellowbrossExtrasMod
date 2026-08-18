@@ -70,7 +70,7 @@ public class OkayMisterImSorry extends CustomAbstractHurtingProjectile {
 
     @Override
     public void tick() {
-        if (!this.level.isClientSide) this.hurtMarked = true;
+        if (!this.level().isClientSide) this.hurtMarked = true;
 
         ProjectileUtil.rotateTowardsMovement(this, 0.7F);
 

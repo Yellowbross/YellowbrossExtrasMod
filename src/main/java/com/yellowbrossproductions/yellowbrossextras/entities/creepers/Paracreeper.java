@@ -66,21 +66,21 @@ public class Paracreeper extends AbstractCreeperEntity implements CreeperInfecti
 
     @Override
     public void explodeCreeper() {
-        if (!this.level.isClientSide) {
-            Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
+        if (!this.level().isClientSide) {
+            Level.ExplosionInteraction explosion$blockinteraction = Level.ExplosionInteraction.MOB;
             this.dead = true;
-            this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 0.75F * f), explosion$blockinteraction);
+            this.level().explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 0.75F * f), explosion$blockinteraction);
 
             if (this.getAbsorbedCreepers() >= this.getMaxAbsorbs()) {
-                Sneaker creeper = new Sneaker(YEEntityTypes.Sneaker.get(), this.level);
+                Sneaker creeper = new Sneaker(YEEntityTypes.Sneaker.get(), this.level());
                 creeper.copyPosition(this);
                 if (this.getTeam() != null) {
-                    level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
-                            level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                    level().getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                            level().getScoreboard().getPlayerTeam(this.getTeam().getName()));
                 }
                 if (random.nextInt(4) == 0) {
                     creeper.setCreeperType(1);
-                    List<Sneaker> list = level.getEntitiesOfClass(Sneaker.class, creeper.getBoundingBox().inflate(30.0F), predicate -> {
+                    List<Sneaker> list = level().getEntitiesOfClass(Sneaker.class, creeper.getBoundingBox().inflate(30.0F), predicate -> {
                         return predicate.getCreeperType() == 2 && predicate != creeper;
                     });
                     if (list.isEmpty()) {
@@ -90,12 +90,12 @@ public class Paracreeper extends AbstractCreeperEntity implements CreeperInfecti
                     }
                 }
 
-                this.level.addFreshEntity(creeper);
+                this.level().addFreshEntity(creeper);
 
-                CameraShake.cameraShake(this.level, position(), 40, 0.2f, 0, 30);
+                CameraShake.cameraShake(this.level(), position(), 40, 0.2f, 0, 30);
             }
 
-            CameraShake.cameraShake(this.level, position(), 20, 0.05f, 0, 15);
+            CameraShake.cameraShake(this.level(), position(), 20, 0.05f, 0, 15);
             this.discard();
             this.spawnLingeringCloud();
         }

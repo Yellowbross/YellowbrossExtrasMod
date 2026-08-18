@@ -2,7 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.render.YERenderTypes;
 import com.yellowbrossproductions.yellowbrossextras.client.render.util.RenderUtil;
@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -37,7 +38,7 @@ public class IcicleRenderer extends EntityRenderer<Icicle> {
     public void render(Icicle pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
         pPoseStack.pushPose();
 
-        VertexConsumer sprite = pBuffer.getBuffer(RenderType.entityTranslucent(TEXTURE));
+        VertexConsumer sprite = pBuffer.getBuffer(YERenderTypes.twoDimensionalEffects(TEXTURE, false));
 
         if (pEntity.getTicks() <= 4) renderIcicle(pPoseStack, sprite, pEntity.getTicks(), pPartialTick, pEntity.getTrueTimer(),  false);
         if (pEntity.getTicks() > 6 + pEntity.getDelay() && pEntity.getTicks() < pEntity.getTrueTimer()) renderWarning(pPoseStack, sprite, pEntity.getTicks());
@@ -57,13 +58,23 @@ public class IcicleRenderer extends EntityRenderer<Icicle> {
     }
 
     @Override
+    protected int getBlockLightLevel(Icicle pEntity, BlockPos pPos) {
+        return 15;
+    }
+
+    @Override
+    protected int getSkyLightLevel(Icicle pEntity, BlockPos pPos) {
+        return 15;
+    }
+
+    @Override
     public boolean shouldRender(Icicle pLivingEntity, Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
         return true;
     }
 
     private void renderIcicle(PoseStack poseStack, VertexConsumer buffer, float ticks, float partialTick, int timer, boolean fallingOrRising) {
         poseStack.pushPose();
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(-this.entityRenderDispatcher.camera.getYRot() + 180.0f));
+        poseStack.mulPose(Axis.YP.rotationDegrees(-this.entityRenderDispatcher.camera.getYRot() + 180.0f));
         float age = ticks + partialTick - (fallingOrRising ? (timer - 4) : 0) - 0.3f;
 
         float size = 0.15f;
@@ -84,7 +95,7 @@ public class IcicleRenderer extends EntityRenderer<Icicle> {
 
     private void renderWarning(PoseStack poseStack, VertexConsumer buffer, float ticks) {
         poseStack.pushPose();
-        poseStack.mulPose(Vector3f.XP.rotationDegrees(90.0f));
+        poseStack.mulPose(Axis.XP.rotationDegrees(90.0f));
         float size = 2.0f;
         poseStack.scale(size, size, size);
         poseStack.translate(0, 0, -0.01);
@@ -99,7 +110,7 @@ public class IcicleRenderer extends EntityRenderer<Icicle> {
 
     private void renderExplosion(PoseStack poseStack, VertexConsumer buffer, float ticks, float partialTick, int timer) {
         poseStack.pushPose();
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(-this.entityRenderDispatcher.camera.getYRot() + 180.0f));
+        poseStack.mulPose(Axis.YP.rotationDegrees(-this.entityRenderDispatcher.camera.getYRot() + 180.0f));
         float age = ticks + partialTick - timer;
 
         float size = 2.0f;

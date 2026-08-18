@@ -13,7 +13,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -58,8 +58,8 @@ public class SentryBullet extends CustomAbstractHurtingProjectile implements Ite
 
     protected void onHit(HitResult pResult) {
         super.onHit(pResult);
-        if (!this.level.isClientSide) {
-            this.level.broadcastEntityEvent(this, (byte)3);
+        if (!this.level().isClientSide) {
+            this.level().broadcastEntityEvent(this, (byte)3);
             this.explode(null, 2.0D);
             this.discard();
         }
@@ -71,19 +71,19 @@ public class SentryBullet extends CustomAbstractHurtingProjectile implements Ite
     }
 
     private void explode(@Nullable Entity hitEntity, double size) {
-        if (this.level.isClientSide) return;
+        if (this.level().isClientSide) return;
 
-        List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, new AABB(this.position().subtract(size, size, size), this.position().add(size, size, size)), p -> p.isAlive() && p != this.getOwner() && p.hasLineOfSight(this));
+        List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, new AABB(this.position().subtract(size, size, size), this.position().add(size, size, size)), p -> p.isAlive() && p != this.getOwner() && p.hasLineOfSight(this));
         if (hitEntity instanceof LivingEntity living) list.add(living);
 
         this.makeExplodeParticles();
-        this.stopShootingSound(this.level);
+        this.stopShootingSound(this.level());
         this.playSound(YESoundEvents.ENTITY_DEFENDER_SENTRY_HIT.get(), 2.0F, 1.0F);
 
         for (Entity entity : list) {
             boolean canHurt = (!(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(entity, owner)) && entity != this.getOwner() && !(entity instanceof IsDefenderAligned);
             if (canHurt) {
-                DamageSource damageSource = new IndirectEntityDamageSource("thrown", this, this.getOwner()).setProjectile();
+                DamageSource damageSource = this.damageSources().thrown(this, this.getOwner());
                 entity.invulnerableTime -= 9;
                 entity.hurt(damageSource, 5.0F);
             }
@@ -96,8 +96,8 @@ public class SentryBullet extends CustomAbstractHurtingProjectile implements Ite
         super.tick();
 
         if (this.tickCount > 80) {
-            if (!this.level.isClientSide) {
-                this.level.broadcastEntityEvent(this, (byte)3);
+            if (!this.level().isClientSide) {
+                this.level().broadcastEntityEvent(this, (byte)3);
                 this.explode(null, 2.0D);
                 this.discard();
             }
@@ -109,13 +109,13 @@ public class SentryBullet extends CustomAbstractHurtingProjectile implements Ite
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 1; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.EXPLOSION, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
     }
 
@@ -142,7 +142,7 @@ public class SentryBullet extends CustomAbstractHurtingProjectile implements Ite
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if (pSource == DamageSource.OUT_OF_WORLD) {
+        if (pSource.is(DamageTypes.GENERIC_KILL)) {
             return super.hurt(pSource, pAmount);
         }
         return false;

@@ -21,7 +21,7 @@ public class FrozenEffect extends CustomMobEffect {
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
         pLivingEntity.setTicksFrozen(pLivingEntity.getTicksRequiredToFreeze() + 20);
         pLivingEntity.setDeltaMovement(0, pLivingEntity.getDeltaMovement().y, 0);
-        EntityUtil.makeAParticle(pLivingEntity.level, ParticleTypes.SNOWFLAKE, false, new Vec3(pLivingEntity.getRandomX(1.0D), pLivingEntity.getRandomY(), pLivingEntity.getRandomZ(1.0D)), new Vec3(0, -0.1, 0));
+        EntityUtil.makeAParticle(pLivingEntity.level(), ParticleTypes.SNOWFLAKE, false, new Vec3(pLivingEntity.getRandomX(1.0D), pLivingEntity.getRandomY(), pLivingEntity.getRandomZ(1.0D)), new Vec3(0, -0.1, 0));
     }
 
     @Override

@@ -51,14 +51,14 @@ public class YExtrasMob extends PathfinderMob implements ICanBeAnimated, Yextras
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
         if (ANIMATION_STATE.equals(pKey)) {
-            if (this.level.isClientSide) {
+            if (this.level().isClientSide) {
                 this.updateAnimations();
             }
         }
 
         super.onSyncedDataUpdated(pKey);
 
-        if (this.level.isClientSide && MUSIC_TO_PLAY.equals(pKey)) {
+        if (this.level().isClientSide && MUSIC_TO_PLAY.equals(pKey)) {
             if (this.getMusicType() > 0) {
                 ClientAudioHandler.startBossMusic(this);
             }

@@ -96,15 +96,15 @@ public class CustomExplosion extends Explosion {
     }
 
     public static CustomExplosion create(@Nonnull Entity exploderIn, double x, double y, double z, float sizeIn, boolean multipliesToScrewArmor, boolean healExploder) {
-        return create(exploderIn.level, exploderIn, x, y, z, sizeIn, false, multipliesToScrewArmor, healExploder);
+        return create(exploderIn.level(), exploderIn, x, y, z, sizeIn, false, multipliesToScrewArmor, healExploder);
     }
 
     public static CustomExplosion create(@Nonnull Entity exploderIn, Vec3 position, float sizeIn, boolean multipliesToScrewArmor, boolean healExploder) {
-        return create(exploderIn.level, exploderIn, position.x, position.y, position.z, sizeIn, false, multipliesToScrewArmor, healExploder);
+        return create(exploderIn.level(), exploderIn, position.x, position.y, position.z, sizeIn, false, multipliesToScrewArmor, healExploder);
     }
 
     public static CustomExplosion create(Level worldIn, @Nullable Entity exploderIn, double xIn, double yIn, double zIn, float sizeIn, boolean causesFireIn, boolean multipliesToScrewArmor, boolean healExploder) {
-        Explosion.BlockInteraction mode = BlockInteraction.NONE;
+        Explosion.BlockInteraction mode = BlockInteraction.KEEP;
 
         CustomExplosion explosion = new CustomExplosion(worldIn, exploderIn, xIn, yIn, zIn, sizeIn, causesFireIn, mode, multipliesToScrewArmor, healExploder);
         if (ForgeEventFactory.onExplosionStart(worldIn, explosion)) {

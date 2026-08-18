@@ -57,7 +57,7 @@ public class CarrotMinionEntity extends YExtrasMob implements IsOryctolinAligned
         double x = entityIn.getX() - this.getX();
         double y = 0.5;
         double z = entityIn.getZ() - this.getZ();
-        this.setDeltaMovement(x * 3, this.isOnGround() ? y : this.getDeltaMovement().y(), z * 3);
+        this.setDeltaMovement(x * 3, this.onGround() ? y : this.getDeltaMovement().y(), z * 3);
         entityIn.hurtMarked = true;
         entityIn.setDeltaMovement(entityIn.getDeltaMovement().add(x * 1.5, y * 0.5, z * 1.5));
         this.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK);

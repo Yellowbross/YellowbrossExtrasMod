@@ -3,7 +3,6 @@ package com.yellowbrossproductions.yellowbrossextras.client.gui.overlay;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
@@ -44,7 +43,7 @@ public class WitherExplosionOverlay {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
         RenderSystem.setShaderTexture(0, OVERLAY_TEXTURE);
 
-        GuiComponent.blit(poseStack, 0, 0, 0, 0, width, height, width, height);
+        poseStack.blit(OVERLAY_TEXTURE, 0, 0, 0, 0, width, height, width, height);
 
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();

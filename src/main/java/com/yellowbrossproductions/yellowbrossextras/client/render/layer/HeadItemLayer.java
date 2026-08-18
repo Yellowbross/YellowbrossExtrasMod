@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.SkullModelBase;
@@ -23,10 +23,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.ZombieVillager;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.AbstractSkullBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraftforge.api.distmarker.Dist;
@@ -93,9 +90,9 @@ public class HeadItemLayer<T extends LivingEntity, M extends EntityModel<T> & Cu
             SkullModelBase skullmodelbase = this.skullModels.get(skullblock$type);
             RenderType rendertype = SkullBlockRenderer.getRenderType(skullblock$type, gameprofile);
             SkullBlockRenderer.renderSkull((Direction)null, 180.0F, pLimbSwing, pPoseStack, pBuffer, pPackedLight, skullmodelbase, rendertype);
-         } else if (!(item instanceof ArmorItem) || ((ArmorItem)item).getSlot() != EquipmentSlot.HEAD) {
+         } else if (!(item instanceof ArmorItem) || ((ArmorItem)item).getEquipmentSlot() != EquipmentSlot.HEAD) {
             translateToHead(pPoseStack, flag);
-            this.itemInHandRenderer.renderItem(pLivingEntity, itemstack, ItemTransforms.TransformType.HEAD, false, pPoseStack, pBuffer, pPackedLight);
+            this.itemInHandRenderer.renderItem(pLivingEntity, itemstack, ItemDisplayContext.HEAD, false, pPoseStack, pBuffer, pPackedLight);
          }
 
          pPoseStack.popPose();
@@ -105,7 +102,7 @@ public class HeadItemLayer<T extends LivingEntity, M extends EntityModel<T> & Cu
    public static void translateToHead(PoseStack pPoseStack, boolean b) {
       float f = 0.625F;
       pPoseStack.translate(0.0D, -0.25D, 0.0D);
-      pPoseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
+      pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
       pPoseStack.scale(0.625F, -0.625F, -0.625F);
       if (b) {
          pPoseStack.translate(0.0D, 0.1875D, 0.0D);

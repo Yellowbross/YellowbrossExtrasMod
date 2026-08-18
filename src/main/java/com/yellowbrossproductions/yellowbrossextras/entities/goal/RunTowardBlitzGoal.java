@@ -21,10 +21,10 @@ public class RunTowardBlitzGoal extends Goal {
 
     public RunTowardBlitzGoal(PathfinderMob entity) {
         this.mob = entity;
-        this.level = entity.getLevel();
+        this.level = entity.level();
         this.pos = entity.blockPosition();
         if (this.level instanceof ServerLevel) {
-            this.serverLevel = (ServerLevel) entity.getLevel();
+            this.serverLevel = (ServerLevel) entity.level();
         }
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     }

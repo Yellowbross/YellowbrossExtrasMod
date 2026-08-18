@@ -41,14 +41,14 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "onEffectAdded", at = @At("TAIL"))
     private void ye$injectOnEffectAdded(MobEffectInstance pEffectInstance, Entity pEntity, CallbackInfo ci) {
         if (pEffectInstance.getEffect() instanceof CustomMobEffect effect) {
-            if (this.level.isClientSide) return;
+            if (this.level().isClientSide) return;
 
             LivingEntity entity = (LivingEntity) (Object) this;
 
             effect.onAdded(pEffectInstance, entity, pEntity);
 
             if (effect.syncToClients) {
-                for (ServerPlayer player : ((ServerLevel) this.level).players()) {
+                for (ServerPlayer player : ((ServerLevel) this.level()).players()) {
                     if (player.getId() == this.getId()) continue;
                     player.connection.send(new ClientboundUpdateMobEffectPacket(this.getId(), pEffectInstance));
                 }
@@ -58,10 +58,10 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "onEffectUpdated", at = @At("TAIL"))
     private void ye$injectOnEffectUpdated(MobEffectInstance pEffectInstance, boolean pForced, Entity pEntity, CallbackInfo ci) {
-        if (this.level.isClientSide) return;
+        if (this.level().isClientSide) return;
 
         if (pEffectInstance.getEffect() instanceof CustomMobEffect effect && effect.syncToClients)
-            for (ServerPlayer player : ((ServerLevel) this.level).players()) {
+            for (ServerPlayer player : ((ServerLevel) this.level()).players()) {
                 if (player.getId() == this.getId()) continue;
                 player.connection.send(new ClientboundUpdateMobEffectPacket(this.getId(), pEffectInstance));
             }
@@ -69,13 +69,13 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "onEffectRemoved", at = @At("TAIL"))
     private void ye$injectOnEffectRemoved(MobEffectInstance pEffectInstance, CallbackInfo ci) {
-        if (this.level.isClientSide) return;
+        if (this.level().isClientSide) return;
 
         if (pEffectInstance.getEffect() instanceof CustomMobEffect effect) {
             effect.onRemoved(pEffectInstance, (LivingEntity) (Object) this, pEffectInstance.getDuration() > 1);
 
             if (effect.syncToClients) {
-                for (ServerPlayer player : ((ServerLevel) this.level).players()) {
+                for (ServerPlayer player : ((ServerLevel) this.level()).players()) {
                     if (player.getId() == this.getId()) continue;
                     player.connection.send(new ClientboundRemoveMobEffectPacket(this.getId(), pEffectInstance.getEffect()));
                 }

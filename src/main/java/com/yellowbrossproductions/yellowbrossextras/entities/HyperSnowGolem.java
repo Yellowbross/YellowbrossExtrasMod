@@ -5,6 +5,7 @@ import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -52,8 +53,8 @@ public class HyperSnowGolem extends SnowGolem implements YextrasEntity {
 
             double x = (int)(getTarget().getX() + random.nextInt(80) - 40);
             double z = (int)(getTarget().getZ() + random.nextInt(80) - 40);
-            int worldHeight = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int)x, (int)z);
-            if (worldHeight > level.getMinBuildHeight() + 1) {
+            int worldHeight = level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int)x, (int)z);
+            if (worldHeight > level().getMinBuildHeight() + 1) {
                 EntityUtil.makeSimpleTrail(this, ParticleTypes.SONIC_BOOM, 50,
                         this.getX(), this.getY(), this.getZ(),
                         x, worldHeight, z, 1);
@@ -65,7 +66,7 @@ public class HyperSnowGolem extends SnowGolem implements YextrasEntity {
 
     @Override
     public void performRangedAttack(LivingEntity pTarget, float pDistanceFactor) {
-        HyperSnowball snowball = new HyperSnowball(this.level, this);
+        HyperSnowball snowball = new HyperSnowball(this.level(), this);
         double d0 = pTarget.getEyeY() - (double)1.1F;
         double d1 = pTarget.getX() - this.getX();
         double d2 = d0 - snowball.getY();
@@ -73,7 +74,7 @@ public class HyperSnowGolem extends SnowGolem implements YextrasEntity {
         double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
         snowball.shoot(d1, d2 + d4, d3, 3.0F, 30.0F);
         this.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 3.0F, (0.5F + this.getRandom().nextFloat() + (this.getRandom().nextFloat() / 2.0F)));
-        this.level.addFreshEntity(snowball);
+        this.level().addFreshEntity(snowball);
     }
 
     @Override
@@ -86,7 +87,7 @@ public class HyperSnowGolem extends SnowGolem implements YextrasEntity {
     }
 
     private boolean killedByCommand(DamageSource damageSource, float value) {
-        if (damageSource != DamageSource.OUT_OF_WORLD) {
+        if (!damageSource.is(DamageTypes.GENERIC_KILL)) {
             return false;
         } else {
             return value >= 1000000000000.0F;

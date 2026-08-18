@@ -36,9 +36,9 @@ public class Shuriken extends ThrowableItemProjectile {
     public void tick() {
         super.tick();
         if (this.tickCount > 100) {
-            if (!this.level.isClientSide) {
-                this.level.broadcastEntityEvent(this, (byte)3);
-                this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)1.0F, Explosion.BlockInteraction.NONE);
+            if (!this.level().isClientSide) {
+                this.level().broadcastEntityEvent(this, (byte)3);
+                this.level().explode(this, this.getX(), this.getY(), this.getZ(), (float)1.0F, Level.ExplosionInteraction.NONE);
                 this.discard();
             }
         }
@@ -54,17 +54,17 @@ public class Shuriken extends ThrowableItemProjectile {
         Entity entity = pResult.getEntity();
         if (entity instanceof LivingEntity) {
             float amount = ((LivingEntity) entity).getMaxHealth() / 12.5F;
-            entity.hurt(DamageSource.thrown(this, this.getOwner()), 4.0F + amount);
+            entity.hurt(this.damageSources().thrown(this, this.getOwner()), 4.0F + amount);
         } else {
-            entity.hurt(DamageSource.thrown(this, this.getOwner()), 4.0F);
+            entity.hurt(this.damageSources().thrown(this, this.getOwner()), 4.0F);
         }
     }
 
     protected void onHit(HitResult pResult) {
         super.onHit(pResult);
         if (!(pResult instanceof EntityHitResult)) {
-            if (!this.level.isClientSide) {
-                this.level.broadcastEntityEvent(this, (byte)3);
+            if (!this.level().isClientSide) {
+                this.level().broadcastEntityEvent(this, (byte)3);
                 this.discard();
             }
         }

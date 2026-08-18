@@ -68,7 +68,7 @@ public class SuperDuperPoisonDripParticle extends TextureSheetParticle {
                 if (!this.removed) this.setSprite(this.sprites.get(this.frame, this.maxFrames));
             }
 
-            BlockPos blockpos = new BlockPos(this.x, this.y, this.z);
+            BlockPos blockpos = BlockPos.containing(this.x, this.y, this.z);
             double d0 = Math.max(this.level.getBlockState(blockpos).getCollisionShape(this.level, blockpos).max(Direction.Axis.Y, this.x - (double)blockpos.getX(), this.z - (double)blockpos.getZ()), (double)this.level.getFluidState(blockpos).getHeight(this.level, blockpos));
             if (d0 > 0.0D && this.y < (double)blockpos.getY() + d0) {
                 this.remove();

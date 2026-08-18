@@ -10,6 +10,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 
 public class AmoebicDevourer extends YExtrasMob implements Enemy {
@@ -58,16 +60,16 @@ public class AmoebicDevourer extends YExtrasMob implements Enemy {
         this.squish += (this.targetSquish - this.squish) * 0.5F;
         this.oSquish = this.squish;
         super.tick();
-        if (this.onGround && !this.wasOnGround) {
+        if (this.onGround() && !this.wasOnGround) {
             float i = this.getSize();
 
             this.playSound(this.getSquishSound(), this.getSoundVolume(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
             this.targetSquish = -0.5F;
-        } else if (!this.onGround && this.wasOnGround) {
+        } else if (!this.onGround() && this.wasOnGround) {
             this.targetSquish = 1.0F;
         }
 
-        this.wasOnGround = this.onGround;
+        this.wasOnGround = this.onGround();
         this.decreaseSquish();
 
     }
@@ -143,10 +145,10 @@ public class AmoebicDevourer extends YExtrasMob implements Enemy {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.isProjectile()) {
+        if (source.getDirectEntity() instanceof Projectile) {
             this.playSound(YESoundEvents.ENTITY_AMOEBIC_DEVOURER_GULP.get(), this.getSoundVolume(), this.getVoicePitch());
             this.wasOnGround = false;
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 this.setSize(this.getSize() + 0.3f, false);
                 this.heal(1.0f);
                 if (source.getDirectEntity() != null) {
@@ -155,7 +157,7 @@ public class AmoebicDevourer extends YExtrasMob implements Enemy {
             }
             return false;
         }
-        if (source != DamageSource.OUT_OF_WORLD) amount *= 0.1f;
+        if (!source.is(DamageTypes.GENERIC_KILL)) amount *= 0.1f;
         return super.hurt(source, amount);
     }
 

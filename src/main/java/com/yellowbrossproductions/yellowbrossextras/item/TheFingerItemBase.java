@@ -28,7 +28,7 @@ public class TheFingerItemBase extends Item {
     Random random = new Random();
 
     public TheFingerItemBase() {
-        super(new Properties().tab(YellowbrossExtras.YELLOWBROSSEXTRAS_GROUP));
+        super(new Properties());
     }
 
     @Override
@@ -45,20 +45,20 @@ public class TheFingerItemBase extends Item {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        this.yeetMobs(player.getLevel(), 8.0D, player);
+        this.yeetMobs(player.level(), 8.0D, player);
         return true;
     }
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player player, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
-        this.yeetMobs(player.getLevel(), 8.0D, player);
+        this.yeetMobs(player.level(), 8.0D, player);
         player.swing(pUsedHand);
         return super.interactLivingEntity(pStack, player, pInteractionTarget, pUsedHand);
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        this.yeetMobs(player.getLevel(), 8.0D, player);
+        this.yeetMobs(player.level(), 8.0D, player);
         player.swing(hand);
         return super.use(level, player, hand);
     }
@@ -78,7 +78,7 @@ public class TheFingerItemBase extends Item {
                 attacker.playSound(YESoundEvents.YEET.get(), 2.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 hit.hurtMarked = true;
                 hit.setDeltaMovement(hit.position().add(0, 0.5, 0).subtract(attacker.position()).normalize().scale(6.0));
-                if (hit.isOnGround()) hit.setDeltaMovement(hit.getDeltaMovement().x, Math.abs(hit.getDeltaMovement().y), hit.getDeltaMovement().z);
+                if (hit.onGround()) hit.setDeltaMovement(hit.getDeltaMovement().x, Math.abs(hit.getDeltaMovement().y), hit.getDeltaMovement().z);
             }
         }
     }

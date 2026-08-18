@@ -7,6 +7,7 @@ import com.yellowbrossproductions.yellowbrossextras.init.YEGameRules;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class VilvgaverSpawner implements CustomSpawner {
@@ -73,13 +75,13 @@ public class VilvgaverSpawner implements CustomSpawner {
                             this.hasEnoughSpace(pLevel, blockpos2) &&
                             randomTest(player.getRandom()) == 0)
                     {
-                        Vilvgaver vilvgaver = YEEntityTypes.Vilvgaver.get().spawn(pLevel, (CompoundTag)null, (Component)null, (Player)null, blockpos2, MobSpawnType.EVENT, false, false);
+                        Vilvgaver vilvgaver = YEEntityTypes.Vilvgaver.get().spawn(pLevel, blockpos2, MobSpawnType.EVENT);
                         if (vilvgaver != null) {
                             vilvgaver.playSound(YESoundEvents.ENTITY_VILVGAVER_RESPAWN.get(), 10.0F, 1.0F);
                             AttributeInstance speed = vilvgaver.getAttributes().getInstance(Attributes.MOVEMENT_SPEED);
                             if (speed != null) {
                                 speed.setBaseValue(YellowbrossExtrasConfig.vilvgaverChallenge_defaultSpeed.get());
-                                if (vilvgaver.level.dimension() == Level.NETHER && YellowbrossExtrasConfig.vilvgaverChallenge_netherSpeed.get() > 0) {
+                                if (vilvgaver.level().dimension() == Level.NETHER && YellowbrossExtrasConfig.vilvgaverChallenge_netherSpeed.get() > 0) {
                                     speed.setBaseValue(YellowbrossExtrasConfig.vilvgaverChallenge_netherSpeed.get());
                                 }
                             }
@@ -154,7 +156,7 @@ public class VilvgaverSpawner implements CustomSpawner {
             boolean listCheck = true;
 
             for (BlockState blockState : list) {
-                if (YellowbrossExtrasConfig.vilvgaverChallenge_blocklist.get().contains(Registry.BLOCK.getKey(blockState.getBlock()).toString())) {
+                if (YellowbrossExtrasConfig.vilvgaverChallenge_blocklist.get().contains(BuiltInRegistries.BLOCK.getKey(blockState.getBlock()).toString())) {
                     listCheck = false;
                     // YellowbrossExtras.LOGGER.debug("Can't spawn! " + Registry.BLOCK.getKey(blockState.getBlock()) + " nearby!");
                 }

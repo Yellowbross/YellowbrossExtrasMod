@@ -69,36 +69,36 @@ public class Freaker extends AbstractCreeperEntity implements CreeperInfection, 
 
     @Override
     public void explodeCreeper() {
-        if (!this.level.isClientSide) {
-            Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
+        if (!this.level().isClientSide) {
+            Level.ExplosionInteraction explosion$blockinteraction = Level.ExplosionInteraction.MOB;
             this.dead = true;
             for (int i = 0; i < 3; ++i) {
-                Crawler creeper = new Crawler(YEEntityTypes.Crawler.get(), this.level);
+                Crawler creeper = new Crawler(YEEntityTypes.Crawler.get(), this.level());
                 creeper.copyPosition(this);
                 creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
                 creeper.setDeltaMovement(this.random.nextDouble() - 0.5D,
                         this.random.nextDouble() - 0.5D,
                         this.random.nextDouble() - 0.5D);
                 if (this.getTeam() != null) {
-                    level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
-                            level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                    level().getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                            level().getScoreboard().getPlayerTeam(this.getTeam().getName()));
                 }
-                this.level.addFreshEntity(creeper);
+                this.level().addFreshEntity(creeper);
             }
             this.makeExplodeParticles();
             this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 2.0F);
             this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.5F);
             this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.0F);
             this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 0.6F);
-            CameraShake.cameraShake(this.level, position(), 50, 0.4f, 0, 40);
-            this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 5.0F * f), explosion$blockinteraction);
+            CameraShake.cameraShake(this.level(), position(), 50, 0.4f, 0, 40);
+            this.level().explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 5.0F * f), explosion$blockinteraction);
             int rad = 6;
-            this.level.explode(this, this.getX() - rad, this.getY(), this.getZ() - rad, (float)(this.explosionRadius * 3.0F * f), explosion$blockinteraction);
-            this.level.explode(this, this.getX() + rad, this.getY(), this.getZ() - rad, (float)(this.explosionRadius * 3.0F * f), explosion$blockinteraction);
-            this.level.explode(this, this.getX() - rad, this.getY(), this.getZ() + rad, (float)(this.explosionRadius * 3.0F * f), explosion$blockinteraction);
-            this.level.explode(this, this.getX() + rad, this.getY(), this.getZ() + rad, (float)(this.explosionRadius * 3.0F * f), explosion$blockinteraction);
-            this.level.explode(this, this.getX(), this.getY() + rad, this.getZ(), (float)(this.explosionRadius * 3.0F * f), explosion$blockinteraction);
-            this.level.explode(this, this.getX(), this.getY() - rad, this.getZ(), (float)(this.explosionRadius * 3.0F * f), explosion$blockinteraction);
+            this.level().explode(this, this.getX() - rad, this.getY(), this.getZ() - rad, (float)(this.explosionRadius * 3.0F * f), explosion$blockinteraction);
+            this.level().explode(this, this.getX() + rad, this.getY(), this.getZ() - rad, (float)(this.explosionRadius * 3.0F * f), explosion$blockinteraction);
+            this.level().explode(this, this.getX() - rad, this.getY(), this.getZ() + rad, (float)(this.explosionRadius * 3.0F * f), explosion$blockinteraction);
+            this.level().explode(this, this.getX() + rad, this.getY(), this.getZ() + rad, (float)(this.explosionRadius * 3.0F * f), explosion$blockinteraction);
+            this.level().explode(this, this.getX(), this.getY() + rad, this.getZ(), (float)(this.explosionRadius * 3.0F * f), explosion$blockinteraction);
+            this.level().explode(this, this.getX(), this.getY() - rad, this.getZ(), (float)(this.explosionRadius * 3.0F * f), explosion$blockinteraction);
             this.discard();
             this.spawnLingeringCloud();
         }
@@ -110,19 +110,19 @@ public class Freaker extends AbstractCreeperEntity implements CreeperInfection, 
             double d0 = (-0.5 + this.random.nextGaussian()) / 2;
             double d1 = (-0.5 + this.random.nextGaussian()) / 2;
             double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 200; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian()) / 2;
             double d1 = (-0.5 + this.random.nextGaussian()) / 2;
             double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 150; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian()) / 2;
             double d1 = (-0.5 + this.random.nextGaussian()) / 2;
             double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
     }
 

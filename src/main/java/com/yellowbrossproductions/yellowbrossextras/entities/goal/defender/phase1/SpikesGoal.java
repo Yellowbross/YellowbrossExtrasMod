@@ -12,7 +12,7 @@ public class SpikesGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && getRandom().nextInt(8) == 0 && getDefender().cooldown_spikes < 1 && getDefender().getPhase() == 1 && getDefender().isOnGround();
+        return doesAttackMeetNormalRequirements() && getRandom().nextInt(8) == 0 && getDefender().cooldown_spikes < 1 && getDefender().getPhase() == 1 && getDefender().onGround();
     }
 
     @Override

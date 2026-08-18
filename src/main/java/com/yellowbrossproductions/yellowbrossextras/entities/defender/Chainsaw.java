@@ -3,6 +3,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities.defender;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -89,7 +90,7 @@ public class Chainsaw extends Entity {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -147,7 +148,7 @@ public class Chainsaw extends Entity {
 
     private void calculateEndPos() {
         double radius = 30.0D;
-        if (level.isClientSide()) {
+        if (level().isClientSide()) {
             endPosX = getX() + radius * Math.cos(renderYaw) * Math.cos(renderPitch);
             endPosZ = getZ() + radius * Math.sin(renderYaw) * Math.cos(renderPitch);
             endPosY = getY() + radius * Math.sin(renderPitch);
@@ -240,10 +241,10 @@ public class Chainsaw extends Entity {
         xo = getX();
         yo = getY();
         zo = getZ();
-        if (tickCount == 1 && level.isClientSide) {
-            caster = (LivingEntity) level.getEntity(getCasterID());
+        if (tickCount == 1 && level().isClientSide) {
+            caster = (LivingEntity) level().getEntity(getCasterID());
         }
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             this.updateWithDefender();
         }
         if (caster instanceof Defender) {
@@ -257,7 +258,7 @@ public class Chainsaw extends Entity {
 
         if (caster != null && !caster.isAlive()) discard() ;
 
-        if (level.isClientSide && tickCount <= 10 && caster != null) {
+        if (level().isClientSide && tickCount <= 10 && caster != null) {
             int particleCount = 8;
             while (--particleCount != 0) {
                 double radius = 2f * caster.getBbWidth();
@@ -273,13 +274,13 @@ public class Chainsaw extends Entity {
             }
         }
         this.calculateEndPos();
-        List<LivingEntity> hit = raytraceEntities(level, new Vec3(getX(), getY(), getZ()), new Vec3(endPosX, endPosY, endPosZ), false, true, true).entities;
-        if (!level.isClientSide && this.caster != null) {
+        List<LivingEntity> hit = raytraceEntities(level(), new Vec3(getX(), getY(), getZ()), new Vec3(endPosX, endPosY, endPosZ), false, true, true).entities;
+        if (!level().isClientSide && this.caster != null) {
             float healing = 0.0f;
             boolean canHeal = false;
 
             for (LivingEntity target : hit) {
-                if (target.hurt(DamageSource.indirectMagic(this, this.caster), 3.0F)) {
+                if (target.hurt(this.damageSources().indirectMagic(this, this.caster), 3.0F)) {
                     healing += 0.5f;
                     canHeal = true;
                 }

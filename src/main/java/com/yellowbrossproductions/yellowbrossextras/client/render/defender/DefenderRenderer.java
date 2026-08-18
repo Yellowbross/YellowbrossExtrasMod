@@ -2,8 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DefenderModel;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.WatchYoToneBuddyBoyModel;
@@ -15,12 +14,13 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Quaternionf;
 
 import java.util.Random;
 
@@ -108,7 +108,7 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
         boolean startOver = ageInTicks > 4;
 
         poseStack.pushPose();
-        Quaternion quat = this.entityRenderDispatcher.cameraOrientation();
+        Quaternionf quat = this.entityRenderDispatcher.cameraOrientation();
         poseStack.mulPose(quat);
 
         RenderUtil.drawSprite(poseStack, sprite, 0,
@@ -142,7 +142,7 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
         VertexConsumer sprite = multiBufferSource.getBuffer(RenderType.entityTranslucent(SPRITESHEET));
 
         poseStack.pushPose();
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(-this.entityRenderDispatcher.camera.getYRot() + 180.0f));
+        poseStack.mulPose(Axis.YP.rotationDegrees(-this.entityRenderDispatcher.camera.getYRot() + 180.0f));
 
         RenderUtil.drawSprite(poseStack, sprite, 0,
                 loop * TORNADO_WIDTH,
@@ -183,8 +183,8 @@ public class DefenderRenderer extends MobRenderer<Defender, DefenderModel<Defend
 
         f2 = f1 - f;
         float f6 = Mth.lerp(pPartialTicks, defender.xRotO, defender.getXRot());
-        float f8 = Mth.lerp(pPartialTicks, defender.animationSpeedOld, defender.animationSpeed);
-        float f5 = defender.animationPosition - defender.animationSpeed * (1.0F - pPartialTicks);
+        float f8 = defender.walkAnimation.speed(pPartialTicks);
+        float f5 = defender.walkAnimation.position(pPartialTicks);
         float f7 = this.getBob(defender, pPartialTicks);
 
         this.setupRotations(defender, pPoseStack, f7, -f, pPartialTicks);

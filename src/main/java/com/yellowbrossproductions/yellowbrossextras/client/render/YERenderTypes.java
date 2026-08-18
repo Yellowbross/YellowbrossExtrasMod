@@ -31,8 +31,24 @@ public abstract class YERenderTypes extends RenderType {
         return create("noShadingAllowed", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, rendertype$compositestate);
     });
 
+    private static final BiFunction<ResourceLocation, Boolean, RenderType> TWO_DIMENSIONAL_EFFECTS = Util.memoize((resourceLocation, compositeState) -> {
+        RenderType.CompositeState rendertype$compositestate = RenderType.CompositeState.builder()
+                .setShaderState(RenderStateShard.RENDERTYPE_EYES_SHADER)
+                .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))
+                .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                .setCullState(RenderStateShard.NO_CULL)
+                .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+                .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)
+                .createCompositeState(compositeState);
+        return create("twoDimensionalEffects", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, rendertype$compositestate);
+    });
+
     public static RenderType noShadingAllowed(ResourceLocation resourceLocation, boolean compositeState) {
         return NO_SHADING_ALLOWED.apply(resourceLocation, compositeState);
+    }
+
+    public static RenderType twoDimensionalEffects(ResourceLocation resourceLocation, boolean compositeState) {
+        return TWO_DIMENSIONAL_EFFECTS.apply(resourceLocation, compositeState);
     }
 
     public static RenderType getMask(ResourceLocation location) {

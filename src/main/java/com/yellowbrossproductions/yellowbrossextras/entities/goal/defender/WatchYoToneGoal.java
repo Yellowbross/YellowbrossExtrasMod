@@ -42,17 +42,17 @@ public class WatchYoToneGoal extends Goal {
 
             boolean shouldJump = this.defender.distanceTo(soul) < 10.0d && this.defender.jumpscareTicks < 1 && soul.tickCount >= 48;
             if (shouldJump) {
-                if (!defender.level.isClientSide) {
-                    CameraShake.cameraShake(this.defender.level, this.defender.position(), 100.0f, 0.25f, 110, 40);
+                if (!defender.level().isClientSide) {
+                    CameraShake.cameraShake(this.defender.level(), this.defender.position(), 100.0f, 0.25f, 110, 40);
                     this.defender.setCustomRender(3);
                     this.defender.setImmediateTurn(true);
-                    stopScreechingInMyEarYouUngratefulPestThatsWhyFreakagerMutatedYou(this.defender.level);
+                    stopScreechingInMyEarYouUngratefulPestThatsWhyFreakagerMutatedYou(this.defender.level());
                     this.defender.playSound(YESoundEvents.ENTITY_DEFENDER_WATCHYOTONEBUDDYBOY.get(), 5.0F, 1.0F);
                     this.defender.jumpscareTicks = 1;
                     Vec3 position = soul.position().subtract(this.defender.position()).normalize().scale(1.3f);
-                    OkayMisterImSorry okayMisterImSorry = new OkayMisterImSorry(this.defender.level, this.defender, position);
+                    OkayMisterImSorry okayMisterImSorry = new OkayMisterImSorry(this.defender.level(), this.defender, position);
                     okayMisterImSorry.setPos(soul.position());
-                    this.defender.level.addFreshEntity(okayMisterImSorry);
+                    this.defender.level().addFreshEntity(okayMisterImSorry);
                     soul.discard();
                     this.defender.setVillagerSoul(okayMisterImSorry);
                 }

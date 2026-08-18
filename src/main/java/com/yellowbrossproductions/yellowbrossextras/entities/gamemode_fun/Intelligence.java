@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -54,8 +55,8 @@ public class Intelligence extends Entity {
     protected void readAdditionalSaveData(CompoundTag pCompound) {
         if (pCompound.contains("Team", 8)) {
             String s = pCompound.getString("Team");
-            PlayerTeam playerteam = this.level.getScoreboard().getPlayerTeam(s);
-            boolean flag = playerteam != null && this.level.getScoreboard().addPlayerToTeam(this.getStringUUID(), playerteam);
+            PlayerTeam playerteam = this.level().getScoreboard().getPlayerTeam(s);
+            boolean flag = playerteam != null && this.level().getScoreboard().addPlayerToTeam(this.getStringUUID(), playerteam);
             if (!flag) {
                 YellowbrossExtras.LOGGER.warn("Unable to add the Intelligence to team \"{}\" (that team probably doesn't exist)", (Object)s);
             }
@@ -83,7 +84,7 @@ public class Intelligence extends Entity {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -97,7 +98,7 @@ public class Intelligence extends Entity {
         super.tick();
 
         if (this.tickCount % 20 == 0) {
-            List<PathfinderMob> playing = this.level.getEntitiesOfClass(PathfinderMob.class, this.getBoundingBox().inflate(150.0D), p -> {
+            List<PathfinderMob> playing = this.level().getEntitiesOfClass(PathfinderMob.class, this.getBoundingBox().inflate(150.0D), p -> {
                 return !p.isRemoved() && p.isAlive() && p.getTeam() != null && p.getTeam() != this.getTeam() && p.getTags().contains("playing");
             });
 
@@ -131,7 +132,7 @@ public class Intelligence extends Entity {
 
         if (this.getTeam() != null) {
             Team team = this.getTeam();
-            List<Mob> cappers = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(2.0D), p -> {
+            List<Mob> cappers = this.level().getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(2.0D), p -> {
                 return !p.isRemoved() && p.isAlive() && p.getTeam() != null && p.getTeam() != team && p.getTags().contains("playing");
             });
             if (!cappers.isEmpty() && !this.isPassenger() && !this.captured) {
@@ -145,7 +146,7 @@ public class Intelligence extends Entity {
                     this.stopRiding();
                 }
 
-                List<Intelligence> caplist = this.level.getEntitiesOfClass(Intelligence.class, this.getBoundingBox().inflate(60.0D), p -> {
+                List<Intelligence> caplist = this.level().getEntitiesOfClass(Intelligence.class, this.getBoundingBox().inflate(60.0D), p -> {
                     return p.getTeam() == vehicle.getTeam();
                 });
                 Intelligence cap_intel = EntityUtil.getNearestIntel(caplist, vehicle);
@@ -210,7 +211,7 @@ public class Intelligence extends Entity {
     }
 
     public boolean hasMovedFromHome() {
-        BlockPos blockPos = new BlockPos(new Vec3(this.getHomeX(), this.getHomeY(), this.getHomeZ()));
+        BlockPos blockPos = BlockPos.containing(new Vec3(this.getHomeX(), this.getHomeY(), this.getHomeZ()));
         return this.distanceToSqr(Vec3.atCenterOf(blockPos)) > 9.0D;
     }
 
@@ -219,7 +220,7 @@ public class Intelligence extends Entity {
         this.setCaptures(this.getCaptures() + 1);
         this.playSound(YESoundEvents.CTF_FRIENDLY_CAP.get(), 10000.0F, 1.0F);
 
-        List<Mob> cappers = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(150.0D), p -> {
+        List<Mob> cappers = this.level().getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(150.0D), p -> {
             return !p.isRemoved() && p.isAlive() && p.getTeam() == team;
         });
         for (Mob cap : cappers) {
@@ -231,7 +232,7 @@ public class Intelligence extends Entity {
 
     public void goHome() {
         this.stopRiding();
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.setPos(this.getHomeX() + 0.5D, this.getHomeY(), this.getHomeZ() + 0.5D);
         }
         this.resetTimeUntilReturn();

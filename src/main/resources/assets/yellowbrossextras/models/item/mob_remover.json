@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "yellowbrossextras:items/mob_remover"
+    "layer0": "yellowbrossextras:item/mob_remover"
   }
 }

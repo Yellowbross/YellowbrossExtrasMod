@@ -6,6 +6,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGun;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.Chainsaw;
+import com.yellowbrossproductions.yellowbrossextras.init.YEDamageSources;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
@@ -50,14 +52,14 @@ public class AttacksPart1 {
                         defender.setWeaponToShow(1);
                     }
                     if (ticks == 15) {
-                        defender.level.playSound(null, defender, YESoundEvents.ENTITY_DEFENDER_SAW_START.get(), defender.getSoundSource(), 2.0F, 1.0F);
+                        defender.level().playSound(null, defender, YESoundEvents.ENTITY_DEFENDER_SAW_START.get(), defender.getSoundSource(), 2.0F, 1.0F);
                     }
                     if (ticks >= 22 && ticks <= 82) {
                         LivingEntity t = null;
                         if (defender.getTarget() != null && ((defender.getTarget() instanceof Player) || ((defender.getTarget().getBlockStateOn() != Blocks.AIR.defaultBlockState()) || defender.getTarget().isPassenger()))) {
                             t = defender.getTarget();
                         } else {
-                            List<Mob> list = defender.level.getEntitiesOfClass(Mob.class, defender.getBoundingBox().inflate(40.0D), p -> {
+                            List<Mob> list = defender.level().getEntitiesOfClass(Mob.class, defender.getBoundingBox().inflate(40.0D), p -> {
                                 return p instanceof Enemy && EntityUtil.canHurtThisMob(p, defender) && ((p.getBlockStateOn() != Blocks.AIR.defaultBlockState())) && defender.isInAttackSight(p);
                             });
                             if (!list.isEmpty()) {
@@ -73,7 +75,7 @@ public class AttacksPart1 {
                             defender.setDeltaMovement(defender.getDeltaMovement().add(0.0D, 0.15D, 0.0D));
                         }
                         defender.makeSawParticles1();
-                        for (Entity entity : defender.level.getEntities(defender, defender.getBoundingBox().inflate(15.0F))) {
+                        for (Entity entity : defender.level().getEntities(defender, defender.getBoundingBox().inflate(15.0F))) {
                             if (EntityUtil.canHurtThisMob(entity, defender) && entity instanceof LivingEntity && entity.isAlive()) {
                                 double x = defender.getX() - entity.getX();
                                 double y = defender.getY() - entity.getY();
@@ -81,7 +83,7 @@ public class AttacksPart1 {
                                 double d = Math.sqrt(x * x + y * y + z * z);
                                 if ((defender.distanceToSqr(entity) < 9.0D && !(entity instanceof Player)) || (defender.distanceToSqr(entity) < 4.5D)) {
                                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_SAW.get(), 1.0F, 1.0F);
-                                    entity.hurt(DamageSource.mobAttack(defender).bypassArmor(), 10.0F);
+                                    entity.hurt(defender.damageSources().source(YEDamageSources.SAW, defender), 10.0F);
                                     entity.hurtMarked = true;
                                     entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 0.4D, (-y / d * 0.4D) + 0.2D, -z / d * 0.4D));
                                     defender.makeSawParticles2(entity);
@@ -95,11 +97,11 @@ public class AttacksPart1 {
                     if (ticks == 11) {
                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_WHOOSH.get(), 2.0F, 1.0F);
                     }
-                    if (ticks == 12 && !defender.level.isClientSide) {
+                    if (ticks == 12 && !defender.level().isClientSide) {
                         float healing = 0.0F;
 
                         defender.makeSpinParticles();
-                        for (LivingEntity entity : defender.level.getEntitiesOfClass(LivingEntity.class, defender.getBoundingBox().inflate(15.0F))) {
+                        for (LivingEntity entity : defender.level().getEntitiesOfClass(LivingEntity.class, defender.getBoundingBox().inflate(15.0F))) {
                             if (EntityUtil.canHurtThisMob(entity, defender) && entity.isAlive() && entity != defender) {
                                 double x = defender.getX() - entity.getX();
                                 double y = defender.getY() - entity.getY();
@@ -107,7 +109,7 @@ public class AttacksPart1 {
                                 double d = Math.sqrt(x * x + y * y + z * z);
                                 if (defender.distanceTo(entity) < 3.0D) {
                                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, defender.getVoicePitch());
-                                    entity.hurt(DamageSource.mobAttack(defender), ((float) defender.getAttribute(Attributes.ATTACK_DAMAGE).getValue()) * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.5f));
+                                    entity.hurt(defender.damageSources().mobAttack(defender), ((float) defender.getAttribute(Attributes.ATTACK_DAMAGE).getValue()) * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.5f));
                                     entity.hurtMarked = true;
                                     entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 2.5D, (-y / d * 0.4D) + 0.5D, -z / d * 2.5D));
                                 }
@@ -128,10 +130,10 @@ public class AttacksPart1 {
                     }
                     if ((ticks == 6 + (24 * (defender.throwTimes - 1))) || (ticks == 18 + (24 * (defender.throwTimes - 1)))) {
                         defender.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, 0.5F);
-                        if (target != null && !defender.level.isClientSide) {
-                            DefenderAxe axe = new DefenderAxe(defender.level, defender, target.getBoundingBox().getCenter().subtract(defender.position().add(0, 1, 0)));
+                        if (target != null && !defender.level().isClientSide) {
+                            DefenderAxe axe = new DefenderAxe(defender.level(), defender, target.getBoundingBox().getCenter().subtract(defender.position().add(0, 1, 0)));
                             axe.setPos(defender.getX(), defender.getY() + 1, defender.getZ());
-                            defender.level.addFreshEntity(axe);
+                            defender.level().addFreshEntity(axe);
                         }
                     }
                 }
@@ -140,15 +142,15 @@ public class AttacksPart1 {
                     if (ticks == 10) {
                         defender.playSound(SoundEvents.WITCH_THROW, 2.0F, 0.9F);
                         defender.setWeaponToShow(0);
-                        if (target != null && !defender.level.isClientSide) {
-                            Boomerang projectile = new Boomerang(YEEntityTypes.Boomerang.get(), defender.level);
+                        if (target != null && !defender.level().isClientSide) {
+                            Boomerang projectile = new Boomerang(YEEntityTypes.Boomerang.get(), defender.level());
                             projectile.moveTo(defender.position().add(0, 1, 0));
 
                             projectile.setYHeadRot(defender.getYHeadRot());
                             projectile.setYRot(defender.getYHeadRot());
                             if (defender.getTeam() != null) {
-                                defender.level.getScoreboard().addPlayerToTeam(projectile.getStringUUID(),
-                                        defender.level.getScoreboard().getPlayerTeam(defender.getTeam().getName()));
+                                defender.level().getScoreboard().addPlayerToTeam(projectile.getStringUUID(),
+                                        defender.level().getScoreboard().getPlayerTeam(defender.getTeam().getName()));
                             }
 
                             float power = (float) 5.0F;
@@ -157,7 +159,7 @@ public class AttacksPart1 {
                             projectile.setOlder();
 
                             projectile.setShooter(defender);
-                            defender.level.addFreshEntity(projectile);
+                            defender.level().addFreshEntity(projectile);
                         }
                     }
                 }
@@ -167,7 +169,7 @@ public class AttacksPart1 {
                         if (ticks == 15) {
                             defender.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 2.0F, 1.0F);
                             defender.playSound(YESoundEvents.ENTITY_DEFENDER_SPIKE.get(), 2.0F, 1.0F);
-                            CameraShake.cameraShake(defender.level, defender.position(), 30, 0.1f, 0, 15);
+                            CameraShake.cameraShake(defender.level(), defender.position(), 30, 0.1f, 0, 15);
                             defender.performSpellCasting(false);
                         }
                         if (ticks == 39) {
@@ -176,7 +178,7 @@ public class AttacksPart1 {
                             if (target instanceof Player) {
                                 defender.setDeltaMovement((target.getX() - defender.getX()) * 0.2D, 1.6D, (target.getZ() - defender.getZ()) * 0.2D);
                             } else {
-                                List<Mob> targets = defender.level.getEntitiesOfClass(Mob.class, target.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy && defender.isInAttackSight(p));
+                                List<Mob> targets = defender.level().getEntitiesOfClass(Mob.class, target.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy && defender.isInAttackSight(p));
                                 Vec3 strikeZone = EntityUtil.findDensestMobCluster(targets, 6.0d);
 
                                 if (strikeZone != null) {
@@ -194,7 +196,7 @@ public class AttacksPart1 {
                             }
                             defender.jumpAttacking = true;
                         }
-                        if (ticks >= 39 && !defender.isOnGround()) {
+                        if (ticks >= 39 && !defender.onGround()) {
                             defender.performSpellWarn2(2);
 
                             if (!(target instanceof Player)) {
@@ -218,12 +220,12 @@ public class AttacksPart1 {
                                         defender.setDeltaMovement(0.0D, -4.0D, 0.0D);
                                         double x = (int)(defender.averageXCord);
                                         double z = (int)(defender.averageZCord);
-                                        int worldHeight = defender.level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int)x, (int)z);
+                                        int worldHeight = defender.level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int)x, (int)z);
                                         if (defender.stretchHelper == 0) {
                                             defender.stretchHelper = defender.getY();
                                         }
                                         float stretcher = (float) (defender.stretchHelper - defender.getY());
-                                        if (worldHeight > defender.level.getMinBuildHeight() + 65 && stretcher != 0) {
+                                        if (worldHeight > defender.level().getMinBuildHeight() + 65 && stretcher != 0) {
                                             defender.setStretch(worldHeight * stretcher / 1000);
                                         }
                                     }
@@ -253,17 +255,17 @@ public class AttacksPart1 {
                         double x = defender.getX() + 0.8F * Math.sin(-defender.getYRot() * Math.PI / 180) + radius2 * Math.sin(-defender.yHeadRot * Math.PI / 180) * Math.cos(-defender.getXRot() * Math.PI / 180);
                         double y = defender.getY() + 1.0 + radius2 * Math.sin(-defender.getXRot() * Math.PI / 180);
                         double z = defender.getZ() + 0.8F * Math.cos(-defender.getYRot() * Math.PI / 180) + radius2 * Math.cos(-defender.yHeadRot * Math.PI / 180) * Math.cos(-defender.getXRot() * Math.PI / 180);
-                        List<LivingEntity> list = defender.level.getEntitiesOfClass(LivingEntity.class, new AABB(x - 2.0D, defender.getY(), z - 2.0D, x + 2.0D, defender.getY() + 2.0D, z + 2.0D));
+                        List<LivingEntity> list = defender.level().getEntitiesOfClass(LivingEntity.class, new AABB(x - 2.0D, defender.getY(), z - 2.0D, x + 2.0D, defender.getY() + 2.0D, z + 2.0D));
                         for (LivingEntity caught : list) {
                             if (caught != defender && caught.isAlive()) {
                                 float amount = caught.getMaxHealth() / 12.5F;
-                                caught.hurt(DamageSource.mobAttack(defender), (float) 12.0F + amount);
+                                caught.hurt(defender.damageSources().mobAttack(defender), (float) 12.0F + amount);
                             }
                         }
 
                         if (target != null) {
                             for (int i = 0; i < 75; ++i) {
-                                Shuriken shuriken = new Shuriken(defender.level, defender);
+                                Shuriken shuriken = new Shuriken(defender.level(), defender);
 
                                 shuriken.setPos(x, defender.getY() + 1.0D, z);
 
@@ -273,7 +275,7 @@ public class AttacksPart1 {
                                 double d3 = target.getZ() - defender.getZ();
                                 double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
                                 shuriken.shoot(d1, d2 + d4, d3, 1.0F, 24.0F);
-                                defender.level.addFreshEntity(shuriken);
+                                defender.level().addFreshEntity(shuriken);
                             }
                         }
                     }
@@ -286,7 +288,7 @@ public class AttacksPart1 {
                         lookTo = target.getBoundingBox().getCenter();
 
                         if (!(target instanceof Player)) {
-                            List<Mob> targets = defender.level.getEntitiesOfClass(Mob.class, defender.getBoundingBox().inflate(10.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy && defender.isInAttackSight(p));
+                            List<Mob> targets = defender.level().getEntitiesOfClass(Mob.class, defender.getBoundingBox().inflate(10.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy && defender.isInAttackSight(p));
                             Vec3 strikeZone = EntityUtil.findDensestMobCluster(targets, 6.0d);
                             if (strikeZone != null) lookTo = strikeZone;
                         }
@@ -309,9 +311,9 @@ public class AttacksPart1 {
                         Chainsaw beam = null;
                         if (ticks == 30) {
                             defender.playSound(YESoundEvents.ENTITY_DEFENDER_CHAINSAW.get(), 2.0F, 1.0F);
-                            if (!defender.level.isClientSide) {
-                                beam = new Chainsaw(YEEntityTypes.Chainsaw.get(), defender.level, defender, defender.getX(), defender.getY() + 1.125, defender.getZ(), (float) ((defender.yHeadRot + 90) * Math.PI / 180), (float) (-defender.getXRot() * Math.PI / 180), 66);
-                                defender.level.addFreshEntity(beam);
+                            if (!defender.level().isClientSide) {
+                                beam = new Chainsaw(YEEntityTypes.Chainsaw.get(), defender.level(), defender, defender.getX(), defender.getY() + 1.125, defender.getZ(), (float) ((defender.yHeadRot + 90) * Math.PI / 180), (float) (-defender.getXRot() * Math.PI / 180), 66);
+                                defender.level().addFreshEntity(beam);
                             }
                         }
                         if (beam != null) {
@@ -346,10 +348,10 @@ public class AttacksPart1 {
                             double y = defender.getY() + 1.0 + radius2 * Math.sin(-defender.getXRot() * Math.PI / 180);
                             double z = defender.getZ() + 0.8F * Math.cos(-defender.getYRot() * Math.PI / 180) + radius2 * Math.cos(-defender.yHeadRot * Math.PI / 180) * Math.cos(-defender.getXRot() * Math.PI / 180);
                             double thing = 1.2D;
-                            List<LivingEntity> list = defender.level.getEntitiesOfClass(LivingEntity.class, new AABB(x - thing, defender.getY(), z - thing, x + thing, defender.getY() + thing, z + thing));
+                            List<LivingEntity> list = defender.level().getEntitiesOfClass(LivingEntity.class, new AABB(x - thing, defender.getY(), z - thing, x + thing, defender.getY() + thing, z + thing));
                             for (LivingEntity caught : list) {
                                 if (caught != defender && caught.isAlive()) {
-                                    if (caught.hurt(DamageSource.mobAttack(defender), 8.0F)) {
+                                    if (caught.hurt(defender.damageSources().mobAttack(defender), 8.0F)) {
                                         caught.stopRiding();
                                         defender.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
                                         caught.setDeltaMovement(caught.getDeltaMovement().add(0.0D, 2.0D, 0.0D));
@@ -395,16 +397,16 @@ public class AttacksPart1 {
                                 defender.setDeltaMovement(0.0D, 0.0D, 0.0D);
                                 defender.clawsTarget.setDeltaMovement(0.0D, 0.0D, 0.0D);
                                 if (defender.jumpTicks == (21 - 1) || defender.jumpTicks == (21 - 6)) {
-                                    if (defender.clawsTarget.hurt(DamageSource.mobAttack(defender), 6.0F)) {
-                                        CameraShake.cameraShake(defender.level, defender.position(), 30, 0.1f, 0, 4);
+                                    if (defender.clawsTarget.hurt(defender.damageSources().mobAttack(defender), 6.0F)) {
+                                        CameraShake.cameraShake(defender.level(), defender.position(), 30, 0.1f, 0, 4);
                                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, defender.getVoicePitch());
                                         defender.clawsTarget.invulnerableTime = 0;
                                         defender.clawsTarget.hurtTime = 3;
                                     }
                                 }
                                 if (defender.jumpTicks == (21 - 12) || defender.jumpTicks == (21 - 17)) {
-                                    if (defender.clawsTarget.hurt(DamageSource.mobAttack(defender), 5.0F)) {
-                                        CameraShake.cameraShake(defender.level, defender.position(), 30, 0.1f, 0, 4);
+                                    if (defender.clawsTarget.hurt(defender.damageSources().mobAttack(defender), 5.0F)) {
+                                        CameraShake.cameraShake(defender.level(), defender.position(), 30, 0.1f, 0, 4);
                                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_SMACK.get(), 2.0F, defender.getVoicePitch() + 0.2F);
                                         defender.clawsTarget.hurtTime = 3;
                                         defender.clawsTarget.invulnerableTime = 0;
@@ -412,10 +414,10 @@ public class AttacksPart1 {
                                 }
                                 if (defender.jumpTicks == 0) {
                                     defender.itsTimeToClawTarget = false;
-                                    if (defender.clawsTarget.hurt(DamageSource.mobAttack(defender), 8.0F)) {
+                                    if (defender.clawsTarget.hurt(defender.damageSources().mobAttack(defender), 8.0F)) {
                                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 2.0F, 1.0F);
                                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, 1.0F);
-                                        CameraShake.cameraShake(defender.level, defender.position(), 30, 0.2f, 0, 15);
+                                        CameraShake.cameraShake(defender.level(), defender.position(), 30, 0.2f, 0, 15);
                                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_SMACK.get(), 2.0F, defender.getVoicePitch());
                                         defender.clawsTarget.invulnerableTime = 0;
                                         defender.clawsTarget.fallDistance = 5.0F;
@@ -441,17 +443,17 @@ public class AttacksPart1 {
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.8F);
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.5F);
                     defender.playSound(SoundEvents.GENERIC_EXPLODE, 3.0F, 0.7F);
-                    CameraShake.cameraShake(defender.level, defender.position(), 50, 0.4f, 0, 15);
-                    EntityUtil.makeCircleParticles(defender.level, defender.position().add(0, 0.3, 0), ParticleTypes.POOF, false, 50, 1.0F, Vec3.ZERO, 0.0F);
+                    CameraShake.cameraShake(defender.level(), defender.position(), 50, 0.4f, 0, 15);
+                    EntityUtil.makeCircleParticles(defender.level(), defender.position().add(0, 0.3, 0), ParticleTypes.POOF, false, 50, 1.0F, Vec3.ZERO, 0.0F);
 
-                    for (LivingEntity entity : defender.level.getEntitiesOfClass(LivingEntity.class, defender.getBoundingBox().inflate(15.0F), p -> p.isAlive() && EntityUtil.canHurtThisMob(p, defender))) {
+                    for (LivingEntity entity : defender.level().getEntitiesOfClass(LivingEntity.class, defender.getBoundingBox().inflate(15.0F), p -> p.isAlive() && EntityUtil.canHurtThisMob(p, defender))) {
                         double x = defender.getX() - entity.getX();
                         double y = defender.getY() - entity.getY();
                         double z = defender.getZ() - entity.getZ();
                         double d = Math.sqrt(x * x + y * y + z * z);
                         if (defender.distanceTo(entity) < 3.0D) {
                             defender.playSound(YESoundEvents.ENTITY_DEFENDER_BOOMERANG_HIT.get(), 2.0F, defender.getVoicePitch());
-                            entity.hurt(DamageSource.mobAttack(defender), 30.0F);
+                            entity.hurt(defender.damageSources().mobAttack(defender), 30.0F);
                             entity.hurtMarked = true;
                             entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 2.5D, (-y / d * 0.4D) + 0.8D, -z / d * 2.5D));
                         }
@@ -461,15 +463,15 @@ public class AttacksPart1 {
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 1.2F);
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_SPIKE.get(), 3.0F, 0.7F);
-                    CameraShake.cameraShake(defender.level, defender.position(), 50, 0.2f, 0, 15);
+                    CameraShake.cameraShake(defender.level(), defender.position(), 50, 0.2f, 0, 15);
 
-                    LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(defender.level);
+                    LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(defender.level());
                     assert lightning != null;
                     lightning.setPos(defender.getX(), defender.getY() + 2.7D, defender.getZ());
                     lightning.setVisualOnly(true);
                     defender.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 3.0F, 1.0F);
                     defender.playSound(SoundEvents.LIGHTNING_BOLT_THUNDER, 10000.0F, 1.0F);
-                    defender.level.addFreshEntity(lightning);
+                    defender.level().addFreshEntity(lightning);
                 }
                 if (defender.deathAttackTicks >= 35 + 1 && defender.deathAttackTicks < 45 + 1) {
                     defender.makeExcaliburLandParticles();
@@ -478,14 +480,14 @@ public class AttacksPart1 {
                 if (defender.deathAttackTicks >= 59 + 1 && defender.deathAttackTicks < 81 + 1) {
                     defender.stareYOffsetter += 0.05D;
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_EARTH_RUMBLE.get(), 3.0F, defender.getVoicePitch());
-                    CameraShake.cameraShake(defender.level, defender.position(), 50, 0.02f, 0, 15);
+                    CameraShake.cameraShake(defender.level(), defender.position(), 50, 0.02f, 0, 15);
                 }
 
                 if (defender.deathAttackTicks == 81 + 1) {
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 1.2F);
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_SPIKE.get(), 3.0F, 0.5F);
-                    CameraShake.cameraShake(defender.level, defender.position(), 50, 0.3f, 0, 15);
+                    CameraShake.cameraShake(defender.level(), defender.position(), 50, 0.3f, 0, 15);
                 }
 
                 if (defender.deathAttackTicks == 102 + 1) {
@@ -495,14 +497,14 @@ public class AttacksPart1 {
                     defender.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.0F);
                     defender.playSound(YESoundEvents.HUGE_SLAM.get(), 4.0F, 1.0F);
                     defender.playSound(SoundEvents.GENERIC_EXPLODE, 3.0F, 0.7F);
-                    CameraShake.cameraShake(defender.level, defender.position(), 30, 0.4f, 0, 15);
-                    EntityUtil.makeCircleParticles(defender.level, defender.position().add(0, 0.3, 0), ParticleTypes.POOF, false, 50, 1.0F, Vec3.ZERO, 0.0F);
+                    CameraShake.cameraShake(defender.level(), defender.position(), 30, 0.4f, 0, 15);
+                    EntityUtil.makeCircleParticles(defender.level(), defender.position().add(0, 0.3, 0), ParticleTypes.POOF, false, 50, 1.0F, Vec3.ZERO, 0.0F);
                     defender.makeRockExplodeParticles();
 
-                    if (!defender.level.isClientSide) {
-                        defender.level.explode(defender, defender.getX(), defender.getY() + 0.3, defender.getZ(), 6.0F, Explosion.BlockInteraction.NONE);
-                        defender.level.explode(defender, defender.getX(), defender.getY() + 0.3, defender.getZ(), 3.0F, Explosion.BlockInteraction.NONE);
-                        defender.level.explode(defender, defender.getX(), defender.getY() + 0.3, defender.getZ(), 3.0F, Explosion.BlockInteraction.NONE);
+                    if (!defender.level().isClientSide) {
+                        defender.level().explode(defender, defender.getX(), defender.getY() + 0.3, defender.getZ(), 6.0F, Level.ExplosionInteraction.NONE);
+                        defender.level().explode(defender, defender.getX(), defender.getY() + 0.3, defender.getZ(), 3.0F, Level.ExplosionInteraction.NONE);
+                        defender.level().explode(defender, defender.getX(), defender.getY() + 0.3, defender.getZ(), 3.0F, Level.ExplosionInteraction.NONE);
                     }
                 }
 
@@ -520,11 +522,11 @@ public class AttacksPart1 {
 
                     if ((defender.deathAttackTicks - (125 + 1)) % 4 == 0) {
                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH.get(), 3.0F, 1.0F);
-                        CameraShake.cameraShake(defender.level, defender.position(), 30, 0.2f, 0, 8);
+                        CameraShake.cameraShake(defender.level(), defender.position(), 30, 0.2f, 0, 8);
                     }
 
                     LivingEntity t = null;
-                    List<Mob> list = defender.level.getEntitiesOfClass(Mob.class, defender.getBoundingBox().inflate(50.0D), p -> {
+                    List<Mob> list = defender.level().getEntitiesOfClass(Mob.class, defender.getBoundingBox().inflate(50.0D), p -> {
                         return p instanceof Enemy && EntityUtil.canHurtThisMob(p, defender) && ((p.getBlockStateOn() != Blocks.AIR.defaultBlockState())) && defender.isInAttackSight(p);
                     });
                     if (defender.getTarget() != null && (list.isEmpty() || defender.distanceTo(defender.getTarget()) < 25.0D)) {
@@ -547,7 +549,7 @@ public class AttacksPart1 {
                     }
                     defender.setDeltaMovement(defender.getDeltaMovement().multiply(1, 0, 1).add(defender.chargeX, defender.chargeY, defender.chargeZ));
 
-                    for (LivingEntity entity : defender.level.getEntitiesOfClass(LivingEntity.class, defender.getBoundingBox().inflate(100.0F), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && EntityUtil.isMobNotInCreativeMode(p))) {
+                    for (LivingEntity entity : defender.level().getEntitiesOfClass(LivingEntity.class, defender.getBoundingBox().inflate(100.0F), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && EntityUtil.isMobNotInCreativeMode(p))) {
                         if (!(entity instanceof Player)) {
                             double x = defender.getX() - entity.getX();
                             double y = defender.getY() - entity.getY();
@@ -569,16 +571,16 @@ public class AttacksPart1 {
                         }
                     }
 
-                    for (LivingEntity entity : defender.level.getEntitiesOfClass(LivingEntity.class, defender.getBoundingBox().inflate(15.0F), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && EntityUtil.isMobNotInCreativeMode(p))) {
+                    for (LivingEntity entity : defender.level().getEntitiesOfClass(LivingEntity.class, defender.getBoundingBox().inflate(15.0F), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && EntityUtil.isMobNotInCreativeMode(p))) {
                         double x = defender.getX() - entity.getX();
                         double y = defender.getY() - entity.getY();
                         double z = defender.getZ() - entity.getZ();
                         double d = Math.sqrt(x * x + y * y + z * z);
                         if (defender.distanceTo(entity) < 5.0D) {
-                            if (entity.hurt(DamageSource.mobAttack(defender).bypassArmor(), 25.0F * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.25f))) {
-                                for (int i = 0; i < 4; ++i) entity.hurt(DamageSource.mobAttack(defender).bypassArmor(), 25.0F * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.25f));
+                            if (entity.hurt(defender.damageSources().source(YEDamageSources.EXCALIBUR, defender), 25.0F * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.25f))) {
+                                for (int i = 0; i < 4; ++i) entity.hurt(defender.damageSources().source(YEDamageSources.EXCALIBUR, defender), 25.0F * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.25f));
                                 defender.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, defender.getVoicePitch() - 0.2F);
-                                CameraShake.cameraShake(defender.level, defender.position(), 10, 0.2f, 0, 8);
+                                CameraShake.cameraShake(defender.level(), defender.position(), 10, 0.2f, 0, 8);
                                 entity.hurtMarked = true;
                                 if (defender.distanceTo(entity) < 2.0D) {
                                     entity.setDeltaMovement(entity.getDeltaMovement().add(
@@ -628,7 +630,7 @@ public class AttacksPart1 {
                     if (ticks == 30) {
                         double mult = 0.04d;
 
-                        if (!defender.level.isClientSide) {
+                        if (!defender.level().isClientSide) {
                             defender.setDiscardFriction(true);
                             defender.setMaxWobble(15);
                             if (target != null) {
@@ -642,17 +644,17 @@ public class AttacksPart1 {
                             }
                         }
                         defender.setCustomRender(1);
-                        EntityUtil.makeCircleParticles(defender.level, defender.position().add(0, 0.3, 0), ParticleTypes.POOF, false, 10, 1.0f, Vec3.ZERO, 0.0F);
+                        EntityUtil.makeCircleParticles(defender.level(), defender.position().add(0, 0.3, 0), ParticleTypes.POOF, false, 10, 1.0f, Vec3.ZERO, 0.0F);
                     }
                     if (ticks > 30) {
-                        if (defender.isOnGround() && ticks2 == 0) {
+                        if (defender.onGround() && ticks2 == 0) {
                             defender.setDiscardFriction(false);
                             defender.jumpAttacking = true;
                             defender.attackTicks2 = 1;
                             defender.setCustomRender(0);
                             defender.setAnimationState("ratatatabow2");
                         }
-                        if (!defender.isOnGround()) {
+                        if (!defender.onGround()) {
                             if (ticks % 3 == 0) {
                                 defender.playSound(YESoundEvents.ENTITY_DEFENDER_QUICK_WHOOSH2.get(), 1.0F, 0.7f);
                                 defender.setDeltaMovement(defender.getDeltaMovement().add(0, -0.1, 0));
@@ -714,8 +716,8 @@ public class AttacksPart1 {
                         if (ticks == 61) defender.setFreakOutInModel(true);
                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_CREEPERGUN_SHOOT.get(), 2.5F, 1.0F);
 
-                        if (!defender.level.isClientSide) {
-                            CreeperBullet iGaveBirth = new CreeperBullet(YEEntityTypes.CreeperBullet.get(), defender.level);
+                        if (!defender.level().isClientSide) {
+                            CreeperBullet iGaveBirth = new CreeperBullet(YEEntityTypes.CreeperBullet.get(), defender.level());
                             iGaveBirth.moveTo(defender.position().add(0, 1.25D, 0));
 
                             iGaveBirth.setTarget(defender.getTarget());
@@ -726,15 +728,15 @@ public class AttacksPart1 {
                             iGaveBirth.setShootY(defender.getYRot());
                             iGaveBirth.setShootX(defender.getXRot());
 
-                            if (defender.level instanceof ServerLevel serverLevel) iGaveBirth.finalizeSpawn(serverLevel, defender.level.getCurrentDifficultyAt(defender.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
+                            if (defender.level() instanceof ServerLevel serverLevel) iGaveBirth.finalizeSpawn(serverLevel, defender.level().getCurrentDifficultyAt(defender.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
 
                             if (defender.getTeam() != null) {
-                                defender.level.getScoreboard().addPlayerToTeam(iGaveBirth.getStringUUID(),
-                                        defender.level.getScoreboard().getPlayerTeam(defender.getTeam().getName()));
+                                defender.level().getScoreboard().addPlayerToTeam(iGaveBirth.getStringUUID(),
+                                        defender.level().getScoreboard().getPlayerTeam(defender.getTeam().getName()));
                             }
-                            defender.level.addFreshEntity(iGaveBirth);
+                            defender.level().addFreshEntity(iGaveBirth);
 
-                            List<CreeperBullet> bullets = defender.level.getEntitiesOfClass(CreeperBullet.class, target.getBoundingBox().inflate(30.0d));
+                            List<CreeperBullet> bullets = defender.level().getEntitiesOfClass(CreeperBullet.class, target.getBoundingBox().inflate(30.0d));
                             if (bullets.size() > 200) {
                                 boolean shouldContinue = true;
                                 for (CreeperBullet bullet : bullets) if (bullet.isPowered()) shouldContinue = false;
@@ -751,14 +753,14 @@ public class AttacksPart1 {
                 if (defender.attackType == defender.attack_forcegun) {
                     if (ticks == 10) {
                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_FORCEGUN.get(), 3.0F, 1.0F);
-                        EntityUtil.makeCircleParticles(defender.level, defender.position().add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, false, 35, 1.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 0.25F);
-                        EntityUtil.makeCircleParticles(defender.level, defender.position().add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, false, 20, 0.25f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 1.0F);
-                        EntityUtil.makeCircleParticles(defender.level, defender.position().add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, false, 30, 0.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 2.0F);
-                        EntityUtil.makeCircleParticles(defender.level, defender.position().add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, false, 40, 0.75f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 5.0F);
-                        CameraShake.cameraShake(defender.level, defender.position(), 30, 0.3f, 0, 20);
+                        EntityUtil.makeCircleParticles(defender.level(), defender.position().add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, false, 35, 1.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 0.25F);
+                        EntityUtil.makeCircleParticles(defender.level(), defender.position().add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, false, 20, 0.25f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 1.0F);
+                        EntityUtil.makeCircleParticles(defender.level(), defender.position().add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, false, 30, 0.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 2.0F);
+                        EntityUtil.makeCircleParticles(defender.level(), defender.position().add(0, 1.5, 0).add(defender.getLookAngle().scale(1.0)), ParticleTypes.POOF, false, 40, 0.75f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 5.0F);
+                        CameraShake.cameraShake(defender.level(), defender.position(), 30, 0.3f, 0, 20);
 
                         float size = 8.0f;
-                        List<Entity> entities = EntityUtil.getEntitiesFromAABB(defender.level, size, defender, predicate -> (predicate != defender));
+                        List<Entity> entities = EntityUtil.getEntitiesFromAABB(defender.level(), size, defender, predicate -> (predicate != defender));
                         Vec3 viewVec = defender.getLookAngle();
                         for (Entity hit : entities) {
                             Vec3 hitVec = hit.position().subtract(defender.position()).normalize();
@@ -767,7 +769,7 @@ public class AttacksPart1 {
                                 hit.hurtMarked = true;
                                 if (hit instanceof LivingEntity living) living.setLastHurtByMob(defender);
                                 hit.setDeltaMovement(hit.position().add(0, 0.5, 0).subtract(defender.position()).normalize().scale(4.0));
-                                if (hit.isOnGround()) hit.setDeltaMovement(hit.getDeltaMovement().x, Math.abs(hit.getDeltaMovement().y), hit.getDeltaMovement().z);
+                                if (hit.onGround()) hit.setDeltaMovement(hit.getDeltaMovement().x, Math.abs(hit.getDeltaMovement().y), hit.getDeltaMovement().z);
                             }
                         }
                     }
@@ -798,10 +800,10 @@ public class AttacksPart1 {
                                 arrow.shoot(d1, d2, d3, 3.0F, 0.0F);
 
                                 if (ticks == 7 && i != 2) {
-                                    defender.level.addFreshEntity(arrow);
+                                    defender.level().addFreshEntity(arrow);
                                 }
                                 if (ticks == 18 && i != 1  && i != 3) {
-                                    defender.level.addFreshEntity(arrow);
+                                    defender.level().addFreshEntity(arrow);
                                 }
                             }
                         }
@@ -810,7 +812,7 @@ public class AttacksPart1 {
                 // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 if (defender.attackType == defender.attack_snipe) {
                     if (ticks == 6) defender.playSound(YESoundEvents.ENTITY_DEFENDER_SNIPE_START.get(), 2.0F, 1.0F);
-                    if (ticks == 27) defender.level.playSound(null, defender, YESoundEvents.ENTITY_DEFENDER_SNIPE_SPIN.get(), defender.getSoundSource(), 2.0F, 1.0F);
+                    if (ticks == 27) defender.level().playSound(null, defender, YESoundEvents.ENTITY_DEFENDER_SNIPE_SPIN.get(), defender.getSoundSource(), 2.0F, 1.0F);
                     if (ticks > 30 && ticks < 60) {
                         float spinSpeed = 3.0f;
                         for (int i = 0; i < 2; ++i) {
@@ -819,14 +821,14 @@ public class AttacksPart1 {
                                     Math.sin(defender.tickCount / spinSpeed) * 50 * otherSide,
                                     0,
                                     Math.cos(defender.tickCount / spinSpeed) * 50 * otherSide);
-                            if (!defender.level.isClientSide) {
-                                DeadlyArrow deadlyArrow = new DeadlyArrow(defender.level, defender, 1.25d, shoot, 20);
-                                defender.level.addFreshEntity(deadlyArrow);
+                            if (!defender.level().isClientSide) {
+                                DeadlyArrow deadlyArrow = new DeadlyArrow(defender.level(), defender, 1.25d, shoot, 20);
+                                defender.level().addFreshEntity(deadlyArrow);
                             }
                         }
                     }
                     if (ticks == 36) {
-                        if (!defender.level.isClientSide) {
+                        if (!defender.level().isClientSide) {
                             defender.setMaxWobble(20);
                         }
                         defender.setCustomRender(2);
@@ -840,7 +842,7 @@ public class AttacksPart1 {
                     }
                     Vec3 throwTo = defender.position().add(defender.getLookAngle().scale(60.0d));
                     if (ticks >= 91 && target != null) {
-                        List<Mob> targets = defender.level.getEntitiesOfClass(Mob.class, target.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy && defender.isInAttackSight(p));
+                        List<Mob> targets = defender.level().getEntitiesOfClass(Mob.class, target.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy && defender.isInAttackSight(p));
                         Vec3 strikeZone = EntityUtil.findDensestMobCluster(targets, 9.0d);
 
                         throwTo = target.getBoundingBox().getCenter();
@@ -851,9 +853,9 @@ public class AttacksPart1 {
                     }
                     if (ticks == 102) {
                         defender.playSound(SoundEvents.TRIDENT_THROW, 2.0F, 1.0F);
-                        if (!defender.level.isClientSide) {
-                            SniperRifle sniperRifle = new SniperRifle(defender.level, defender, throwTo);
-                            defender.level.addFreshEntity(sniperRifle);
+                        if (!defender.level().isClientSide) {
+                            SniperRifle sniperRifle = new SniperRifle(defender.level(), defender, throwTo);
+                            defender.level().addFreshEntity(sniperRifle);
                         }
                         defender.setDeltaMovement(defender.getLookAngle().scale(-1));
                     }
@@ -862,7 +864,7 @@ public class AttacksPart1 {
                 if (defender.attackType == defender.attack_witherbazooka) {
                     Vec3 throwTo = defender.getLookAngle().scale(10.0d);
                     if (ticks <= 24 && target != null) {
-                        List<Mob> targets = defender.level.getEntitiesOfClass(Mob.class, target.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy && defender.isInAttackSight(p));
+                        List<Mob> targets = defender.level().getEntitiesOfClass(Mob.class, target.getBoundingBox().inflate(30.0f), p -> EntityUtil.canHurtThisMob(p, defender) && p.isAlive() && p instanceof Enemy && defender.isInAttackSight(p));
                         Vec3 strikeZone = EntityUtil.findDensestMobCluster(targets, 15.0d);
 
                         throwTo = target.getBoundingBox().getCenter();
@@ -874,13 +876,13 @@ public class AttacksPart1 {
                     if (ticks == 38) {
                         defender.setDeltaMovement(defender.getLookAngle().scale(-2).multiply(1, 0, 1).add(0, 0.6, 0));
                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_WITHERBAZOOKA_SHOOT.get(), 3.0F, 1.0F);
-                        CameraShake.cameraShake(defender.level, defender.position(), 20, 0.05f, 0, 10);
+                        CameraShake.cameraShake(defender.level(), defender.position(), 20, 0.05f, 0, 10);
                         defender.setDiscardFriction(true);
 
-                        if (!defender.level.isClientSide) {
-                            SkullOfDoom skull = new SkullOfDoom(defender.level, defender, throwTo);
+                        if (!defender.level().isClientSide) {
+                            SkullOfDoom skull = new SkullOfDoom(defender.level(), defender, throwTo);
                             skull.setPos(defender.position().add(0, 1.5, 0));
-                            defender.level.addFreshEntity(skull);
+                            defender.level().addFreshEntity(skull);
                         }
                     }
                     if (ticks > 38) {
@@ -888,7 +890,7 @@ public class AttacksPart1 {
                             CustomExplosion.create(defender, defender.position().add(0, 0.3, 0), 4.0F, true, false);
                             defender.setDiscardFriction(false);
                             defender.attackTicks2 = 9999;
-                        } else if (!defender.getAnimationState().equals("witherbazooka_land") && defender.isOnGround()) {
+                        } else if (!defender.getAnimationState().equals("witherbazooka_land") && defender.onGround()) {
                             defender.setAnimationState("witherbazooka_land");
                             defender.attackTicks2 = 1;
                             defender.playSound(YESoundEvents.ENTITY_DEFENDER_WITHERBAZOOKA_END.get(), 2.0F, 1.0F);
@@ -922,9 +924,9 @@ public class AttacksPart1 {
                         BlockPos blockPos = new BlockPos(x + ((-14 + defender.getRandom().nextInt(28)) * 4), 0,
                                 z + ((-14 + defender.getRandom().nextInt(28)) * 4));
 
-                        Icicle icicle = new Icicle(defender.level, defender, thereTo, blockPos);
+                        Icicle icicle = new Icicle(defender.level(), defender, thereTo, blockPos);
                         icicle.setTimer(80 + (defender.getRandom().nextInt(8) * 20));
-                        defender.level.addFreshEntity(icicle);
+                        defender.level().addFreshEntity(icicle);
                     }
                     if (ticks > 23 && ticks <= 33) {
                         f = (float)(Mth.wrapDegrees(defender.yBodyRot + 195.0f) * (Math.PI / 180F));
@@ -944,14 +946,14 @@ public class AttacksPart1 {
                         BlockPos blockPos = new BlockPos(x + ((-7 + defender.getRandom().nextInt(14)) * 3), 0,
                                 z + ((-7 + defender.getRandom().nextInt(14)) * 3));
 
-                        Icicle icicle = new Icicle(defender.level, defender, thereTo, blockPos);
+                        Icicle icicle = new Icicle(defender.level(), defender, thereTo, blockPos);
                         if (target != null) icicle.setDelayAndTarget(ticks - 23, target);
                         icicle.setTimer(30);
-                        defender.level.addFreshEntity(icicle);
+                        defender.level().addFreshEntity(icicle);
                     }
                     if (ticks == 37) {
                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_ICETHROWER_MURDERHEADPHONEUSERS.get(), 3.0F, 1.0F);
-                        CameraShake.cameraShake(defender.level, defender.position(), 50, 0.15f, 8, 5);
+                        CameraShake.cameraShake(defender.level(), defender.position(), 50, 0.15f, 8, 5);
                     }
                     if (ticks >= 37 && ticks <= 47) {
                         for (int i = 0; i < 20; ++i) {
@@ -972,8 +974,8 @@ public class AttacksPart1 {
                             BlockPos blockPos = new BlockPos(x + ((-16 + defender.getRandom().nextInt(32)) * 3), 0,
                                     z + ((-16 + defender.getRandom().nextInt(32)) * 3));
 
-                            Icicle icicle = new Icicle(defender.level, defender, thereTo, blockPos);
-                            defender.level.addFreshEntity(icicle);
+                            Icicle icicle = new Icicle(defender.level(), defender, thereTo, blockPos);
+                            defender.level().addFreshEntity(icicle);
                         }
                     }
                 }
@@ -1005,31 +1007,31 @@ public class AttacksPart1 {
                     );
 
                     for (int i = 0; i < 20; ++i) {
-                        EntityUtil.makeAParticle(defender.level, ParticleTypes.FLAME, true, thereTo.add(defender.getLookAngle().multiply(1, 0, 1).scale(0.5)).add(((-0.5d + defender.getRandom().nextDouble()) * 0.6d), 0, ((-0.5d + defender.getRandom().nextDouble()) * 0.6d)), new Vec3(0, 0.25 + defender.getRandom().nextFloat(), 0));
+                        EntityUtil.makeAParticle(defender.level(), ParticleTypes.FLAME, true, thereTo.add(defender.getLookAngle().multiply(1, 0, 1).scale(0.5)).add(((-0.5d + defender.getRandom().nextDouble()) * 0.6d), 0, ((-0.5d + defender.getRandom().nextDouble()) * 0.6d)), new Vec3(0, 0.25 + defender.getRandom().nextFloat(), 0));
                     }
                 }
                 if (defender.deathAttackTicks == 32) defender.setWeaponToShow(16);
                 if (defender.deathAttackTicks == 43 || defender.deathAttackTicks == 52) {
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_FLAMETHROWER_WING.get(), 3.0F, 1.0F);
-                    CameraShake.cameraShake(defender.level, defender.position(), 50, 0.2f, 0, 10);
+                    CameraShake.cameraShake(defender.level(), defender.position(), 50, 0.2f, 0, 10);
                 }
 
                 if (defender.deathAttackTicks >= 70 && defender.deathAttackTicks <= 86) {
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_EARTH_RUMBLE.get(), 3.0F, defender.getVoicePitch());
-                    CameraShake.cameraShake(defender.level, defender.position(), 50, 0.02f, 0, 15);
+                    CameraShake.cameraShake(defender.level(), defender.position(), 50, 0.02f, 0, 15);
                 }
                 if (defender.deathAttackTicks == 87) {
                     defender.playSound(YESoundEvents.ENTITY_DEFENDER_FLAMETHROWER_START.get(), 5.0F, 1.0F);
-                    CameraShake.cameraShake(defender.level, defender.position(), 50, 0.1f, 0, 20);
+                    CameraShake.cameraShake(defender.level(), defender.position(), 50, 0.1f, 0, 20);
                     for (int i = 0; i < 5; i++) {
                         double mult = i - 2;
                         Vec3 spawnAt = new Vec3(f1 * mult, -0.5d, f2 * mult);
 
-                        for (int i1 = 0; i1 < 40; i1++) EntityUtil.makeAParticle(defender.level, ParticleTypes.LARGE_SMOKE, true, defender.position().add(0, 0.5, 0).add(spawnAt).add(defender.getLookAngle().scale(-1).multiply(1, 0, 1)), new Vec3(0, (-0.5f + defender.getRandom().nextFloat()) * 5.0f, 0));
-                        for (int i1 = 0; i1 < 40; i1++) EntityUtil.makeAParticle(defender.level, ParticleTypes.FLAME, true, defender.position().add(0, 0.5, 0).add(spawnAt).add(defender.getLookAngle().scale(-1).multiply(1, 0, 1)), new Vec3(0, (-0.5f + defender.getRandom().nextFloat()) * 5.0f, 0));
+                        for (int i1 = 0; i1 < 40; i1++) EntityUtil.makeAParticle(defender.level(), ParticleTypes.LARGE_SMOKE, true, defender.position().add(0, 0.5, 0).add(spawnAt).add(defender.getLookAngle().scale(-1).multiply(1, 0, 1)), new Vec3(0, (-0.5f + defender.getRandom().nextFloat()) * 5.0f, 0));
+                        for (int i1 = 0; i1 < 40; i1++) EntityUtil.makeAParticle(defender.level(), ParticleTypes.FLAME, true, defender.position().add(0, 0.5, 0).add(spawnAt).add(defender.getLookAngle().scale(-1).multiply(1, 0, 1)), new Vec3(0, (-0.5f + defender.getRandom().nextFloat()) * 5.0f, 0));
                     }
                 }
-                if (defender.deathAttackTicks == 88 && !defender.level.isClientSide) defender.setInvisible(true);
+                if (defender.deathAttackTicks == 88 && !defender.level().isClientSide) defender.setInvisible(true);
 
                 if (defender.deathAttackTicks <= 120 && target != null) defender.lookAtWhileDead(target, 100.0F, 0.0F);
 
@@ -1059,13 +1061,13 @@ public class AttacksPart1 {
                             y = target.getY();
                         }
 
-                        if (!defender.level.isClientSide) {
+                        if (!defender.level().isClientSide) {
                             defender.hasImpulse = true;
                             defender.teleportTo(teleportLocation.x, y + 6, teleportLocation.z);
                         }
                     }
                     if (bigBallTimes.contains(defender.deathAttackTicks)) {
-                        if (!defender.level.isClientSide) defender.setInvisible(false);
+                        if (!defender.level().isClientSide) defender.setInvisible(false);
 
                         Vec3 throwTo = defender.getLookAngle().scale(10.0d).subtract(0, 20, 0);
                         defender.setSpecialLookLocation(defender.position().add(throwTo));
@@ -1078,27 +1080,27 @@ public class AttacksPart1 {
 
                         defender.setAnimationState("flamethrower_big");
 
-                        if (!defender.level.isClientSide) {
-                            Fireball fireball = new Fireball(defender.level, defender, defender.position().add(0, 8, 0), throwTo);
+                        if (!defender.level().isClientSide) {
+                            Fireball fireball = new Fireball(defender.level(), defender, defender.position().add(0, 8, 0), throwTo);
                             fireball.setShouldFlash(true);
                             fireball.setSize(3);
                             fireball.defenderYeet = true;
                             fireball.wasHit = true;
-                            defender.level.addFreshEntity(fireball);
+                            defender.level().addFreshEntity(fireball);
                         }
                     }
                     if (bigBallHandleEffects.contains(defender.deathAttackTicks)) {
                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_FLAMETHROWER_VANISH.get(), 5.0F, defender.getVoicePitch());
                         for (int i = 0; i < 50; i++) {
-                            EntityUtil.makeAParticle(defender.level, ParticleTypes.FLAME, true, defender.getBoundingBox().getCenter(), new Vec3(0, -0.5f + defender.getRandom().nextFloat(), 0));
+                            EntityUtil.makeAParticle(defender.level(), ParticleTypes.FLAME, true, defender.getBoundingBox().getCenter(), new Vec3(0, -0.5f + defender.getRandom().nextFloat(), 0));
                         }
-                        EntityUtil.makeAParticle(defender.level, ParticleTypes.EXPLOSION, true, defender.getBoundingBox().getCenter(), Vec3.ZERO);
+                        EntityUtil.makeAParticle(defender.level(), ParticleTypes.EXPLOSION, true, defender.getBoundingBox().getCenter(), Vec3.ZERO);
                     }
                     if (bigBallFinallyDisappear.contains(defender.deathAttackTicks)) {
                         defender.setAnimationState("none");
                         defender.setSpecialLookLocation(Vec3.ZERO);
                         defender.setPos(defender.position().subtract(0, 6, 0));
-                        if (!defender.level.isClientSide) defender.setInvisible(true);
+                        if (!defender.level().isClientSide) defender.setInvisible(true);
                     }
 
                     // Row
@@ -1134,35 +1136,35 @@ public class AttacksPart1 {
                             }
                         }
 
-                        if (!defender.level.isClientSide) {
+                        if (!defender.level().isClientSide) {
                             defender.hasImpulse = true;
                             defender.teleportTo(teleportLocation.x, y + 10, teleportLocation.z);
                             defender.setDiscardFriction(true);
                         }
                     }
                     if (rowTimes.contains(defender.deathAttackTicks)) {
-                        defender.level.playSound(null, defender, YESoundEvents.ENTITY_DEFENDER_FLAMETHROWER_ROW.get(), defender.getSoundSource(), 5.0F, 1.0F);
+                        defender.level().playSound(null, defender, YESoundEvents.ENTITY_DEFENDER_FLAMETHROWER_ROW.get(), defender.getSoundSource(), 5.0F, 1.0F);
                         defender.setAnimationState("flamethrower_row");
 
-                        if (!defender.level.isClientSide) defender.setInvisible(false);
+                        if (!defender.level().isClientSide) defender.setInvisible(false);
 
-                        EntityUtil.makeAParticle(defender.level, ParticleTypes.EXPLOSION, true, defender.getBoundingBox().getCenter(), Vec3.ZERO);
-                        EntityUtil.makeCircleParticles(defender.level, defender.position().add(0, 1.5, 0), ParticleTypes.FLAME, true, 60, 1.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 0.25F);
+                        EntityUtil.makeAParticle(defender.level(), ParticleTypes.EXPLOSION, true, defender.getBoundingBox().getCenter(), Vec3.ZERO);
+                        EntityUtil.makeCircleParticles(defender.level(), defender.position().add(0, 1.5, 0), ParticleTypes.FLAME, true, 60, 1.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 0.25F);
                     }
                     if (defender.getAnimationState().equals("flamethrower_row")) {
                         defender.setDeltaMovement(defender.chargeX, 0, defender.chargeZ);
 
                         if (defender.deathAttackTicks % 5 == 0) {
                             defender.playSound(YESoundEvents.ENTITY_DEFENDER_FLAMETHROWER_SHOOT.get(), 2.0F, 1.0F);
-                            if (!defender.level.isClientSide) {
+                            if (!defender.level().isClientSide) {
                                 for (int i = 0; i < 2; i++) {
                                     double mult = 2.0d;
                                     int whichDirection = i == 0 ? 1 : -1;
                                     Vec3 throwTo = new Vec3(f1 * mult * whichDirection, -0.5d, f2 * mult * whichDirection);
 
-                                    Fireball fireball = new Fireball(defender.level, defender, defender.position().add(throwTo), throwTo);
+                                    Fireball fireball = new Fireball(defender.level(), defender, defender.position().add(throwTo), throwTo);
                                     fireball.setSize(2);
-                                    defender.level.addFreshEntity(fireball);
+                                    defender.level().addFreshEntity(fireball);
                                 }
                             }
                         }
@@ -1170,60 +1172,60 @@ public class AttacksPart1 {
                             double mult = i - 2;
                             Vec3 spawnAt = new Vec3(f1 * mult, -0.5d, f2 * mult);
 
-                            EntityUtil.makeAParticle(defender.level, ParticleTypes.LARGE_SMOKE, true, defender.position().add(spawnAt.add(0, 1.5, 0)).add(defender.getLookAngle().scale(-2).multiply(1, 0, 1)), defender.getLookAngle().scale(-1).multiply(1, 0, 1));
-                            if (!defender.level.isClientSide) {
-                                Fireball fireball = new Fireball(defender.level, defender, defender.position().add(spawnAt), new Vec3(0, -0.01, 0));
+                            EntityUtil.makeAParticle(defender.level(), ParticleTypes.LARGE_SMOKE, true, defender.position().add(spawnAt.add(0, 1.5, 0)).add(defender.getLookAngle().scale(-2).multiply(1, 0, 1)), defender.getLookAngle().scale(-1).multiply(1, 0, 1));
+                            if (!defender.level().isClientSide) {
+                                Fireball fireball = new Fireball(defender.level(), defender, defender.position().add(spawnAt), new Vec3(0, -0.01, 0));
                                 fireball.setSize(1);
                                 fireball.wasHit = true;
-                                defender.level.addFreshEntity(fireball);
+                                defender.level().addFreshEntity(fireball);
                             }
                         }
                     }
                     if (rowDisappear.contains(defender.deathAttackTicks) || (defender.getAnimationState().equals("flamethrower_row") && defender.horizontalCollision)) {
                         defender.playSound(YESoundEvents.ENTITY_DEFENDER_FLAMETHROWER_VANISH.get(), 5.0F, defender.getVoicePitch());
-                        EntityUtil.makeAParticle(defender.level, ParticleTypes.EXPLOSION, true, defender.getBoundingBox().getCenter(), Vec3.ZERO);
-                        EntityUtil.makeCircleParticles(defender.level, defender.position().add(0, 1.5, 0), ParticleTypes.FLAME, true, 60, 1.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 0.25F);
+                        EntityUtil.makeAParticle(defender.level(), ParticleTypes.EXPLOSION, true, defender.getBoundingBox().getCenter(), Vec3.ZERO);
+                        EntityUtil.makeCircleParticles(defender.level(), defender.position().add(0, 1.5, 0), ParticleTypes.FLAME, true, 60, 1.5f, new Vec3(90.0f, -defender.getYRot(), 0.0f), 0.25F);
 
                         defender.setAnimationState("none");
                         defender.setDiscardFriction(false);
                         defender.setCharge(Vec3.ZERO);
                         defender.setForcedDirection(0);
                         if (target != null) defender.setPos(target.position().add(0, 3, 0));
-                        if (!defender.level.isClientSide) defender.setInvisible(true);
+                        if (!defender.level().isClientSide) defender.setInvisible(true);
                     }
                 }
                 if (defender.deathAttackTicks == 600) {
                     Vec3 landingPosition = target != null ? target.position().add(target.getLookAngle().scale(16.0D).multiply(1, 0, 1)) : defender.position();
-                    BlockPos.MutableBlockPos yPosition = new BlockPos.MutableBlockPos(landingPosition.x, landingPosition.y + defender.level.getMaxBuildHeight(), landingPosition.z);
-                    while (yPosition.getY() > defender.level.getMinBuildHeight() && !defender.level.getBlockState(yPosition).getMaterial().blocksMotion()) {
+                    BlockPos.MutableBlockPos yPosition = new BlockPos.MutableBlockPos(landingPosition.x, landingPosition.y + defender.level().getMaxBuildHeight(), landingPosition.z);
+                    while (yPosition.getY() > defender.level().getMinBuildHeight() && !defender.level().getBlockState(yPosition).blocksMotion()) {
                         yPosition.move(Direction.DOWN);
                     }
 
-                    if (!defender.level.isClientSide) defender.teleportTo(landingPosition.x, yPosition.getY() + 1, landingPosition.z);
+                    if (!defender.level().isClientSide) defender.teleportTo(landingPosition.x, yPosition.getY() + 1, landingPosition.z);
                 }
                 if (defender.deathAttackTicks >= 605) {
                     defender.setDeltaMovement(0, -1, 0);
                     if (target != null) defender.setSpecialLookLocation(target.position().add(0, target.getEyeHeight(), 0));
                 }
                 if (defender.deathAttackTicks == 605) {
-                    if (!defender.level.isClientSide) defender.setInvisible(false);
+                    if (!defender.level().isClientSide) defender.setInvisible(false);
                     defender.setAnimationState("flamethrower_end");
                 }
                 if (defender.deathAttackTicks == 607) {
                     defender.playSound(YESoundEvents.HUGE_SLAM.get(), 4.0F, 1.0F);
-                    CameraShake.cameraShake(defender.level, defender.position(), 80, 0.2f, 0, 30);
-                    EntityUtil.makeCircleParticles(defender.level, defender.position().add(0, 0.3, 0), ParticleTypes.FLAME, false, 50, 0.7F, Vec3.ZERO, 0.0F);
-                    EntityUtil.makeCircleParticles(defender.level, defender.position().add(0, 0.3, 0), ParticleTypes.LARGE_SMOKE, false, 70, 1.0F, Vec3.ZERO, 0.0F);
+                    CameraShake.cameraShake(defender.level(), defender.position(), 80, 0.2f, 0, 30);
+                    EntityUtil.makeCircleParticles(defender.level(), defender.position().add(0, 0.3, 0), ParticleTypes.FLAME, false, 50, 0.7F, Vec3.ZERO, 0.0F);
+                    EntityUtil.makeCircleParticles(defender.level(), defender.position().add(0, 0.3, 0), ParticleTypes.LARGE_SMOKE, false, 70, 1.0F, Vec3.ZERO, 0.0F);
                     defender.setSecondHat(defender.getPhaseLimit() > 2 ? 3 : 0);
 
-                    for (LivingEntity entity : defender.level.getEntitiesOfClass(LivingEntity.class, defender.getBoundingBox().inflate(15.0F), p -> p.isAlive() && EntityUtil.canHurtThisMob(p, defender))) {
+                    for (LivingEntity entity : defender.level().getEntitiesOfClass(LivingEntity.class, defender.getBoundingBox().inflate(15.0F), p -> p.isAlive() && EntityUtil.canHurtThisMob(p, defender))) {
                         double x = defender.getX() - entity.getX();
                         double y = defender.getY() - entity.getY();
                         double z = defender.getZ() - entity.getZ();
                         double d = Math.sqrt(x * x + y * y + z * z);
                         if (defender.distanceTo(entity) < 3.0D) {
                             defender.playSound(YESoundEvents.ENTITY_DEFENDER_BOOMERANG_HIT.get(), 2.0F, defender.getVoicePitch());
-                            entity.hurt(DamageSource.mobAttack(defender), 30.0F);
+                            entity.hurt(defender.damageSources().mobAttack(defender), 30.0F);
                             entity.hurtMarked = true;
                             entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 2.5D, (-y / d * 0.4D) + 0.8D, -z / d * 2.5D));
                         }
@@ -1243,8 +1245,8 @@ public class AttacksPart1 {
     }
 
     protected static void throwSentry(Defender defender, Vec3 whereTo) {
-        if (!defender.level.isClientSide) {
-            SentryGun iGaveBirth = new SentryGun(YEEntityTypes.SentryGun.get(), defender.level);
+        if (!defender.level().isClientSide) {
+            SentryGun iGaveBirth = new SentryGun(YEEntityTypes.SentryGun.get(), defender.level());
             iGaveBirth.moveTo(defender.position().add(0, 0.5, 0));
 
             double mult = 1.0d;
@@ -1260,13 +1262,13 @@ public class AttacksPart1 {
 
             iGaveBirth.setTarget(defender.getTarget());
 
-            if (defender.level instanceof ServerLevel serverLevel) iGaveBirth.finalizeSpawn(serverLevel, defender.level.getCurrentDifficultyAt(defender.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
+            if (defender.level() instanceof ServerLevel serverLevel) iGaveBirth.finalizeSpawn(serverLevel, defender.level().getCurrentDifficultyAt(defender.blockPosition()), MobSpawnType.REINFORCEMENT, (SpawnGroupData)null, (CompoundTag)null);
 
             if (defender.getTeam() != null) {
-                defender.level.getScoreboard().addPlayerToTeam(iGaveBirth.getStringUUID(),
-                        defender.level.getScoreboard().getPlayerTeam(defender.getTeam().getName()));
+                defender.level().getScoreboard().addPlayerToTeam(iGaveBirth.getStringUUID(),
+                        defender.level().getScoreboard().getPlayerTeam(defender.getTeam().getName()));
             }
-            defender.level.addFreshEntity(iGaveBirth);
+            defender.level().addFreshEntity(iGaveBirth);
         }
     }
 }

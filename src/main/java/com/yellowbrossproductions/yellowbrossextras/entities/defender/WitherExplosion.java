@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -62,7 +63,7 @@ public class WitherExplosion extends Entity {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return new ClientboundAddEntityPacket(this);
     }
 
@@ -77,9 +78,9 @@ public class WitherExplosion extends Entity {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        CameraShake.cameraShake(this.level, this.position(), 200, 0.04f, 40, 20);
+        CameraShake.cameraShake(this.level(), this.position(), 200, 0.04f, 40, 20);
 
-        if (!this.level.isClientSide && this.level instanceof ServerLevel serverLevel) {
+        if (!this.level().isClientSide && this.level() instanceof ServerLevel serverLevel) {
             double radius = 150.0;
 
             for (ServerPlayer player : serverLevel.players()) {
@@ -98,11 +99,11 @@ public class WitherExplosion extends Entity {
             }
         }
 
-        for (LivingEntity entity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(50.0d))) {
+        for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(50.0d))) {
             boolean allowedToDamage = true;
             if (this.owner != null) allowedToDamage = EntityUtil.canHurtThisMob(entity, this.owner) && entity != this.owner;
             if (allowedToDamage && entity.hasLineOfSight(this)) {
-                if (entity.hurt(DamageSource.explosion(this.owner), 50 * EntityUtil.multiplyToScrewArmor(entity, 0.3f))) {
+                if (entity.hurt(this.damageSources().explosion(this.owner, this), 50 * EntityUtil.multiplyToScrewArmor(entity, 0.3f))) {
                     double x = this.getX() - entity.getX();
                     double y = this.getY() - entity.getY();
                     double z = this.getZ() - entity.getZ();

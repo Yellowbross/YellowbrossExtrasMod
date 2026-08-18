@@ -23,7 +23,7 @@ import java.util.List;
 public class MobRemoverItemBase extends Item {
 
     public MobRemoverItemBase() {
-        super(new Properties().tab(YellowbrossExtras.YELLOWBROSSEXTRAS_GROUP));
+        super(new Properties());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class MobRemoverItemBase extends Item {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity instanceof YextrasEntity) {
-            if (!entity.level.isClientSide) {
+            if (!entity.level().isClientSide) {
                 entity.discard();
             }
             return true;

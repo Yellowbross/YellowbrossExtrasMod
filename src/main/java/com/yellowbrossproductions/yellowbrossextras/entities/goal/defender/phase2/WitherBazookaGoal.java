@@ -14,7 +14,7 @@ public class WitherBazookaGoal extends CustomAttackGoal {
 
     @Override
     public boolean canUse() {
-        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_witherbazooka < 1 && getDefender().getPhase() == 2 && getDefender().getTarget().isOnGround();
+        return doesAttackMeetNormalRequirements() && getRandom().nextInt(16) == 0 && getDefender().cooldown_witherbazooka < 1 && getDefender().getPhase() == 2 && getDefender().getTarget().onGround();
     }
 
     @Override

@@ -32,6 +32,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -283,7 +285,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                 this.setAnimationState("spikes_land");
                 this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 3.0F, 0.7F);
                 this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 3.0F, 1.0F);
-                if (!this.level.isClientSide) {
+                if (!this.level().isClientSide) {
                     CustomExplosion.create(this, this.position().add(0, 0.3, 0), 6.0F, true, true);
                     CustomExplosion.create(this, this.position().add(0, 0.3, 0), 3.0F, true, false);
                     CustomExplosion.create(this, this.position().add(0, 0.3, 0), 3.0F, true, false);
@@ -291,7 +293,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                 this.performSpellCasting(true);
                 int thing = 2;
                 this.performSpellCasting2(thing);
-                CameraShake.cameraShake(this.level, position(), 50, 0.3f, 0, 10);
+                CameraShake.cameraShake(this.level(), position(), 50, 0.3f, 0, 10);
                 this.makeSpikeParticles();
                 // this.fireCircleProjectiles(this.level, this, 10, 0.4D, 1.0F);
                 this.jumpTicks = 20;
@@ -303,7 +305,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             if (this.attackType == attack_claws) {
                 if (this.clawsTarget != null) {
                     if (this.distanceToSqr(this.clawsTarget) < 7.5D) {
-                        if (this.clawsTarget.hurt(DamageSource.mobAttack(this), 10.0F)) {
+                        if (this.clawsTarget.hurt(this.damageSources().mobAttack(this), 10.0F)) {
                             clawsPunchTimer = 13;
                             double x = this.getX() - this.clawsTarget.getX();
                             double y = this.getY() - this.clawsTarget.getY();
@@ -312,7 +314,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
                             this.setAnimationState("claws_punch");
                             this.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, 0.8F);
-                            CameraShake.cameraShake(this.level, position(), 30, 0.1f, 0, 15);
+                            CameraShake.cameraShake(this.level(), position(), 30, 0.1f, 0, 15);
                             this.playSound(YESoundEvents.ENTITY_DEFENDER_SMACK.get(), 2.0F, this.getVoicePitch());
                             this.clawsTarget.invulnerableTime = 0;
                             this.clawsTarget.hurtMarked = true;
@@ -329,7 +331,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             this.jumpAttacking = false;
             if (this.shouldDiscardFriction()) {
                 this.playSound(YESoundEvents.ENTITY_DEFENDER_CRASH.get(), 2.0F, 1.0F);
-                for (Entity entity : this.level.getEntities(this, this.getBoundingBox().inflate(15.0F))) {
+                for (Entity entity : this.level().getEntities(this, this.getBoundingBox().inflate(15.0F))) {
                     if (EntityUtil.canHurtThisMob(entity, this) && entity instanceof LivingEntity && entity.isAlive()) {
                         double x = this.getX() - entity.getX();
                         double y = this.getY() - entity.getY();
@@ -337,14 +339,14 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                         double d = Math.sqrt(x * x + y * y + z * z);
                         if (this.distanceTo(entity) < 10.0D) {
                             this.playSound(YESoundEvents.ENTITY_DEFENDER_SWORD_HIT.get(), 2.0F, this.getVoicePitch());
-                            entity.hurt(DamageSource.mobAttack(this), 20.0f * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.5f));
+                            entity.hurt(this.damageSources().mobAttack(this), 20.0f * EntityUtil.multiplyToScrewArmor((LivingEntity) entity, 0.5f));
                             entity.hurtMarked = true;
                             entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 3.5D, (-y / d * 0.4D) + 0.75D, -z / d * 3.5D));
                         }
                     }
                 }
-                CameraShake.cameraShake(this.level, position(), 20, 0.1f, 0, 15);
-                EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4d, 0), ParticleTypes.LARGE_SMOKE, false, 30, 1.0F, Vec3.ZERO, 0.0F);
+                CameraShake.cameraShake(this.level(), position(), 20, 0.1f, 0, 15);
+                EntityUtil.makeCircleParticles(this.level(), this.getPosition(0).add(0, 0.4d, 0), ParticleTypes.LARGE_SMOKE, false, 30, 1.0F, Vec3.ZERO, 0.0F);
                 this.setDiscardFriction(false);
             }
         }
@@ -367,7 +369,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
     @Override
     public boolean hasLineOfSight(Entity pEntity) {
-        if (pEntity.level != this.level) {
+        if (pEntity.level() != this.level()) {
             return false;
         } else {
             Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
@@ -381,7 +383,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public boolean isInAttackSight(Entity pEntity) {
-        if (pEntity.level != this.level) {
+        if (pEntity.level() != this.level()) {
             return false;
         } else {
             Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
@@ -389,7 +391,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             if (vec31.distanceTo(vec3) > 128.0D) {
                 return false;
             } else {
-                return this.level.clip(new ClipContext(vec3, vec31, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS;
+                return this.level().clip(new ClipContext(vec3, vec31, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS;
             }
         }
     }
@@ -410,7 +412,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
         if (this.getTarget() != null && this.getTarget().isAlive()) t = getTarget();
         else if (this.getLastHurtByMob() != null && this.getLastHurtByMob().isAlive() && EntityUtil.isMobNotInCreativeMode(this.getLastHurtByMob())) t = getLastHurtByMob();
         else {
-            List<Mob> list = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(40.0D), p -> {
+            List<Mob> list = this.level().getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(40.0D), p -> {
                 return p instanceof Enemy && EntityUtil.canHurtThisMob(p, this) && this.isInAttackSight(p) && p.isAlive();
             });
             if (!list.isEmpty()) t = list.get(0);
@@ -419,7 +421,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public void setFreakOutInModel(boolean input) {
-        if (!this.level.isClientSide) this.entityData.set(FREAKING_OUT_IN_MODEL, input);
+        if (!this.level().isClientSide) this.entityData.set(FREAKING_OUT_IN_MODEL, input);
     }
 
     public boolean isFreakingOutInModel() {
@@ -448,7 +450,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public void setForcedDirection(int direction) {
-        if (!this.level.isClientSide) this.entityData.set(FORCED_DIRECTION, direction);
+        if (!this.level().isClientSide) this.entityData.set(FORCED_DIRECTION, direction);
     }
 
     @Override
@@ -467,7 +469,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
         }
 
         if (this.getPhase() == 1 && this.deathAttackTicks < 1 && this.attackType == 0 && this.tickCount % 20 == 0) {
-            List<Entity> anySoulsNearby = this.level.getEntities(this, this.getBoundingBox().inflate(60.0D), p -> Objects.equals(p.getEncodeId(), nameToLookFor));
+            List<Entity> anySoulsNearby = this.level().getEntities(this, this.getBoundingBox().inflate(60.0D), p -> Objects.equals(p.getEncodeId(), nameToLookFor));
             if (!anySoulsNearby.isEmpty()) this.setVillagerSoul(anySoulsNearby.get(0));
         }
         if (this.jumpscareTicks > 0) this.jumpscareTicks += 1;
@@ -500,7 +502,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             this.attackTicks2 += 1;
         }
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (this.getTarget() instanceof Player player && player.isAlive()) {
                 if (this.isAlive() && this.deathAttackTicks < 1) {
                     this.musicTransTicks += 1;
@@ -608,10 +610,10 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                     }
 
                     if (this.deathAttackTicks == 91) {
-                        this.playSound(SoundEvents.UI_BUTTON_CLICK, 10000.0F, 1.0F);
-                        EntityUtil.broadcastMessage(this.level, Component.translatable("yellowbrossextras.defenderLeaveGame", this.getDisplayName()).withStyle(ChatFormatting.YELLOW));
-                        super.die(DamageSource.GENERIC);
-                        if (!this.level.isClientSide()) {
+                        this.playSound(SoundEvents.UI_BUTTON_CLICK.get(), 10000.0F, 1.0F);
+                        EntityUtil.broadcastMessage(this.level(), Component.translatable("yellowbrossextras.defenderLeaveGame", this.getDisplayName()).withStyle(ChatFormatting.YELLOW));
+                        super.die(this.damageSources().generic());
+                        if (!this.level().isClientSide()) {
                             this.remove(RemovalReason.KILLED);
                         }
                     }
@@ -634,7 +636,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
         this.frame++;
 
         if (this.tickCount % 20 == 1 && (this.getTarget() == null || !this.getTarget().isAlive() || this.getTarget().isRemoved()) && this.isAlive()) {
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 this.heal(4.0F);
             }
         }
@@ -674,7 +676,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
         int rand = this.random.nextInt(4);
         switch (rand) {
             case 1 -> {
-                Snowball projectile = EntityType.SNOWBALL.create(this.level);
+                Snowball projectile = EntityType.SNOWBALL.create(this.level());
                 assert projectile != null;
 
                 projectile.setOwner(this);
@@ -682,11 +684,11 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
                 projectile.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
-                this.level.addFreshEntity(projectile);
+                this.level().addFreshEntity(projectile);
                 this.playSound(SoundEvents.SNOWBALL_THROW, 2.0F, this.getVoicePitch());
             }
             case 2 -> {
-                ThrownTrident projectile = EntityType.TRIDENT.create(this.level);
+                ThrownTrident projectile = EntityType.TRIDENT.create(this.level());
                 assert projectile != null;
                 projectile.setCritArrow(true);
 
@@ -700,11 +702,11 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
                 projectile.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
-                this.level.addFreshEntity(projectile);
+                this.level().addFreshEntity(projectile);
                 this.playSound(SoundEvents.TRIDENT_THROW, 2.0F, this.getVoicePitch());
             }
             case 3 -> {
-                ThrownPotion projectile = new ThrownPotion(this.level, this);
+                ThrownPotion projectile = new ThrownPotion(this.level(), this);
 
                 projectile.setOwner(this);
 
@@ -714,7 +716,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
                 projectile.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
-                this.level.addFreshEntity(projectile);
+                this.level().addFreshEntity(projectile);
                 this.playSound(SoundEvents.WITCH_THROW, 2.0F, this.getVoicePitch());
             }
             default -> {
@@ -733,14 +735,14 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
                 projectile.setPos(this.getX(), this.getY() + (this.getBbHeight() / 2), this.getZ());
 
-                this.level.addFreshEntity(projectile);
+                this.level().addFreshEntity(projectile);
                 this.playSound(SoundEvents.ARROW_SHOOT, 2.0F, this.getVoicePitch());
             }
         }
     }
 
     public DefenderArrow getArrow(float enchantments) {
-        DefenderArrow abstractarrow = new DefenderArrow(this.level, this);
+        DefenderArrow abstractarrow = new DefenderArrow(this.level(), this);
         abstractarrow.setEnchantmentEffectsFromEntity(this, enchantments);
 
         return abstractarrow;
@@ -783,7 +785,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public void setImmediateTurn(boolean turn) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.entityData.set(SHOULD_IMMEDIATELY_TURN, turn);
         }
     }
@@ -793,7 +795,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public void setCustomRender(int turn) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.entityData.set(USING_CUSTOM_RENDER, turn);
         }
     }
@@ -836,7 +838,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
         double d2 = this.getZ() - vec3.z;
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
         float f1 = (float)((Mth.atan2(d1, d3) * 57.2957763671875D));
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.lerpChainsawX = this.rotlerp(this.getChainsawLookX(), f1, xMax);
             this.lerpChainsawSteps = steps;
         }
@@ -942,17 +944,17 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     private void createSpellEntity(double p_32673_, double p_32674_, double p_32675_, double p_32676_, float p_32677_, int p_32678_) {
-        BlockPos blockpos = new BlockPos(p_32673_, p_32676_, p_32674_);
+        BlockPos blockpos = BlockPos.containing(p_32673_, p_32676_, p_32674_);
         boolean flag = false;
         double d0 = 0.0D;
 
         do {
             BlockPos blockpos1 = blockpos.below();
-            BlockState blockstate = this.level.getBlockState(blockpos1);
-            if (blockstate.isFaceSturdy(this.level, blockpos1, Direction.UP)) {
-                if (!this.level.isEmptyBlock(blockpos)) {
-                    BlockState blockstate1 = this.level.getBlockState(blockpos);
-                    VoxelShape voxelshape = blockstate1.getCollisionShape(this.level, blockpos);
+            BlockState blockstate = this.level().getBlockState(blockpos1);
+            if (blockstate.isFaceSturdy(this.level(), blockpos1, Direction.UP)) {
+                if (!this.level().isEmptyBlock(blockpos)) {
+                    BlockState blockstate1 = this.level().getBlockState(blockpos);
+                    VoxelShape voxelshape = blockstate1.getCollisionShape(this.level(), blockpos);
                     if (!voxelshape.isEmpty()) {
                         d0 = voxelshape.max(Direction.Axis.Y);
                     }
@@ -966,23 +968,23 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
         } while(blockpos.getY() >= Mth.floor(p_32675_) - 1);
 
         if (flag) {
-            this.level.addFreshEntity(new Spike(this.level, p_32673_, (double)blockpos.getY() + d0, p_32674_, p_32677_, p_32678_, this));
+            this.level().addFreshEntity(new Spike(this.level(), p_32673_, (double)blockpos.getY() + d0, p_32674_, p_32677_, p_32678_, this));
         }
 
     }
 
     private void createSpikeWarnParticles(double p_190876_1_, double p_190876_3_, double p_190876_5_, double p_190876_7_, float p_190876_9_, int p_190876_10_) {
-        BlockPos blockpos = new BlockPos(p_190876_1_, p_190876_7_, p_190876_3_);
+        BlockPos blockpos = BlockPos.containing(p_190876_1_, p_190876_7_, p_190876_3_);
         boolean flag = false;
         double dthing = 0.5D;
 
         do {
             BlockPos blockpos1 = blockpos.below();
-            BlockState blockstate = level.getBlockState(blockpos1);
-            if (blockstate.isFaceSturdy(level, blockpos1, Direction.UP)) {
-                if (!level.isEmptyBlock(blockpos)) {
-                    BlockState blockstate1 = level.getBlockState(blockpos);
-                    VoxelShape voxelshape = blockstate1.getCollisionShape(level, blockpos);
+            BlockState blockstate = level().getBlockState(blockpos1);
+            if (blockstate.isFaceSturdy(level(), blockpos1, Direction.UP)) {
+                if (!level().isEmptyBlock(blockpos)) {
+                    BlockState blockstate1 = level().getBlockState(blockpos);
+                    VoxelShape voxelshape = blockstate1.getCollisionShape(level(), blockpos);
                     if (!voxelshape.isEmpty()) {
                         dthing = voxelshape.max(Direction.Axis.Y);
                     }
@@ -1000,7 +1002,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                 double d0 = (-0.5 + this.random.nextGaussian()) / 4;
                 double d1 = (-0.5 + this.random.nextGaussian()) / 4;
                 double d2 = (-0.5 + this.random.nextGaussian()) / 4;
-                EntityUtil.makeAParticle(this.level, ParticleTypes.ELECTRIC_SPARK, false, new Vec3(p_190876_1_ + 0.5F, (double)blockpos.getY() + dthing, p_190876_3_ + 0.5F), new Vec3(d0, d1, d2));
+                EntityUtil.makeAParticle(this.level(), ParticleTypes.ELECTRIC_SPARK, false, new Vec3(p_190876_1_ + 0.5F, (double)blockpos.getY() + dthing, p_190876_3_ + 0.5F), new Vec3(d0, d1, d2));
             }
         }
 
@@ -1017,7 +1019,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                 float vy = random.nextFloat() * 0.1F - 0.05f;
                 float vx = velocity * Mth.cos(yaw);
                 float vz = velocity * Mth.sin(yaw);
-                ConverslinBullet bullet = new ConverslinBullet(spawner.level, spawner, vx, vy, vz);
+                ConverslinBullet bullet = new ConverslinBullet(spawner.level(), spawner, vx, vy, vz);
 
                 bullet.setPos(spawner.getX(), spawner.getY() + y, spawner.getZ());
                 bullet.setOwner(spawner);
@@ -1091,7 +1093,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     private boolean killedByCommand(DamageSource damageSource, float value) {
-        if (damageSource != DamageSource.OUT_OF_WORLD) {
+        if (!damageSource.is(DamageTypes.GENERIC_KILL)) {
             return false;
         } else {
             return value >= 1000000000000.0F;
@@ -1145,7 +1147,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public void setWeaponToShow(int show) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.entityData.set(WEAPON_TO_SHOW, show);
         }
     }
@@ -1155,7 +1157,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public void setKilledByVoid(boolean killedByVoid) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.entityData.set(KILLED_BY_VOID, killedByVoid);
         }
     }
@@ -1165,7 +1167,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public void setHideAllHats(boolean hideAllHats) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.entityData.set(SHOULD_HIDE_ALL_HATS, hideAllHats);
         }
     }
@@ -1190,7 +1192,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     @Override
     public void die(DamageSource pDamageSource) {
         if (!this.wasKilledByVoid()) {
-            List<Mob> list = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(50.0D), p -> {
+            List<Mob> list = this.level().getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(50.0D), p -> {
                 return p instanceof Enemy && EntityUtil.canHurtThisMob(p, this);
             });
 
@@ -1213,7 +1215,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
     private void processDeath() {
         if (this.getPhase() != 0) {
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 this.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
             }
             if (this.lastHurtByPlayerTime > 0) {
@@ -1221,7 +1223,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             }
             this.deathAttackTicks = 1;
             this.playSound(YESoundEvents.ENTITY_DEFENDER_PHASE_ENDED.get(), 6.0F, 1.0F);
-            CameraShake.cameraShake(this.level, position(), 60, 0.3f, 0, 15);
+            CameraShake.cameraShake(this.level(), position(), 60, 0.3f, 0, 15);
             this.makePhaseEndParticles();
         }
         if (this.getPhase() == 1) {
@@ -1241,7 +1243,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             double d0 = (-0.5 + this.random.nextGaussian()) / 4;
             double d1 = (-0.5 + this.random.nextGaussian()) / 4;
             double d2 = (-0.5 + this.random.nextGaussian()) / 4;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.ANGRY_VILLAGER, false, new Vec3(
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.ANGRY_VILLAGER, false, new Vec3(
                     this.getRandomX(1.0D) + ((-0.5D + this.random.nextDouble()) * 2.5D),
                     this.getRandomY() + ((-0.5D + this.random.nextDouble()) * 1.5D),
                     this.getRandomZ(1.0D) + ((-0.5D + this.random.nextDouble()) * 2.5D)), new Vec3(d0, d1, d2));
@@ -1250,15 +1252,15 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
     public void makeExcaliburLandParticles() {
         for(int i = 0; i < 5; ++i) {
-            EntityUtil.makeAParticle(this.level, ParticleTypes.TOTEM_OF_UNDYING, false, new Vec3(
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.TOTEM_OF_UNDYING, false, new Vec3(
                     this.getRandomX(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D),
                     this.getRandomY() + ((-0.5D + this.random.nextDouble()) * 1.5D) + 2.4D,
                     this.getRandomZ(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D)), new Vec3(0.0D, 2.0D, 0.0D));
-            EntityUtil.makeAParticle(this.level, ParticleTypes.CRIT, false, new Vec3(
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.CRIT, false, new Vec3(
                     this.getRandomX(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D),
                     this.getRandomY() + ((-0.5D + this.random.nextDouble()) * 1.5D) + 2.4D,
                     this.getRandomZ(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D)), new Vec3(0.0D, 2.0D, 0.0D));
-            EntityUtil.makeAParticle(this.level, ParticleTypes.ELECTRIC_SPARK, false, new Vec3(
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.ELECTRIC_SPARK, false, new Vec3(
                     this.getRandomX(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D),
                     this.getRandomY() + ((-0.5D + this.random.nextDouble()) * 1.5D) + 2.4D,
                     this.getRandomZ(1.0D) + ((-0.5D + this.random.nextDouble()) * 1.5D)), new Vec3(0.0D, 2.0D, 0.0D));
@@ -1270,19 +1272,19 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             double d0 = (-0.5 + this.random.nextGaussian()) / 2;
             double d1 = (-0.5 + this.random.nextGaussian()) / 2;
             double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 200; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian()) / 2;
             double d1 = (-0.5 + this.random.nextGaussian()) / 2;
             double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 150; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian()) / 2;
             double d1 = (-0.5 + this.random.nextGaussian()) / 2;
             double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
     }
 
@@ -1316,23 +1318,23 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION_EMITTER, false, new Vec3(this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.EXPLOSION_EMITTER, false, new Vec3(this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
         }
     }
 
     public void makeSpikeParticles() {
-        EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4, 0), ParticleTypes.LARGE_SMOKE, false, 50, 1.0F, Vec3.ZERO, 0.0F);
+        EntityUtil.makeCircleParticles(this.level(), this.getPosition(0).add(0, 0.4, 0), ParticleTypes.LARGE_SMOKE, false, 50, 1.0F, Vec3.ZERO, 0.0F);
         for(int i = 0; i < 100; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 100; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getX(), this.getY() + this.getEyeHeight(), this.getZ()), new Vec3(d0, d1, d2));
         }
     }
 
@@ -1341,7 +1343,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.CRIT, false, new Vec3(this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.CRIT, false, new Vec3(this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
         }
     }
 
@@ -1350,7 +1352,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(caught.getRandomX(0.5D), caught.getRandomY(), caught.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.POOF, false, new Vec3(caught.getRandomX(0.5D), caught.getRandomY(), caught.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
         }
     }
 
@@ -1359,7 +1361,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(0.5D), this.getY() + 1.0D, this.getRandomZ(0.5D)), new Vec3(d0, 0.0D, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.POOF, false, new Vec3(this.getRandomX(0.5D), this.getY() + 1.0D, this.getRandomZ(0.5D)), new Vec3(d0, 0.0D, d2));
         }
     }
 
@@ -1429,7 +1431,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public void setSecondHat(int phase) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.entityData.set(SECOND_HAT, phase);
         }
     }
@@ -1439,7 +1441,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public void setShakeMultiplier(int shake) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.entityData.set(SHAKE_MULTIPLIER, shake);
         }
     }
@@ -1449,7 +1451,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public void setStretch(float stretch) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.entityData.set(STRETCH, stretch);
         }
     }
@@ -1480,7 +1482,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
             return doesJumpMeetNormalRequirements()
                     && getTarget() != null
                     && ((distanceTo(getTarget()) < 10.0D && random.nextInt(howShouldDefenderApproachHisTarget() == 2 ? 4 : 16) == 0) || ((damageTaken >= 30.0F || (howShouldDefenderApproachHisTarget() == 2 && Defender.this.horizontalCollision))) && distanceTo(getTarget()) < 14.0D)
-                    && isOnGround()
+                    && onGround()
                     && shouldJumpAway(getTarget());
         }
 
@@ -1495,7 +1497,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
         @Override
         public boolean canContinueToUse() {
-            return attackTicks <= 12 || (!isOnGround() && !isInWater());
+            return attackTicks <= 12 || (!onGround() && !isInWater());
         }
 
         @Override
@@ -1508,7 +1510,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public boolean doesAttackMeetNormalRequirements() {
-        return this.attackType == 0 && this.getTarget() != null && this.isInAttackSight(this.getTarget()) && this.getTarget().isAlive() && !((this.damageTaken >= 30.0F) && this.isOnGround()) && !this.isRemoved() && this.deathAttackTicks <= 0;
+        return this.attackType == 0 && this.getTarget() != null && this.isInAttackSight(this.getTarget()) && this.getTarget().isAlive() && !((this.damageTaken >= 30.0F) && this.onGround()) && !this.isRemoved() && this.deathAttackTicks <= 0;
     }
 
     class DefeatedGoal extends Goal {
@@ -1545,7 +1547,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public void setChainsawLookX(float amount) {
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             this.entityData.set(CHAINSAW_LOOK_X, amount);
         }
     }

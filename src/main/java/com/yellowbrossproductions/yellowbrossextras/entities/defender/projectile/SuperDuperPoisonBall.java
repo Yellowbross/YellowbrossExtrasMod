@@ -6,6 +6,7 @@ import com.yellowbrossproductions.yellowbrossextras.init.*;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -47,8 +48,8 @@ public class SuperDuperPoisonBall extends CustomAbstractHurtingProjectile implem
 
     protected void onHit(HitResult pResult) {
         super.onHit(pResult);
-        if (!this.level.isClientSide) {
-            this.level.broadcastEntityEvent(this, (byte)3);
+        if (!this.level().isClientSide) {
+            this.level().broadcastEntityEvent(this, (byte)3);
             this.explode(2.0D);
             this.discard();
         }
@@ -60,11 +61,11 @@ public class SuperDuperPoisonBall extends CustomAbstractHurtingProjectile implem
     }
 
     private void explode(double size) {
-        List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level, size, this, Entity::isAlive);
+        List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level(), size, this, Entity::isAlive);
 
         boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
         this.playSound(YESoundEvents.SUPERDUPERPOISON_NOSCREAM.get(), 1.0F, 1.0F);
-        EntityUtil.makeAParticle(this.level, YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, this.position(), Vec3.ZERO);
+        EntityUtil.makeAParticle(this.level(), YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, this.position(), Vec3.ZERO);
         for (Entity entity : list) {
             if (entity instanceof LivingEntity living) {
                 boolean team = true;
@@ -76,7 +77,7 @@ public class SuperDuperPoisonBall extends CustomAbstractHurtingProjectile implem
                 }
             }
         }
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.discard();
         }
     }
@@ -86,8 +87,8 @@ public class SuperDuperPoisonBall extends CustomAbstractHurtingProjectile implem
         super.tick();
 
         if (this.tickCount > 80) {
-            if (!this.level.isClientSide) {
-                this.level.broadcastEntityEvent(this, (byte)3);
+            if (!this.level().isClientSide) {
+                this.level().broadcastEntityEvent(this, (byte)3);
                 this.explode(2.0D);
                 this.discard();
             }
@@ -101,7 +102,7 @@ public class SuperDuperPoisonBall extends CustomAbstractHurtingProjectile implem
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if (pSource == DamageSource.OUT_OF_WORLD) {
+        if (pSource.is(DamageTypes.GENERIC_KILL)) {
             return super.hurt(pSource, pAmount);
         }
         return false;

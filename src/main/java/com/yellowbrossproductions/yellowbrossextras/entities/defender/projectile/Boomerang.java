@@ -9,7 +9,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -45,7 +45,7 @@ public class Boomerang extends PathfinderMob implements MobAttack {
 
     @Override
     public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource bullcrap) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.discard();
         }
         return false;
@@ -63,22 +63,16 @@ public class Boomerang extends PathfinderMob implements MobAttack {
 
         Mob attacker = this.shooter != null ? this.shooter : this;
 
-        List<Entity> checkList = EntityUtil.getEntitiesFromAABB(this.level, 0.4d, this,
+        List<Entity> checkList = EntityUtil.getEntitiesFromAABB(this.level(), 0.4d, this,
                 predicate -> predicate.isAlive() && !predicate.isRemoved() && predicate instanceof LivingEntity living && EntityUtil.canHurtThisMob(living, attacker) && predicate != attacker && predicate != this);
         if (!checkList.isEmpty()) {
-            List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level, 3.0d, this,
+            List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level(), 3.0d, this,
                     predicate -> predicate.isAlive() && !predicate.isRemoved() && predicate instanceof LivingEntity living && EntityUtil.canHurtThisMob(living, attacker) && predicate != attacker && predicate != this);
             for (Entity entity : list) {
                 LivingEntity living = (LivingEntity) entity;
 
                 if (!entity.isInvulnerable() && !entity.isSpectator()) {
-                    DamageSource damageSource = new IndirectEntityDamageSource("thrown", this, this.shooter){
-                        @Nullable
-                        @Override
-                        public Vec3 getSourcePosition() {
-                            return null;
-                        }
-                    }.setProjectile();
+                    DamageSource damageSource = this.damageSources().thrown(this, this.shooter);
                     boolean flag = living.hurt(damageSource, 4.0F);
                     if (flag) {
                         this.playSound(YESoundEvents.ENTITY_DEFENDER_BOOMERANG_HIT.get(), 2.0F, this.getVoicePitch());
@@ -118,7 +112,7 @@ public class Boomerang extends PathfinderMob implements MobAttack {
             this.setAcceleration(motionX, motionY, motionZ);
 
             if (this.distanceToSqr(entity) < 6.0D) {
-                if (!this.level.isClientSide) {
+                if (!this.level().isClientSide) {
                     this.discard();
                 }
             }
@@ -141,7 +135,7 @@ public class Boomerang extends PathfinderMob implements MobAttack {
                 }
             } else {
                 LivingEntity t = null;
-                List<Mob> attacklist = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(40.0D), p -> {
+                List<Mob> attacklist = this.level().getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(40.0D), p -> {
                     return p instanceof Enemy && EntityUtil.canHurtThisMob(p, this) && !p.hasEffect(YEEffects.KNOCKED_OUT.get()) && p.isAlive() && !p.isRemoved();
                 });
                 if (!attacklist.isEmpty()) {
@@ -186,7 +180,7 @@ public class Boomerang extends PathfinderMob implements MobAttack {
         }
 
         if (this.tickCount >= 240) {
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 this.discard();
             }
         }
@@ -211,7 +205,7 @@ public class Boomerang extends PathfinderMob implements MobAttack {
     @Override
     public void kill() {
         super.kill();
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.discard();
         }
     }
@@ -235,7 +229,7 @@ public class Boomerang extends PathfinderMob implements MobAttack {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.CRIT, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.CRIT, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
     }
 
@@ -244,13 +238,13 @@ public class Boomerang extends PathfinderMob implements MobAttack {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.CRIT, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.CRIT, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 6; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.EXPLOSION, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
     }
 
@@ -271,7 +265,7 @@ public class Boomerang extends PathfinderMob implements MobAttack {
         float f2 = Mth.cos(p_234612_3_ * ((float)Math.PI / 180F)) * Mth.cos(p_234612_2_ * ((float)Math.PI / 180F));
         this.shoot((double)f, (double)f1, (double)f2, p_234612_5_, p_234612_6_);
         Vec3 vector3d = pEntity.getDeltaMovement();
-        this.setDeltaMovement(this.getDeltaMovement().add(vector3d.x, pEntity.isOnGround() ? 0.0D : vector3d.y, vector3d.z));
+        this.setDeltaMovement(this.getDeltaMovement().add(vector3d.x, pEntity.onGround() ? 0.0D : vector3d.y, vector3d.z));
         this.accelerationX = this.getDeltaMovement().x;
         this.accelerationY = this.getDeltaMovement().y;
         this.accelerationZ = this.getDeltaMovement().z;
@@ -301,7 +295,7 @@ public class Boomerang extends PathfinderMob implements MobAttack {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source != DamageSource.OUT_OF_WORLD) {
+        if (!source.is(DamageTypes.GENERIC_KILL)) {
             return false;
         } else {
             return super.hurt(source, amount);

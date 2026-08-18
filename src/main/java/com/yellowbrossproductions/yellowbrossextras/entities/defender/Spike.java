@@ -7,6 +7,7 @@ import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -53,8 +54,8 @@ public class Spike extends Entity implements MobAttack {
 
     @Nullable
     public LivingEntity getOwner() {
-        if (this.owner == null && this.ownerUUID != null && this.level instanceof ServerLevel) {
-            Entity entity = ((ServerLevel)this.level).getEntity(this.ownerUUID);
+        if (this.owner == null && this.ownerUUID != null && this.level() instanceof ServerLevel) {
+            Entity entity = ((ServerLevel) this.level()).getEntity(this.ownerUUID);
             if (entity instanceof LivingEntity) {
                 this.owner = (LivingEntity)entity;
             }
@@ -81,7 +82,7 @@ public class Spike extends Entity implements MobAttack {
 
     public void tick() {
         super.tick();
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             if (this.clientSideAttackStarted) {
                 --this.lifeTicks;
                 if (this.lifeTicks == 20) {
@@ -92,21 +93,21 @@ public class Spike extends Entity implements MobAttack {
                         double d3 = (this.random.nextDouble() * 2.0D - 1.0D) * 0.3D;
                         double d4 = 0.3D + this.random.nextDouble() * 0.3D + 2.0D;
                         double d5 = (this.random.nextDouble() * 2.0D - 1.0D) * 0.3D;
-                        this.level.addParticle(ParticleTypes.CRIT, d0, d1 + 1.0D, d2, d3, d4, d5);
+                        this.level().addParticle(ParticleTypes.CRIT, d0, d1 + 1.0D, d2, d3, d4, d5);
                     }
                 }
             }
         } else if (--this.warmupDelayTicks < 0) {
             if (this.warmupDelayTicks > -8) {
-                for(LivingEntity livingentity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox())) {
+                for(LivingEntity livingentity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox())) {
                     this.dealDamageTo(livingentity);
                 }
             }
 
             if (!this.sentSpikeEvent) {
-                this.level.broadcastEntityEvent(this, (byte)4);
+                this.level().broadcastEntityEvent(this, (byte)4);
                 this.sentSpikeEvent = true;
-                CameraShake.cameraShake(this.level, position(), 5, 0.2f, 0, 10);
+                CameraShake.cameraShake(this.level(), position(), 5, 0.2f, 0, 10);
             }
 
             if (--this.lifeTicks < 0) {
@@ -120,7 +121,7 @@ public class Spike extends Entity implements MobAttack {
         LivingEntity livingentity = this.getOwner();
         if (p_36945_.isAlive() && !p_36945_.isInvulnerable() && p_36945_ != livingentity) {
             if (livingentity == null) {
-                if (p_36945_.hurt(DamageSource.MAGIC, 10.0F)) {
+                if (p_36945_.hurt(this.damageSources().magic(), 10.0F)) {
                     p_36945_.hurtMarked = true;
                     p_36945_.setDeltaMovement(p_36945_.getDeltaMovement().add(0.0D, 0.5D, 0.0D));
                 }
@@ -129,7 +130,7 @@ public class Spike extends Entity implements MobAttack {
                     return;
                 }
 
-                if (p_36945_.hurt(DamageSource.indirectMagic(this, livingentity), 10.0F)) {
+                if (p_36945_.hurt(this.damageSources().indirectMagic(this, livingentity), 10.0F)) {
                     p_36945_.hurtMarked = true;
                     p_36945_.setDeltaMovement(p_36945_.getDeltaMovement().add(0.0D, 0.5D, 0.0D));
                 }
@@ -143,7 +144,7 @@ public class Spike extends Entity implements MobAttack {
         if (p_36935_ == 4) {
             this.clientSideAttackStarted = true;
             if (!this.isSilent()) {
-                this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), YESoundEvents.ENTITY_DEFENDER_SPIKE.get(), this.getSoundSource(), 2.0F, this.random.nextFloat() * 0.2F + 0.85F, false);
+                this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), YESoundEvents.ENTITY_DEFENDER_SPIKE.get(), this.getSoundSource(), 2.0F, this.random.nextFloat() * 0.2F + 0.85F, false);
             }
         }
 
@@ -158,7 +159,7 @@ public class Spike extends Entity implements MobAttack {
         }
     }
 
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return new ClientboundAddEntityPacket(this);
     }
 }

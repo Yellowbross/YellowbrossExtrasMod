@@ -7,6 +7,7 @@ import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -76,7 +77,7 @@ public class DefenderArrow extends AbstractArrow {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -102,7 +103,7 @@ public class DefenderArrow extends AbstractArrow {
                 break;
             }
             case 1 : {
-                if (hitRes.getEntity() instanceof LivingEntity living && !living.isBlocking() && !this.level.isClientSide) {
+                if (hitRes.getEntity() instanceof LivingEntity living && !living.isBlocking() && !this.level().isClientSide) {
                     MobEffectInstance effect = living.getEffect(YEEffects.SUPER_DUPER_POISON.get());
                     int i = 1;
                     if (effect != null) {
@@ -122,7 +123,7 @@ public class DefenderArrow extends AbstractArrow {
     }
 
     private void explode(double size) {
-        List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level, size, this, Entity::isAlive);
+        List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level(), size, this, Entity::isAlive);
 
         boolean shouldCareAboutTeams = this.getOwner() instanceof Mob;
         this.makeExplodeParticles();
@@ -133,7 +134,7 @@ public class DefenderArrow extends AbstractArrow {
                     team = EntityUtil.canHurtThisMob(living, (Mob) this.getOwner()) && entity != this.getOwner() && !(living instanceof IsDefenderAligned);
                 }
                 if (team && entity.isAlive() && !entity.isInvulnerable() && !entity.isSpectator()) {
-                    living.hurt(DamageSource.arrow(this, this.getOwner()), (float) this.getBaseDamage() * EntityUtil.multiplyToScrewArmor(living, 1.0f));
+                    living.hurt(this.damageSources().arrow(this, this.getOwner()), (float) this.getBaseDamage() * EntityUtil.multiplyToScrewArmor(living, 1.0f));
                 }
             }
         }
@@ -144,19 +145,19 @@ public class DefenderArrow extends AbstractArrow {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 3; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 1; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION_EMITTER, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.EXPLOSION_EMITTER, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
     }
 }

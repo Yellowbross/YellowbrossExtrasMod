@@ -170,5 +170,9 @@
   "command.yellowbrossextras.bunny_blitz.highlight_success": "Highlighted %s raiders",
   "command.yellowbrossextras.bunny_blitz.overall_fail": "There are no Bunny Blitzes active right now",
   "command.yellowbrossextras.bunny_blitz.skip_success": "Skipped to wave %s",
-  "command.yellowbrossextras.bunny_blitz.skip_fail": "There are no Bunny Blitzes active in that location"
+  "command.yellowbrossextras.bunny_blitz.skip_fail": "There are no Bunny Blitzes active in that location",
+
+  "death.attack.saw": "%1$s was sawed apart by %2$s",
+  "death.attack.excalibur": "%1$s was proven unworthy by %2$s",
+  "death.attack.vilvgaver": "%1$s vanished without a trace due to %2$s"
 }

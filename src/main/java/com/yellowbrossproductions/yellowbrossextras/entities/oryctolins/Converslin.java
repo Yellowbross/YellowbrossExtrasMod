@@ -110,7 +110,7 @@ public class Converslin extends AbstractOryctolin {
     @Override
     public boolean hasLineOfSight(Entity pEntity) {
         if (this.getFace() == 2) {
-            if (pEntity.level != this.level) {
+            if (pEntity.level() != this.level()) {
                 return false;
             } else {
                 Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
@@ -201,11 +201,11 @@ public class Converslin extends AbstractOryctolin {
                             double d3 = target.getZ() + (double)$$6 - z;
                             double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double)0.2F;
 
-                            ConverslinBullet bullet = new ConverslinBullet(this.level, this, d1, d2, d3);
+                            ConverslinBullet bullet = new ConverslinBullet(this.level(), this, d1, d2, d3);
 
                             bullet.setPos(x, y1, z);
                             bullet.setOwner(this);
-                            this.level.addFreshEntity(bullet);
+                            this.level().addFreshEntity(bullet);
                         }
                     }
                 }
@@ -226,7 +226,7 @@ public class Converslin extends AbstractOryctolin {
         float moveZ = (float) (this.getZ() - this.zo);
         float speed = Mth.sqrt(moveX * moveX + moveZ * moveZ);
         if (speed > 0.1) {
-            if (this.tickCount % 4 == 0 && this.isOnGround()) {
+            if (this.tickCount % 4 == 0 && this.onGround()) {
                 this.playSound(YESoundEvents.ENTITY_CONVERSLIN_STEP.get(), 0.25F, 1.0F);
             }
         }
@@ -275,11 +275,11 @@ public class Converslin extends AbstractOryctolin {
     }
 
     public void celebrateAnim() {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (!this.AHHHHHH && this.getTarget() == null) {
-                if (this.level instanceof ServerLevel) {
-                    if (((ServerLevel) this.level).getRaidAt(this.blockPosition()) != null) {
-                        Raid raid = ((ServerLevel) this.level).getRaidAt(this.blockPosition());
+                if (this.level() instanceof ServerLevel) {
+                    if (((ServerLevel) this.level()).getRaidAt(this.blockPosition()) != null) {
+                        Raid raid = ((ServerLevel) this.level()).getRaidAt(this.blockPosition());
                         assert raid != null;
                         if (raid.isVictory()) {
                             this.celebrating = raid.celebrationTicks < 580;
@@ -321,7 +321,7 @@ public class Converslin extends AbstractOryctolin {
     public boolean hurt(DamageSource pSource, float pAmount) {
         boolean soup = super.hurt(pSource, pAmount);
         if (soup) {
-            if (pSource.getEntity() instanceof LivingEntity entity && !this.level.isClientSide && !this.AHHHHHH) {
+            if (pSource.getEntity() instanceof LivingEntity entity && !this.level().isClientSide && !this.AHHHHHH) {
                 this.runAwayTimer = 300;
                 this.AHHHHHH = true;
                 this.runAwayFrom = entity;

@@ -55,15 +55,15 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
 
     @Override
     public void tick() {
-        if (!this.level.isClientSide) this.hurtMarked = true;
+        if (!this.level().isClientSide) this.hurtMarked = true;
 
-        for (LivingEntity livingEntity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.5d), p -> !p.isRemoved() && p != this.getOwner())) {
+        for (LivingEntity livingEntity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.5d), p -> !p.isRemoved() && p != this.getOwner())) {
             boolean canHurt = !(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(livingEntity, owner);
 
             if (canHurt && !this.caught.contains(livingEntity) && livingEntity.hasLineOfSight(this) && EntityUtil.isMobNotInCreativeMode(livingEntity)) {
                 this.caught.add(livingEntity);
                 livingEntity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, livingEntity.getVoicePitch());
-                livingEntity.hurt(DamageSource.thrown(this, this.getOwner()), 10.0F);
+                livingEntity.hurt(this.damageSources().thrown(this, this.getOwner()), 10.0F);
             }
         }
 
@@ -82,23 +82,23 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
             caught.setDeltaMovement(this.getDeltaMovement().scale(1.1d));
         }
 
-        if (!this.level.getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getMaterial().blocksMotion()) {
+        if (!this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).blocksMotion()) {
             this.setPos(this.position().add(0, -0.5, 0));
         }
 
         Vec3 flyAway = new Vec3(-xPower, -yPower, -zPower).scale(3.0d).scale(this.getDeltaMovement().length());
-        EntityUtil.makeAParticle(this.level, ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), flyAway);
-        EntityUtil.makeAParticle(this.level, ParticleTypes.SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), flyAway);
-        for (int i = 0; i < 5; ++i) EntityUtil.makeAParticle(this.level, ParticleTypes.ASH, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), flyAway);
+        EntityUtil.makeAParticle(this.level(), ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), flyAway);
+        EntityUtil.makeAParticle(this.level(), ParticleTypes.SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), flyAway);
+        for (int i = 0; i < 5; ++i) EntityUtil.makeAParticle(this.level(), ParticleTypes.ASH, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), flyAway);
 
-        if (this.tickCount > this.timer || !this.level.getWorldBorder().isWithinBounds(this.blockPosition())) {
+        if (this.tickCount > this.timer || !this.level().getWorldBorder().isWithinBounds(this.blockPosition())) {
             this.explode(Vec3.ZERO);
         }
     }
 
     @Override
     protected void onHitBlock(BlockHitResult pResult) {
-        if (this.level.getBlockState(pResult.getBlockPos().above()).getMaterial().blocksMotion()) {
+        if (this.level().getBlockState(pResult.getBlockPos().above()).blocksMotion()) {
             BlockPos.MutableBlockPos pos = pResult.getBlockPos().mutable();
             pos = pos.move(pResult.getDirection(), 2);
             this.explode(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
@@ -117,17 +117,17 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
     }
 
     private void explode(Vec3 position) {
-        if (this.level.isClientSide) return;
+        if (this.level().isClientSide) return;
 
         if (position == Vec3.ZERO) {
             BlockPos.MutableBlockPos yPosition = this.blockPosition().mutable();
-            while (yPosition.getY() > this.level.getMinBuildHeight() && !this.level.getBlockState(yPosition).getMaterial().blocksMotion()) {
+            while (yPosition.getY() > this.level().getMinBuildHeight() && !this.level().getBlockState(yPosition).blocksMotion()) {
                 yPosition.move(Direction.DOWN);
             }
             position = new Vec3(this.getX(), yPosition.getY() + 1, this.getZ());
         }
-        WitherExplosion explosion = new WitherExplosion(this.level, position, this.getOwner() instanceof Mob mob ? mob : null);
-        this.level.addFreshEntity(explosion);
+        WitherExplosion explosion = new WitherExplosion(this.level(), position, this.getOwner() instanceof Mob mob ? mob : null);
+        this.level().addFreshEntity(explosion);
         this.playSound(YESoundEvents.ENTITY_DEFENDER_WITHERBAZOOKA_EXPLOSION.get(), 10.0f, 1.0f);
         this.discard();
     }
@@ -146,6 +146,6 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
     public void onAddedToWorld() {
         super.onAddedToWorld();
 
-        if (this.level.isClientSide) Minecraft.getInstance().getSoundManager().play(new TimeBombSound(this, YESoundEvents.ENTITY_DEFENDER_WITHERBAZOOKA_LOOP.get(), 2.5F, this.timer));
+        if (this.level().isClientSide) Minecraft.getInstance().getSoundManager().play(new TimeBombSound(this, YESoundEvents.ENTITY_DEFENDER_WITHERBAZOOKA_LOOP.get(), 2.5F, this.timer));
     }
 }

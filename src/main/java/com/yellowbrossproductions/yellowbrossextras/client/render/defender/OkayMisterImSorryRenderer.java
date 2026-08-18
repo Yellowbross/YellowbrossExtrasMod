@@ -2,7 +2,6 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.OkayMisterImSorryModel;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.OkayMisterImSorry;
@@ -10,6 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -22,6 +22,16 @@ public class OkayMisterImSorryRenderer extends EntityRenderer<OkayMisterImSorry>
     public OkayMisterImSorryRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
         this.model = new OkayMisterImSorryModel<>(pContext.bakeLayer(OkayMisterImSorryModel.LAYER_LOCATION));
+    }
+
+    @Override
+    protected int getBlockLightLevel(OkayMisterImSorry pEntity, BlockPos pPos) {
+        return 15;
+    }
+
+    @Override
+    protected int getSkyLightLevel(OkayMisterImSorry pEntity, BlockPos pPos) {
+        return 15;
     }
 
     @Override

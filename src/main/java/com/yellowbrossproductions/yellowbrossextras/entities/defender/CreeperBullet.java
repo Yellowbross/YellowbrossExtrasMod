@@ -15,7 +15,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -121,24 +121,24 @@ public class CreeperBullet extends AbstractCreeperEntity implements IsDefenderAl
 
     @Override
     public void explodeCreeper() {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             this.dead = true;
             CustomExplosion.create(this, this.getX(), this.getY() + 0.3, this.getZ(), (float)this.explosionRadius * (this.isPowered() ? 2 : 1), true, false);
             if (this.hasEffect(YEEffects.SUPER_DUPER_POISON.get())) {
-                EntityUtil.makeAParticle(this.level, YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, this.getBoundingBox().getCenter(), Vec3.ZERO);
+                EntityUtil.makeAParticle(this.level(), YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), false, this.getBoundingBox().getCenter(), Vec3.ZERO);
                 for (int i = 0; i < 100; ++i) {
                     Random random = new Random();
-                    EntityUtil.makeAParticle(this.level, YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), false, this.getBoundingBox().getCenter(), new Vec3(
+                    EntityUtil.makeAParticle(this.level(), YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), false, this.getBoundingBox().getCenter(), new Vec3(
                             -0.5f + random.nextFloat(),
-                            (-0.5f + random.nextFloat()) + (this.isOnGround() ? 0.5f : 0.0f),
+                            (-0.5f + random.nextFloat()) + (this.onGround() ? 0.5f : 0.0f),
                             -0.5f + random.nextFloat()
                     ));
                 }
-                CameraShake.cameraShake(this.level, this.position(), 20, 0.4f, 2, 3);
+                CameraShake.cameraShake(this.level(), this.position(), 20, 0.4f, 2, 3);
                 this.playSound(YESoundEvents.SUPERDUPERPOISON_NOSCREAM.get(), 1.0F, 1.0F);
-                EntityUtil.fireCircleOfPoisonBalls(this.level, this, 10, 0.25d, 1.0f, false);
+                EntityUtil.fireCircleOfPoisonBalls(this.level(), this, 10, 0.25d, 1.0f, false);
             }
-            CameraShake.cameraShake(this.level, position(), 30, 0.1f, 0, 5);
+            CameraShake.cameraShake(this.level(), position(), 30, 0.1f, 0, 5);
             this.discard();
             this.spawnLingeringCloud();
         }
@@ -186,24 +186,24 @@ public class CreeperBullet extends AbstractCreeperEntity implements IsDefenderAl
         if (this.isAlive()) {
             if (this.wasShotFromDefender) {
                 if (this.tickCount == 1) {
-                    if (!this.level.isClientSide) this.spawnHittingSomething(this.level, this.getPosition(0.0F), new Vec3(this.getCollisionPos().getX(), this.getCollisionPos().getY(), this.getCollisionPos().getZ()));
+                    if (!this.level().isClientSide) this.spawnHittingSomething(this.level(), this.getPosition(0.0F), new Vec3(this.getCollisionPos().getX(), this.getCollisionPos().getY(), this.getCollisionPos().getZ()));
                 }
                 if (this.tickCount == 5 && !this.getAnimationState().equals("getup")) {
                     this.setAnimationState("falling");
                 }
             }
-            if (this.tickCount > 200 && this.random.nextInt(16) == 0 && !this.level.isClientSide) this.ignite();
+            if (this.tickCount > 200 && this.random.nextInt(16) == 0 && !this.level().isClientSide) this.ignite();
         }
     }
 
     public void beTheChosenOne() {
-        LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(this.level);
+        LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(this.level());
         assert lightning != null;
         lightning.setPos(this.getX(), this.getY(), this.getZ());
         lightning.setVisualOnly(true);
         this.playSound(SoundEvents.LIGHTNING_BOLT_IMPACT, 3.0F, 1.0F);
         this.playSound(SoundEvents.LIGHTNING_BOLT_THUNDER, 10000.0F, 1.0F);
-        this.level.addFreshEntity(lightning);
+        this.level().addFreshEntity(lightning);
         this.setPowered();
         this.ignite();
     }
@@ -275,7 +275,7 @@ public class CreeperBullet extends AbstractCreeperEntity implements IsDefenderAl
         hitResult.setBlockHit(world.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)));
         if (hitResult.blockHit != null) {
             this.setCollisionPos(hitResult.getBlockHit().getBlockPos());
-            this.hurt(DamageSource.FLY_INTO_WALL, Float.MAX_VALUE);
+            this.hurt(this.level().damageSources().flyIntoWall(), Float.MAX_VALUE);
         } else {
             this.setCollisionPos((int)to.x, (int)to.y, (int)to.z);
         }
@@ -318,10 +318,10 @@ public class CreeperBullet extends AbstractCreeperEntity implements IsDefenderAl
             this.setCollisionPos(closestDamaged.getBlockX(), (int)(closestDamaged.getBlockY() + closestDamaged.getBbHeight() / 2), closestDamaged.getBlockZ());
             if (closestDamaged.hasEffect(YEEffects.SUPER_DUPER_POISON.get())) this.addEffect(new MobEffectInstance(YEEffects.SUPER_DUPER_POISON.get(), 15 * 20, 0));
 
-            if (closestDamaged.hurt(new IndirectEntityDamageSource("arrow", this, this.shooter).setProjectile(), 0.5F)) {
+            if (closestDamaged.hurt(this.damageSources().source(DamageTypes.ARROW, this.shooter), 0.5F)) {
                 closestDamaged.invulnerableTime = 0;
             } else {
-                if (!closestDamaged.hasEffect(YEEffects.SUPER_DUPER_POISON.get())) this.hurt(DamageSource.FLY_INTO_WALL, Float.MAX_VALUE);
+                if (!closestDamaged.hasEffect(YEEffects.SUPER_DUPER_POISON.get())) this.hurt(this.damageSources().flyIntoWall(), Float.MAX_VALUE);
             }
         }
         this.setPos(this.getCollisionPos().getX(), this.getCollisionPos().getY(), this.getCollisionPos().getZ());

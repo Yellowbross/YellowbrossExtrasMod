@@ -37,7 +37,7 @@ public class HyperSnowball extends ThrowableItemProjectile {
             ParticleOptions particleoptions = this.getParticle();
 
             for(int i = 0; i < 8; ++i) {
-                this.level.addParticle(particleoptions, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+                this.level().addParticle(particleoptions, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
             }
         }
 
@@ -46,9 +46,9 @@ public class HyperSnowball extends ThrowableItemProjectile {
     @Override
     protected void onHit(HitResult pResult) {
         super.onHit(pResult);
-        if (!this.level.isClientSide) {
-            this.level.broadcastEntityEvent(this, (byte)3);
-            this.level.explode(this.getOwner(), this.getX(), this.getY(), this.getZ(), (float)3.0F, Explosion.BlockInteraction.NONE);
+        if (!this.level().isClientSide) {
+            this.level().broadcastEntityEvent(this, (byte)3);
+            this.level().explode(this.getOwner(), this.getX(), this.getY(), this.getZ(), (float)3.0F, Level.ExplosionInteraction.NONE);
             this.discard();
         }
     }

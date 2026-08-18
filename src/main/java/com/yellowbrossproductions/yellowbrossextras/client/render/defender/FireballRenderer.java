@@ -2,11 +2,10 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.render.YERenderTypes;
 import com.yellowbrossproductions.yellowbrossextras.client.render.util.RenderUtil;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.WitherExplosion;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.Fireball;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -67,6 +66,11 @@ public class FireballRenderer extends EntityRenderer<Fireball> {
     }
 
     @Override
+    protected int getBlockLightLevel(Fireball pEntity, BlockPos pPos) {
+        return 15;
+    }
+
+    @Override
     public ResourceLocation getTextureLocation(Fireball pEntity) {
         return TEXTURE;
     }
@@ -90,7 +94,7 @@ public class FireballRenderer extends EntityRenderer<Fireball> {
         float mult = -5.0f;
         float calculation = age * mult;
         poseStack.scale(size, size, size);
-        poseStack.mulPose(Vector3f.ZP.rotationDegrees(calculation));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(calculation));
         RenderUtil.drawSprite(poseStack, buffer, 0, 0, ((ticks % interval >= ((float)interval / 2)) && shouldFlash ? BALL_SIZE_HUGE : 0), BALL_SIZE_HUGE, BALL_SIZE_HUGE + ((ticks % interval >= ((float)interval / 2)) && shouldFlash ? BALL_SIZE_HUGE : 0), TEXTURE_WIDTH, TEXTURE_HEIGHT);
         poseStack.popPose();
     }
@@ -106,7 +110,7 @@ public class FireballRenderer extends EntityRenderer<Fireball> {
         float mult = -15.0f;
         float calculation = age * mult;
         poseStack.scale(size, size, size);
-        poseStack.mulPose(Vector3f.ZP.rotationDegrees(calculation));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(calculation));
         RenderUtil.drawSprite(poseStack, buffer, 0, BALL_SIZE_HUGE, 0, BALL_SIZE_HUGE + BALL_SIZE_BIG, BALL_SIZE_BIG, TEXTURE_WIDTH, TEXTURE_HEIGHT);
         poseStack.popPose();
     }
@@ -122,7 +126,7 @@ public class FireballRenderer extends EntityRenderer<Fireball> {
         float mult = -40.0f;
         float calculation = age * mult;
         poseStack.scale(size, size, size);
-        poseStack.mulPose(Vector3f.ZP.rotationDegrees(calculation));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(calculation));
         RenderUtil.drawSprite(poseStack, buffer, 0, BALL_SIZE_HUGE + BALL_SIZE_BIG, 0, BALL_SIZE_HUGE + BALL_SIZE_BIG + BALL_SIZE_SMALL, BALL_SIZE_SMALL, TEXTURE_WIDTH, TEXTURE_HEIGHT);
         poseStack.popPose();
     }

@@ -20,7 +20,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -132,7 +132,7 @@ public class Aimbot extends YExtrasMob implements Enemy {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source != DamageSource.OUT_OF_WORLD) amount = 1.0F;
+        if (!source.is(DamageTypes.GENERIC_KILL)) amount = 1.0F;
         return super.hurt(source, amount);
     }
 
@@ -142,12 +142,12 @@ public class Aimbot extends YExtrasMob implements Enemy {
 
         this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
 
-        if (!this.level.isClientSide) this.heal(10.0F);
+        if (!this.level().isClientSide) this.heal(10.0F);
 
-        if (this.getKarma() > 0 && this.random.nextInt(Math.max(YellowbrossExtrasConfig.aimbot_randomBanChance.get() - this.getKarma(), 1)) == 0 && !this.level.isClientSide) {
-            this.stopShootingSound(this.level);
+        if (this.getKarma() > 0 && this.random.nextInt(Math.max(YellowbrossExtrasConfig.aimbot_randomBanChance.get() - this.getKarma(), 1)) == 0 && !this.level().isClientSide) {
+            this.stopShootingSound(this.level());
             this.playSound(YESoundEvents.AIMBOT_BANNED.get(), 10.0F, 1.6F);
-            EntityUtil.broadcastMessage(this.level, Component.translatable("yellowbrossextras.aimbotBanned" + (this.random.nextInt(11) + 1), this.getDisplayName()).withStyle(ChatFormatting.YELLOW));
+            EntityUtil.broadcastMessage(this.level(), Component.translatable("yellowbrossextras.aimbotBanned" + (this.random.nextInt(11) + 1), this.getDisplayName()).withStyle(ChatFormatting.YELLOW));
             this.dead = true;
             this.discard();
         }
@@ -159,9 +159,9 @@ public class Aimbot extends YExtrasMob implements Enemy {
     }
 
     @Override
-    public boolean wasKilled(ServerLevel level, LivingEntity living) {
+    public boolean killedEntity(ServerLevel pLevel, LivingEntity pEntity) {
         if (this.getKarma() != -1) this.setKarma(this.getKarma() + 1);
-        return super.wasKilled(level, living);
+        return super.killedEntity(pLevel, pEntity);
     }
 
     public void addAdditionalSaveData(CompoundTag tag) {
@@ -201,7 +201,7 @@ public class Aimbot extends YExtrasMob implements Enemy {
         LivingEntity t = null;
         if (this.getTarget() != null && this.getTarget().isAlive()) t = getTarget();
         else {
-            List<Mob> list = this.level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(40.0D), p -> {
+            List<Mob> list = this.level().getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(40.0D), p -> {
                 return EntityUtil.canHurtThisMob(p, this) && !(p instanceof Aimbot) && p.isAlive();
             });
             if (!list.isEmpty()) t = list.get(0);
@@ -256,7 +256,7 @@ public class Aimbot extends YExtrasMob implements Enemy {
         public void start() {
             LivingEntity target = this.aimbot.getTarget();
             if (target != null) {
-                this.aimbot.stopShootingSound(this.aimbot.level);
+                this.aimbot.stopShootingSound(this.aimbot.level());
                 this.aimbot.playSound(YESoundEvents.AIMBOT_SHOOT.get(), 4.0F, 1.0F);
                 this.aimbot.stareAt = target.getPosition(0).add(0, target.getEyeHeight(), 0);
                 this.aimbot.getLookControl().setLookAt(this.aimbot.stareAt.x, this.aimbot.stareAt.y, this.aimbot.stareAt.z, 999.0F, 100.0F);
@@ -271,7 +271,7 @@ public class Aimbot extends YExtrasMob implements Enemy {
                         target.getEyeY(),
                         target.getZ(), 1);
 
-                if (target.hurt(new EntityDamageSource("arrow", this.aimbot).setProjectile(), Float.MAX_VALUE)) {
+                if (target.hurt(this.aimbot.damageSources().source(DamageTypes.ARROW, this.aimbot), Float.MAX_VALUE)) {
                     target.invulnerableTime = 0;
                     if (target.isDeadOrDying()) target.setDeltaMovement(target.position().subtract(this.aimbot.position()));
                 }

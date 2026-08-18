@@ -1,6 +1,5 @@
 package com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile;
 
-import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.AbstractSnipingProjectile;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
@@ -11,13 +10,13 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PlayMessages;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +35,7 @@ public class DeadlyArrow extends AbstractSnipingProjectile {
         super(YEEntityTypes.DeadlyArrow.get(), level);
         this.setOwner(shooter);
         if (!level.isClientSide) {
-            this.setCollisionPos(new BlockPos(shootTo));
+            this.setCollisionPos(BlockPos.containing(shootTo));
         }
         this.setMaxTime(4);
         this.setWarnTimer(warnTimer);
@@ -88,7 +87,7 @@ public class DeadlyArrow extends AbstractSnipingProjectile {
 
             Vec3 from = this.position();
             Vec3 to = Vec3.atCenterOf(this.getCollisionPos());
-            List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, new AABB(
+            List<LivingEntity> entities = this.level().getEntitiesOfClass(LivingEntity.class, new AABB(
                     Math.min(getX(), this.getCollisionPos().getX()),
                     Math.min(getY(), this.getCollisionPos().getY()),
                     Math.min(getZ(), this.getCollisionPos().getZ()),
@@ -110,9 +109,8 @@ public class DeadlyArrow extends AbstractSnipingProjectile {
             }
         }
         if (this.tickCount == this.getMaxTime() + this.getWarnTimer()) {
-            DamageSource damageSource = new IndirectEntityDamageSource("thrown", this, this.getOwner()).setProjectile();
             for (LivingEntity living : this.hitResult.entities) {
-                if (living.hurt(damageSource, Math.max(15, living.getMaxHealth() * 0.25F))) {
+                if (living.hurt(this.damageSources().thrown(this, this.getOwner()), Math.max(15, living.getMaxHealth() * 0.25F))) {
                     living.invulnerableTime = 0;
                     living.playSound(YESoundEvents.ENTITY_DEFENDER_SNIPE_HIT.get(), 3.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 }

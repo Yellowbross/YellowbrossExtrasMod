@@ -59,7 +59,7 @@ public class Sprayer extends AbstractCreeperEntity implements CreeperInfection, 
     @Override
     public void performRangedAttack(LivingEntity p_33317_, float p_33318_) {
         if (this.distanceTo(p_33317_) <= 20.0F) {
-            TNTProjectile tnt = new TNTProjectile(this.level, this);
+            TNTProjectile tnt = new TNTProjectile(this.level(), this);
             double d0 = p_33317_.getEyeY() - (double)1.1F;
             double d1 = p_33317_.getX() - this.getX();
             double d2 = d0 - tnt.getY();
@@ -69,7 +69,7 @@ public class Sprayer extends AbstractCreeperEntity implements CreeperInfection, 
             this.playSound(SoundEvents.SNOWBALL_THROW, 1.0F, 1.0F + (this.random.nextFloat() / 3.0F));
             this.playSound(SoundEvents.TNT_PRIMED, 1.0F, 1.0F + (this.random.nextFloat() / 3.0F));
             tnt.shooter = this;
-            this.level.addFreshEntity(tnt);
+            this.level().addFreshEntity(tnt);
         }
     }
 
@@ -92,18 +92,18 @@ public class Sprayer extends AbstractCreeperEntity implements CreeperInfection, 
     public void explodeCreeper() {
         super.explodeCreeper();
         if (this.getAbsorbedCreepers() >= this.getMaxAbsorbs()) {
-            if (!this.level.isClientSide) {
-                Crawler creeper = new Crawler(YEEntityTypes.Crawler.get(), this.level);
+            if (!this.level().isClientSide) {
+                Crawler creeper = new Crawler(YEEntityTypes.Crawler.get(), this.level());
                 creeper.copyPosition(this);
                 if (this.getTeam() != null) {
-                    level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
-                            level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                    level().getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                            level().getScoreboard().getPlayerTeam(this.getTeam().getName()));
                 }
-                this.level.addFreshEntity(creeper);
+                this.level().addFreshEntity(creeper);
 
                 this.makeExplodeParticles();
                 this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.2F);
-                CameraShake.cameraShake(this.level, position(), 40, 0.2f, 0, 30);
+                CameraShake.cameraShake(this.level(), position(), 40, 0.2f, 0, 30);
             }
         }
     }
@@ -113,19 +113,19 @@ public class Sprayer extends AbstractCreeperEntity implements CreeperInfection, 
             double d0 = (-0.5 + this.random.nextGaussian()) / 2;
             double d1 = (-0.5 + this.random.nextGaussian()) / 2;
             double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 200; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian()) / 2;
             double d1 = (-0.5 + this.random.nextGaussian()) / 2;
             double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 150; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian()) / 2;
             double d1 = (-0.5 + this.random.nextGaussian()) / 2;
             double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
     }
 }

@@ -2,11 +2,9 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.Chainsaw;
+import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -18,6 +16,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 import java.util.Random;
 
@@ -92,7 +93,7 @@ public class ChainsawRenderer extends EntityRenderer<Chainsaw> {
 
     private void renderStart(int frame, PoseStack matrixStackIn, VertexConsumer builder, int packedLightIn) {
         matrixStackIn.pushPose();
-        Quaternion quat = this.entityRenderDispatcher.cameraOrientation();
+        Quaternionf quat = this.entityRenderDispatcher.cameraOrientation();
         matrixStackIn.mulPose(quat);
         renderFlatQuad(frame, matrixStackIn, builder, packedLightIn);
         matrixStackIn.popPose();
@@ -100,7 +101,7 @@ public class ChainsawRenderer extends EntityRenderer<Chainsaw> {
 
     private void renderEnd(int frame, Direction side, PoseStack matrixStackIn, VertexConsumer builder, int packedLightIn) {
         matrixStackIn.pushPose();
-        Quaternion quat = this.entityRenderDispatcher.cameraOrientation();
+        Quaternionf quat = this.entityRenderDispatcher.cameraOrientation();
         matrixStackIn.mulPose(quat);
         renderFlatQuad(frame, matrixStackIn, builder, packedLightIn);
         matrixStackIn.popPose();
@@ -122,9 +123,9 @@ public class ChainsawRenderer extends EntityRenderer<Chainsaw> {
 
     private void renderBeam(int frame, float length, float yaw, float pitch, PoseStack matrixStackIn, VertexConsumer builder, int packedLightIn) {
         matrixStackIn.pushPose();
-        matrixStackIn.mulPose(new Quaternion(90, 0, 0, true));
-        matrixStackIn.mulPose(new Quaternion(0, 0, yaw - 90f, true));
-        matrixStackIn.mulPose(new Quaternion(-pitch, 0, 0, true));
+        matrixStackIn.mulPose(EntityUtil.quatFromRotationXYZ(90, 0, 0, true));
+        matrixStackIn.mulPose(EntityUtil.quatFromRotationXYZ(0, 0, yaw - 90f, true));
+        matrixStackIn.mulPose(EntityUtil.quatFromRotationXYZ(-pitch, 0, 0, true));
         matrixStackIn.pushPose();
         drawBeam(frame, length, matrixStackIn, builder, packedLightIn);
         matrixStackIn.popPose();

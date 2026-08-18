@@ -1,7 +1,6 @@
 package com.yellowbrossproductions.yellowbrossextras.util;
 
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.creepers.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender;
@@ -40,6 +39,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.compress.utils.Lists;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -254,10 +255,10 @@ public class EntityUtil {
         final Random random = new Random();
         float TAU = (float) (2 * StrictMath.PI);
 
-        Quaternion rotation = Quaternion.ONE.copy();
-        rotation.mul(Vector3f.YP.rotationDegrees((float) rotationVec.y));
-        rotation.mul(Vector3f.XP.rotationDegrees((float) rotationVec.x));
-        rotation.mul(Vector3f.ZP.rotationDegrees((float) rotationVec.z));
+        Quaternionf rotation = new Quaternionf();
+        rotation.mul(Axis.YP.rotationDegrees((float) rotationVec.y));
+        rotation.mul(Axis.XP.rotationDegrees((float) rotationVec.x));
+        rotation.mul(Axis.ZP.rotationDegrees((float) rotationVec.z));
 
         // code adapted from Mowzie's Mobs
         for (int i = 0; i < amount; i++) {
@@ -268,7 +269,7 @@ public class EntityUtil {
             float vz = velocityExpanding * Mth.sin(yaw);
 
             Vector3f velocityVec = new Vector3f(vx, vy, vz);
-            velocityVec.transform(rotation);
+            velocityVec.rotate(rotation);
             makeAParticle(level, particleType, forceAlwaysRender, spawnVec, new Vec3(velocityVec.x(), velocityVec.y(), velocityVec.z()));
         }
     }
@@ -371,7 +372,7 @@ public class EntityUtil {
     }
 
     public static boolean checkGuide(BlockPos pos, LivingEntity playing, Vec3 goal) {
-        PathGuide guide = getGuideAt(pos, playing.level);
+        PathGuide guide = getGuideAt(pos, playing.level());
         if (guide != null) {
             for (BlockPos pos2 : guide.getNeighbors()) {
                 Vec3 pos2_distance = new Vec3(pos2.getX(), pos2.getY(), pos2.getZ());
@@ -400,7 +401,7 @@ public class EntityUtil {
         if (location.distanceTo(vec3) > 128.0D) {
             return false;
         } else {
-            return mob.level.clip(new ClipContext(vec3, location, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mob)).getType() == HitResult.Type.MISS;
+            return mob.level().clip(new ClipContext(vec3, location, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mob)).getType() == HitResult.Type.MISS;
         }
     }
 
@@ -408,8 +409,8 @@ public class EntityUtil {
     public static void makeSimpleTrail(Entity entity, ParticleOptions type, int amount, double srcX, double srcY, double srcZ, double destX, double destY, double destZ, float randomMult) {
         Random random = new Random();
 
-        if (!entity.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)entity.level).players()) {
+        if (!entity.level().isClientSide) {
+            for (ServerPlayer serverPlayer : ((ServerLevel)entity.level()).players()) {
                 if (serverPlayer.distanceToSqr(entity) < 4096.0D) {
                     ParticlePacket packet = new ParticlePacket();
 
@@ -432,12 +433,12 @@ public class EntityUtil {
 
     // code adapted from Illage & Spillage: Respillaged
     public static void basicMobFlight(Mob mob, @Nullable LivingEntity target, double distanceRequired, int blocksToFlyNormal, int blocksToFlyAggressive) {
-        BlockState blockState = mob.level.getBlockState(mob.blockPosition().below(blocksToFlyNormal));
+        BlockState blockState = mob.level().getBlockState(mob.blockPosition().below(blocksToFlyNormal));
         if (target != null) {
             if (mob.distanceToSqr(target) > distanceRequired)
                 mob.setDeltaMovement(mob.getDeltaMovement().add(target.position().subtract(mob.position()).normalize().scale(0.016)));
 
-            blockState = mob.level.getBlockState(mob.blockPosition().below(blocksToFlyAggressive));
+            blockState = mob.level().getBlockState(mob.blockPosition().below(blocksToFlyAggressive));
 
             if (blockState.isAir()) {
                 if (mob.getDeltaMovement().y > 0)
@@ -495,7 +496,7 @@ public class EntityUtil {
             float vy = random.nextFloat() * 0.1F - 0.05f;
             float vx = velocity * Mth.cos(yaw);
             float vz = velocity * Mth.sin(yaw);
-            SuperDuperPoisonBall bullet = new SuperDuperPoisonBall(spawner.level, spawner, vx, vy, vz);
+            SuperDuperPoisonBall bullet = new SuperDuperPoisonBall(spawner.level(), spawner, vx, vy, vz);
 
             bullet.setPos(spawner.getX(), spawner.getY() + y, spawner.getZ());
             List<Defender> defender = level.getEntitiesOfClass(Defender.class, spawner.getBoundingBox().inflate(40.0d),
@@ -536,7 +537,17 @@ public class EntityUtil {
         if (livingEntity instanceof Player && livingEntity.isBlocking()) {
             ((Player) livingEntity).getCooldowns().addCooldown(livingEntity.getUseItem().getItem(), ticks);
             livingEntity.stopUsingItem();
-            livingEntity.level.broadcastEntityEvent(livingEntity, (byte)30);
+            livingEntity.level().broadcastEntityEvent(livingEntity, (byte)30);
         }
+    }
+
+    // Code borrowed from Mowzie's Mobs
+    public static Quaternionf quatFromRotationXYZ(float x, float y, float z, boolean degrees) {
+        if (degrees) {
+            x *= ((float)Math.PI / 180F);
+            y *= ((float)Math.PI / 180F);
+            z *= ((float)Math.PI / 180F);
+        }
+        return (new Quaternionf()).rotationXYZ(x, y, z);
     }
 }

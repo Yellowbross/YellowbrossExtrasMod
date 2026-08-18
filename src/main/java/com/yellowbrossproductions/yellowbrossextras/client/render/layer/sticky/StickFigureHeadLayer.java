@@ -17,6 +17,9 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 // THANK YOU DARKPEASANT THANK YOU THANK YOU THANK YOUUUUUUUUUUU
 @OnlyIn(Dist.CLIENT)
@@ -64,15 +67,13 @@ public class StickFigureHeadLayer<T extends StickFigure, M extends StickFigureMo
             PoseStack headStack = new PoseStack();
             headStack.pushPose();
             RenderUtil.translatePoseStackToPart(this.getParentModel(), headStack, whichPart);
-            Matrix4f patrick = headStack.last().pose();
-            Vector4f headPos = new Vector4f(0, 0, 0, 1);
-            headPos.transform(patrick);
+            Vector4f headPos = new Vector4f(0, 0, 0, 1).mul(headStack.last().pose());
             pPoseStack.translate(headPos.x(), headPos.y(), headPos.z());
             headStack.popPose();
 
             pPoseStack.scale(-1, 1, 1);
             // pPoseStack.translate(0, START_RADIUS / 2, 0);
-            pPoseStack.mulPose(Vector3f.YP.rotationDegrees(RenderUtil.getDefaultBodyRot(pLivingEntity, pPartialTick)));
+            pPoseStack.mulPose(Axis.YP.rotationDegrees(RenderUtil.getDefaultBodyRot(pLivingEntity, pPartialTick)));
             pPoseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
             this.renderFlatQuad(pPoseStack, pBuffer.getBuffer(RenderType.entityTranslucent(HEAD)), !whichPart.equals("head"));
             this.renderFlatQuad(pPoseStack, pBuffer.getBuffer(YERenderTypes.noShadingAllowed(HEAD, false)), !whichPart.equals("head"));

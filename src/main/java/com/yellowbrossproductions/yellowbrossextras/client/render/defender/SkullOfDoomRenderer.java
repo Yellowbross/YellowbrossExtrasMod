@@ -2,11 +2,8 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
-import com.yellowbrossproductions.yellowbrossextras.client.model.defender.DeadlyArrowModel;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.SkullOfDoomModel;
-import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.DeadlyArrow;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.SkullOfDoom;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

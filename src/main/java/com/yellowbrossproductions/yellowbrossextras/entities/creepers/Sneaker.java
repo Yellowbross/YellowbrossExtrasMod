@@ -98,7 +98,7 @@ public class Sneaker extends AbstractCreeperEntity implements CreeperInfection, 
                 }
             }
 
-            for (Entity caught : level.getEntities(this, getBoundingBox().inflate(15.0F))) {
+            for (Entity caught : level().getEntities(this, getBoundingBox().inflate(15.0F))) {
                 if (EntityUtil.canHurtThisMob(caught, this) && caught.isAlive() && EntityUtil.isMobNotInCreativeMode(caught) && !(caught instanceof CreeperInfection)) {
                     double x = getX() - caught.getX();
                     double y = getY() - caught.getY();
@@ -148,7 +148,7 @@ public class Sneaker extends AbstractCreeperEntity implements CreeperInfection, 
 
     public void makeLifestealParticles2(Entity caught) {
         for(int i = 0; i < 2; ++i) {
-            EntityUtil.makeAParticle(this.level, ParticleTypes.CRIT, false, new Vec3(caught.getRandomX(0.5D), caught.getRandomY(), caught.getRandomZ(0.5D)), new Vec3(0.0D, 0.0D, 0.0D));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.CRIT, false, new Vec3(caught.getRandomX(0.5D), caught.getRandomY(), caught.getRandomZ(0.5D)), new Vec3(0.0D, 0.0D, 0.0D));
         }
     }
 
@@ -161,75 +161,75 @@ public class Sneaker extends AbstractCreeperEntity implements CreeperInfection, 
             double d0 = (this.getX() - randomX) / 4;
             double d1 = (this.getY() - randomY) / 4;
             double d2 = (this.getZ() - randomZ) / 4;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.ELECTRIC_SPARK, false, new Vec3(randomX, randomY, randomZ), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.ELECTRIC_SPARK, false, new Vec3(randomX, randomY, randomZ), new Vec3(d0, d1, d2));
         }
     }
 
     @Override
     public void explodeCreeper() {
-        if (!this.level.isClientSide) {
-            Explosion.BlockInteraction explosion$blockinteraction = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE;
+        if (!this.level().isClientSide) {
+            Level.ExplosionInteraction explosion$blockinteraction = Level.ExplosionInteraction.MOB;
             this.dead = true;
-            CameraShake.cameraShake(this.level, position(), 30, 0.1f, 0, 15);
+            CameraShake.cameraShake(this.level(), position(), 30, 0.1f, 0, 15);
             if (this.getAbsorbedCreepers() < this.getMaxAbsorbs()) {
                 if (this.getCreeperType() == 0) {
                     if (this.random.nextBoolean()) {
-                        Paracreeper creeper = new Paracreeper(YEEntityTypes.Paracreeper.get(), this.level);
+                        Paracreeper creeper = new Paracreeper(YEEntityTypes.Paracreeper.get(), this.level());
                         creeper.copyPosition(this);
                         creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
                         if (this.getTeam() != null) {
-                            level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
-                                    level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                            level().getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                                    level().getScoreboard().getPlayerTeam(this.getTeam().getName()));
                         }
-                        this.level.addFreshEntity(creeper);
+                        this.level().addFreshEntity(creeper);
                     }
-                    this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * f), explosion$blockinteraction);
+                    this.level().explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * f), explosion$blockinteraction);
                 } else if (this.getCreeperType() == 1) {
                     for (int i = 0; i < 5; ++i) {
-                        Paracreeper creeper = new Paracreeper(YEEntityTypes.Paracreeper.get(), this.level);
+                        Paracreeper creeper = new Paracreeper(YEEntityTypes.Paracreeper.get(), this.level());
                         creeper.copyPosition(this);
                         creeper.setPos(creeper.getX(), creeper.getY() + 1, creeper.getZ());
                         creeper.setDeltaMovement(this.random.nextDouble() - 0.5D,
                                 this.random.nextDouble() - 0.5D,
                                 this.random.nextDouble() - 0.5D);
                         if (this.getTeam() != null) {
-                            level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
-                                    level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                            level().getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                                    level().getScoreboard().getPlayerTeam(this.getTeam().getName()));
                         }
-                        this.level.addFreshEntity(creeper);
+                        this.level().addFreshEntity(creeper);
                     }
                     this.makeExplodeParticles();
                     this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.2F);
-                    CameraShake.cameraShake(this.level, position(), 40, 0.2f, 0, 30);
-                    this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 2.5F * f), explosion$blockinteraction);
+                    CameraShake.cameraShake(this.level(), position(), 40, 0.2f, 0, 30);
+                    this.level().explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 2.5F * f), explosion$blockinteraction);
                 } else if (this.getCreeperType() == 2) {
-                    Sneaker creeper = new Sneaker(YEEntityTypes.Sneaker.get(), this.level);
+                    Sneaker creeper = new Sneaker(YEEntityTypes.Sneaker.get(), this.level());
                     creeper.copyPosition(this);
                     if (this.getTeam() != null) {
-                        level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
-                                level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                        level().getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                                level().getScoreboard().getPlayerTeam(this.getTeam().getName()));
                     }
                     creeper.setCreeperType(1);
-                    this.level.addFreshEntity(creeper);
+                    this.level().addFreshEntity(creeper);
 
                     this.makeExplodeParticles();
                     this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.2F);
-                    CameraShake.cameraShake(this.level, position(), 40, 0.2f, 0, 30);
-                    this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 2.5F * f), explosion$blockinteraction);
+                    CameraShake.cameraShake(this.level(), position(), 40, 0.2f, 0, 30);
+                    this.level().explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 2.5F * f), explosion$blockinteraction);
                 }
             } else {
-                Crawler creeper = new Crawler(YEEntityTypes.Crawler.get(), this.level);
+                Crawler creeper = new Crawler(YEEntityTypes.Crawler.get(), this.level());
                 creeper.copyPosition(this);
                 if (this.getTeam() != null) {
-                    level.getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
-                            level.getScoreboard().getPlayerTeam(this.getTeam().getName()));
+                    level().getScoreboard().addPlayerToTeam(creeper.getStringUUID(),
+                            level().getScoreboard().getPlayerTeam(this.getTeam().getName()));
                 }
-                this.level.addFreshEntity(creeper);
+                this.level().addFreshEntity(creeper);
 
                 this.makeExplodeParticles();
                 this.playSound(YESoundEvents.HUGE_EXPLOSION.get(), 4.0F, 1.2F);
-                CameraShake.cameraShake(this.level, position(), 40, 0.2f, 0, 30);
-                this.level.explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 2.5F * f), explosion$blockinteraction);
+                CameraShake.cameraShake(this.level(), position(), 40, 0.2f, 0, 30);
+                this.level().explode(this, this.getX(), this.getY(), this.getZ(), (float)(this.explosionRadius * 2.5F * f), explosion$blockinteraction);
             }
             this.discard();
             this.spawnLingeringCloud();
@@ -242,19 +242,19 @@ public class Sneaker extends AbstractCreeperEntity implements CreeperInfection, 
             double d0 = (-0.5 + this.random.nextGaussian()) / 2;
             double d1 = (-0.5 + this.random.nextGaussian()) / 2;
             double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.CAMPFIRE_COSY_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 200; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian()) / 2;
             double d1 = (-0.5 + this.random.nextGaussian()) / 2;
             double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 150; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian()) / 2;
             double d1 = (-0.5 + this.random.nextGaussian()) / 2;
             double d2 = (-0.5 + this.random.nextGaussian()) / 2;
-            EntityUtil.makeAParticle(this.level, ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.LARGE_SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
     }
 

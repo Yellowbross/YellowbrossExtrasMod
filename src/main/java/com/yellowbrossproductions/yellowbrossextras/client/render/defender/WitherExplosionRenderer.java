@@ -2,10 +2,9 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
+import com.yellowbrossproductions.yellowbrossextras.client.render.YERenderTypes;
 import com.yellowbrossproductions.yellowbrossextras.client.render.util.RenderUtil;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.WitherExplosion;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -13,11 +12,12 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Vector3f;
 
 import java.util.Random;
 
@@ -45,9 +45,10 @@ public class WitherExplosionRenderer extends EntityRenderer<WitherExplosion> {
     public void render(WitherExplosion pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
         pPoseStack.pushPose();
 
+        VertexConsumer sprite = pBuffer.getBuffer(YERenderTypes.twoDimensionalEffects(TEXTURE, false));
+
         pPoseStack.translate(this.getRenderOffset(pEntity, pPartialTick).x, this.getRenderOffset(pEntity, pPartialTick).y, this.getRenderOffset(pEntity, pPartialTick).z);
 
-        VertexConsumer sprite = pBuffer.getBuffer(RenderType.entityTranslucent(TEXTURE));
         renderBody(pPoseStack, sprite, pEntity.tickCount, pPartialTick);
 
         float age = pEntity.tickCount + pPartialTick;
@@ -102,6 +103,16 @@ public class WitherExplosionRenderer extends EntityRenderer<WitherExplosion> {
     }
 
     @Override
+    protected int getBlockLightLevel(WitherExplosion pEntity, BlockPos pPos) {
+        return 15;
+    }
+
+    @Override
+    protected int getSkyLightLevel(WitherExplosion pEntity, BlockPos pPos) {
+        return 15;
+    }
+
+    @Override
     public Vec3 getRenderOffset(WitherExplosion pEntity, float pPartialTicks) {
         float ranMult = 0.1f;
         return new Vec3((-0.5 + random.nextDouble()) * ranMult, (-0.5 + random.nextDouble()) * ranMult, (-0.5 + random.nextDouble()) * ranMult);
@@ -109,7 +120,7 @@ public class WitherExplosionRenderer extends EntityRenderer<WitherExplosion> {
 
     private void renderBody(PoseStack poseStack, VertexConsumer buffer, float ticks, float partialTick) {
         poseStack.pushPose();
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(-this.entityRenderDispatcher.camera.getYRot() + 180.0f));
+        poseStack.mulPose(Axis.YP.rotationDegrees(-this.entityRenderDispatcher.camera.getYRot() + 180.0f));
         float age = ticks + partialTick;
 
         float size = 3.25f;
@@ -132,7 +143,7 @@ public class WitherExplosionRenderer extends EntityRenderer<WitherExplosion> {
         float mult = 6.0f;
         float calculation = age * mult;
         poseStack.scale(size, size, size);
-        poseStack.mulPose(Vector3f.ZP.rotationDegrees(calculation));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(calculation));
         RenderUtil.drawSprite(poseStack, buffer, ticks > 40 ? (age - 40) / 20 : 0, BODY_WIDTH, 0, (BODY_WIDTH + PARTICLE_SIZE), PARTICLE_SIZE, TEXTURE_WIDTH, TEXTURE_HEIGHT);
         poseStack.popPose();
     }

@@ -17,7 +17,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
@@ -96,7 +95,7 @@ public class Fireball extends CustomAbstractHurtingProjectile {
         if (pSource.getDirectEntity() instanceof Fireball) return false;
         if (this.getSize() == 1) return false;
         this.wasHit = true;
-        if (!this.level.isClientSide) this.setShouldFlash(false);
+        if (!this.level().isClientSide) this.setShouldFlash(false);
         return super.hurt(pSource, pAmount);
     }
 
@@ -149,7 +148,7 @@ public class Fireball extends CustomAbstractHurtingProjectile {
         }
         super.tick();
 
-        if (this.isInWater() || this.tickCount > 150 || !this.level.getWorldBorder().isWithinBounds(this.blockPosition())) this.explode(3.0F);
+        if (this.isInWater() || this.tickCount > 150 || !this.level().getWorldBorder().isWithinBounds(this.blockPosition())) this.explode(3.0F);
 
         if (this.startPos != Vec3.ZERO && this.destPos != Vec3.ZERO && !this.wasHit) {
             int amount = Math.max(25, 60 - (int)(this.tickCount / 5));
@@ -159,15 +158,15 @@ public class Fireball extends CustomAbstractHurtingProjectile {
                     double tx = this.startPos.x + (this.destPos.x - this.startPos.x) * trailFactor;
                     double ty = this.startPos.y + (this.destPos.y - this.startPos.y) * trailFactor;
                     double tz = this.startPos.z + (this.destPos.z - this.startPos.z) * trailFactor;
-                    BlockPos.MutableBlockPos yPosition = new BlockPos(tx, ty, tz).mutable();
-                    while (yPosition.getY() > this.level.getMinBuildHeight()
-                            && !this.level.getBlockState(yPosition).getMaterial().blocksMotion()
-                            && !this.level.getBlockState(yPosition).getMaterial().isLiquid()) {
+                    BlockPos.MutableBlockPos yPosition = BlockPos.containing(tx, ty, tz).mutable();
+                    while (yPosition.getY() > this.level().getMinBuildHeight()
+                            && !this.level().getBlockState(yPosition).blocksMotion()
+                            && !this.level().getBlockState(yPosition).liquid()) {
                         yPosition.move(Direction.DOWN);
                     }
                     Vec3 pos = new Vec3(tx, yPosition.getY() + 1.65, tz);
 
-                    EntityUtil.makeAParticle(this.level, ParticleTypes.SOUL_FIRE_FLAME, true, pos, Vec3.ZERO);
+                    EntityUtil.makeAParticle(this.level(), ParticleTypes.SOUL_FIRE_FLAME, true, pos, Vec3.ZERO);
                 }
             } else {
                 EntityUtil.makeSimpleTrail(this, ParticleTypes.SOUL_FIRE_FLAME, amount,
@@ -181,9 +180,9 @@ public class Fireball extends CustomAbstractHurtingProjectile {
             }
         }
 
-        if (!this.level.isClientSide &&
-                !this.level.getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getMaterial().blocksMotion()
-                && !this.level.getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).getMaterial().isLiquid()
+        if (!this.level().isClientSide &&
+                !this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).blocksMotion()
+                && !this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).liquid()
                 && this.getSize() == 1 && !this.wasHit) {
             this.setPos(this.position().add(0, -1, 0));
         }
@@ -230,7 +229,7 @@ public class Fireball extends CustomAbstractHurtingProjectile {
             if (pResult.getEntity() instanceof LivingEntity living && pResult.getEntity() != this.getOwner()) {
                 if (!living.fireImmune()) {
                     living.invulnerableTime = 0;
-                    living.hurt(DamageSource.thrown(this, this.getOwner()), 1.0F * this.getSize());
+                    living.hurt(this.damageSources().thrown(this, this.getOwner()), 1.0F * this.getSize());
                     living.invulnerableTime = 0;
                     living.setSecondsOnFire(8);
                     living.playSound(SoundEvents.PLAYER_HURT_ON_FIRE, 2.0F, living.getVoicePitch());
@@ -241,7 +240,7 @@ public class Fireball extends CustomAbstractHurtingProjectile {
 
     @Override
     protected void onHitBlock(BlockHitResult pResult) {
-        if (this.level.getBlockState(pResult.getBlockPos().above()).getMaterial().blocksMotion()
+        if (this.level().getBlockState(pResult.getBlockPos().above()).blocksMotion()
                 || this.getSize() > 1
                 || pResult.getDirection() == Direction.UP
                 || pResult.getDirection() == Direction.DOWN) {
@@ -263,20 +262,20 @@ public class Fireball extends CustomAbstractHurtingProjectile {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.FLAME, false, this.position(), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.FLAME, false, this.position(), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 10 * this.getSize(); ++i) {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.LARGE_SMOKE, true, this.position(), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.LARGE_SMOKE, true, this.position(), new Vec3(d0, d1, d2));
         }
-        EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION, true, this.position(), Vec3.ZERO);
-        if (this.getSize() > 1) EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION_EMITTER, true, this.position(), Vec3.ZERO);
+        EntityUtil.makeAParticle(this.level(), ParticleTypes.EXPLOSION, true, this.position(), Vec3.ZERO);
+        if (this.getSize() > 1) EntityUtil.makeAParticle(this.level(), ParticleTypes.EXPLOSION_EMITTER, true, this.position(), Vec3.ZERO);
     }
 
     private void explode(float s) {
-        if (this.level.isClientSide) return;
+        if (this.level().isClientSide) return;
 
         this.makeExplodeParticles();
         SoundEvent sound = switch (this.getSize()) {
@@ -286,16 +285,16 @@ public class Fireball extends CustomAbstractHurtingProjectile {
         };
         this.playSound(SoundEvents.PLAYER_HURT_ON_FIRE, 2.0F, 1.0F);
         this.playSound(sound, 1.5F * this.getSize(), 1.0F);
-        if (this.getSize() == 3) CameraShake.cameraShake(this.level, this.position(), 50, 0.1f, 0, 20);
+        if (this.getSize() == 3) CameraShake.cameraShake(this.level(), this.position(), 50, 0.1f, 0, 20);
 
         float size = s * this.getSize();
 
-        List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, new AABB(this.position().subtract(size, size, size), this.position().add(size, size, size)), p -> p.isAlive() && p != this.getOwner());
+        List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, new AABB(this.position().subtract(size, size, size), this.position().add(size, size, size)), p -> p.isAlive() && p != this.getOwner());
 
         for (LivingEntity entity : list) {
             boolean canHurt = !(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(entity, owner);
             if (canHurt) {
-                DamageSource damageSource = new IndirectEntityDamageSource("thrown", this, this.getOwner()).setProjectile();
+                DamageSource damageSource = this.damageSources().thrown(this, this.getOwner());
                 entity.invulnerableTime = 0;
                 entity.hurt(damageSource, 8.0F * this.getSize() * EntityUtil.multiplyToScrewArmor(entity, 0.2f));
             }
@@ -308,7 +307,7 @@ public class Fireball extends CustomAbstractHurtingProjectile {
     }
 
     public void fireProjectiles(@Nullable Entity spawner, int amount, double yOffset, float speed, int size, boolean circleOrSphere) {
-        if (this.level.isClientSide()) return;
+        if (this.level().isClientSide()) return;
 
         if (circleOrSphere) {
             for (int i = 0; i < amount; i++) {
@@ -319,11 +318,11 @@ public class Fireball extends CustomAbstractHurtingProjectile {
                 float vz = speed * Mth.sin(yaw);
                 Vec3 direction = new Vec3(vx, 0, vz);
 
-                if (!this.level.getBlockState(new BlockPos(this.position().add(direction))).getMaterial().blocksMotion()) {
-                    Fireball bullet = new Fireball(this.level, spawner, this.position().add(0, yOffset, 0), direction);
+                if (!this.level().getBlockState(BlockPos.containing(this.position().add(direction))).blocksMotion()) {
+                    Fireball bullet = new Fireball(this.level(), spawner, this.position().add(0, yOffset, 0), direction);
 
                     bullet.setSize(size);
-                    this.level.addFreshEntity(bullet);
+                    this.level().addFreshEntity(bullet);
                 }
             }
         } else {
@@ -338,11 +337,11 @@ public class Fireball extends CustomAbstractHurtingProjectile {
 
                 Vec3 direction = new Vec3(x, y, z).normalize().scale(speed);
 
-                if (!this.level.getBlockState(new BlockPos(this.position().add(direction))).getMaterial().blocksMotion()) {
-                    Fireball bullet = new Fireball(this.level, spawner, this.position().add(0, yOffset, 0), direction);
+                if (!this.level().getBlockState(BlockPos.containing(this.position().add(direction))).blocksMotion()) {
+                    Fireball bullet = new Fireball(this.level(), spawner, this.position().add(0, yOffset, 0), direction);
 
                     bullet.setSize(size);
-                    this.level.addFreshEntity(bullet);
+                    this.level().addFreshEntity(bullet);
                 }
             }
         }

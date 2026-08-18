@@ -42,12 +42,12 @@ public class TNTProjectile extends ThrowableItemProjectile {
     protected void onHitEntity(EntityHitResult pResult) {
         if (!(pResult.getEntity() instanceof CreeperInfection)) {
             super.onHitEntity(pResult);
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 this.explode(2.5D);
-                CameraShake.cameraShake(this.level, position(), 20, 0.05f, 0, 15);
+                CameraShake.cameraShake(this.level(), position(), 20, 0.05f, 0, 15);
             }
             Entity entity = pResult.getEntity();
-            entity.hurt(DamageSource.thrown(this, this.getOwner()), 1.0F);
+            entity.hurt(this.damageSources().thrown(this, this.getOwner()), 1.0F);
         }
     }
 
@@ -58,15 +58,15 @@ public class TNTProjectile extends ThrowableItemProjectile {
     @Override
     protected void onHitBlock(BlockHitResult pResult) {
         super.onHitBlock(pResult);
-        if (!this.level.isClientSide) {
-            this.level.broadcastEntityEvent(this, (byte)3);
+        if (!this.level().isClientSide) {
+            this.level().broadcastEntityEvent(this, (byte)3);
             this.explode(2.5D);
             this.discard();
         }
     }
 
     private void explode(double size) {
-        List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level, size, this, Entity::isAlive);
+        List<Entity> list = EntityUtil.getEntitiesFromAABB(this.level(), size, this, Entity::isAlive);
 
         boolean shouldCareAboutTeams = this.shooter != null;
         this.makeExplodeParticles();
@@ -78,8 +78,8 @@ public class TNTProjectile extends ThrowableItemProjectile {
                     team = EntityUtil.canHurtThisMob(living, this.shooter) && entity != this.shooter;
                 }
                 if (team && entity.isAlive() && !entity.isInvulnerable() && !entity.isSpectator()) {
-                    living.hurt(DamageSource.thrown(this, this.getOwner()), 2.0F);
-                    if (!this.level.isClientSide) {
+                    living.hurt(this.damageSources().thrown(this, this.getOwner()), 2.0F);
+                    if (!this.level().isClientSide) {
                         this.discard();
                     }
                 }
@@ -92,19 +92,19 @@ public class TNTProjectile extends ThrowableItemProjectile {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 3; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.SMOKE, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 6; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.EXPLOSION, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
     }
 }

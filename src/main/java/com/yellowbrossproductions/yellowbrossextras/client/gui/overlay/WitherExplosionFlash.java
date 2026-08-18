@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,7 +43,7 @@ public class WitherExplosionFlash {
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
-        GuiComponent.fill(poseStack, 0, 0, width, height, color);
+        poseStack.fill(0, 0, width, height, color);
 
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();

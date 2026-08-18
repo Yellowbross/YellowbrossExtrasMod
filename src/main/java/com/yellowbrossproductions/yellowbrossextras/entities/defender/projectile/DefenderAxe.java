@@ -10,7 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
@@ -47,7 +47,7 @@ public class DefenderAxe extends CustomAbstractHurtingProjectile {
 
         this.makeParticles();
 
-        if (this.tickCount >= 100 && !this.level.isClientSide) this.discard();
+        if (this.tickCount >= 100 && !this.level().isClientSide) this.discard();
 
         float oldOldYRot = this.yRotO;
         super.tick();
@@ -59,8 +59,8 @@ public class DefenderAxe extends CustomAbstractHurtingProjectile {
     }
 
     public void makeParticles() {
-        if (!this.level.isClientSide) {
-            for (ServerPlayer serverPlayer : ((ServerLevel)this.level).players()) {
+        if (!this.level().isClientSide) {
+            for (ServerPlayer serverPlayer : ((ServerLevel) this.level()).players()) {
                 if (serverPlayer.distanceToSqr(this) < 4096.0D) {
                     ParticlePacket packet = new ParticlePacket();
 
@@ -92,20 +92,20 @@ public class DefenderAxe extends CustomAbstractHurtingProjectile {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.POOF, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 20; ++i) {
             double d0 = (-0.5 + this.random.nextGaussian());
             double d1 = (-0.5 + this.random.nextGaussian());
             double d2 = (-0.5 + this.random.nextGaussian());
-            EntityUtil.makeAParticle(this.level, ParticleTypes.CRIT, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(this.level(), ParticleTypes.CRIT, false, new Vec3(this.getRandomX(1.0D), this.getRandomY(), this.getRandomZ(1.0D)), new Vec3(d0, d1, d2));
         }
-        EntityUtil.makeAParticle(this.level, ParticleTypes.EXPLOSION, false, this.position(), Vec3.ZERO);
+        EntityUtil.makeAParticle(this.level(), ParticleTypes.EXPLOSION, false, this.position(), Vec3.ZERO);
     }
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        return pSource != DamageSource.OUT_OF_WORLD && super.hurt(pSource, pAmount);
+        return !pSource.is(DamageTypes.GENERIC_KILL) && super.hurt(pSource, pAmount);
     }
 
     @Override
@@ -114,18 +114,18 @@ public class DefenderAxe extends CustomAbstractHurtingProjectile {
     }
 
     private void explode(@Nullable Entity hitEntity, double size) {
-        if (this.level.isClientSide) return;
+        if (this.level().isClientSide) return;
 
         this.makeExplodeParticles();
         this.playSound(SoundEvents.PLAYER_ATTACK_CRIT, 2.0F, 1.0F);
 
-        List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, new AABB(this.position().subtract(size, size, size), this.position().add(size, size, size)), p -> p.isAlive() && p != this.getOwner());
+        List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, new AABB(this.position().subtract(size, size, size), this.position().add(size, size, size)), p -> p.isAlive() && p != this.getOwner());
         if (hitEntity instanceof LivingEntity living) list.add(living);
 
         for (LivingEntity entity : list) {
             boolean canHurt = (!(this.getOwner() instanceof Mob owner) || EntityUtil.canHurtThisMob(entity, owner)) && entity.hasLineOfSight(this);
             if (canHurt) {
-                DamageSource damageSource = new IndirectEntityDamageSource("thrown", this, this.getOwner()).setProjectile();
+                DamageSource damageSource = this.damageSources().thrown(this, this.getOwner());
                 entity.invulnerableTime = 0;
                 entity.hurt(damageSource, 8.0F);
                 EntityUtil.disableShield(entity, 100);

@@ -2,9 +2,6 @@ package com.yellowbrossproductions.yellowbrossextras.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
 import com.yellowbrossproductions.yellowbrossextras.entities.Vilvgaver;
@@ -19,6 +16,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 @OnlyIn(Dist.CLIENT)
 public class VilvgaverRenderer extends EntityRenderer<Entity> {
@@ -64,7 +64,7 @@ public class VilvgaverRenderer extends EntityRenderer<Entity> {
 
     private void renderMonster(PoseStack matrixStackIn, VertexConsumer builder, int packedLightIn, float warning) {
         matrixStackIn.pushPose();
-        Quaternion quat = this.entityRenderDispatcher.cameraOrientation();
+        Quaternionf quat = this.entityRenderDispatcher.cameraOrientation();
         matrixStackIn.mulPose(quat);
         renderFlatQuad(matrixStackIn, builder, packedLightIn, warning);
         matrixStackIn.popPose();

@@ -13,7 +13,7 @@ public class SuperDuperPoisonEffect extends CustomMobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
-        if (pLivingEntity.getHealth() > 1 && pLivingEntity.getMobType() != MobType.UNDEAD) pLivingEntity.hurt(DamageSource.MAGIC, Math.min(pLivingEntity.getHealth() - 1, 1.0F * (pAmplifier + 1)));
+        if (pLivingEntity.getHealth() > 1 && pLivingEntity.getMobType() != MobType.UNDEAD) pLivingEntity.hurt(pLivingEntity.level().damageSources().magic(), Math.min(pLivingEntity.getHealth() - 1, 1.0F * (pAmplifier + 1)));
     }
 
     @Override

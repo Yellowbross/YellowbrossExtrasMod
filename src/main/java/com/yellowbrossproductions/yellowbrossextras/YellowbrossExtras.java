@@ -9,6 +9,8 @@ import com.yellowbrossproductions.yellowbrossextras.util.*;
 import com.yellowbrossproductions.yellowbrossextras.world.commands.BunnyBlitzCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
@@ -26,6 +28,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
 import java.util.Locale;
@@ -42,7 +46,37 @@ public class YellowbrossExtras
     public static final String MOD_ID = "yellowbrossextras";
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
-    public static final CreativeModeTab YELLOWBROSSEXTRAS_GROUP = new YellowbrossExtrasGroup("yellowbrossextrastab");
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
+
+    public static final RegistryObject<CreativeModeTab> YELLOWBROSSEXTRAS_GROUP = CREATIVE_MODE_TABS.register("yellowbrossextrastab", () -> CreativeModeTab.builder()
+            .icon(() -> YEItemsAndBlocks.ICON.get().getDefaultInstance())
+            .title(Component.translatable("itemGroup.yellowbrossextrastab"))
+            .displayItems((parameters, output) -> {
+                // Items
+                output.accept(YEItemsAndBlocks.MOB_REMOVER.get());
+                output.accept(YEItemsAndBlocks.THE_FINGER.get());
+
+                // Spawn Eggs
+                output.accept(YEItemsAndBlocks.DEFENDER_SPAWN_EGG.get());
+                output.accept(YEItemsAndBlocks.SENTRY_GUN_SPAWN_EGG.get());
+
+                output.accept(YEItemsAndBlocks.SNEAKER_SPAWN_EGG.get());
+                output.accept(YEItemsAndBlocks.PARACREEPER_SPAWN_EGG.get());
+                output.accept(YEItemsAndBlocks.CRAWLER_SPAWN_EGG.get());
+                output.accept(YEItemsAndBlocks.FREAKER_SPAWN_EGG.get());
+                output.accept(YEItemsAndBlocks.SPRAYER_SPAWN_EGG.get());
+
+                output.accept(YEItemsAndBlocks.VILVGAVER_SPAWN_EGG.get());
+
+                output.accept(YEItemsAndBlocks.CONVERSLIN_SPAWN_EGG.get());
+
+                output.accept(YEItemsAndBlocks.AMOEBIC_DEVOURER_SPAWN_EGG.get());
+                output.accept(YEItemsAndBlocks.HYPER_SNOW_GOLEM_SPAWN_EGG.get());
+                output.accept(YEItemsAndBlocks.AIMBOT_SPAWN_EGG.get());
+
+                output.accept(YEItemsAndBlocks.PVE_BLOCK_ITEM.get());
+            })
+            .build());
 
     public YellowbrossExtras()
     {
@@ -62,6 +96,8 @@ public class YellowbrossExtras
         forgeBus.addListener(EventPriority.NORMAL, YellowbrossExtras::registerCommands);
         // modEventBus.addListener(YECapabilities::registerCaps);
 
+        CREATIVE_MODE_TABS.register(modEventBus);
+
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -77,17 +113,5 @@ public class YellowbrossExtras
 
     public static ResourceLocation prefix(String name) {
         return new ResourceLocation(MOD_ID, name.toLowerCase(Locale.ROOT));
-    }
-
-    public static class YellowbrossExtrasGroup extends CreativeModeTab {
-
-        public YellowbrossExtrasGroup(String label) {
-            super(label);
-        }
-
-        @Override
-        public ItemStack makeIcon() {
-            return YEItemsAndBlocks.ICON.get().getDefaultInstance();
-        }
     }
 }

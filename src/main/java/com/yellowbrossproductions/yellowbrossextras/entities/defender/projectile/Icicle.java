@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -74,7 +75,7 @@ public class Icicle extends Entity {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -83,7 +84,7 @@ public class Icicle extends Entity {
     }
 
     public void setCollisionPos(int x, int z) {
-        this.entityData.set(COLLISION_POS, new BlockPos(x, this.level.getMaxBuildHeight(), z));
+        this.entityData.set(COLLISION_POS, new BlockPos(x, this.level().getMaxBuildHeight(), z));
     }
 
     public int getTrueTimer() {
@@ -129,7 +130,7 @@ public class Icicle extends Entity {
     public void tick() {
         super.tick();
 
-        if (!this.level.isClientSide) this.setTicks(this.getTicks() + 1);
+        if (!this.level().isClientSide) this.setTicks(this.getTicks() + 1);
 
         if (this.shotByDefender) {
             if (this.getTicks() < 5 + this.getDelay() && this.target != null && this.target.isAlive() && !this.target.isRemoved()) {
@@ -137,29 +138,29 @@ public class Icicle extends Entity {
             }
             if (this.getTicks() >= 5 + this.getDelay()) {
                 BlockPos.MutableBlockPos yPosition = this.getCollisionPos().mutable();
-                while (yPosition.getY() > this.level.getMinBuildHeight() && !this.level.getBlockState(yPosition).getMaterial().blocksMotion()) {
+                while (yPosition.getY() > this.level().getMinBuildHeight() && !this.level().getBlockState(yPosition).blocksMotion()) {
                     yPosition.move(Direction.DOWN);
                 }
 
                 this.setPos(yPosition.getX() + 0.5, yPosition.getY() + 1, yPosition.getZ() + 0.5);
-                if (this.level instanceof ServerLevel server) server.getChunkSource().broadcast(this, new ClientboundTeleportEntityPacket(this));
+                if (this.level() instanceof ServerLevel server) server.getChunkSource().broadcast(this, new ClientboundTeleportEntityPacket(this));
             }
         }
 
         if (this.getTicks() == this.getTrueTimer()) {
             this.playSound(YESoundEvents.ENTITY_DEFENDER_ICETHROWER_HIT.get(), 2.0F, 1.0F);
-            EntityUtil.makeCircleParticles(this.level, this.getPosition(0).add(0, 0.4, 0), ParticleTypes.POOF, false, 30, 1.0F, Vec3.ZERO, 0.0F);
+            EntityUtil.makeCircleParticles(this.level(), this.getPosition(0).add(0, 0.4, 0), ParticleTypes.POOF, false, 30, 1.0F, Vec3.ZERO, 0.0F);
             for(int i = 0; i < 10; ++i) {
-                EntityUtil.makeAParticle(this.level, ParticleTypes.POOF, false, new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(0, this.random.nextGaussian() * 2, 0));
+                EntityUtil.makeAParticle(this.level(), ParticleTypes.POOF, false, new Vec3(this.getX(), this.getY(), this.getZ()), new Vec3(0, this.random.nextGaussian() * 2, 0));
             }
-            CameraShake.cameraShake(this.level, position(), 35, 0.05f, 0, 10);
+            CameraShake.cameraShake(this.level(), position(), 35, 0.05f, 0, 10);
 
-            List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(3).setMaxY(this.level.getMaxBuildHeight()),
+            List<LivingEntity> entities = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(3).setMaxY(this.level().getMaxBuildHeight()),
                     p -> !p.isOnFire() && p.getType().isBlockDangerous(Blocks.POWDER_SNOW.defaultBlockState()));
             for (LivingEntity hit : entities) {
-                if (hit.hurt(DamageSource.thrown(this, this.getOwner()), 8.0F)) {
+                if (hit.hurt(this.damageSources().thrown(this, this.getOwner()), 8.0F)) {
                     hit.invulnerableTime = 0;
-                    hit.hurt(DamageSource.FREEZE, 4.0F);
+                    hit.hurt(this.damageSources().freeze(), 4.0F);
                     hit.addEffect(new MobEffectInstance(YEEffects.FROZEN.get(), 300, 0,  false, false, true));
                 }
             }

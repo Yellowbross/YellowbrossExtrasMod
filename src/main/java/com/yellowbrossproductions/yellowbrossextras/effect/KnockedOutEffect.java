@@ -25,13 +25,13 @@ public class KnockedOutEffect extends CustomMobEffect {
             double d0 = (-0.5 + random.nextGaussian()) / 10;
             double d1 = (-0.5 + random.nextGaussian()) / 10;
             double d2 = (-0.5 + random.nextGaussian()) / 10;
-            EntityUtil.makeAParticle(pLivingEntity.level, ParticleTypes.SPLASH, false, new Vec3(pLivingEntity.getRandomX(0.5D), pLivingEntity.getRandomY(), pLivingEntity.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(pLivingEntity.level(), ParticleTypes.SPLASH, false, new Vec3(pLivingEntity.getRandomX(0.5D), pLivingEntity.getRandomY(), pLivingEntity.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
         }
         for(int i = 0; i < 2; ++i) {
             double d0 = (-0.5 + random.nextGaussian()) / 10;
             double d1 = (-0.5 + random.nextGaussian()) / 10;
             double d2 = (-0.5 + random.nextGaussian()) / 10;
-            EntityUtil.makeAParticle(pLivingEntity.level, ParticleTypes.CRIT, false, new Vec3(pLivingEntity.getRandomX(0.5D), pLivingEntity.getY() + pLivingEntity.getBbHeight() + 0.2D, pLivingEntity.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
+            EntityUtil.makeAParticle(pLivingEntity.level(), ParticleTypes.CRIT, false, new Vec3(pLivingEntity.getRandomX(0.5D), pLivingEntity.getY() + pLivingEntity.getBbHeight() + 0.2D, pLivingEntity.getRandomZ(0.5D)), new Vec3(d0, d1, d2));
         }
     }
 

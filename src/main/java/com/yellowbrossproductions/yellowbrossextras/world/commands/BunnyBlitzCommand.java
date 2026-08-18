@@ -13,6 +13,7 @@ import net.minecraft.commands.arguments.TeamArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -52,7 +53,7 @@ public class BunnyBlitzCommand {
 
     private static int start(CommandSourceStack commandSourceStack, BlockPos pos, boolean centerOnVillage, boolean absurdity, @Nullable PlayerTeam team) throws CommandSyntaxException {
         ServerPlayer serverplayer = commandSourceStack.getPlayerOrException();
-        BunnyBlitz blitz = BlitzManager.createRaid(serverplayer.getLevel(), pos);
+        BunnyBlitz blitz = BlitzManager.createRaid(serverplayer.serverLevel(), pos);
         blitz.addPlayerToRaid(serverplayer);
         if (centerOnVillage) {
             blitz.moveRaidCenterToNearbyVillageSection();
@@ -64,7 +65,7 @@ public class BunnyBlitzCommand {
             blitz.setTeam(team);
         }
         if (blitz != null) {
-            commandSourceStack.sendSuccess(Component.translatable("command.yellowbrossextras.bunny_blitz.start_success", (blitz.getCenter().getX() + ", " + blitz.getCenter().getY() + ", " + blitz.getCenter().getZ())), false);
+            commandSourceStack.sendSuccess(() -> Component.translatable("command.yellowbrossextras.bunny_blitz.start_success", (blitz.getCenter().getX() + ", " + blitz.getCenter().getY() + ", " + blitz.getCenter().getZ())), false);
         } else {
             commandSourceStack.sendFailure(Component.literal("Failed to create a raid in your local village"));
         }
@@ -74,7 +75,7 @@ public class BunnyBlitzCommand {
 
     private static int highlightBunnies(CommandSourceStack commandSourceStack) throws CommandSyntaxException {
         ServerPlayer serverplayer = commandSourceStack.getPlayerOrException();
-        List<BunnyBlitz> list = BlitzManager.getRaids(serverplayer.getLevel());
+        List<BunnyBlitz> list = BlitzManager.getRaids(serverplayer.serverLevel());
         if (!list.isEmpty()) {
             int i = 0;
             for (BunnyBlitz blitz : list) {
@@ -86,7 +87,8 @@ public class BunnyBlitzCommand {
                     }
                 }
             }
-            commandSourceStack.sendSuccess(Component.translatable("command.yellowbrossextras.bunny_blitz.highlight_success", i), false);
+            int finalI = i;
+            commandSourceStack.sendSuccess(() -> Component.translatable("command.yellowbrossextras.bunny_blitz.highlight_success", finalI), false);
         } else {
             commandSourceStack.sendFailure(Component.translatable("command.yellowbrossextras.bunny_blitz.overall_fail"));
         }
@@ -95,7 +97,7 @@ public class BunnyBlitzCommand {
 
     private static int skipToWave(CommandSourceStack commandSourceStack, BlockPos pos, int i, int range) throws CommandSyntaxException {
         ServerPlayer serverplayer = commandSourceStack.getPlayerOrException();
-        List<BunnyBlitz> list = BlitzManager.getRaids(serverplayer.getLevel());
+        List<BunnyBlitz> list = BlitzManager.getRaids(serverplayer.serverLevel());
 
         if (!list.isEmpty()) {
             int i1 = 0;
@@ -112,7 +114,7 @@ public class BunnyBlitzCommand {
             if (i1 == 0) {
                 commandSourceStack.sendFailure(Component.translatable("command.yellowbrossextras.bunny_blitz.skip_fail"));
             } else {
-                commandSourceStack.sendSuccess(Component.translatable("command.yellowbrossextras.bunny_blitz.skip_success", i), false);
+                commandSourceStack.sendSuccess(() -> Component.translatable("command.yellowbrossextras.bunny_blitz.skip_success", i), false);
             }
         } else {
             commandSourceStack.sendFailure(Component.translatable("command.yellowbrossextras.bunny_blitz.overall_fail"));

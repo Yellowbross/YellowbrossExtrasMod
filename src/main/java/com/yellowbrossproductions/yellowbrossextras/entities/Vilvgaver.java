@@ -2,6 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.entities;
 
 import com.google.common.collect.Sets;
 import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConfig;
+import com.yellowbrossproductions.yellowbrossextras.init.YEDamageSources;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.init.YEItemsAndBlocks;
 import com.yellowbrossproductions.yellowbrossextras.util.LoopingSound;
@@ -11,14 +12,17 @@ import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -88,7 +92,7 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
 
     @Override
     public boolean hasLineOfSight(Entity pEntity) {
-        if (pEntity.level != this.level) {
+        if (pEntity.level() != this.level()) {
             return false;
         } else {
             Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
@@ -102,7 +106,7 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
     }
 
     public boolean isInAttackSight(Entity pEntity) {
-        if (pEntity.level != this.level) {
+        if (pEntity.level() != this.level()) {
             return false;
         } else {
             Vec3 vec3 = new Vec3(this.getX(), this.getEyeY(), this.getZ());
@@ -110,7 +114,7 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
             if (vec31.distanceTo(vec3) > 128.0D) {
                 return false;
             } else {
-                return this.level.clip(new ClipContext(vec3, vec31, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS;
+                return this.level().clip(new ClipContext(vec3, vec31, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS;
             }
         }
     }
@@ -166,25 +170,25 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
         super.tick();
 
         if (this.isChallenge()) {
-            if (this.level.getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).is(Blocks.BEDROCK)) {
-                Player player = this.level.getNearestEntity(Player.class, TargetingConditions.DEFAULT, this, this.getX(), this.getY(), this.getZ(), this.getBoundingBox().inflate(150.0D));
+            if (this.level().getBlockState(this.getBlockPosBelowThatAffectsMyMovement()).is(Blocks.BEDROCK)) {
+                Player player = this.level().getNearestEntity(Player.class, TargetingConditions.DEFAULT, this, this.getX(), this.getY(), this.getZ(), this.getBoundingBox().inflate(150.0D));
                 if (player != null) {
                     this.setPos(this.getX(), player.getY(), this.getZ());
                 }
             }
-            List<Player> list = this.level.getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(90.0D));
+            List<Player> list = this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(90.0D));
             if (list.isEmpty() && this.tickCount > 20) {
                 this.kill();
             }
 
-            List<Vilvgaver> list2 = this.level.getEntitiesOfClass(Vilvgaver.class, this.getBoundingBox().inflate(100.0D), predicate -> {
+            List<Vilvgaver> list2 = this.level().getEntitiesOfClass(Vilvgaver.class, this.getBoundingBox().inflate(100.0D), predicate -> {
                 return predicate.isChallenge() && predicate != this;
             });
             if (!list2.isEmpty() && this.tickCount > 10) {
                 this.kill();
             }
 
-            CameraShake.cameraShake(this.level, position(), 35, 0.1f, 1, 0);
+            CameraShake.cameraShake(this.level(), position(), 35, 0.1f, 1, 0);
         }
 
         this.sayTicks--;
@@ -199,7 +203,7 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
             this.jumpWaitTime = 0;
         }
 
-        for (Entity entity : level.getEntities(this, getBoundingBox().inflate(15.0F))) {
+        for (Entity entity : level().getEntities(this, getBoundingBox().inflate(15.0F))) {
             if (EntityUtil.canHurtThisMob(entity, this) && entity instanceof LivingEntity && entity.isAlive() && EntityUtil.isMobNotInCreativeMode(entity) && !(entity instanceof Vilvgaver)) {
                 double x = this.getX() - entity.getX();
                 double y = this.getY() - entity.getY();
@@ -214,7 +218,7 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
                         }
                         this.sayTicks = 60;
 
-                        entity.hurt(DamageSource.mobAttack(this).bypassArmor(), Float.MAX_VALUE);
+                        entity.hurt(this.damageSources().source(YEDamageSources.VILVGAVER, this), Float.MAX_VALUE);
                         entity.hurtMarked = true;
                         entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 0.4D, (-y / d * 0.4D) + 0.2D, -z / d * 0.4D));
                         entity.setDeltaMovement(entity.getDeltaMovement().add(-x / d * 0.4D, (-y / d * 0.4D) + 0.2D, -z / d * 0.4D));
@@ -302,8 +306,8 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
                 if (this.stuckTicks > 40) {
                     double x = (int)(this.getX() + random.nextInt(6) - 3);
                     double z = (int)(this.getZ() + random.nextInt(6) - 3);
-                    int worldHeight = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int)x, (int)z);
-                    if (worldHeight > level.getMinBuildHeight() + 1) {
+                    int worldHeight = level().getHeight(Heightmap.Types.MOTION_BLOCKING, (int)x, (int)z);
+                    if (worldHeight > level().getMinBuildHeight() + 1) {
                         this.setPos(x, worldHeight, z);
                         this.stuckTicks = 0;
                     }
@@ -314,7 +318,7 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
         }
 
         if (this.isChallenge()) {
-            if (this.level.dimensionType().piglinSafe()) {
+            if (this.level().dimensionType().piglinSafe()) {
                 final ObjectArrayList<BlockPos> toBlow = new ObjectArrayList<>();
                 Set<BlockPos> set = Sets.newHashSet();
                 int k;
@@ -330,16 +334,16 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
                                 d0 /= d3;
                                 d1 /= d3;
                                 d2 /= d3;
-                                float f = (float) (2.5F * (0.7F + this.level.random.nextFloat() * 0.6F));
+                                float f = (float) (2.5F * (0.7F + this.level().random.nextFloat() * 0.6F));
                                 double d4 = this.getX();
                                 double d6 = this.getY();
                                 double d8 = this.getZ();
 
                                 for(float f1 = 0.3F; f > 0.0F; f -= 0.22500001F) {
-                                    BlockPos blockpos = new BlockPos(d4, d6, d8);
-                                    BlockState blockstate = this.level.getBlockState(blockpos);
-                                    FluidState fluidstate = this.level.getFluidState(blockpos);
-                                    if (!this.level.isInWorldBounds(blockpos)) {
+                                    BlockPos blockpos = BlockPos.containing(d4, d6, d8);
+                                    BlockState blockstate = this.level().getBlockState(blockpos);
+                                    FluidState fluidstate = this.level().getFluidState(blockpos);
+                                    if (!this.level().isInWorldBounds(blockpos)) {
                                         break;
                                     }
 
@@ -360,14 +364,14 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
                 ObjectListIterator var5 = toBlow.iterator();
                 while(var5.hasNext()) {
                     BlockPos blockpos = (BlockPos)var5.next();
-                    BlockState blockstate = this.level.getBlockState(blockpos);
+                    BlockState blockstate = this.level().getBlockState(blockpos);
                     net.minecraft.world.level.block.Block block = blockstate.getBlock();
                     if (!blockstate.isAir() && blockstate.is(Blocks.LAVA)) {
                         BlockPos blockpos1 = blockpos.immutable();
-                        this.level.getProfiler().push("explosion_blocks");
+                        this.level().getProfiler().push("explosion_blocks");
 
-                        this.level.setBlockAndUpdate(blockpos1, YEItemsAndBlocks.FROZEN_LAVA.get().defaultBlockState());
-                        this.level.getProfiler().pop();
+                        this.level().setBlockAndUpdate(blockpos1, YEItemsAndBlocks.FROZEN_LAVA.get().defaultBlockState());
+                        this.level().getProfiler().pop();
                     }
                 }
             }
@@ -382,8 +386,8 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
-            if (this.canDestroyBlocks && !(this.isOnGround() || this.targetJumpTime < 20)) {
+        if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(), this)) {
+            if (this.canDestroyBlocks && !(this.onGround() || this.targetJumpTime < 20)) {
                 int j1 = Mth.floor(this.getY());
                 int i2 = Mth.floor(this.getX());
                 int j2 = Mth.floor(this.getZ());
@@ -396,10 +400,10 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
                             int l = j1 + k;
                             int i1 = j2 + k2;
                             BlockPos blockpos = new BlockPos(l2, l, i1);
-                            BlockState blockstate = this.level.getBlockState(blockpos);
-                            if (!YellowbrossExtrasConfig.vilvgaverChallenge_smashBlacklist.get().contains(Registry.BLOCK.getKey(blockstate.getBlock()).toString())) {
-                                if (blockstate.canEntityDestroy(this.level, blockpos, this) && net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, blockstate)) {
-                                    flag = this.level.destroyBlock(blockpos, false, this) || flag;
+                            BlockState blockstate = this.level().getBlockState(blockpos);
+                            if (!YellowbrossExtrasConfig.vilvgaverChallenge_smashBlacklist.get().contains(BuiltInRegistries.BLOCK.getKey(blockstate.getBlock()).toString())) {
+                                if (blockstate.canEntityDestroy(this.level(), blockpos, this) && net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, blockstate)) {
+                                    flag = this.level().destroyBlock(blockpos, false, this) || flag;
                                 }
                             }
                         }
@@ -407,7 +411,7 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
                 }
 
                 if (flag) {
-                    this.level.levelEvent((Player)null, 1022, this.blockPosition(), 0);
+                    this.level().levelEvent((Player)null, 1022, this.blockPosition(), 0);
                 }
             } else {
                 if (this.horizontalCollision) {
@@ -424,10 +428,10 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
                                     int l = j1 + k;
                                     int i1 = j2 + k2;
                                     BlockPos blockpos = new BlockPos(l2, l, i1);
-                                    BlockState blockstate = this.level.getBlockState(blockpos);
-                                    if (!YellowbrossExtrasConfig.vilvgaverChallenge_smashBlacklist.get().contains(Registry.BLOCK.getKey(blockstate.getBlock()).toString())) {
-                                        if (blockstate.canEntityDestroy(this.level, blockpos, this) && net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, blockstate)) {
-                                            flag = this.level.destroyBlock(blockpos, false, this) || flag;
+                                    BlockState blockstate = this.level().getBlockState(blockpos);
+                                    if (!YellowbrossExtrasConfig.vilvgaverChallenge_smashBlacklist.get().contains(BuiltInRegistries.BLOCK.getKey(blockstate.getBlock()).toString())) {
+                                        if (blockstate.canEntityDestroy(this.level(), blockpos, this) && net.minecraftforge.event.ForgeEventFactory.onEntityDestroyBlock(this, blockpos, blockstate)) {
+                                            flag = this.level().destroyBlock(blockpos, false, this) || flag;
                                         }
                                     }
                                 }
@@ -442,7 +446,7 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
                                         this.playSound(YESoundEvents.ENTITY_VILVGAVER_CRASH_CLOSE.get(), 3.2F, this.getVoicePitch());
                                         this.playSound(YESoundEvents.ENTITY_VILVGAVER_CRASH_MEDIUM.get(), 4.0F, this.getVoicePitch());
                                         this.playSound(YESoundEvents.ENTITY_VILVGAVER_CRASH_DISTANT.get(), 10.0F, this.getVoicePitch());
-                                        CameraShake.cameraShake(this.level, position(), 60, 0.1f, 0, 20);
+                                        CameraShake.cameraShake(this.level(), position(), 60, 0.1f, 0, 20);
                                     }
                                 }
                             }
@@ -466,15 +470,15 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
     }
 
     private float getFrictionInfluencedSpeed(float v) {
-        return this.onGround ? this.getSpeed() * (0.21600002F / (v * v * v)) : this.flyingSpeed;
+        return this.onGround() ? this.getSpeed() * (0.21600002F / (v * v * v)) : this.getFlyingSpeed();
     }
 
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
-        if (pSource == DamageSource.OUT_OF_WORLD) {
+        if (pSource.is(DamageTypes.GENERIC_KILL)) {
             pAmount = Float.MAX_VALUE;
         }
-        if (pSource.isProjectile() && this.isChallenge()) {
+        if (pSource.is(DamageTypes.MOB_PROJECTILE) && this.isChallenge()) {
             if (pSource.getEntity() != null) {
                 Entity entity = pSource.getEntity();
                 double chargex = this.getX() - entity.getX();
@@ -519,9 +523,8 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
         return false;
     }
 
-    @Nonnull
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -532,6 +535,6 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
     @Override
     @OnlyIn(Dist.CLIENT)
     public void readSpawnData(FriendlyByteBuf additionalData) {
-        if (this.level.isClientSide) Minecraft.getInstance().getSoundManager().play(new LoopingSound(this, YESoundEvents.ENTITY_VILVGAVER_LOOP.get(), (float) (YellowbrossExtrasConfig.vilvgaver_ambienceVolume.get() * 1.0D)));
+        if (this.level().isClientSide) Minecraft.getInstance().getSoundManager().play(new LoopingSound(this, YESoundEvents.ENTITY_VILVGAVER_LOOP.get(), (float) (YellowbrossExtrasConfig.vilvgaver_ambienceVolume.get() * 1.0D)));
     }
 }

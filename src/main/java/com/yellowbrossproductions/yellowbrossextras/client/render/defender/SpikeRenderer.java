@@ -2,7 +2,7 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.defender;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.defender.SpikeModel;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.Spike;
@@ -39,7 +39,7 @@ public class SpikeRenderer extends EntityRenderer<Spike> {
             }
 
             pPoseStack.pushPose();
-            pPoseStack.mulPose(Vector3f.YP.rotationDegrees(90.0F - pEntity.getYRot()));
+            pPoseStack.mulPose(Axis.YP.rotationDegrees(90.0F - pEntity.getYRot()));
             pPoseStack.scale(1.0F, -f1, 1.0F);
             float f2 = 0.03125F;
             this.model.setupAnim(pEntity, f, 0.0F, 0.0F, pEntity.getYRot(), pEntity.getXRot());
