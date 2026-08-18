@@ -254,11 +254,6 @@ public class YECommonEventHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void preventJumping(LivingEvent.LivingJumpEvent event) {
-        if (event.getEntity().hasEffect(YEEffects.FROZEN.get())) event.setCanceled(true);
-    }
-
     private static final Map<ServerLevel, VilvgaverSpawner> VILVGAVER_SPAWN_MAP = new HashMap<>();
 
     @SubscribeEvent
