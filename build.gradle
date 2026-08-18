@@ -79,9 +79,11 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    runtimeOnly fg.deobf("curse.maven:mob-battle-mod-268746:3952789")
+    runtimeOnly fg.deobf("curse.maven:tslatentitystatus-tes-830420:7116734")
 
-    runtimeOnly fg.deobf("curse.maven:worldedit-225608:3922622")
+    runtimeOnly fg.deobf("curse.maven:mob-battle-mod-268746:6596542")
+
+    runtimeOnly fg.deobf("curse.maven:worldedit-225608:4586218")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
