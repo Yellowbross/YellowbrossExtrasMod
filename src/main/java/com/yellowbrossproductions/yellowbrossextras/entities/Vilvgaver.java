@@ -32,6 +32,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -153,6 +154,11 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
 
     public void setChallenge(boolean challenge) {
         this.entityData.set(CHALLENGE, challenge);
+    }
+
+    @Override
+    public float getHealth() {
+        return this.getMaxHealth();
     }
 
     @Override
@@ -476,9 +482,9 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
         if (pSource.is(DamageTypes.GENERIC_KILL)) {
-            pAmount = Float.MAX_VALUE;
+            this.die(pSource);
         }
-        if (pSource.is(DamageTypes.MOB_PROJECTILE) && this.isChallenge()) {
+        if (pSource.getDirectEntity() instanceof Projectile && this.isChallenge()) {
             if (pSource.getEntity() != null) {
                 Entity entity = pSource.getEntity();
                 double chargex = this.getX() - entity.getX();
@@ -496,16 +502,12 @@ public class Vilvgaver extends YExtrasMob implements IEntityAdditionalSpawnData,
                 this.speedBackUp = Math.max(speedCheck, -YellowbrossExtrasConfig.vilvgaverChallenge_pushLimit.get());
             }
         }
-        if (pAmount < 1000000000000.0F) {
-            return false;
-        }
-        return super.hurt(pSource, pAmount);
+        return false;
     }
 
     @Override
     public void die(DamageSource pDamageSource) {
-        this.deathTime = 19;
-        super.die(pDamageSource);
+        this.discard();
     }
 
     @Override

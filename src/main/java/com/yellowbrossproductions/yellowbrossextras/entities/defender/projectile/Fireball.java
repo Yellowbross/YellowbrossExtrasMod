@@ -301,7 +301,7 @@ public class Fireball extends CustomAbstractHurtingProjectile {
         }
 
         if (this.getSize() == 2) this.fireProjectiles(this.getOwner(), 8, this.getBbHeight() / 2, 1.0f, 1, true);
-        if (this.getSize() == 3) this.fireProjectiles(this.getOwner(), 50, this.getBbHeight() / 2, 1.0f, 2, false);
+        if (this.getSize() == 3) this.fireProjectiles(this.getOwner(), 30, this.getBbHeight() / 2, 1.0f, 2, false);
 
         this.discard();
     }
