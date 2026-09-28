@@ -76,14 +76,14 @@ public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctoli
         return false;
     }
 
-    public abstract void applyRaidBuffs(int var1, boolean var2);
+    public abstract void applyRaidBuffs(int wave, boolean var2);
 
     public boolean canJoinRaid() {
         return this.canJoinRaid;
     }
 
-    public void setCanJoinRaid(boolean p_37898_) {
-        this.canJoinRaid = p_37898_;
+    public void setCanJoinRaid(boolean canJoinRaid) {
+        this.canJoinRaid = canJoinRaid;
     }
 
     public int getShakeMultiplier() {
@@ -131,7 +131,7 @@ public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctoli
     public abstract SoundEvent getCelebrateSound();
 
     public void updateAnimations() {
-        EntityUtil.animateWhen(this.anim_celebrate, this.getAnimationState().equals("celebrate"), this.tickCount);
+        this.anim_celebrate.animateWhen(this.getAnimationState().equals("celebrate"), this.tickCount);
     }
 
     protected PathNavigation createNavigation(Level pLevel) {

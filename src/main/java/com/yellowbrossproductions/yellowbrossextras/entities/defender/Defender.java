@@ -1371,39 +1371,39 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
     }
 
     public void updateAnimations() {
-        EntityUtil.animateWhen(this.anim_jump, this.getAnimationState().equals("jump"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_jump2, this.getAnimationState().equals("jump2"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_defeated, this.getAnimationState().equals("defeated"), this.tickCount);
+        this.anim_jump.animateWhen(this.getAnimationState().equals("jump"), this.tickCount);
+        this.anim_jump2.animateWhen(this.getAnimationState().equals("jump2"), this.tickCount);
+        this.anim_defeated.animateWhen(this.getAnimationState().equals("defeated"), this.tickCount);
 
-        EntityUtil.animateWhen(this.anim_saws, this.getAnimationState().equals("saws"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_sword, this.getAnimationState().equals("sword"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_axes, this.getAnimationState().equals("axes"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_boomerang, this.getAnimationState().equals("boomerang"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_spikes, this.getAnimationState().equals("spikes"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_spikes_land, this.getAnimationState().equals("spikes_land"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_spikes_slam, this.getAnimationState().equals("spikes_slam"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_shurikens, this.getAnimationState().equals("shurikens"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_chainsaw, this.getAnimationState().equals("chainsaw"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_claws_start, this.getAnimationState().equals("claws_start"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_claws_continue, this.getAnimationState().equals("claws_continue"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_claws_end, this.getAnimationState().equals("claws_end"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_claws_punch, this.getAnimationState().equals("claws_punch"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_excalibur, this.getAnimationState().equals("excalibur"), this.tickCount);
+        this.anim_saws.animateWhen(this.getAnimationState().equals("saws"), this.tickCount);
+        this.anim_sword.animateWhen(this.getAnimationState().equals("sword"), this.tickCount);
+        this.anim_axes.animateWhen(this.getAnimationState().equals("axes"), this.tickCount);
+        this.anim_boomerang.animateWhen(this.getAnimationState().equals("boomerang"), this.tickCount);
+        this.anim_spikes.animateWhen(this.getAnimationState().equals("spikes"), this.tickCount);
+        this.anim_spikes_land.animateWhen(this.getAnimationState().equals("spikes_land"), this.tickCount);
+        this.anim_spikes_slam.animateWhen(this.getAnimationState().equals("spikes_slam"), this.tickCount);
+        this.anim_shurikens.animateWhen(this.getAnimationState().equals("shurikens"), this.tickCount);
+        this.anim_chainsaw.animateWhen(this.getAnimationState().equals("chainsaw"), this.tickCount);
+        this.anim_claws_start.animateWhen(this.getAnimationState().equals("claws_start"), this.tickCount);
+        this.anim_claws_continue.animateWhen(this.getAnimationState().equals("claws_continue"), this.tickCount);
+        this.anim_claws_end.animateWhen(this.getAnimationState().equals("claws_end"), this.tickCount);
+        this.anim_claws_punch.animateWhen(this.getAnimationState().equals("claws_punch"), this.tickCount);
+        this.anim_excalibur.animateWhen(this.getAnimationState().equals("excalibur"), this.tickCount);
 
-        EntityUtil.animateWhen(this.anim_ratatatabow, this.getAnimationState().equals("ratatatabow"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_ratatatabow2, this.getAnimationState().equals("ratatatabow2"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_poisondarts, this.getAnimationState().equals("poisondarts"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_forcegun, this.getAnimationState().equals("forcegun"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_snipe, this.getAnimationState().equals("snipe"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_sentryguns, this.getAnimationState().equals("sentryguns"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_icethrower, this.getAnimationState().equals("icethrower"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_witherbazooka, this.getAnimationState().equals("witherbazooka"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_witherbazooka_land, this.getAnimationState().equals("witherbazooka_land"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_creepergun, this.getAnimationState().equals("creepergun"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_flamethrower, this.getAnimationState().equals("flamethrower"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_flamethrower_row, this.getAnimationState().equals("flamethrower_row"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_flamethrower_big, this.getAnimationState().equals("flamethrower_big"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_flamethrower_end, this.getAnimationState().equals("flamethrower_end"), this.tickCount);
+        this.anim_ratatatabow.animateWhen(this.getAnimationState().equals("ratatatabow"), this.tickCount);
+        this.anim_ratatatabow2.animateWhen(this.getAnimationState().equals("ratatatabow2"), this.tickCount);
+        this.anim_poisondarts.animateWhen(this.getAnimationState().equals("poisondarts"), this.tickCount);
+        this.anim_forcegun.animateWhen(this.getAnimationState().equals("forcegun"), this.tickCount);
+        this.anim_snipe.animateWhen(this.getAnimationState().equals("snipe"), this.tickCount);
+        this.anim_sentryguns.animateWhen(this.getAnimationState().equals("sentryguns"), this.tickCount);
+        this.anim_icethrower.animateWhen(this.getAnimationState().equals("icethrower"), this.tickCount);
+        this.anim_witherbazooka.animateWhen(this.getAnimationState().equals("witherbazooka"), this.tickCount);
+        this.anim_witherbazooka_land.animateWhen(this.getAnimationState().equals("witherbazooka_land"), this.tickCount);
+        this.anim_creepergun.animateWhen(this.getAnimationState().equals("creepergun"), this.tickCount);
+        this.anim_flamethrower.animateWhen(this.getAnimationState().equals("flamethrower"), this.tickCount);
+        this.anim_flamethrower_row.animateWhen(this.getAnimationState().equals("flamethrower_row"), this.tickCount);
+        this.anim_flamethrower_big.animateWhen(this.getAnimationState().equals("flamethrower_big"), this.tickCount);
+        this.anim_flamethrower_end.animateWhen(this.getAnimationState().equals("flamethrower_end"), this.tickCount);
     }
 
     public boolean doesJumpMeetNormalRequirements() {

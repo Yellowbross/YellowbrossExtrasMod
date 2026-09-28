@@ -457,12 +457,6 @@ public class EntityUtil {
         return level.getEntities(attacker, new AABB(attacker.getX() - size, attacker.getY() - size, attacker.getZ() - size, attacker.getX() + size, attacker.getY() + size, attacker.getZ() + size), predicate);
     }
 
-    // Code lent by TheDarkPeasant since "animateWhen" does not exist in 1.19.2
-    public static void animateWhen(AnimationState state, boolean condition, int tickCount) {
-        state.stop();
-        if (condition) state.startIfStopped(tickCount);
-    }
-
     public static float multiplyToScrewArmor(LivingEntity entity, float multiplier) {
         if (!(entity instanceof Player)) {
             return Math.max(entity.getArmorValue() * multiplier, 1.0f);

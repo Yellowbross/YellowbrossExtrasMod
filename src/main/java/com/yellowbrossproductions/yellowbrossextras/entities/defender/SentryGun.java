@@ -107,10 +107,10 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
 
     @Override
     public void updateAnimations() {
-        EntityUtil.animateWhen(this.anim_shoot, this.getAnimationState().equals("shoot"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_intro, this.getAnimationState().equals("intro"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_flying, this.getAnimationState().equals("flying"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_mitosis, this.getAnimationState().equals("mitosis"), this.tickCount);
+        this.anim_shoot.animateWhen(this.getAnimationState().equals("shoot"), this.tickCount);
+        this.anim_flying.animateWhen(this.getAnimationState().equals("intro"), this.tickCount);
+        this.anim_flying.animateWhen(this.getAnimationState().equals("flying"), this.tickCount);
+        this.anim_mitosis.animateWhen(this.getAnimationState().equals("mitosis"), this.tickCount);
     }
 
     @Override

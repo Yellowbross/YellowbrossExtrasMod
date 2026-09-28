@@ -30,7 +30,7 @@ public class FrozenLayer<T extends LivingEntity, M extends EntityModel<T>> exten
             entityModel.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
             this.getParentModel().copyPropertiesTo(entityModel);
             VertexConsumer vertexConsumer = bufferIn.getBuffer(YERenderTypes.getMask(FROZEN));
-            entityModel.setupAnim(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            // entityModel.setupAnim(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             entityModel.renderToBuffer(poseStack, vertexConsumer, packedLightIn, OverlayTexture.NO_OVERLAY,
                     1.0F, 1.0F, 1.0F, 0.25F);
         }

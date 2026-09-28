@@ -42,6 +42,7 @@ public class Converslin extends AbstractOryctolin {
     boolean canAttack = false;
 
     private final int ATTACK1 = 1;
+    private final int ATTACK2 = 2;
 
     private final int FACE_DEFAULT = 0;
     private final int FACE_SCARE = 1;
@@ -131,7 +132,7 @@ public class Converslin extends AbstractOryctolin {
     }
 
     @Override
-    public void applyRaidBuffs(int var1, boolean var2) {
+    public void applyRaidBuffs(int wave, boolean var2) {
 
     }
 
@@ -305,7 +306,7 @@ public class Converslin extends AbstractOryctolin {
     @Override
     public void updateAnimations() {
         super.updateAnimations();
-        EntityUtil.animateWhen(this.anim_attack1, this.getAnimationState().equals("attack1"), this.tickCount);
+        this.anim_attack1.animateWhen(this.getAnimationState().equals("attack1"), this.tickCount);
     }
 
     @Override

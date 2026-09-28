@@ -45,6 +45,6 @@ public class StickFigure extends YExtrasMob {
 
     @Override
     public void updateAnimations() {
-        EntityUtil.animateWhen(this.anim_base, this.getAnimationState().equals("none"), this.tickCount);
+        this.anim_base.animateWhen(this.getAnimationState().equals("none"), this.tickCount);
     }
 }

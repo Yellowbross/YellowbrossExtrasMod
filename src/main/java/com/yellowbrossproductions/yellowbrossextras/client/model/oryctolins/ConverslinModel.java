@@ -17,18 +17,69 @@ import net.minecraft.world.entity.Entity;
 
 import java.util.Random;
 
-public class ConverslinModel<T extends Entity> extends HierarchicalModel<T> implements CustomHeadedModel {
-    // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
+public class ConverslinModel<T extends Converslin> extends HierarchicalModel<T> implements CustomHeadedModel {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(YellowbrossExtras.MOD_ID, "converslin"), "main");
     private final ModelPart root;
     private float partialTick;
-    private final ModelPart all;
     private final Random random = new Random();
+
+    private final ModelPart all;
+    private final ModelPart body;
+    private final ModelPart part;
+    private final ModelPart head;
+    private final ModelPart hat;
+    private final ModelPart ear1;
+    private final ModelPart ear_bend1;
+    private final ModelPart ear2;
+    private final ModelPart ear_bend2;
+    private final ModelPart right_arm;
+    private final ModelPart rarm_rotated;
+    private final ModelPart right_elbow;
+    private final ModelPart relbow_rotated;
+    private final ModelPart right_hand;
+    private final ModelPart rhand_rotated;
+    private final ModelPart staff;
+    private final ModelPart staff_center;
+    private final ModelPart tail;
+    private final ModelPart left_arm;
+    private final ModelPart larm_rotated;
+    private final ModelPart left_elbow;
+    private final ModelPart lelbow_rotated;
+    private final ModelPart left_hand;
+    private final ModelPart lhand_rotated;
+    private final ModelPart lower_half;
+    private final ModelPart right_foot;
+    private final ModelPart left_foot;
 
     public ConverslinModel(ModelPart root) {
         this.root = root;
-
         this.all = root.getChild("all");
+        this.body = this.all.getChild("body");
+        this.part = this.body.getChild("part");
+        this.head = this.body.getChild("head");
+        this.hat = this.head.getChild("hat");
+        this.ear1 = this.head.getChild("ear1");
+        this.ear_bend1 = this.ear1.getChild("ear_bend1");
+        this.ear2 = this.head.getChild("ear2");
+        this.ear_bend2 = this.ear2.getChild("ear_bend2");
+        this.right_arm = this.body.getChild("right_arm");
+        this.rarm_rotated = this.right_arm.getChild("rarm_rotated");
+        this.right_elbow = this.rarm_rotated.getChild("right_elbow");
+        this.relbow_rotated = this.right_elbow.getChild("relbow_rotated");
+        this.right_hand = this.relbow_rotated.getChild("right_hand");
+        this.rhand_rotated = this.right_hand.getChild("rhand_rotated");
+        this.staff = this.rhand_rotated.getChild("staff");
+        this.staff_center = this.staff.getChild("staff_center");
+        this.tail = this.body.getChild("tail");
+        this.left_arm = this.body.getChild("left_arm");
+        this.larm_rotated = this.left_arm.getChild("larm_rotated");
+        this.left_elbow = this.larm_rotated.getChild("left_elbow");
+        this.lelbow_rotated = this.left_elbow.getChild("lelbow_rotated");
+        this.left_hand = this.lelbow_rotated.getChild("left_hand");
+        this.lhand_rotated = this.left_hand.getChild("lhand_rotated");
+        this.lower_half = this.body.getChild("lower_half");
+        this.right_foot = this.lower_half.getChild("right_foot");
+        this.left_foot = this.lower_half.getChild("left_foot");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -96,59 +147,48 @@ public class ConverslinModel<T extends Entity> extends HierarchicalModel<T> impl
     }
 
     @Override
-    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(Converslin oryctolin, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
 
-        ModelPart body = this.all.getChild("body");
-        ModelPart head = body.getChild("head");
-        ModelPart leg1 = body.getChild("lower_half").getChild("right_foot");
-        ModelPart leg2 = body.getChild("lower_half").getChild("left_foot");
-        ModelPart arm1 = body.getChild("right_arm");
-        ModelPart arm2 = body.getChild("left_arm");
-        ModelPart elbow1 = arm1.getChild("rarm_rotated").getChild("right_elbow");
-        ModelPart elbow2 = arm2.getChild("larm_rotated").getChild("left_elbow");
-
-        head.yRot += netHeadYaw * ((float)Math.PI / 180F);
-        head.xRot += (headPitch * ((float)Math.PI / 180F));
+        this.head.yRot += netHeadYaw * ((float)Math.PI / 180F);
+        this.head.xRot += (headPitch * ((float)Math.PI / 180F));
 
         float twitchamount = 125;
 
         if (this.riding) {
-            body.getChild("lower_half").xRot = -1.4137167F;
+            this.lower_half.xRot = -1.4137167F;
         }
 
-        if (entity instanceof Converslin oryctolin) {
-            this.animate(oryctolin.anim_celebrate, ConverslinAnimation.celebrate, ageInTicks, oryctolin.getAnimationSpeed());
-            this.animate(oryctolin.anim_attack1, ConverslinAnimation.attack1, ageInTicks, oryctolin.getAnimationSpeed());
+        this.animate(oryctolin.anim_celebrate, ConverslinAnimation.celebrate, ageInTicks, oryctolin.getAnimationSpeed());
+        this.animate(oryctolin.anim_attack1, ConverslinAnimation.attack1, ageInTicks, oryctolin.getAnimationSpeed());
 
-            if (oryctolin.getAnimationState().equals("none")) {
-                float moveX = (float) (oryctolin.getX() - oryctolin.xo);
-                float moveZ = (float) (oryctolin.getZ() - oryctolin.zo);
-                float speed = Mth.sqrt(moveX * moveX + moveZ * moveZ);
-                leg1.xRot += Mth.cos(limbSwing * 2.6648F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.8F;
-                leg2.xRot += Mth.cos(limbSwing * 2.6648F) * 1.4F * limbSwingAmount * 0.8F;
-                if (speed > 0.2) {
+        if (oryctolin.getAnimationState().equals("none")) {
+            float moveX = (float) (oryctolin.getX() - oryctolin.xo);
+            float moveZ = (float) (oryctolin.getZ() - oryctolin.zo);
+            float speed = Mth.sqrt(moveX * moveX + moveZ * moveZ);
+            this.right_foot.xRot += Mth.cos(limbSwing * 2.6648F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.8F;
+            this.left_foot.xRot += Mth.cos(limbSwing * 2.6648F) * 1.4F * limbSwingAmount * 0.8F;
+            if (speed > 0.2) {
 
-                } else {
-                    this.animateIdle(oryctolin.getFrame());
-                }
-                if (oryctolin.getHealth() < (oryctolin.getMaxHealth() / 2)) {
-                    arm1.xRot += (-0.5F + this.random.nextFloat()) / twitchamount;
-                    arm1.yRot += (-0.5F + this.random.nextFloat()) / twitchamount;
-                    arm1.zRot += (-0.5F + this.random.nextFloat()) / twitchamount;
+            } else {
+                this.animateIdle(oryctolin.getFrame());
+            }
+            if (oryctolin.getHealth() < (oryctolin.getMaxHealth() / 2)) {
+                this.right_arm.xRot += (-0.5F + this.random.nextFloat()) / twitchamount;
+                this.right_arm.yRot += (-0.5F + this.random.nextFloat()) / twitchamount;
+                this.right_arm.zRot += (-0.5F + this.random.nextFloat()) / twitchamount;
 
-                    arm2.xRot += (-0.5F + this.random.nextFloat()) / twitchamount;
-                    arm2.yRot += (-0.5F + this.random.nextFloat()) / twitchamount;
-                    arm2.zRot += (-0.5F + this.random.nextFloat()) / twitchamount;
+                this.left_arm.xRot += (-0.5F + this.random.nextFloat()) / twitchamount;
+                this.left_arm.yRot += (-0.5F + this.random.nextFloat()) / twitchamount;
+                this.left_arm.zRot += (-0.5F + this.random.nextFloat()) / twitchamount;
 
-                    elbow1.xRot += (-0.5F + this.random.nextFloat()) / twitchamount;
-                    elbow1.yRot += (-0.5F + this.random.nextFloat()) / twitchamount;
-                    elbow1.zRot += (-0.5F + this.random.nextFloat()) / twitchamount;
+                this.right_elbow.xRot += (-0.5F + this.random.nextFloat()) / twitchamount;
+                this.right_elbow.yRot += (-0.5F + this.random.nextFloat()) / twitchamount;
+                this.right_elbow.zRot += (-0.5F + this.random.nextFloat()) / twitchamount;
 
-                    elbow2.xRot += (-0.5F + this.random.nextFloat()) / twitchamount;
-                    elbow2.yRot += (-0.5F + this.random.nextFloat()) / twitchamount;
-                    elbow2.zRot += (-0.5F + this.random.nextFloat()) / twitchamount;
-                }
+                this.left_elbow.xRot += (-0.5F + this.random.nextFloat()) / twitchamount;
+                this.left_elbow.yRot += (-0.5F + this.random.nextFloat()) / twitchamount;
+                this.left_elbow.zRot += (-0.5F + this.random.nextFloat()) / twitchamount;
             }
         }
     }
@@ -157,20 +197,17 @@ public class ConverslinModel<T extends Entity> extends HierarchicalModel<T> impl
         int actualTick = fullTick % 80;
         float tick = ((float)actualTick + this.partialTick);
         float f3 = tick / 65.0F;
-        ModelPart body = this.all.getChild("body");
-        ModelPart head = body.getChild("head");
-        ModelPart lower_half = body.getChild("lower_half");
 
         float multiplier = 0.5F;
-        body.x += (Mth.cos(f3 * 10) * multiplier / 2.0F);
-        body.y += (Mth.cos(f3 * 20) * multiplier / 2.0F);
-        head.x += (Mth.cos(f3 * 10) * (multiplier / 2.0F));
-        head.y += (Mth.cos(f3 * 20) * (multiplier / 2.0F));
-        lower_half.x += -(Mth.cos(f3 * 10) * multiplier / 2.0F);
-        lower_half.y += -(Mth.cos(f3 * 20) * multiplier / 2.0F);
-        lower_half.xScale += Math.abs((Mth.cos(f3 * 10) * multiplier / 2.0F) * 0.25F);
-        lower_half.zScale += Math.abs((Mth.cos(f3 * 10) * multiplier / 2.0F) * 0.25F);
-        lower_half.yScale += -Math.abs((Mth.cos(f3 * 10) * multiplier / 2.0F) * 0.25F);
+        this.body.x += (Mth.cos(f3 * 10) * multiplier / 2.0F);
+        this.body.y += (Mth.cos(f3 * 20) * multiplier / 2.0F);
+        this.head.x += (Mth.cos(f3 * 10) * (multiplier / 2.0F));
+        this.head.y += (Mth.cos(f3 * 20) * (multiplier / 2.0F));
+        this.lower_half.x += -(Mth.cos(f3 * 10) * multiplier / 2.0F);
+        this.lower_half.y += -(Mth.cos(f3 * 20) * multiplier / 2.0F);
+        this.lower_half.xScale += Math.abs((Mth.cos(f3 * 10) * multiplier / 2.0F) * 0.25F);
+        this.lower_half.zScale += Math.abs((Mth.cos(f3 * 10) * multiplier / 2.0F) * 0.25F);
+        this.lower_half.yScale += -Math.abs((Mth.cos(f3 * 10) * multiplier / 2.0F) * 0.25F);
         this.all.y += Math.abs((Mth.cos(f3 * 10) * multiplier / 2.0F) * 2.0F);
     }
 
@@ -190,15 +227,15 @@ public class ConverslinModel<T extends Entity> extends HierarchicalModel<T> impl
     }
 
     public ModelPart getHead() {
-        return this.all.getChild("body").getChild("head");
+        return this.head;
     }
 
     @Override
     public void translateToHead(PoseStack stack) {
         this.root().translateAndRotate(stack);
         this.all.translateAndRotate(stack);
-        this.all.getChild("body").translateAndRotate(stack);
-        this.all.getChild("body").getChild("head").translateAndRotate(stack);
+        this.body.translateAndRotate(stack);
+        this.head.translateAndRotate(stack);
         stack.scale(1.2F, 1.2F, 1.2F);
     }
 }

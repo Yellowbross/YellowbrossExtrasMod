@@ -39,6 +39,9 @@
   "entity.yellowbrossextras.vilvgaver": "Vilvgaver",
 
   "entity.yellowbrossextras.converslin": "Converslin",
+
+  "entity.yellowbrossextras.toymaklin": "Toymaklin",
+
   "entity.yellowbrossextras.carrot_minion": "Carrot Minion",
 
   "entity.yellowbrossextras.amoebic_devourer": "Amoebic Devourer",
@@ -116,6 +119,8 @@
   "subtitles.entity.converslin.step": "Converslin scurries",
   "subtitles.entity.converslin.shriek": "Converslin shrieks",
   "subtitles.entity.converslin.jump": "Converslin jumps",
+
+  "subtitles.entity.toymaklin.shiver": "Toymaklin shivers",
 
   "subtitles.entity.amoebic_devourer.gulp": "Amoebic Devourer absorbs",
 

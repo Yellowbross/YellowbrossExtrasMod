@@ -9,10 +9,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ConverslinAnimation {
-
-    public ConverslinAnimation() {
-    }
-
     public static final AnimationDefinition celebrate = AnimationDefinition.Builder.withLength(2f).looping()
             .addAnimation("all",
                     new AnimationChannel(AnimationChannel.Targets.POSITION,

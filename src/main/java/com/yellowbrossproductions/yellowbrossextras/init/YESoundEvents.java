@@ -85,6 +85,8 @@ public class YESoundEvents {
     public static final RegistryObject<SoundEvent> ENTITY_CONVERSLIN_SHRIEK = addSoundsToRegistry("entity.converslin.shriek");
     public static final RegistryObject<SoundEvent> ENTITY_CONVERSLIN_JUMP = addSoundsToRegistry("entity.converslin.jump");
 
+    public static final RegistryObject<SoundEvent> ENTITY_TOYMAKLIN_SHIVER = addSoundsToRegistry("entity.toymaklin.shiver");
+
     public static final RegistryObject<SoundEvent> HUGE_EXPLOSION = addSoundsToRegistry("huge_explosion");
     public static final RegistryObject<SoundEvent> HUGE_SLAM = addSoundsToRegistry("huge_slam");
     public static final RegistryObject<SoundEvent> YEET = addSoundsToRegistry("yeet");

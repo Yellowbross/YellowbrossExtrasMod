@@ -7,6 +7,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.defender.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.gamemode_fun.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.*;
+import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.bosses.Toymaklin;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.*;
 import net.minecraft.resources.ResourceLocation;
@@ -23,34 +24,34 @@ public class YEEntityTypes {
 
     // Entity Types
     public static final RegistryObject<EntityType<Vilvgaver>> Vilvgaver = ENTITY_TYPES.register("vilvgaver",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.Vilvgaver::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(Vilvgaver::new, MobCategory.MONSTER)
                     .sized(0.8f, 2.3f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "vilvgaver").toString()));
 
     public static final RegistryObject<EntityType<HyperSnowGolem>> HyperSnowGolem = ENTITY_TYPES.register("hyper_snow_golem",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.HyperSnowGolem::new, MobCategory.MISC)
+            () -> EntityType.Builder.of(HyperSnowGolem::new, MobCategory.MISC)
                     .immuneTo(Blocks.POWDER_SNOW)
                     .fireImmune()
                     .sized(0.7f, 1.9f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "hyper_snow_golem").toString()));
 
     public static final RegistryObject<EntityType<AmoebicDevourer>> AmoebicDevourer = ENTITY_TYPES.register("amoebic_devourer",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.AmoebicDevourer::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(AmoebicDevourer::new, MobCategory.MONSTER)
                     .sized(0.9f, 3.0f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "amoebic_devourer").toString()));
 
     public static final RegistryObject<EntityType<SkeletonSnap>> SkeletonSnap = ENTITY_TYPES.register("skeleton_snap",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.SkeletonSnap::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(SkeletonSnap::new, MobCategory.MONSTER)
                     .sized(0.6F, 1.99F)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "skeleton_snap").toString()));
 
     public static final RegistryObject<EntityType<Aimbot>> Aimbot = ENTITY_TYPES.register("aimbot",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.Aimbot::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(Aimbot::new, MobCategory.MONSTER)
                     .sized(0.6F, 1.99F)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "aimbot").toString()));
 
     public static final RegistryObject<EntityType<StickFigure>> StickFigure = ENTITY_TYPES.register("stick_figure",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.StickFigure::new, MobCategory.MISC)
+            () -> EntityType.Builder.of(StickFigure::new, MobCategory.MISC)
                     .sized(0.25F, 2.625F)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "stick_figure").toString()));
 
@@ -58,18 +59,18 @@ public class YEEntityTypes {
 
     // Defender and his entities
     public static final RegistryObject<EntityType<Defender>> Defender = ENTITY_TYPES.register("defender",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.defender.Defender::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(Defender::new, MobCategory.MONSTER)
                     .sized(0.75f, 2.25f)
                     .clientTrackingRange(12)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "defender").toString()));
 
     public static final RegistryObject<EntityType<SentryGun>> SentryGun = ENTITY_TYPES.register("sentry_gun",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.defender.SentryGun::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(SentryGun::new, MobCategory.MONSTER)
                     .sized(0.5f, 1.25f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sentry_gun").toString()));
 
     public static final RegistryObject<EntityType<CreeperBullet>> CreeperBullet = ENTITY_TYPES.register("creeper_bullet",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.defender.CreeperBullet::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(CreeperBullet::new, MobCategory.MONSTER)
                     .sized(0.3f, 0.75f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "creeper_bullet").toString()));
 
@@ -77,7 +78,7 @@ public class YEEntityTypes {
 
     // Oryctolins
     public static final RegistryObject<EntityType<Converslin>> Converslin = ENTITY_TYPES.register("converslin",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.Converslin::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(Converslin::new, MobCategory.MONSTER)
                     .sized(0.5f, 1.5f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "converslin").toString()));
 
@@ -86,31 +87,37 @@ public class YEEntityTypes {
                     .sized(0.8f, 1.8f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "carrot_minion").toString()));
 
+    // Bosses
+    public static final RegistryObject<EntityType<Toymaklin>> Toymaklin = ENTITY_TYPES.register("toymaklin",
+            () -> EntityType.Builder.of(Toymaklin::new, MobCategory.MONSTER)
+                    .sized(0.5f, 1.5f)
+                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "converslin").toString()));
+
 
 
     // Creeper Infection
     public static final RegistryObject<EntityType<Sneaker>> Sneaker = ENTITY_TYPES.register("sneaker",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.creepers.Sneaker::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(Sneaker::new, MobCategory.MONSTER)
                     .sized(0.6f, 1.7f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sneaker").toString()));
 
     public static final RegistryObject<EntityType<Paracreeper>> Paracreeper = ENTITY_TYPES.register("paracreeper",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.creepers.Paracreeper::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(Paracreeper::new, MobCategory.MONSTER)
                     .sized(0.4f, 0.6f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "paracreeper").toString()));
 
     public static final RegistryObject<EntityType<Crawler>> Crawler = ENTITY_TYPES.register("crawler",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.creepers.Crawler::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(Crawler::new, MobCategory.MONSTER)
                     .sized(2.2f, 2.7f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "crawler").toString()));
 
     public static final RegistryObject<EntityType<Freaker>> Freaker = ENTITY_TYPES.register("freaker",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.creepers.Freaker::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(Freaker::new, MobCategory.MONSTER)
                     .sized(2.625f, 3.75f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "freaker").toString()));
 
     public static final RegistryObject<EntityType<Sprayer>> Sprayer = ENTITY_TYPES.register("sprayer",
-            () -> EntityType.Builder.of(com.yellowbrossproductions.yellowbrossextras.entities.creepers.Sprayer::new, MobCategory.MONSTER)
+            () -> EntityType.Builder.of(Sprayer::new, MobCategory.MONSTER)
                     .sized(0.6f, 1.7f)
                     .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "sprayer").toString()));
 

@@ -114,9 +114,9 @@ public class CreeperBullet extends AbstractCreeperEntity implements IsDefenderAl
 
     @Override
     public void updateAnimations() {
-        EntityUtil.animateWhen(this.anim_fly, this.getAnimationState().equals("fly"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_getup, this.getAnimationState().equals("getup"), this.tickCount);
-        EntityUtil.animateWhen(this.anim_falling, this.getAnimationState().equals("falling"), this.tickCount);
+        this.anim_fly.animateWhen(this.getAnimationState().equals("fly"), this.tickCount);
+        this.anim_getup.animateWhen(this.getAnimationState().equals("getup"), this.tickCount);
+        this.anim_falling.animateWhen(this.getAnimationState().equals("falling"), this.tickCount);
     }
 
     @Override

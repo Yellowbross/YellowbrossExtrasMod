@@ -533,6 +533,16 @@
     ]
   },
 
+  "entity.toymaklin.shiver": {
+    "subtitle": "subtitles.entity.toymaklin.shiver",
+    "sounds": [
+      "yellowbrossextras:oryctolins/toymaklin/shiver1",
+      "yellowbrossextras:oryctolins/toymaklin/shiver2",
+      "yellowbrossextras:oryctolins/toymaklin/shiver3",
+      "yellowbrossextras:oryctolins/toymaklin/shiver4"
+    ]
+  },
+
   "entity.amoebic_devourer.gulp": {
     "subtitle": "subtitles.entity.amoebic_devourer.gulp",
     "sounds": [

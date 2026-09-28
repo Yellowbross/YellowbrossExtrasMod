@@ -62,6 +62,8 @@ public class YEClientEventHandler {
 
             event.registerLayerDefinition(ConverslinModel.LAYER_LOCATION, ConverslinModel::createBodyLayer);
 
+            event.registerLayerDefinition(ToymaklinModel.LAYER_LOCATION, ToymaklinModel::createBodyLayer);
+
             event.registerLayerDefinition(CarrotMinionModel.LAYER_LOCATION, CarrotMinionModel::createBodyLayer);
 
             event.registerLayerDefinition(AmoebicDevourerModel.LAYER_LOCATION, AmoebicDevourerModel::createBodyLayer);
@@ -96,6 +98,8 @@ public class YEClientEventHandler {
             event.registerEntityRenderer(YEEntityTypes.Vilvgaver.get(), VilvgaverRenderer::new);
 
             event.registerEntityRenderer(YEEntityTypes.Converslin.get(), ConverslinRenderer::new);
+
+            event.registerEntityRenderer(YEEntityTypes.Toymaklin.get(), ToymaklinRenderer::new);
 
             event.registerEntityRenderer(YEEntityTypes.CarrotMinion.get(), CarrotMinionRenderer::new);
 

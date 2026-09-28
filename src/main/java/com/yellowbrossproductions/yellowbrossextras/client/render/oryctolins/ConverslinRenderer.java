@@ -3,9 +3,8 @@ package com.yellowbrossproductions.yellowbrossextras.client.render.oryctolins;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.yellowbrossproductions.yellowbrossextras.YellowbrossExtras;
 import com.yellowbrossproductions.yellowbrossextras.client.model.oryctolins.ConverslinModel;
-import com.yellowbrossproductions.yellowbrossextras.client.render.layer.ConverslinGlowLayer;
 import com.yellowbrossproductions.yellowbrossextras.client.render.layer.HeadItemLayer;
-import com.yellowbrossproductions.yellowbrossextras.client.render.layer.faces.oryctolins.ConverslinFaceLayer;
+import com.yellowbrossproductions.yellowbrossextras.client.render.layer.oryctolins.ConverslinOverlayLayer;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.Converslin;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -24,8 +23,7 @@ public class ConverslinRenderer extends MobRenderer<Converslin, ConverslinModel<
 
     public ConverslinRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new ConverslinModel<>(renderManagerIn.bakeLayer(ConverslinModel.LAYER_LOCATION)), 0.5F);
-        this.addLayer(new ConverslinFaceLayer<>(this, renderManagerIn.getModelSet()));
-        this.addLayer(new ConverslinGlowLayer<>(this));
+        this.addLayer(new ConverslinOverlayLayer<>(this));
         this.addLayer(new HeadItemLayer<>(this, renderManagerIn.getModelSet(), renderManagerIn.getItemInHandRenderer()));
     }
 

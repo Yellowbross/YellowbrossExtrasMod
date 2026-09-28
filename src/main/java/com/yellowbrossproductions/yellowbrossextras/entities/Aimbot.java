@@ -193,7 +193,7 @@ public class Aimbot extends YExtrasMob implements Enemy {
 
     @Override
     public void updateAnimations() {
-        EntityUtil.animateWhen(this.anim_shoot, this.getAnimationState().equals("shoot"), this.tickCount);
+        // this.anim_shoot.animateWhen(this.getAnimationState().equals("shoot"), this.tickCount);
     }
 
     @Nullable
@@ -261,8 +261,8 @@ public class Aimbot extends YExtrasMob implements Enemy {
                 this.aimbot.stareAt = target.getPosition(0).add(0, target.getEyeHeight(), 0);
                 this.aimbot.getLookControl().setLookAt(this.aimbot.stareAt.x, this.aimbot.stareAt.y, this.aimbot.stareAt.z, 999.0F, 100.0F);
                 this.aimbot.setOldPosAndRot();
-                this.aimbot.setAnimationState("none");
-                this.aimbot.setAnimationState("shoot");
+                this.aimbot.anim_shoot.stop();
+                this.aimbot.anim_shoot.start(this.aimbot.tickCount);
                 this.aimbot.shotTick = this.aimbot.tryToFindTarget() != null ? 1 : 10;
 
                 EntityUtil.makeSimpleTrail(this.aimbot, ParticleTypes.CRIT, 80,

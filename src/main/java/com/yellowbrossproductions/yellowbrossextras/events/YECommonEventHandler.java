@@ -12,6 +12,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.goal.LoseAIGoal;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.AbstractOryctolin;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.Converslin;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.IsOryctolinAligned;
+import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.bosses.Toymaklin;
 import com.yellowbrossproductions.yellowbrossextras.entities.oryctolins.minions.CarrotMinionEntity;
 import com.yellowbrossproductions.yellowbrossextras.entities.defender.projectile.Boomerang;
 import com.yellowbrossproductions.yellowbrossextras.init.*;
@@ -91,6 +92,8 @@ public class YECommonEventHandler {
             SpawnPlacements.register(YEEntityTypes.Converslin.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
             SpawnPlacements.register(YEEntityTypes.CarrotMinion.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
 
+            SpawnPlacements.register(YEEntityTypes.Toymaklin.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
+
             SpawnPlacements.register(YEEntityTypes.AmoebicDevourer.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, YellowbrossExtras::checkYExtrasMonsterSpawnRules);
             SpawnPlacements.register(YEEntityTypes.HyperSnowGolem.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, PathfinderMob::checkMobSpawnRules);
             SpawnPlacements.register(YEEntityTypes.SkeletonSnap.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
@@ -119,6 +122,9 @@ public class YECommonEventHandler {
             event.put(YEEntityTypes.StickFigure.get(), StickFigure.createAttributes().build());
 
             event.put(YEEntityTypes.Converslin.get(), Converslin.createAttributes().build());
+
+            event.put(YEEntityTypes.Toymaklin.get(), Toymaklin.createAttributes().build());
+
             event.put(YEEntityTypes.CarrotMinion.get(), CarrotMinionEntity.createAttributes().build());
 
             event.put(YEEntityTypes.Boomerang.get(), Boomerang.createAttributes().build());
