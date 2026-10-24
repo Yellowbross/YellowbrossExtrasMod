@@ -1,5 +1,8 @@
 {
-  "item.yellowbrossextras.defender_spawn_egg": "\u00A7dDefender Spawn Egg (WIP)",
+  "item.yellowbrossextras.defender_spawn_egg": "\u00A7dDefender Spawn Egg",
+  "item.yellowbrossextras.defender_spawn_egg_p2": "\u00A7dDefender Spawn Egg - Phase 2",
+  "item.yellowbrossextras.defender_spawn_egg_p3": "\u00A7dDefender Spawn Egg - Phase 3",
+
   "item.yellowbrossextras.sentry_gun_spawn_egg": "Sentry Gun Spawn Egg",
 
   "item.yellowbrossextras.sneaker_spawn_egg": "Sneaker Spawn Egg",

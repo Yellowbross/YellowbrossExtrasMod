@@ -15,9 +15,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class DescriptionSpawnEggItemBase extends ForgeSpawnEggItem {
+public class CustomSpawnEggItemBase extends ForgeSpawnEggItem {
 
-    public DescriptionSpawnEggItemBase(Supplier<? extends EntityType<? extends Mob>> type, int backgroundColor, int highlightColor, Properties props) {
+    public CustomSpawnEggItemBase(Supplier<? extends EntityType<? extends Mob>> type, int backgroundColor, int highlightColor, Properties props) {
         super(type, backgroundColor, highlightColor, props);
     }
 

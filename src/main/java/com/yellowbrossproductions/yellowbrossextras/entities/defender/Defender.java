@@ -10,6 +10,7 @@ import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase
 import com.yellowbrossproductions.yellowbrossextras.entities.goal.defender.phase2.*;
 import com.yellowbrossproductions.yellowbrossextras.entities.projectile.*;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEffects;
+import com.yellowbrossproductions.yellowbrossextras.init.YEItemsAndBlocks;
 import com.yellowbrossproductions.yellowbrossextras.util.DelayedActionHandler;
 import com.yellowbrossproductions.yellowbrossextras.util.EntityUtil;
 import com.yellowbrossproductions.yellowbrossextras.init.YESoundEvents;
@@ -1035,10 +1036,17 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_21434_, DifficultyInstance p_21435_, MobSpawnType p_21436_, @Nullable SpawnGroupData p_21437_, @Nullable CompoundTag p_21438_) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         this.setShowBossBar(true);
         this.setPhase(1);
-        return super.finalizeSpawn(p_21434_, p_21435_, p_21436_, p_21437_, p_21438_);
+        if (pReason == MobSpawnType.SPAWN_EGG) {
+            List<Player> list = this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(9.0d));
+            for (Player player : list) {
+                if (player.getMainHandItem().is(YEItemsAndBlocks.DEFENDER_SPAWN_EGG_P2.get())) this.setPhase(2);
+                if (player.getMainHandItem().is(YEItemsAndBlocks.DEFENDER_SPAWN_EGG_P3.get())) this.setPhase(3);
+            }
+        }
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
     @Override

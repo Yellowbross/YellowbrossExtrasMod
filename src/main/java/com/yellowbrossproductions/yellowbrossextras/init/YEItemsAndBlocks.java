@@ -30,7 +30,10 @@ public class YEItemsAndBlocks {
     public static final RegistryObject<Item> THE_FINGER = ITEMS.register("the_finger", TheFingerItemBase::new);
 
     // Spawn Eggs
-    public static final RegistryObject<Item> DEFENDER_SPAWN_EGG = ITEMS.register("defender_spawn_egg", () -> new ForgeSpawnEggItem(YEEntityTypes.Defender, 6012148, 8115455, new Item.Properties()));
+    public static final RegistryObject<Item> DEFENDER_SPAWN_EGG = ITEMS.register("defender_spawn_egg", () -> new ForgeSpawnEggItem(YEEntityTypes.Defender, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
+    public static final RegistryObject<Item> DEFENDER_SPAWN_EGG_P2 = ITEMS.register("defender_spawn_egg_p2", () -> new ForgeSpawnEggItem(YEEntityTypes.Defender, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
+    public static final RegistryObject<Item> DEFENDER_SPAWN_EGG_P3 = ITEMS.register("defender_spawn_egg_p3", () -> new ForgeSpawnEggItem(YEEntityTypes.Defender, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
+
     public static final RegistryObject<Item> SENTRY_GUN_SPAWN_EGG = ITEMS.register("sentry_gun_spawn_egg", () -> new ForgeSpawnEggItem(YEEntityTypes.SentryGun, 2840946, 8115455, new Item.Properties()));
 
     public static final RegistryObject<Item> SNEAKER_SPAWN_EGG = ITEMS.register("sneaker_spawn_egg", () -> new ForgeSpawnEggItem(YEEntityTypes.Sneaker, 894731, 16777215, new Item.Properties()));
@@ -45,7 +48,7 @@ public class YEItemsAndBlocks {
 
     public static final RegistryObject<Item> AMOEBIC_DEVOURER_SPAWN_EGG = ITEMS.register("amoebic_devourer_spawn_egg", () -> new ForgeSpawnEggItem(YEEntityTypes.AmoebicDevourer, 6385441, 10266217, new Item.Properties()));
     public static final RegistryObject<Item> HYPER_SNOW_GOLEM_SPAWN_EGG = ITEMS.register("hyper_snow_golem_spawn_egg", () -> new ForgeSpawnEggItem(YEEntityTypes.HyperSnowGolem, 16777215, 16738816, new Item.Properties()));
-    public static final RegistryObject<Item> AIMBOT_SPAWN_EGG = ITEMS.register("aimbot_spawn_egg", () -> new DescriptionSpawnEggItemBase(YEEntityTypes.Aimbot, 12698049, 0xFFF05A, new Item.Properties()));
+    public static final RegistryObject<Item> AIMBOT_SPAWN_EGG = ITEMS.register("aimbot_spawn_egg", () -> new CustomSpawnEggItemBase(YEEntityTypes.Aimbot, 12698049, 0xFFF05A, new Item.Properties()));
 
     // Others
     public static final RegistryObject<Item> ICON = ITEMS.register("icon", ItemBase::new);

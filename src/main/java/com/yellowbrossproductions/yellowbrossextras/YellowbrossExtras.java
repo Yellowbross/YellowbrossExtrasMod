@@ -58,6 +58,9 @@ public class YellowbrossExtras
 
                 // Spawn Eggs
                 output.accept(YEItemsAndBlocks.DEFENDER_SPAWN_EGG.get());
+                output.accept(YEItemsAndBlocks.DEFENDER_SPAWN_EGG_P2.get());
+                output.accept(YEItemsAndBlocks.DEFENDER_SPAWN_EGG_P3.get());
+
                 output.accept(YEItemsAndBlocks.SENTRY_GUN_SPAWN_EGG.get());
 
                 output.accept(YEItemsAndBlocks.SNEAKER_SPAWN_EGG.get());
