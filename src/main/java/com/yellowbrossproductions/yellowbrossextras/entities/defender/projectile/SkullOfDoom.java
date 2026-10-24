@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -22,6 +23,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -55,6 +59,10 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
 
     @Override
     public void tick() {
+        if (this.tickCount == 1) {
+            if (this.level().isClientSide) Minecraft.getInstance().getSoundManager().play(new TimeBombSound(this, YESoundEvents.ENTITY_DEFENDER_WITHERBAZOOKA_LOOP.get(), 2.5F, this.timer));
+        }
+
         if (!this.level().isClientSide) this.hurtMarked = true;
 
         for (LivingEntity livingEntity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.5d), p -> !p.isRemoved() && p != this.getOwner())) {
@@ -140,12 +148,5 @@ public class SkullOfDoom extends CustomAbstractHurtingProjectile {
     @Override
     public boolean isOnFire() {
         return false;
-    }
-
-    @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-
-        if (this.level().isClientSide) Minecraft.getInstance().getSoundManager().play(new TimeBombSound(this, YESoundEvents.ENTITY_DEFENDER_WITHERBAZOOKA_LOOP.get(), 2.5F, this.timer));
     }
 }
