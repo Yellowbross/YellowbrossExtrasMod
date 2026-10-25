@@ -90,8 +90,8 @@ public class YEEntityTypes {
     // Bosses
     public static final RegistryObject<EntityType<Toymaklin>> Toymaklin = ENTITY_TYPES.register("toymaklin",
             () -> EntityType.Builder.of(Toymaklin::new, MobCategory.MONSTER)
-                    .sized(0.5f, 1.5f)
-                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "converslin").toString()));
+                    .sized(0.5f, 1.75f)
+                    .build(new ResourceLocation(YellowbrossExtras.MOD_ID, "toymaklin").toString()));
 
 
 
