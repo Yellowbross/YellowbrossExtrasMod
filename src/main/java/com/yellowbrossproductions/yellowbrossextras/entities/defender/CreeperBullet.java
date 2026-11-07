@@ -167,7 +167,7 @@ public class CreeperBullet extends AbstractCreeperEntity implements IsDefenderAl
             }
             return false;
         }
-        if (source.getEntity() instanceof IsDefenderAligned && EntityUtil.canHurtThisMob(source.getEntity(), this)) {
+        if (source.getEntity() instanceof IsDefenderAligned && !EntityUtil.canHurtThisMob(source.getEntity(), this)) {
             return false;
         }
         return super.hurt(source, amount);

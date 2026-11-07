@@ -1088,7 +1088,7 @@ public class Defender extends YExtrasMob implements YextrasEntity, IsDefenderAli
                 case attack_snipe: if (this.getCustomRender() == 2) damage = 0; break;
             }
         }
-        if (source.getEntity() instanceof IsDefenderAligned && EntityUtil.canHurtThisMob(source.getEntity(), this)) {
+        if (source.getEntity() instanceof IsDefenderAligned && !EntityUtil.canHurtThisMob(source.getEntity(), this)) {
             return false;
         }
         if (source.getEntity() != null && source.getEntity() != this) {
