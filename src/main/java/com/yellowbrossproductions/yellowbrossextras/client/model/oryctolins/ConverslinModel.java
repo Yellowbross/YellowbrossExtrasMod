@@ -20,7 +20,6 @@ import java.util.Random;
 public class ConverslinModel<T extends Converslin> extends HierarchicalModel<T> implements CustomHeadedModel {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(YellowbrossExtras.MOD_ID, "converslin"), "main");
     private final ModelPart root;
-    private float partialTick;
     private final Random random = new Random();
 
     private final ModelPart all;
@@ -160,18 +159,19 @@ public class ConverslinModel<T extends Converslin> extends HierarchicalModel<T> 
         }
 
         this.animate(oryctolin.anim_celebrate, ConverslinAnimation.celebrate, ageInTicks, oryctolin.getAnimationSpeed());
+        this.animate(oryctolin.anim_death, ConverslinAnimation.death, ageInTicks, oryctolin.getAnimationSpeed());
+        this.animate(oryctolin.anim_running, ConverslinAnimation.running, ageInTicks, oryctolin.getAnimationSpeed());
+        this.animate(oryctolin.anim_idle, ConverslinAnimation.idle, ageInTicks, oryctolin.getAnimationSpeed());
+
         this.animate(oryctolin.anim_attack1, ConverslinAnimation.attack1, ageInTicks, oryctolin.getAnimationSpeed());
 
         if (oryctolin.getAnimationState().equals("none")) {
             float moveX = (float) (oryctolin.getX() - oryctolin.xo);
             float moveZ = (float) (oryctolin.getZ() - oryctolin.zo);
             float speed = Mth.sqrt(moveX * moveX + moveZ * moveZ);
-            this.right_foot.xRot += Mth.cos(limbSwing * 2.6648F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.8F;
-            this.left_foot.xRot += Mth.cos(limbSwing * 2.6648F) * 1.4F * limbSwingAmount * 0.8F;
-            if (speed > 0.2) {
-
-            } else {
-                this.animateIdle(oryctolin.getFrame());
+            if (speed <= 0.2) {
+                this.right_foot.xRot += Mth.cos(limbSwing * 2.6648F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.8F;
+                this.left_foot.xRot += Mth.cos(limbSwing * 2.6648F) * 1.4F * limbSwingAmount * 0.8F;
             }
             if (oryctolin.getHealth() < (oryctolin.getMaxHealth() / 2)) {
                 this.right_arm.xRot += (-0.5F + this.random.nextFloat()) / twitchamount;
@@ -191,29 +191,6 @@ public class ConverslinModel<T extends Converslin> extends HierarchicalModel<T> 
                 this.left_elbow.zRot += (-0.5F + this.random.nextFloat()) / twitchamount;
             }
         }
-    }
-
-    public void animateIdle(int fullTick) {
-        int actualTick = fullTick % 80;
-        float tick = ((float)actualTick + this.partialTick);
-        float f3 = tick / 65.0F;
-
-        float multiplier = 0.5F;
-        this.body.x += (Mth.cos(f3 * 10) * multiplier / 2.0F);
-        this.body.y += (Mth.cos(f3 * 20) * multiplier / 2.0F);
-        this.head.x += (Mth.cos(f3 * 10) * (multiplier / 2.0F));
-        this.head.y += (Mth.cos(f3 * 20) * (multiplier / 2.0F));
-        this.lower_half.x += -(Mth.cos(f3 * 10) * multiplier / 2.0F);
-        this.lower_half.y += -(Mth.cos(f3 * 20) * multiplier / 2.0F);
-        this.lower_half.xScale += Math.abs((Mth.cos(f3 * 10) * multiplier / 2.0F) * 0.25F);
-        this.lower_half.zScale += Math.abs((Mth.cos(f3 * 10) * multiplier / 2.0F) * 0.25F);
-        this.lower_half.yScale += -Math.abs((Mth.cos(f3 * 10) * multiplier / 2.0F) * 0.25F);
-        this.all.y += Math.abs((Mth.cos(f3 * 10) * multiplier / 2.0F) * 2.0F);
-    }
-
-    @Override
-    public void prepareMobModel(T entity, float p_102615_, float p_102616_, float p_102617_) {
-        this.partialTick = p_102617_;
     }
 
     @Override

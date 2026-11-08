@@ -17,6 +17,8 @@ public final class YEParticleTypes {
     public static final RegistryObject<SimpleParticleType> SUPERDUPERPOISON_DRIP = PARTICLE_TYPES.register("superduperpoison_drip", () -> new SimpleParticleType(false));
     public static final RegistryObject<SimpleParticleType> SUPERDUPERPOISON_EXPLOSION = PARTICLE_TYPES.register("superduperpoison_explosion", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> RIFLE_EXPLOSION_ONOMATOPOEIA = PARTICLE_TYPES.register("rifle_explosion_onomatopoeia", () -> new SimpleParticleType(true));
+    public static final RegistryObject<SimpleParticleType> ORYCTOLIN_SHARD = PARTICLE_TYPES.register("oryctolin_shard", () -> new SimpleParticleType(false));
+    public static final RegistryObject<SimpleParticleType> MAGIC_TWINKLE = PARTICLE_TYPES.register("magic_twinkle", () -> new SimpleParticleType(false));
 
     private static <T extends ParticleOptions> RegistryObject<ParticleType<T>> register(String pKey, boolean pOverrideLimiter, ParticleOptions.Deserializer<T> pDeserializer, final Function<ParticleType<T>, Codec<T>> pCodecFactory) {
         return PARTICLE_TYPES.register(pKey, () -> new ParticleType<>(pOverrideLimiter, pDeserializer) {

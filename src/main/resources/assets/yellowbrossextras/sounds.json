@@ -509,6 +509,20 @@
     ]
   },
 
+  "entity.oryctolin.inflate": {
+    "subtitle": "subtitles.entity.oryctolin.inflate",
+    "sounds": [
+      "yellowbrossextras:oryctolins/inflate"
+    ]
+  },
+
+  "entity.oryctolin.pop": {
+    "subtitle": "subtitles.entity.oryctolin.pop",
+    "sounds": [
+      "yellowbrossextras:oryctolins/pop"
+    ]
+  },
+
   "entity.converslin.step": {
     "subtitle": "subtitles.entity.converslin.step",
     "sounds": [
@@ -516,6 +530,23 @@
       "yellowbrossextras:oryctolins/scurry2",
       "yellowbrossextras:oryctolins/scurry3",
       "yellowbrossextras:oryctolins/scurry4"
+    ]
+  },
+
+  "entity.converslin.ambient": {
+    "subtitle": "subtitles.entity.converslin.ambient",
+    "sounds": [
+      "yellowbrossextras:oryctolins/converslin/ambient1",
+      "yellowbrossextras:oryctolins/converslin/ambient2",
+      "yellowbrossextras:oryctolins/converslin/ambient3",
+      "yellowbrossextras:oryctolins/converslin/ambient4"
+    ]
+  },
+
+  "entity.converslin.death": {
+    "subtitle": "subtitles.entity.converslin.death",
+    "sounds": [
+      "yellowbrossextras:oryctolins/converslin/death"
     ]
   },
 

@@ -81,6 +81,11 @@ public class YESoundEvents {
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_CRASH_MEDIUM = addSoundsToRegistry("entity.vilvgaver.crash_medium");
     public static final RegistryObject<SoundEvent> ENTITY_VILVGAVER_CRASH_DISTANT = addSoundsToRegistry("entity.vilvgaver.crash_distant");
 
+    public static final RegistryObject<SoundEvent> ENTITY_ORYCTOLIN_INFLATE = addSoundsToRegistry("entity.oryctolin.inflate");
+    public static final RegistryObject<SoundEvent> ENTITY_ORYCTOLIN_POP = addSoundsToRegistry("entity.oryctolin.pop");
+
+    public static final RegistryObject<SoundEvent> ENTITY_CONVERSLIN_AMBIENT = addSoundsToRegistry("entity.converslin.ambient");
+    public static final RegistryObject<SoundEvent> ENTITY_CONVERSLIN_DEATH = addSoundsToRegistry("entity.converslin.death");
     public static final RegistryObject<SoundEvent> ENTITY_CONVERSLIN_STEP = addSoundsToRegistry("entity.converslin.step");
     public static final RegistryObject<SoundEvent> ENTITY_CONVERSLIN_SHRIEK = addSoundsToRegistry("entity.converslin.shriek");
     public static final RegistryObject<SoundEvent> ENTITY_CONVERSLIN_JUMP = addSoundsToRegistry("entity.converslin.jump");

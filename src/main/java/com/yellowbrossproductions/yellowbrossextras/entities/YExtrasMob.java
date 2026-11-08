@@ -49,12 +49,17 @@ public class YExtrasMob extends PathfinderMob implements ICanBeAnimated, Yextras
     public void updateAnimations() {}
 
     @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
-        if (ANIMATION_STATE.equals(pKey)) {
-            if (this.level().isClientSide) {
-                this.updateAnimations();
-            }
+    public void tick() {
+        super.tick();
+
+        if (this.level().isClientSide) {
+            this.updateAnimations();
         }
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
+        if (ANIMATION_STATE.equals(pKey) && this.level().isClientSide) this.updateAnimations();
 
         super.onSyncedDataUpdated(pKey);
 

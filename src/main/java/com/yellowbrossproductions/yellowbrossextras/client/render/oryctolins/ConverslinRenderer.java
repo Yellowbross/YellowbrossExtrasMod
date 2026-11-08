@@ -43,6 +43,11 @@ public class ConverslinRenderer extends MobRenderer<Converslin, ConverslinModel<
     }
 
     @Override
+    protected float getFlipDegrees(Converslin pLivingEntity) {
+        return 0.0F;
+    }
+
+    @Override
     public ResourceLocation getTextureLocation(Converslin pEntity) {
         if (pEntity.getHealth() < (pEntity.getMaxHealth() / 2)) {
             return NEAR_DEATH;

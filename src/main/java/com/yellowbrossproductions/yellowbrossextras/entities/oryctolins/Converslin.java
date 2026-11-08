@@ -28,6 +28,7 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
@@ -41,15 +42,15 @@ public class Converslin extends AbstractOryctolin {
     int runAwayTimer;
     boolean canAttack = false;
 
-    private final int ATTACK1 = 1;
-    private final int ATTACK2 = 2;
+    private final static int ATTACK1 = 1;
+    private final static int ATTACK2 = 2;
 
-    private final int FACE_DEFAULT = 0;
-    private final int FACE_SCARE = 1;
-    private final int FACE_CRY = 2;
-    private final int FACE_AGGRESSIVE = 3;
-    private final int FACE_CELEBRATE = 4;
-    private final int FACE_BLINK = 5;
+    private final static int FACE_DEFAULT = 0;
+    private final static int FACE_SCARE = 1;
+    private final static int FACE_CRY = 2;
+    private final static int FACE_AGGRESSIVE = 3;
+    private final static int FACE_CELEBRATE = 4;
+    private final static int FACE_BLINK = 5;
 
     public AnimationState anim_attack1 = new AnimationState();
 
@@ -137,8 +138,10 @@ public class Converslin extends AbstractOryctolin {
     }
 
     @Override
-    public SoundEvent getCelebrateSound() {
-        return null;
+    public void die(DamageSource pDamageSource) {
+        super.die(pDamageSource);
+
+        this.setFace(FACE_SCARE);
     }
 
     @Override
@@ -146,13 +149,25 @@ public class Converslin extends AbstractOryctolin {
         return 1.0F;
     }
 
-    @Nullable
+    @NotNull
     @Override
     protected SoundEvent getAmbientSound() {
-        if (this.celebrating) {
-            return this.getCelebrateSound();
-        }
-        return super.getAmbientSound();
+        return YESoundEvents.ENTITY_CONVERSLIN_AMBIENT.get();
+    }
+
+    @Override
+    public void playAmbientSound() {
+        this.playSound(this.getAmbientSound(), 1.0F, 1.0F);
+    }
+
+    @Override
+    protected @Nullable SoundEvent getDeathSound() {
+        return YESoundEvents.ENTITY_CONVERSLIN_SHRIEK.get();
+    }
+
+    @Override
+    public @Nullable SoundEvent getPopDeathSound() {
+        return YESoundEvents.ENTITY_CONVERSLIN_DEATH.get();
     }
 
     public boolean isBreakDoorsTaskSet() {
@@ -241,9 +256,9 @@ public class Converslin extends AbstractOryctolin {
         if (this.getTarget() != null && !this.getTarget().isAlive()) this.setTarget(null);
 
         if (this.isAggressive() && this.getFace() == 0) {
-            this.setFace(3);
+            this.setFace(FACE_AGGRESSIVE);
         } else if (this.getTarget() == null && this.getFace() == 3) {
-            this.setFace(0);
+            this.setFace(FACE_DEFAULT);
         }
 
         if (this.getFace() == 1 && this.isInWater()) {
@@ -354,7 +369,7 @@ public class Converslin extends AbstractOryctolin {
         public void stop() {
             super.stop();
             if (!Converslin.this.AHHHHHH) {
-                Converslin.this.setFace(0);
+                Converslin.this.setFace(FACE_DEFAULT);
             }
         }
     }
@@ -374,7 +389,7 @@ public class Converslin extends AbstractOryctolin {
 
         @Override
         public void start() {
-            setFace(3);
+            setFace(FACE_AGGRESSIVE);
             Converslin.this.canAttack = true;
         }
 
@@ -454,7 +469,7 @@ public class Converslin extends AbstractOryctolin {
 
         @Override
         public void stop() {
-            setFace(0);
+            setFace(FACE_DEFAULT);
         }
     }
 }

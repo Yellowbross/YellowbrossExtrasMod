@@ -15,9 +15,7 @@ import com.yellowbrossproductions.yellowbrossextras.config.YellowbrossExtrasConf
 import com.yellowbrossproductions.yellowbrossextras.entities.CameraShake;
 import com.yellowbrossproductions.yellowbrossextras.init.YEEntityTypes;
 import com.yellowbrossproductions.yellowbrossextras.init.YEParticleTypes;
-import com.yellowbrossproductions.yellowbrossextras.particles.RifleExplosionOnomatopoeiaParticle;
-import com.yellowbrossproductions.yellowbrossextras.particles.SuperDuperPoisonDripParticle;
-import com.yellowbrossproductions.yellowbrossextras.particles.SuperDuperPoisonExplosionParticle;
+import com.yellowbrossproductions.yellowbrossextras.particles.*;
 import com.yellowbrossproductions.yellowbrossextras.util.DynamicAnimationManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -142,6 +140,8 @@ public class YEClientEventHandler {
             event.registerSpriteSet(YEParticleTypes.SUPERDUPERPOISON_DRIP.get(), SuperDuperPoisonDripParticle.Provider::new);
             event.registerSpriteSet(YEParticleTypes.SUPERDUPERPOISON_EXPLOSION.get(), SuperDuperPoisonExplosionParticle.Provider::new);
             event.registerSpriteSet(YEParticleTypes.RIFLE_EXPLOSION_ONOMATOPOEIA.get(), RifleExplosionOnomatopoeiaParticle.Provider::new);
+            event.registerSpriteSet(YEParticleTypes.ORYCTOLIN_SHARD.get(), OryctolinShardParticle.Provider::new);
+            event.registerSpriteSet(YEParticleTypes.MAGIC_TWINKLE.get(), MagicTwinkleParticle.Provider::new);
         }
 
         @SubscribeEvent

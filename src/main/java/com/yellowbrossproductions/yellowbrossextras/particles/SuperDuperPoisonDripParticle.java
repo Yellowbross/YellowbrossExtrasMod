@@ -16,7 +16,7 @@ public class SuperDuperPoisonDripParticle extends TextureSheetParticle {
     protected boolean hasTouchedGround = false;
     private final SpriteSet sprites;
     private int frame;
-    private final int maxFrames = 7;
+    private final static int maxFrames = 7;
 
     protected SuperDuperPoisonDripParticle(ClientLevel pLevel, SpriteSet spriteSet, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, float pScale) {
         super(pLevel, pX, pY, pZ);
@@ -27,7 +27,7 @@ public class SuperDuperPoisonDripParticle extends TextureSheetParticle {
         this.xd += pXSpeed;
         this.yd += pYSpeed;
         this.zd += pZSpeed;
-        this.frame = this.random.nextInt(7);
+        this.frame = this.random.nextInt(maxFrames);
         this.sprites = spriteSet;
         this.pickSprite(sprites);
     }
@@ -45,11 +45,11 @@ public class SuperDuperPoisonDripParticle extends TextureSheetParticle {
         if (this.lifetime-- <= 0) {
             this.remove();
         } else {
-            this.yd -= (double)this.gravity;
+            this.yd -= this.gravity;
             this.move(this.xd, this.yd, this.zd);
-            this.xd *= (double)0.98F;
-            this.yd *= (double)0.98F;
-            this.zd *= (double)0.98F;
+            this.xd *= 0.98F;
+            this.yd *= 0.98F;
+            this.zd *= 0.98F;
 
             if (this.onGround) {
                 if (!this.hasTouchedGround) {
@@ -61,11 +61,11 @@ public class SuperDuperPoisonDripParticle extends TextureSheetParticle {
                     this.remove();
                 }
 
-                this.xd *= (double)0.7F;
-                this.zd *= (double)0.7F;
+                this.xd *= 0.7F;
+                this.zd *= 0.7F;
             } else {
-                if (this.frame++ >= 7) this.frame = 0;
-                if (!this.removed) this.setSprite(this.sprites.get(this.frame, this.maxFrames));
+                if (this.frame++ >= maxFrames) this.frame = 0;
+                if (!this.removed) this.setSprite(this.sprites.get(this.frame, maxFrames));
             }
 
             BlockPos blockpos = BlockPos.containing(this.x, this.y, this.z);

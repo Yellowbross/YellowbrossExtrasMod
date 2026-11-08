@@ -22,6 +22,7 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 public class Toymaklin extends BossOryctolin {
     private final int FACE_DEFAULT = 0;
@@ -70,7 +71,7 @@ public class Toymaklin extends BossOryctolin {
     }
 
     @Override
-    public SoundEvent getCelebrateSound() {
+    public @Nullable SoundEvent getPopDeathSound() {
         return null;
     }
 
