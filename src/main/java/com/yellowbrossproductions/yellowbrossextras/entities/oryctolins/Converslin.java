@@ -34,7 +34,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 
 public class Converslin extends AbstractOryctolin {
-    int frame;
     boolean AHHHHHH = false;
     LivingEntity runAwayFrom = null;
     boolean celebrating = false;
@@ -53,6 +52,7 @@ public class Converslin extends AbstractOryctolin {
     private final static int FACE_BLINK = 5;
 
     public AnimationState anim_attack1 = new AnimationState();
+    public AnimationState anim_attack2 = new AnimationState();
 
     public Converslin(EntityType<? extends AbstractOryctolin> entityType, Level level) {
         super(entityType, level);
@@ -70,10 +70,10 @@ public class Converslin extends AbstractOryctolin {
         this.goalSelector.addGoal(1, new OryctolinAvoidGoal(this, Wolf.class, 6.0F, 1.2D, 1.2D));
 
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.5));
-        this.goalSelector.addGoal(2, new AvoidEntityGoal(this, LivingEntity.class, 15.0F, 1.5, 1.5, (p_29932_) -> {
+        this.goalSelector.addGoal(2, new AvoidEntityGoal(this, LivingEntity.class, 15.0F, 1.1, 1.1, (p_29932_) -> {
             return this.getTarget() == p_29932_ || (this.getTeam() != null && EntityUtil.canHurtThisMob((LivingEntity) p_29932_, this));
         }));
-        this.goalSelector.addGoal(2, new AvoidEntityGoal(this, LivingEntity.class, 50.0F, 1.0, 1.5, (p_29932_) -> {
+        this.goalSelector.addGoal(2, new AvoidEntityGoal(this, LivingEntity.class, 50.0F, 0.8, 1.1, (p_29932_) -> {
             return this.AHHHHHH && (this.getTarget() == p_29932_ || (this.getTeam() != null && EntityUtil.canHurtThisMob((LivingEntity) p_29932_, this)));
         }));
         this.goalSelector.addGoal(3, new AttackGoal());
@@ -157,7 +157,7 @@ public class Converslin extends AbstractOryctolin {
 
     @Override
     public void playAmbientSound() {
-        this.playSound(this.getAmbientSound(), 1.0F, 1.0F);
+        if (!this.AHHHHHH) this.playSound(this.getAmbientSound(), 1.0F, 1.0F);
     }
 
     @Override
@@ -197,9 +197,12 @@ public class Converslin extends AbstractOryctolin {
                                     0.8D,
                                     ((d3 * d4) * mult) / distance);
                         }
-                        this.playSound(YESoundEvents.ENTITY_CONVERSLIN_JUMP.get(), 1.0F, this.getVoicePitch());
+                        this.playSound(YESoundEvents.ENTITY_ORYCTOLIN_JUMP.get(), 1.0F, this.getVoicePitch());
+                        this.playSound(YESoundEvents.ENTITY_CONVERSLIN_PROJECTILES_WARN.get(), 3.0F, 1.0F);
                     }
                     if (this.attackTicks == 16) {
+                        this.playSound(YESoundEvents.ENTITY_CONVERSLIN_PROJECTILES.get(), 4.0F, 1.0F);
+
                         float radius2 = 1.1f;
                         double x = this.getX() + 0.8F * Math.sin(-this.getYRot() * Math.PI / 180) + radius2 * Math.sin(-this.yHeadRot * Math.PI / 180) * Math.cos(-this.getXRot() * Math.PI / 180);
                         double y = this.getY() + 1.0 + radius2 * Math.sin(-this.getXRot() * Math.PI / 180);
@@ -266,7 +269,7 @@ public class Converslin extends AbstractOryctolin {
         }
 
         if (this.AHHHHHH && this.runAwayFrom != null && this.getFace() != 1 && this.getFace() != 2) {
-            this.playSound(YESoundEvents.ENTITY_CONVERSLIN_SHRIEK.get(), 1.5F, this.getVoicePitch());
+            this.playSound(YESoundEvents.ENTITY_CONVERSLIN_SHRIEK.get(), 4.0F, this.getVoicePitch());
             this.setFace(FACE_SCARE);
             this.setAnimationState("none");
             double d1 = this.runAwayFrom.getX() - this.getX();
@@ -286,8 +289,6 @@ public class Converslin extends AbstractOryctolin {
         if (YellowbrossExtrasConfig.oryctolin_victoryDance.get()) {
             this.celebrateAnim();
         }
-
-        this.frame++;
     }
 
     public void celebrateAnim() {
@@ -322,15 +323,12 @@ public class Converslin extends AbstractOryctolin {
     public void updateAnimations() {
         super.updateAnimations();
         this.anim_attack1.animateWhen(this.getAnimationState().equals("attack1"), this.tickCount);
+        this.anim_attack2.animateWhen(this.getAnimationState().equals("attack2"), this.tickCount);
     }
 
     @Override
     protected void playStepSound(BlockPos pPos, BlockState pState) {
 
-    }
-
-    public int getFrame() {
-        return frame;
     }
 
     @Override

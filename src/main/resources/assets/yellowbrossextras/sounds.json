@@ -509,6 +509,13 @@
     ]
   },
 
+  "entity.oryctolin.jump": {
+    "subtitle": "subtitles.entity.oryctolin.jump",
+    "sounds": [
+      "yellowbrossextras:oryctolins/jump"
+    ]
+  },
+
   "entity.oryctolin.inflate": {
     "subtitle": "subtitles.entity.oryctolin.inflate",
     "sounds": [
@@ -557,10 +564,17 @@
     ]
   },
 
-  "entity.converslin.jump": {
-    "subtitle": "subtitles.entity.converslin.jump",
+  "entity.converslin.projectiles_warn": {
+    "subtitle": "subtitles.entity.converslin.attack",
     "sounds": [
-      "yellowbrossextras:oryctolins/jump"
+      "yellowbrossextras:oryctolins/converslin/projectiles_warn"
+    ]
+  },
+
+  "entity.converslin.projectiles": {
+    "subtitle": "subtitles.entity.converslin.attack",
+    "sounds": [
+      "yellowbrossextras:oryctolins/converslin/projectiles"
     ]
   },
 

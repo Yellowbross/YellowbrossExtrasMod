@@ -189,7 +189,7 @@ public abstract class AbstractOryctolin extends YExtrasMob implements IsOryctoli
             if (entity instanceof LivingEntity living) {
                 boolean team = EntityUtil.canHurtThisMob(living, this);
                 if (team && entity.isAlive() && EntityUtil.isMobNotInCreativeMode(entity)) {
-                    living.hurt(this.damageSources().explosion(this, null), 15.0F);
+                    living.hurt(this.damageSources().explosion(this, this), 15.0F);
                 }
             }
         }

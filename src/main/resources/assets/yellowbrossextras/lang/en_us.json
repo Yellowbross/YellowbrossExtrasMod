@@ -117,6 +117,7 @@
   "subtitles.entity.vilvgaver.warn": "Ground shakes",
   "subtitles.entity.vilvgaver.crash": "Blocks smashed through",
 
+  "subtitles.entity.oryctolin.jump": "Oryctolin jumps",
   "subtitles.entity.oryctolin.inflate": "Oryctolin inflates",
   "subtitles.entity.oryctolin.pop": "Oryctolin pops",
 
@@ -125,7 +126,7 @@
   "subtitles.entity.converslin.death": "Converslin dies",
   "subtitles.entity.converslin.step": "Converslin scurries",
   "subtitles.entity.converslin.shriek": "Converslin shrieks",
-  "subtitles.entity.converslin.jump": "Converslin jumps",
+  "subtitles.entity.converslin.attack": "Converslin attacks",
 
   "subtitles.entity.toymaklin.shiver": "Toymaklin shivers",
 

@@ -278,8 +278,8 @@ public class SentryGun extends YExtrasMob implements IsDefenderAligned {
         for (Entity entity : list) {
             if (entity instanceof LivingEntity living) {
                 boolean team = EntityUtil.canHurtThisMob(living, this) && !(living instanceof IsDefenderAligned);
-                if (team && entity.isAlive() && !entity.isInvulnerable() && !entity.isSpectator()) {
-                    living.hurt(this.damageSources().explosion(this, null), 24.0F);
+                if (team && entity.isAlive() && EntityUtil.isMobNotInCreativeMode(entity)) {
+                    living.hurt(this.damageSources().explosion(this, this), 24.0F);
                 }
             }
         }
